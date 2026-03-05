@@ -391,105 +391,330 @@ footer{padding:40px;border-top:1px solid var(--border);position:relative;z-index
 </div>
 
 <script>
+
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwrEE391bby4jUATJ8jd95tcb8OCpchI8fRs-TAt8s2NLD2CDmdeCScDHm0ERlsucs2/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
-const GARMENTS={'BL-KLG26':{name:'Kumpul Keluarga<br>Pontianak',origin:'Klaten',year:'2026',edition:'50 pcs',mockup:''}};
+
+const GARMENTS={
+'BL-KLG26':{
+name:'Kumpul Keluarga<br>Pontianak',
+origin:'Klaten',
+year:'2026',
+edition:'50 pcs',
+mockup:''
+}
+};
 
 const path=window.location.pathname;
-if(path.includes('/id/')){const id=path.split('/').filter(Boolean).pop().toUpperCase();showGarment(id);}
-else{document.getElementById('page-home').classList.add('active');loadSparkCounter();}
+
+if(path.includes('/id/')){
+const id=path.split('/').filter(Boolean).pop().toUpperCase();
+showGarment(id);
+}else{
+document.getElementById('page-home').classList.add('active');
+loadSparkCounter();
+}
 
 function loadSparkCounter(){
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
-  fetch(url).then(r=>r.text()).then(txt=>{
-    const json=JSON.parse(txt.slice(47,-2));
-    const rows=json.table.rows||[];
-    const total=rows.filter(r=>r.c[7]?.v==='story'&&r.c[5]?.v==='APPROVED').length;
-    document.getElementById('spark-count').textContent=total||'0';
-    const lastScan=rows.filter(r=>r.c[2]?.v).pop();
-    if(lastScan){document.getElementById('ls-city').textContent=lastScan.c[2].v;document.getElementById('latest-spark').style.display='block';}
-    // Spark Map — unique cities
-    const cities=[];
-    const seen=new Set();
-    seen.add('Klaten, Jawa Tengah');
-    rows.forEach(r=>{const c=r.c[2]?.v;if(c&&!seen.has(c)){seen.add(c);cities.push(c);}});
-    const wrap=document.getElementById('spark-cities');
-    if(cities.length){
-      wrap.innerHTML=`<div class="spark-city origin"><span class="dot"></span>Klaten</div>`+cities.slice(-11).map(c=>`<div class="spark-city"><span class="dot"></span>${c.split(',')[0]}</div>`).join('');
-    } else {
-      wrap.innerHTML='<div class="spark-empty">Belum ada scan dari luar Klaten</div>';
-    }
-  }).catch(()=>{document.getElementById('spark-count').textContent='0';});
+
+const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
+
+fetch(url)
+.then(r=>r.text())
+.then(txt=>{
+
+const json=JSON.parse(txt.slice(47,-2));
+const rows=json.table.rows||[];
+
+const total=rows.filter(r=>r.c[0]?.v).length;
+
+document.getElementById('spark-count').textContent=total||'0';
+
+const scans=rows.filter(r=>r.c[2]?.v);
+const lastScan=scans[scans.length-1];
+
+if(lastScan){
+document.getElementById('ls-city').textContent=lastScan.c[2].v;
+document.getElementById('latest-spark').style.display='block';
+}
+
+buildSparkMap(rows);
+
+})
+.catch(()=>{
+document.getElementById('spark-count').textContent='0';
+});
+
+}
+
+function buildSparkMap(rows){
+
+const wrap=document.getElementById('spark-cities');
+
+const citySet=new Set();
+
+rows.forEach(r=>{
+const city=r.c[2]?.v;
+if(city) citySet.add(city);
+});
+
+const cities=[...citySet];
+
+if(cities.length){
+
+wrap.innerHTML=
+`<div class="spark-city origin">
+<span class="dot"></span>Klaten
+</div>`+
+
+cities.slice(-10).map(c=>`
+<div class="spark-city">
+<span class="dot"></span>${c.split(',')[0]}
+</div>
+`).join('');
+
+}else{
+
+wrap.innerHTML=
+`<div class="spark-empty">
+Belum ada scan dari luar Klaten
+</div>`;
+
+}
+
 }
 
 function showGarment(id){
-  document.getElementById('page-garment').classList.add('active');
-  document.getElementById('nav-id').textContent=id;
-  document.getElementById('g-id').textContent=id;
-  document.getElementById('g-mtag').textContent=id;
-  const d=GARMENTS[id];
-  if(d){document.getElementById('g-nm').innerHTML=d.name;document.getElementById('g-ori').textContent=d.origin;document.getElementById('g-yr').textContent=d.year;document.getElementById('g-ed').textContent=d.edition;if(d.mockup){document.getElementById('g-ph').style.display='none';const img=document.getElementById('g-img');img.src=d.mockup;img.style.display='block';}}
-  loadStories(id);recordScan(id);
+
+document.getElementById('page-garment').classList.add('active');
+
+document.getElementById('nav-id').textContent=id;
+document.getElementById('g-id').textContent=id;
+document.getElementById('g-mtag').textContent=id;
+
+const d=GARMENTS[id];
+
+if(d){
+
+document.getElementById('g-nm').innerHTML=d.name;
+document.getElementById('g-ori').textContent=d.origin;
+document.getElementById('g-yr').textContent=d.year;
+document.getElementById('g-ed').textContent=d.edition;
+
+if(d.mockup){
+document.getElementById('g-ph').style.display='none';
+const img=document.getElementById('g-img');
+img.src=d.mockup;
+img.style.display='block';
+}
+
+}
+
+loadStories(id);
+recordScan(id);
+
 }
 
 function loadStories(id){
-  const wrap=document.getElementById('sto-wrap');
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
-  fetch(url).then(r=>r.text()).then(txt=>{
-    const json=JSON.parse(txt.slice(47,-2));
-    const rows=json.table.rows||[];
-    const approved=rows.filter(r=>r.c[0]?.v===id&&r.c[5]?.v==='APPROVED'&&r.c[3]?.v);
-    wrap.innerHTML=approved.length?approved.map(r=>storyCard({name:r.c[1]?.v||'Anonim',city:r.c[2]?.v||'',story:r.c[3]?.v||'',photo:r.c[4]?.v||''})).join(''):'<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';
-    addJourney(rows.filter(r=>r.c[0]?.v===id));
-  }).catch(()=>{wrap.innerHTML='<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';});
+
+const wrap=document.getElementById('sto-wrap');
+
+const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
+
+fetch(url)
+.then(r=>r.text())
+.then(txt=>{
+
+const json=JSON.parse(txt.slice(47,-2));
+const rows=json.table.rows||[];
+
+const approved=rows.filter(r=>
+r.c[0]?.v===id &&
+r.c[5]?.v==='APPROVED' &&
+r.c[3]?.v
+);
+
+wrap.innerHTML=approved.length
+?approved.map(r=>storyCard({
+name:r.c[1]?.v||'Anonim',
+city:r.c[2]?.v||'',
+story:r.c[3]?.v||'',
+photo:r.c[4]?.v||''
+})).join('')
+:'<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';
+
+addJourney(rows.filter(r=>r.c[0]?.v===id));
+
+})
+.catch(()=>{
+wrap.innerHTML='<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';
+});
+
 }
 
 function storyCard(s){
-  const av=s.photo?`<img src="${s.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-dim);flex-shrink:0">`:`<div class="savph">${s.name.charAt(0).toUpperCase()}</div>`;
-  return `<div class="sc"><div class="sow">${av}<div><div class="snm">${s.name}</div>${s.city?`<div class="sct">✦ ${s.city}</div>`:''}</div></div><div class="stxt">"${s.story}"</div></div>`;
+
+const av=s.photo
+?`<img src="${s.photo}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #8a6f2e">`
+:`<div class="savph">${s.name.charAt(0).toUpperCase()}</div>`;
+
+return `
+<div class="sc">
+<div class="sow">
+${av}
+<div>
+<div class="snm">${s.name}</div>
+${s.city?`<div class="sct">✦ ${s.city}</div>`:''}
+</div>
+</div>
+<div class="stxt">"${s.story}"</div>
+</div>
+`;
+
 }
 
 function addJourney(sparks){
-  const list=document.getElementById('jlist');
-  sparks.slice(-5).forEach((r,i)=>{
-    const city=r.c[2]?.v;if(!city)return;
-    const el=document.createElement('div');el.className='ji';
-    el.innerHTML=`<div style="position:relative"><div class="jdot ${i===0?'latest':''}"></div><div class="jline"></div></div><div><div class="jcity">${city}</div><div class="jtime">${r.c[6]?.v||'Baru saja'}</div>${i===0?'<div class="jbadge">Terbaru</div>':''}</div>`;
-    list.appendChild(el);
-  });
+
+const list=document.getElementById('jlist');
+
+sparks
+.slice(-5)
+.reverse()
+.forEach((r,i)=>{
+
+const city=r.c[2]?.v;
+if(!city) return;
+
+const el=document.createElement('div');
+
+el.className='ji';
+
+el.innerHTML=`
+<div style="position:relative">
+<div class="jdot ${i===0?'latest':''}"></div>
+<div class="jline"></div>
+</div>
+<div>
+<div class="jcity">${city}</div>
+<div class="jtime">${r.c[6]?.v||'Baru saja'}</div>
+${i===0?'<div class="jbadge">Terbaru</div>':''}
+</div>
+`;
+
+list.appendChild(el);
+
+});
+
 }
 
 function recordScan(id){
-  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
-    fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'scan',garment_id:id,city:`${g.city}, ${g.country_name}`,timestamp:new Date().toISOString()})});
-  }).catch(()=>{});
+
+fetch('https://ipapi.co/json/')
+.then(r=>r.json())
+.then(g=>{
+
+fetch(SCRIPT_URL,{
+method:'POST',
+mode:'no-cors',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'scan',
+garment_id:id,
+city:`${g.city}, ${g.country_name}`,
+timestamp:new Date().toISOString()
+})
+});
+
+})
+.catch(()=>{});
+
 }
 
 function prevPhoto(input){
-  if(!input.files||!input.files[0])return;
-  const r=new FileReader();
-  r.onload=e=>{const p=document.getElementById('u-prev');p.src=e.target.result;p.style.display='block';document.getElementById('u-ico').style.display='none';document.getElementById('u-txt').textContent='Foto dipilih ✓';};
-  r.readAsDataURL(input.files[0]);
+
+if(!input.files||!input.files[0])return;
+
+const r=new FileReader();
+
+r.onload=e=>{
+const p=document.getElementById('u-prev');
+p.src=e.target.result;
+p.style.display='block';
+document.getElementById('u-ico').style.display='none';
+document.getElementById('u-txt').textContent='Foto dipilih ✓';
+};
+
+r.readAsDataURL(input.files[0]);
+
 }
 
 async function submitStory(){
-  const name=document.getElementById('f-name').value.trim();
-  const city=document.getElementById('f-city').value.trim();
-  const story=document.getElementById('f-story').value.trim();
-  const photo=document.getElementById('f-photo').files[0];
-  const err=document.getElementById('f-err');const btn=document.getElementById('f-btn');
-  err.style.display='none';
-  if(!name){err.textContent='Nama tidak boleh kosong';err.style.display='block';return;}
-  if(!city){err.textContent='Kota tidak boleh kosong';err.style.display='block';return;}
-  btn.disabled=true;btn.textContent='✦   Mengirim...';
-  let pb='';
-  if(photo){pb=await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(photo);});}
-  const id=document.getElementById('g-id').textContent;
-  try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'story',garment_id:id,name,city,story,photo:pb,timestamp:new Date().toISOString()})});}catch(e){}
-  showOk();
+
+const name=document.getElementById('f-name').value.trim();
+const city=document.getElementById('f-city').value.trim();
+const story=document.getElementById('f-story').value.trim();
+const photo=document.getElementById('f-photo').files[0];
+
+const err=document.getElementById('f-err');
+const btn=document.getElementById('f-btn');
+
+err.style.display='none';
+
+if(!name){
+err.textContent='Nama tidak boleh kosong';
+err.style.display='block';
+return;
 }
 
-function showOk(){document.getElementById('form-body').style.display='none';document.getElementById('form-ok').style.display='block';}
+if(!city){
+err.textContent='Kota tidak boleh kosong';
+err.style.display='block';
+return;
+}
+
+btn.disabled=true;
+btn.textContent='Mengirim...';
+
+let pb='';
+
+if(photo){
+pb=await new Promise(res=>{
+const r=new FileReader();
+r.onload=e=>res(e.target.result);
+r.readAsDataURL(photo);
+});
+}
+
+const id=document.getElementById('g-id').textContent;
+
+try{
+
+await fetch(SCRIPT_URL,{
+method:'POST',
+mode:'no-cors',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+action:'story',
+garment_id:id,
+name,
+city,
+story,
+photo:pb,
+timestamp:new Date().toISOString()
+})
+});
+
+}catch(e){}
+
+showOk();
+
+}
+
+function showOk(){
+
+document.getElementById('form-body').style.display='none';
+document.getElementById('form-ok').style.display='block';
+
+}
+
 </script>
-</body>
-</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blumbang Admin · Spark Control</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --black:#080808;--charcoal:#111;--grey:#1a1a1a;--border:#2a2a2a;
+  --muted:#555;--dim:#777;--light:#bbb;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#0e0900;
+  --green:#2d6a4f;--green-light:#40916c;
+  --red:#7f1d1d;--red-light:#dc2626;
+  --font:'Inter',sans-serif;--font-logo:'Bebas Neue',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:var(--font);min-height:100vh;}
+
+/* HEADER */
+header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--black);z-index:100;}
+.hbrand{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.15em;color:var(--gold);}
+.hbadge{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;background:var(--charcoal);border:1px solid var(--border);padding:3px 10px;}
+.hstatus{font-size:0.7rem;font-weight:500;letter-spacing:0.1em;color:var(--dim);}
+.hstatus span{color:var(--gold);}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 32px;gap:0;}
+.tab{font-size:0.72rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:14px 20px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all 0.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.tab:hover{color:var(--light);}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+
+/* CONTENT */
+.content{padding:32px;max-width:1200px;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:32px;}
+.sbox{background:var(--charcoal);padding:20px;text-align:center;}
+.sbox-num{font-family:var(--font-logo);font-size:2rem;color:var(--gold);letter-spacing:0.1em;}
+.sbox-lbl{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:4px;}
+
+/* SECTION TITLE */
+.sec-title{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.1em;color:var(--white);margin-bottom:6px;}
+.sec-sub{font-size:0.72rem;color:var(--dim);margin-bottom:24px;line-height:1.6;}
+
+/* FORM ELEMENTS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-label{font-size:0.68rem;font-weight:600;letter-spacing:0.15em;color:var(--light);text-transform:uppercase;}
+.form-input,.form-select{background:var(--charcoal);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:0.9rem;padding:10px 14px;outline:none;transition:border-color 0.2s;width:100%;}
+.form-input:focus,.form-select:focus{border-color:var(--gold);}
+.form-input::placeholder{color:var(--muted);}
+.form-select option{background:var(--charcoal);}
+
+/* BUTTONS */
+.btn{padding:10px 20px;font-family:var(--font);font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.2s;border:none;}
+.btn-gold{background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);}
+.btn-gold:hover{background:var(--gold);color:var(--black);}
+.btn-green{background:rgba(45,106,79,0.2);border:1px solid var(--green-light);color:#86efac;}
+.btn-green:hover{background:var(--green-light);color:white;}
+.btn-red{background:rgba(127,29,29,0.2);border:1px solid var(--red-light);color:#fca5a5;}
+.btn-red:hover{background:var(--red-light);color:white;}
+.btn-sm{padding:6px 14px;font-size:0.65rem;}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--light);}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);}
+.btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+/* TABLE */
+.table-wrap{border:1px solid var(--border);overflow:hidden;margin-bottom:24px;}
+table{width:100%;border-collapse:collapse;}
+th{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:12px 16px;text-align:left;background:var(--charcoal);border-bottom:1px solid var(--border);}
+td{font-size:0.82rem;padding:14px 16px;border-bottom:1px solid var(--border);color:var(--light);vertical-align:middle;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);}
+.badge{display:inline-block;font-size:0.62rem;font-weight:600;letter-spacing:0.1em;padding:2px 8px;text-transform:uppercase;}
+.badge-pending{background:rgba(201,168,76,0.1);border:1px solid var(--gold-dim);color:var(--gold);}
+.badge-approved{background:rgba(45,106,79,0.2);border:1px solid var(--green-light);color:#86efac;}
+.badge-rejected{background:rgba(127,29,29,0.2);border:1px solid #7f1d1d;color:#fca5a5;}
+
+/* QR SHEET */
+.qr-preview{border:1px solid var(--border);background:white;padding:20px;margin-top:24px;}
+.qr-sheet-title{font-family:var(--font-logo);font-size:1rem;letter-spacing:0.2em;color:#111;margin-bottom:16px;text-align:center;}
+.qr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.qr-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid #ddd;}
+.qr-item canvas,.qr-item img{width:80px!important;height:80px!important;}
+.qr-code-id{font-family:'Courier New',monospace;font-size:0.6rem;color:#333;text-align:center;word-break:break-all;}
+.qr-brand{font-size:0.55rem;color:#888;text-align:center;}
+
+/* QR ACTIONS */
+.qr-actions{display:flex;gap:12px;margin-top:16px;align-items:center;}
+
+/* GARMENT CARDS */
+.garment-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px;}
+.gcard{border:1px solid var(--border);background:var(--charcoal);padding:20px;position:relative;}
+.gcard-id{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:0.1em;color:var(--gold);margin-bottom:4px;}
+.gcard-name{font-size:0.82rem;color:var(--white);margin-bottom:12px;}
+.gcard-meta{font-size:0.68rem;color:var(--dim);margin-bottom:14px;line-height:1.7;}
+.gcard-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.gcard-mockup{width:100%;height:80px;object-fit:cover;margin-bottom:12px;border:1px solid var(--border);}
+.gcard-ph{width:100%;height:80px;background:var(--grey);display:flex;align-items:center;justify-content:center;margin-bottom:12px;border:1px solid var(--border);}
+.gcard-ph span{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;}
+
+/* ADD GARMENT FORM */
+.add-form{border:1px solid var(--border);background:var(--charcoal);padding:24px;margin-bottom:32px;}
+
+/* STORY REVIEW */
+.story-card{border:1px solid var(--border);background:var(--charcoal);padding:20px;margin-bottom:12px;}
+.story-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px;}
+.story-info{flex:1;}
+.story-name{font-size:0.9rem;font-weight:600;color:var(--white);margin-bottom:2px;}
+.story-meta{font-size:0.68rem;color:var(--dim);}
+.story-body{font-size:0.88rem;font-style:italic;color:var(--light);line-height:1.7;border-left:2px solid var(--gold-dim);padding-left:12px;margin-bottom:12px;}
+.story-actions{display:flex;gap:8px;}
+
+/* LOADING */
+.loading{text-align:center;padding:48px;font-size:0.78rem;color:var(--dim);letter-spacing:0.2em;text-transform:uppercase;}
+.empty{text-align:center;padding:32px;font-size:0.78rem;color:var(--muted);letter-spacing:0.15em;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--charcoal);border:1px solid var(--gold-dim);padding:12px 20px;font-size:0.75rem;font-weight:500;color:var(--gold);letter-spacing:0.1em;z-index:9999;transform:translateY(100px);transition:transform 0.3s;max-width:300px;}
+.toast.show{transform:translateY(0);}
+
+@media(max-width:768px){
+  .content{padding:16px;}
+  .tabs{padding:0 16px;overflow-x:auto;}
+  header{padding:12px 16px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+  .garment-grid{grid-template-columns:1fr;}
+  .qr-grid{grid-template-columns:repeat(3,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="hbrand">BLUMB✦NG <span style="color:var(--dim);font-size:0.7em">ADMIN</span></div>
+  </div>
+  <div class="hbadge">Spark Control Panel</div>
+  <div class="hstatus">Sheets: <span id="conn-status">Connecting...</span></div>
+</header>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('approval')">✦ Approval</button>
+  <button class="tab" onclick="switchTab('garments')">Garment Manager</button>
+  <button class="tab" onclick="switchTab('qr')">QR Generator</button>
+  <button class="tab" onclick="switchTab('stats')">Statistik</button>
+</div>
+
+<!-- ===================== APPROVAL PANEL ===================== -->
+<div class="content">
+<div id="panel-approval" class="panel active">
+  <div class="stats-row" id="approval-stats">
+    <div class="sbox"><div class="sbox-num" id="st-pending">—</div><div class="sbox-lbl">Pending</div></div>
+    <div class="sbox"><div class="sbox-num" id="st-approved">—</div><div class="sbox-lbl">Approved</div></div>
+    <div class="sbox"><div class="sbox-num" id="st-total-scan">—</div><div class="sbox-lbl">Total Scan</div></div>
+    <div class="sbox"><div class="sbox-num" id="st-garments">—</div><div class="sbox-lbl">Garments Aktif</div></div>
+  </div>
+
+  <div class="sec-title">Antrian Cerita</div>
+  <div class="sec-sub">Cerita yang menunggu review. Approve untuk tampilkan di halaman garment.</div>
+
+  <div style="display:flex;gap:10px;margin-bottom:16px;">
+    <button class="btn btn-ghost btn-sm" onclick="loadApproval('ALL')">Semua</button>
+    <button class="btn btn-ghost btn-sm" onclick="loadApproval('PENDING')">Pending</button>
+    <button class="btn btn-ghost btn-sm" onclick="loadApproval('APPROVED')">Approved</button>
+  </div>
+
+  <div id="story-list"><div class="loading">Memuat cerita...</div></div>
+</div>
+
+<!-- ===================== GARMENT MANAGER ===================== -->
+<div id="panel-garments" class="panel">
+  <div class="sec-title">Tambah Garment Baru</div>
+  <div class="sec-sub">Isi data garment — akan langsung tersimpan ke Google Sheets dan tampil di website.</div>
+
+  <div class="add-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Garment ID *</label>
+        <input type="text" class="form-input" id="new-id" placeholder="BL-PTK26" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Seri *</label>
+        <input type="text" class="form-input" id="new-name" placeholder="Kumpul Keluarga Pontianak">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kota Asal</label>
+        <input type="text" class="form-input" id="new-origin" placeholder="Klaten" value="Klaten">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tahun</label>
+        <input type="text" class="form-input" id="new-year" placeholder="2026" value="2026">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Jumlah Edisi</label>
+        <input type="text" class="form-input" id="new-edition" placeholder="50 pcs">
+      </div>
+      <div class="form-group">
+        <label class="form-label">URL Mockup (Google Drive)</label>
+        <input type="text" class="form-input" id="new-mockup" placeholder="https://drive.google.com/...">
+      </div>
+    </div>
+    <button class="btn btn-gold" onclick="addGarment()">✦ &nbsp; Simpan Garment</button>
+  </div>
+
+  <div class="sec-title">Garment Terdaftar</div>
+  <div class="sec-sub">Semua garment yang sudah terdaftar di sistem.</div>
+  <div id="garment-grid" class="garment-grid"><div class="loading">Memuat data...</div></div>
+</div>
+
+<!-- ===================== QR GENERATOR ===================== -->
+<div id="panel-qr" class="panel">
+  <div class="sec-title">QR Code Generator</div>
+  <div class="sec-sub">Generate QR code untuk satu seri kaos. Output berupa sheet PNG siap kirim ke percetakan.</div>
+
+  <div class="add-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Prefix Garment ID *</label>
+        <input type="text" class="form-input" id="qr-prefix" placeholder="BL-PTK26" oninput="this.value=this.value.toUpperCase()">
+        <span style="font-size:0.65rem;color:var(--muted);margin-top:4px;">QR akan dibuat: BL-PTK26-001, BL-PTK26-002, dst</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Jumlah Kaos *</label>
+        <input type="number" class="form-input" id="qr-qty" placeholder="68" min="1" max="500" value="10">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Mulai Dari Nomor</label>
+        <input type="number" class="form-input" id="qr-start" placeholder="1" min="1" value="1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Base URL</label>
+        <input type="text" class="form-input" id="qr-base" value="https://blumbang.id/id/" readonly style="color:var(--dim)">
+      </div>
+    </div>
+    <button class="btn btn-gold" onclick="generateQR()">✦ &nbsp; Generate QR Sheet</button>
+  </div>
+
+  <div id="qr-output" style="display:none">
+    <div class="qr-actions">
+      <button class="btn btn-gold" onclick="printQR()">🖨 Print / Save PDF</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('qr-output').style.display='none'">Tutup Preview</button>
+      <span style="font-size:0.68rem;color:var(--dim)" id="qr-count-label"></span>
+    </div>
+    <div class="qr-preview" id="qr-print-area">
+      <div class="qr-sheet-title" id="qr-sheet-title">BLUMBANG · QR CODE SHEET</div>
+      <div class="qr-grid" id="qr-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== STATISTIK ===================== -->
+<div id="panel-stats" class="panel">
+  <div class="sec-title">Statistik Keseluruhan</div>
+  <div class="sec-sub">Data real-time dari Google Sheets.</div>
+
+  <div class="stats-row" style="margin-bottom:24px;">
+    <div class="sbox"><div class="sbox-num" id="stat-total-garment">—</div><div class="sbox-lbl">Total Garment</div></div>
+    <div class="sbox"><div class="sbox-num" id="stat-total-scan">—</div><div class="sbox-lbl">Total Scan</div></div>
+    <div class="sbox"><div class="sbox-num" id="stat-total-kota">—</div><div class="sbox-lbl">Kota Unik</div></div>
+    <div class="sbox"><div class="sbox-num" id="stat-total-negara">—</div><div class="sbox-lbl">Negara</div></div>
+  </div>
+
+  <div class="sec-title" style="font-size:1rem;margin-bottom:12px;">Scan Per Garment</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Garment ID</th><th>Nama</th><th>Total Scan</th><th>Kota Terbaru</th><th>Cerita</th></tr></thead>
+      <tbody id="stats-table"><tr><td colspan="5" class="loading">Memuat...</td></tr></tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwrEE391bby4jUATJ8jd95tcb8OCpchI8fRs-TAt8s2NLD2CDmdeCScDHm0ERlsucs2/exec';
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+const BASE_URL='https://blumbang.id/id/';
+
+let allRows=[];
+let garmentData=[];
+
+// Init
+loadAll();
+
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+name).classList.add('active');
+  if(name==='approval') loadApproval('PENDING');
+  if(name==='garments') loadGarments();
+  if(name==='stats') loadStats();
+}
+
+// =================== LOAD ALL DATA ===================
+async function loadAll(){
+  try{
+    const [sparks,garments]=await Promise.all([fetchSheet('SPARKS'),fetchSheet('GARMENTS')]);
+    allRows=sparks;
+    garmentData=garments;
+    document.getElementById('conn-status').textContent='Connected ✓';
+    document.getElementById('conn-status').style.color='#86efac';
+    updateApprovalStats();
+    loadApproval('PENDING');
+  }catch(e){
+    document.getElementById('conn-status').textContent='Error';
+    document.getElementById('conn-status').style.color='#fca5a5';
+  }
+}
+
+async function fetchSheet(sheetName){
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+  const r=await fetch(url);
+  const txt=await r.text();
+  const json=JSON.parse(txt.slice(47,-2));
+  return json.table.rows||[];
+}
+
+// =================== APPROVAL ===================
+function updateApprovalStats(){
+  const pending=allRows.filter(r=>r.c[7]?.v==='story'&&r.c[5]?.v==='PENDING').length;
+  const approved=allRows.filter(r=>r.c[7]?.v==='story'&&r.c[5]?.v==='APPROVED').length;
+  const scans=allRows.filter(r=>r.c[0]?.v).length;
+  const garments=new Set(allRows.filter(r=>r.c[0]?.v).map(r=>r.c[0].v)).size;
+  document.getElementById('st-pending').textContent=pending;
+  document.getElementById('st-approved').textContent=approved;
+  document.getElementById('st-total-scan').textContent=scans;
+  document.getElementById('st-garments').textContent=garments;
+}
+
+function loadApproval(filter='PENDING'){
+  const list=document.getElementById('story-list');
+  let stories=allRows.filter(r=>r.c[7]?.v==='story'||r.c[3]?.v);
+  if(filter==='PENDING') stories=stories.filter(r=>r.c[5]?.v==='PENDING'||!r.c[5]?.v);
+  if(filter==='APPROVED') stories=stories.filter(r=>r.c[5]?.v==='APPROVED');
+
+  if(!stories.length){
+    list.innerHTML=`<div class="empty">Tidak ada cerita ${filter==='PENDING'?'yang menunggu review':filter.toLowerCase()}</div>`;
+    return;
+  }
+
+  list.innerHTML=stories.reverse().map((r,i)=>{
+    const status=r.c[5]?.v||'PENDING';
+    const rowIdx=allRows.indexOf(r);
+    return `
+    <div class="story-card" id="sc-${rowIdx}">
+      <div class="story-top">
+        <div class="story-info">
+          <div class="story-name">${r.c[1]?.v||'Anonim'}</div>
+          <div class="story-meta">
+            ${r.c[2]?.v?`✦ ${r.c[2].v} &nbsp;·&nbsp; `:''}
+            Garment: <strong style="color:var(--gold)">${r.c[0]?.v||'—'}</strong> &nbsp;·&nbsp;
+            ${r.c[6]?.v||'—'}
+          </div>
+        </div>
+        <span class="badge badge-${status.toLowerCase()}">${status}</span>
+      </div>
+      ${r.c[3]?.v?`<div class="story-body">"${r.c[3].v}"</div>`:'<div style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;font-style:italic">Tidak ada cerita teks</div>'}
+      ${r.c[4]?.v?`<img src="${r.c[4].v}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:1px solid var(--border);margin-bottom:12px">`:''}
+      <div class="story-actions">
+        ${status!=='APPROVED'?`<button class="btn btn-green btn-sm" onclick="updateStatus(${rowIdx},'APPROVED')">✓ Approve</button>`:''}
+        ${status!=='REJECTED'?`<button class="btn btn-red btn-sm" onclick="updateStatus(${rowIdx},'REJECTED')">✗ Reject</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function updateStatus(rowIdx,status){
+  const row=allRows[rowIdx];
+  if(!row) return;
+  const garmentId=row.c[0]?.v;
+  const name=row.c[1]?.v;
+  showToast(`Mengupdate status...`);
+  try{
+    await fetch(SCRIPT_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'updateStatus',garment_id:garmentId,name,status,row_index:rowIdx+2})
+    });
+    row.c[5]={v:status};
+    document.getElementById(`sc-${rowIdx}`)?.remove();
+    updateApprovalStats();
+    showToast(`✓ Status diupdate: ${status}`);
+  }catch(e){
+    showToast('Gagal update status');
+  }
+}
+
+// =================== GARMENT MANAGER ===================
+async function loadGarments(){
+  const grid=document.getElementById('garment-grid');
+  try{
+    const rows=await fetchSheet('GARMENTS');
+    garmentData=rows;
+    if(!rows.length){
+      grid.innerHTML='<div class="empty">Belum ada garment terdaftar</div>';
+      return;
+    }
+    grid.innerHTML=rows.map((r,i)=>{
+      const id=r.c[0]?.v||'';
+      const name=r.c[1]?.v||'';
+      const origin=r.c[2]?.v||'Klaten';
+      const year=r.c[3]?.v||'2026';
+      const edition=r.c[4]?.v||'—';
+      const mockup=r.c[5]?.v||'';
+      const scanCount=allRows.filter(row=>row.c[0]?.v===id).length;
+      return `
+      <div class="gcard">
+        ${mockup
+          ?`<img src="${mockup}" class="gcard-mockup" onerror="this.style.display='none'">`
+          :`<div class="gcard-ph"><span>No Mockup</span></div>`}
+        <div class="gcard-id">${id}</div>
+        <div class="gcard-name">${name}</div>
+        <div class="gcard-meta">
+          📍 ${origin} · ${year}<br>
+          📦 ${edition} · 🔍 ${scanCount} scans
+        </div>
+        <div class="gcard-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editMockup('${id}',${i})">📷 Mockup</button>
+          <a href="https://blumbang.id/id/${id}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">🔗 Lihat</a>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    grid.innerHTML='<div class="empty">Gagal memuat data</div>';
+  }
+}
+
+async function addGarment(){
+  const id=document.getElementById('new-id').value.trim();
+  const name=document.getElementById('new-name').value.trim();
+  const origin=document.getElementById('new-origin').value.trim()||'Klaten';
+  const year=document.getElementById('new-year').value.trim()||'2026';
+  const edition=document.getElementById('new-edition').value.trim();
+  const mockup=document.getElementById('new-mockup').value.trim();
+  if(!id||!name){showToast('ID dan Nama wajib diisi');return;}
+  showToast('Menyimpan garment...');
+  try{
+    await fetch(SCRIPT_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'addGarment',garment_id:id,name,origin,year,edition,mockup})
+    });
+    showToast(`✓ ${id} berhasil ditambahkan`);
+    ['new-id','new-name','new-edition','new-mockup'].forEach(i=>document.getElementById(i).value='');
+    setTimeout(loadGarments,1000);
+  }catch(e){showToast('Gagal menyimpan');}
+}
+
+function editMockup(id,idx){
+  const url=prompt(`Paste URL Google Drive untuk mockup ${id}:\n\nContoh: https://drive.google.com/uc?id=XXXX`);
+  if(!url) return;
+  fetch(SCRIPT_URL,{
+    method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'updateMockup',garment_id:id,mockup:url})
+  }).then(()=>{showToast(`✓ Mockup ${id} diupdate`);setTimeout(loadGarments,1000);});
+}
+
+// =================== QR GENERATOR ===================
+function generateQR(){
+  const prefix=document.getElementById('qr-prefix').value.trim().toUpperCase();
+  const qty=parseInt(document.getElementById('qr-qty').value)||10;
+  const start=parseInt(document.getElementById('qr-start').value)||1;
+  if(!prefix){showToast('Prefix wajib diisi');return;}
+  if(qty>500){showToast('Maksimal 500 QR per generate');return;}
+
+  const grid=document.getElementById('qr-grid');
+  grid.innerHTML='';
+  document.getElementById('qr-sheet-title').textContent=`BLUMBANG · ${prefix} · QR Sheet (${qty} pcs)`;
+  document.getElementById('qr-count-label').textContent=`${qty} QR code · ${Math.ceil(qty/10)} halaman`;
+
+  for(let i=0;i<qty;i++){
+    const num=String(start+i).padStart(3,'0');
+    const garmentId=`${prefix}-${num}`;
+    const url=`https://blumbang.id/id/${garmentId}?src=qr`;
+
+    const item=document.createElement('div');
+    item.className='qr-item';
+
+    const qrDiv=document.createElement('div');
+    qrDiv.id=`qr-${i}`;
+    item.appendChild(qrDiv);
+
+    const idLabel=document.createElement('div');
+    idLabel.className='qr-code-id';
+    idLabel.textContent=garmentId;
+    item.appendChild(idLabel);
+
+    const brand=document.createElement('div');
+    brand.className='qr-brand';
+    brand.textContent='blumbang.id';
+    item.appendChild(brand);
+
+    grid.appendChild(item);
+
+    new QRCode(qrDiv,{
+      text:url,
+      width:80,height:80,
+      colorDark:'#000000',
+      colorLight:'#ffffff',
+      correctLevel:QRCode.CorrectLevel.M
+    });
+  }
+
+  document.getElementById('qr-output').style.display='block';
+  document.getElementById('qr-output').scrollIntoView({behavior:'smooth'});
+  showToast(`✓ ${qty} QR code siap`);
+}
+
+function printQR(){
+  const area=document.getElementById('qr-print-area');
+  const w=window.open('','_blank');
+  w.document.write(`
+    <html><head><title>Blumbang QR Sheet</title>
+    <style>
+      body{margin:0;padding:20px;font-family:'Courier New',monospace;background:white;}
+      .qr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+      .qr-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px;border:1px solid #eee;page-break-inside:avoid;}
+      .qr-item img,.qr-item canvas{width:80px!important;height:80px!important;}
+      .qr-code-id{font-size:9px;text-align:center;word-break:break-all;color:#333;}
+      .qr-brand{font-size:8px;color:#aaa;}
+      h2{font-family:sans-serif;font-size:14px;text-align:center;margin-bottom:16px;letter-spacing:2px;}
+      @media print{@page{margin:10mm;}body{padding:0;}}
+    </style></head><body>
+    ${area.innerHTML}
+    <script>window.onload=()=>window.print()<\/script>
+    </body></html>
+  `);
+  w.document.close();
+}
+
+// =================== STATS ===================
+async function loadStats(){
+  try{
+    const rows=await fetchSheet('GARMENTS');
+    const sparks=allRows.length?allRows:await fetchSheet('SPARKS');
+
+    const garmentIds=new Set(sparks.filter(r=>r.c[0]?.v).map(r=>r.c[0].v));
+    const cities=new Set();
+    const negara=new Set(['Indonesia']);
+    sparks.forEach(r=>{
+      const c=r.c[2]?.v;
+      if(c){
+        cities.add(c.split(',')[0].trim().toLowerCase());
+        if(c.includes(',')) negara.add(c.split(',').pop().trim());
+      }
+    });
+
+    document.getElementById('stat-total-garment').textContent=rows.length||garmentIds.size;
+    document.getElementById('stat-total-scan').textContent=sparks.length;
+    document.getElementById('stat-total-kota').textContent=cities.size;
+    document.getElementById('stat-total-negara').textContent=negara.size;
+
+    const tbody=document.getElementById('stats-table');
+    const garmentList=rows.length?rows:[...garmentIds].map(id=>({c:[{v:id},{v:'—'}]}));
+    tbody.innerHTML=garmentList.map(r=>{
+      const id=r.c[0]?.v||'';
+      const name=r.c[1]?.v||'—';
+      const scanRows=sparks.filter(s=>s.c[0]?.v===id);
+      const lastCity=scanRows.length?scanRows[scanRows.length-1].c[2]?.v||'—':'—';
+      const stories=sparks.filter(s=>s.c[0]?.v===id&&s.c[3]?.v).length;
+      return `<tr>
+        <td><strong style="color:var(--gold);font-family:var(--font-logo);letter-spacing:0.1em">${id}</strong></td>
+        <td>${name}</td>
+        <td><strong style="color:var(--white)">${scanRows.length}</strong></td>
+        <td style="color:var(--dim)">${lastCity}</td>
+        <td>${stories}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){console.error(e);}
+}
+
+// =================== UTILS ===================
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>

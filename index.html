@@ -234,6 +234,21 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 /* QC MODE */
 .qc-banner{background:#1a0a00;border:1px solid #8a4a00;padding:10px 20px;text-align:center;font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:#c87a00;text-transform:uppercase;display:none;}
 
+/* GALERI */
+.galeri-item{transition:opacity 0.3s;}
+.galeri-item:hover{opacity:0.85;}
+.galeri-item img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.galeri-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:absolute;inset:0;}
+
+/* FLOATING RIA BUTTON */
+.ria-float{position:fixed;bottom:28px;right:28px;z-index:200;display:flex;align-items:center;gap:10px;background:var(--gold-bg);border:1px solid var(--gold);padding:12px 20px;cursor:pointer;text-decoration:none;transition:all 0.25s;box-shadow:0 0 24px rgba(201,168,76,0.2);}
+.ria-float:hover{background:var(--gold);box-shadow:0 0 32px rgba(201,168,76,0.4);}
+.ria-float:hover .rf-text{color:var(--black);}
+.ria-float:hover .rf-dot{background:var(--black);}
+.rf-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
+.ria-float:hover .rf-dot{animation:none;}
+.rf-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @keyframes sparkAppear{0%{transform:translate(-50%,-50%) scale(0);opacity:0;}60%{transform:translate(-50%,-50%) scale(1.4);}100%{transform:translate(-50%,-50%) scale(1);opacity:1;}}
@@ -255,11 +270,19 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 <div class="corner tl"></div><div class="corner tr"></div>
 <div class="corner bl"></div><div class="corner br"></div>
 
+<!-- FLOATING RIA BUTTON -->
+<a href="/ria" class="ria-float" id="ria-float">
+  <div class="rf-dot"></div>
+  <span class="rf-text">✦ Chat Ria</span>
+</a>
+
 <nav>
   <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
   <div class="nav-links">
+    <a href="#galeri">Karya</a>
     <a href="#identity">Garment Identity</a>
     <a href="#process">Cara Kerja</a>
+    <a href="/ria" style="color:var(--gold)">✦ Chat Ria</a>
     <a href="https://wa.me/6281234561146">Order</a>
   </div>
   <span class="nav-id" id="nav-id"></span>
@@ -328,7 +351,83 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
     <!-- CTA -->
     <div class="hero-cta">
       <a href="https://wa.me/6281234561146" class="btn-primary">✦ &nbsp; AKTIFKAN KAOSMU &nbsp; ✦</a>
-      <a href="#identity" class="btn-ghost">✦ &nbsp; LIHAT IDENTITAS KAOS &nbsp; ✦</a>
+      <a href="/ria" class="btn-ghost">✦ &nbsp; CHAT RIA &nbsp; ✦</a>
+    </div>
+    <div style="margin-top:14px;opacity:0;animation:fadeUp 1s ease 1.9s forwards;">
+      <a href="#galeri" style="font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.2em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--dim)'">Lihat Karya Kami ↓</a>
+    </div>
+  </section>
+
+  <!-- GALERI KARYA -->
+  <section class="section" id="galeri" style="border-top:1px solid var(--border);">
+    <div class="section-inner">
+      <span class="section-tag">✦ Karya Blumbang</span>
+      <h2 class="section-title">DIBUAT DI KLATEN,<br>DIPAKAI DI MANA SAJA</h2>
+      <p class="section-body">Screen printing, DTF, konveksi kaos polos — semuanya satu atap di Jeto, Klaten.</p>
+
+      <div id="galeri-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:48px;">
+        <!-- Foto 1 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Foto Produk</span>
+          </div>
+        </div>
+        <!-- Foto 2 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Foto Produk</span>
+          </div>
+        </div>
+        <!-- Foto 3 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Foto Produk</span>
+          </div>
+        </div>
+        <!-- Foto 4 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Workshop</span>
+          </div>
+        </div>
+        <!-- Foto 5 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Workshop</span>
+          </div>
+        </div>
+        <!-- Foto 6 -->
+        <div class="galeri-item" style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;cursor:pointer;">
+          <div class="galeri-ph">
+            <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+            <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Proses Sablon</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:24px;">
+        <a href="https://www.tiktok.com/@blumbang.id" target="_blank" style="font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.2em;color:var(--dim);text-decoration:none;text-transform:uppercase;transition:color 0.2s;border:1px solid var(--border);padding:10px 24px;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.color='var(--dim)';this.style.borderColor='var(--border)'">Lihat Lebih di TikTok @blumbang.id →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- RIA SECTION -->
+  <section style="padding:80px 40px;border-top:1px solid var(--border);position:relative;z-index:1;background:linear-gradient(180deg,var(--black),var(--charcoal));">
+    <div style="max-width:700px;margin:0 auto;text-align:center;">
+      <div style="font-family:var(--font-logo);font-size:4rem;color:var(--gold);margin-bottom:8px;text-shadow:0 0 40px rgba(201,168,76,0.3);letter-spacing:0.1em;">✦</div>
+      <span style="font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;display:block;margin-bottom:20px;">AI Assistant Blumbang</span>
+      <h2 style="font-family:var(--font-logo);font-size:clamp(2.5rem,6vw,4.5rem);letter-spacing:0.08em;margin-bottom:20px;line-height:1.05;">TANYA RIA,<br>DAPAT JAWABAN</h2>
+      <p style="font-family:var(--font-body);font-size:1rem;font-weight:300;font-style:italic;line-height:1.9;color:var(--white);margin-bottom:12px;">Harga, bahan, estimasi order, cara pesan — Ria siap bantu 24 jam. Bukan chatbot biasa. Ria tahu semua soal Blumbang.</p>
+      <p style="font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.15em;color:var(--dim);margin-bottom:40px;text-transform:uppercase;">Aktif 24 jam · Senin – Minggu</p>
+
+      <a href="/ria" style="display:inline-block;padding:18px 48px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);font-family:var(--font-ui);font-size:0.78rem;font-weight:700;letter-spacing:0.3em;text-decoration:none;text-transform:uppercase;transition:all 0.25s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'" onmouseout="this.style.background='var(--gold-bg)';this.style.color='var(--gold)'">✦ &nbsp; CHAT DENGAN RIA &nbsp; ✦</a>
+
+      <div style="margin-top:20px;font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);">Ditenagai Claude AI · Anthropic</div>
     </div>
   </section>
 
@@ -410,8 +509,10 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
     <div class="footer-inner">
       <div class="footer-brand">BLUMB<span class="spark-spin" style="font-size:0.8rem">✦</span>NG</div>
       <div class="footer-links">
+        <a href="#galeri">Karya</a>
         <a href="#identity">Garment Identity</a>
         <a href="#process">Cara Kerja</a>
+        <a href="/ria">Chat Ria</a>
         <a href="https://wa.me/6281234561146">WhatsApp</a>
       </div>
       <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
@@ -541,7 +642,9 @@ async function fetchGarments(){
     const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=GARMENTS`;
     const r=await fetch(url);
     const txt=await r.text();
-    const json=JSON.parse(txt.slice(47,-2));
+    const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match) throw new Error('No gviz response');
+    const json=JSON.parse(match[1]);
     const rows=json.table.rows||[];
     rows.forEach(row=>{
       const id=row.c[0]?.v;
@@ -554,8 +657,9 @@ async function fetchGarments(){
         mockup:convertDriveUrl(row.c[5]?.v||'')
       };
     });
+    console.log('GARMENTS loaded:',Object.keys(GARMENTS).length,'items');
   }catch(e){
-    console.warn('Gagal load GARMENTS sheet, fallback empty');
+    console.warn('Gagal load GARMENTS sheet, fallback empty',e);
   }
 }
 
@@ -570,6 +674,9 @@ function convertDriveUrl(url){
 async function init(){
   await fetchGarments();
   if(isGarment){
+    document.getElementById('page-home').style.display='none';
+    const floatBtn=document.getElementById('ria-float');
+    if(floatBtn) floatBtn.style.display='none';
     const id=path.split('/').filter(Boolean).pop().toUpperCase();
     showGarment(id,isQC);
   }else{
@@ -588,7 +695,8 @@ function loadHomeData(){
   fetch(url)
     .then(r=>r.text())
     .then(txt=>{
-      const json=JSON.parse(txt.slice(47,-2));
+      const _m1=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      const json=JSON.parse(_m1[1]);
       const rows=json.table.rows||[];
 
       // STAT 1: Living Garments = unique garment IDs that have at least 1 scan
@@ -753,7 +861,8 @@ function loadStories(id){
   fetch(url)
     .then(r=>r.text())
     .then(txt=>{
-      const json=JSON.parse(txt.slice(47,-2));
+      const _m2=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      const json=JSON.parse(_m2[1]);
       const rows=json.table.rows||[];
       const garmentRows=rows.filter(r=>r.c[0]?.v===id);
 

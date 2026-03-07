@@ -280,7 +280,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
   <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
   <div class="nav-links">
     <a href="#galeri">Karya</a>
-    <a href="#identity">Garment Identity</a>
+    <a href="#living-garments">Living Garments</a>
     <a href="#process">Cara Kerja</a>
     <a href="/ria" style="color:var(--gold)">✦ Chat Ria</a>
     <a href="https://wa.me/6281234561146">Order</a>
@@ -428,6 +428,20 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       <a href="/ria" style="display:inline-block;padding:18px 48px;background:var(--gold-bg);border:1px solid var(--gold);color:var(--gold);font-family:var(--font-ui);font-size:0.78rem;font-weight:700;letter-spacing:0.3em;text-decoration:none;text-transform:uppercase;transition:all 0.25s;" onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'" onmouseout="this.style.background='var(--gold-bg)';this.style.color='var(--gold)'">✦ &nbsp; CHAT DENGAN RIA &nbsp; ✦</a>
 
       <div style="margin-top:20px;font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);">Ditenagai Claude AI · Anthropic</div>
+    </div>
+  </section>
+
+  <!-- LIVING GARMENTS SECTION -->
+  <section class="section" id="living-garments" style="border-top:1px solid var(--border);">
+    <div class="section-inner">
+      <span class="section-tag">✦ Living Garments</span>
+      <h2 class="section-title">KAOS YANG<br>SUDAH HIDUP</h2>
+      <p class="section-body">Setiap kaos di bawah ini memiliki identitas unik. Klik untuk melihat perjalanan dan cerita di baliknya.</p>
+      <div id="garments-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:48px;">
+        <div style="background:var(--charcoal);padding:32px;text-align:center;">
+          <div style="font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Memuat data...</div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -681,6 +695,7 @@ async function init(){
     showGarment(id,isQC);
   }else{
     document.getElementById('page-home').classList.add('active');
+    renderGarmentsList();
     loadHomeData();
   }
 }
@@ -690,6 +705,42 @@ init();
 /* =========================================
    HOME: LOAD ALL DATA
 ========================================= */
+function renderGarmentsList(){
+  const el=document.getElementById('garments-list');
+  if(!el) return;
+  const ids=Object.keys(GARMENTS);
+  if(ids.length===0){
+    el.innerHTML=`<div style="background:var(--charcoal);padding:40px;text-align:center;grid-column:1/-1;">
+      <div style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Belum ada garment terdaftar</div>
+    </div>`;
+    return;
+  }
+  el.innerHTML=ids.map(id=>{
+    const g=GARMENTS[id];
+    const mockupHtml=g.mockup
+      ?`<img src="${g.mockup}" alt="${g.name}" style="width:100%;height:180px;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      :'';
+    return `<a href="/id/${id}" style="background:var(--charcoal);display:block;text-decoration:none;transition:background 0.2s;position:relative;overflow:hidden;" onmouseover="this.style.background='var(--grey)'" onmouseout="this.style.background='var(--charcoal)'">
+      ${mockupHtml}
+      <div style="display:${g.mockup?'none':'flex'};flex-direction:column;align-items:center;justify-content:center;height:180px;background:var(--grey);">
+        <span style="font-size:2rem;color:var(--gold-dim);">✦</span>
+        <span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.15em;color:var(--muted);margin-top:6px;text-transform:uppercase;">Mockup Coming Soon</span>
+      </div>
+      <div style="padding:20px 24px;">
+        <div style="font-family:var(--font-logo);font-size:1.1rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px;">${id}</div>
+        <div style="font-family:var(--font-body);font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:8px;">${g.name}</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <span style="font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;">${g.origin}</span>
+          <span style="font-family:var(--font-ui);font-size:0.65rem;color:var(--muted);">·</span>
+          <span style="font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;">${g.edition||g.year}</span>
+        </div>
+        <div style="margin-top:14px;font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;">Lihat Perjalanan →</div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+
 function loadHomeData(){
   const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
   fetch(url)

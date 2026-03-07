@@ -526,15 +526,8 @@ function getCityCoord(cityStr){
   return null;
 }
 
-const GARMENTS={
-  'BL-KLG26':{
-    name:'Kumpul Keluarga<br>Pontianak',
-    origin:'Klaten',
-    year:'2026',
-    edition:'50 pcs',
-    mockup:''
-  }
-};
+// Garments loaded from Sheets — not hardcoded
+let GARMENTS={};
 
 // Origin coordinates (Klaten)
 const ORIGIN={x:80.7,y:54.3};
@@ -543,13 +536,49 @@ const path=window.location.pathname;
 const isQC=path.includes('/qc/');
 const isGarment=path.includes('/id/')||isQC;
 
-if(isGarment){
-  const id=path.split('/').filter(Boolean).pop().toUpperCase();
-  showGarment(id,isQC);
-}else{
-  document.getElementById('page-home').classList.add('active');
-  loadHomeData();
+async function fetchGarments(){
+  try{
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=GARMENTS`;
+    const r=await fetch(url);
+    const txt=await r.text();
+    const json=JSON.parse(txt.slice(47,-2));
+    const rows=json.table.rows||[];
+    rows.forEach(row=>{
+      const id=row.c[0]?.v;
+      if(!id) return;
+      GARMENTS[id]={
+        name:(row.c[1]?.v||id).replace(/\n/g,'<br>'),
+        origin:row.c[2]?.v||'Klaten',
+        year:row.c[3]?.v||'2026',
+        edition:row.c[4]?.v||'',
+        mockup:convertDriveUrl(row.c[5]?.v||'')
+      };
+    });
+  }catch(e){
+    console.warn('Gagal load GARMENTS sheet, fallback empty');
+  }
 }
+
+function convertDriveUrl(url){
+  if(!url) return '';
+  // Convert share link to direct image URL
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(match) return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+  return url;
+}
+
+async function init(){
+  await fetchGarments();
+  if(isGarment){
+    const id=path.split('/').filter(Boolean).pop().toUpperCase();
+    showGarment(id,isQC);
+  }else{
+    document.getElementById('page-home').classList.add('active');
+    loadHomeData();
+  }
+}
+
+init();
 
 /* =========================================
    HOME: LOAD ALL DATA
@@ -695,12 +724,23 @@ function showGarment(id,isQC){
     document.getElementById('g-nm').innerHTML=d.name;
     document.getElementById('g-ori-val').textContent=d.origin;
     document.getElementById('g-yr').textContent=d.year;
-    document.getElementById('g-ed').textContent=d.edition;
+    document.getElementById('g-ed').textContent=d.edition||'—';
     if(d.mockup){
       document.getElementById('g-ph').style.display='none';
       const img=document.getElementById('g-img');
-      img.src=d.mockup;img.style.display='block';
+      img.src=d.mockup;
+      img.style.display='block';
+      img.onerror=()=>{img.style.display='none';document.getElementById('g-ph').style.display='flex';};
     }
+  } else {
+    document.getElementById('g-nm').innerHTML=id;
+    document.getElementById('g-ori-val').textContent='Blumbang · Klaten';
+    document.getElementById('g-yr').textContent='—';
+    document.getElementById('g-ed').textContent='—';
+    const notice=document.createElement('div');
+    notice.style.cssText='background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.2);padding:14px 20px;font-size:0.78rem;color:#8a7040;letter-spacing:0.05em;margin-top:16px;line-height:1.8;';
+    notice.innerHTML='Kaos ini belum terdaftar di sistem Blumbang.<br><span style="font-size:0.7rem;opacity:0.8">Hubungi <a href="https://wa.me/6281234561146" style="color:var(--gold)">081234561146</a> untuk konfirmasi.</span>';
+    document.getElementById('g-nm').after(notice);
   }
 
   loadStories(id);

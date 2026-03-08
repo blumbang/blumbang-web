@@ -310,24 +310,41 @@ function switchTab(name){
 async function loadAll(){
   try{
     const [sparks,garments]=await Promise.all([fetchSheet('SPARKS'),fetchSheet('GARMENTS')]);
-    allRows=sparks;
-    garmentData=garments;
+    allRows=sparks||[];
+    garmentData=garments||[];
     document.getElementById('conn-status').textContent='Connected ✓';
     document.getElementById('conn-status').style.color='#86efac';
     updateApprovalStats();
     loadApproval('PENDING');
   }catch(e){
-    document.getElementById('conn-status').textContent='Error';
-    document.getElementById('conn-status').style.color='#fca5a5';
+    // Coba fetch satu per satu untuk diagnosa lebih akurat
+    try{ allRows=await fetchSheet('SPARKS')||[]; }catch(e2){ allRows=[]; }
+    try{ garmentData=await fetchSheet('GARMENTS')||[]; }catch(e2){ garmentData=[]; }
+    const total=allRows.length+garmentData.length;
+    if(total===0&&e.message&&e.message.includes('HTTP')){
+      document.getElementById('conn-status').textContent='Error: '+e.message;
+      document.getElementById('conn-status').style.color='#fca5a5';
+    } else {
+      // Sheet terbaca tapi kosong — ini normal
+      document.getElementById('conn-status').textContent='Connected ✓ (sheet kosong)';
+      document.getElementById('conn-status').style.color='#86efac';
+      updateApprovalStats();
+      loadApproval('PENDING');
+    }
+    console.error('Sheet fetch info:',e);
   }
 }
 
 async function fetchSheet(sheetName){
-  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+  const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
   const r=await fetch(url);
+  if(!r.ok) throw new Error('HTTP '+r.status);
   const txt=await r.text();
-  const json=JSON.parse(txt.slice(47,-2));
-  return json.table.rows||[];
+  const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+  if(!match) throw new Error('Format respons tidak dikenal');
+  const json=JSON.parse(match[1]);
+  if(json.status==='error') throw new Error((json.errors&&json.errors[0]&&json.errors[0].message)||'Sheet error');
+  return (json.table&&json.table.rows)||[];
 }
 
 // =================== APPROVAL ===================

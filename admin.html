@@ -250,6 +250,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <div id="qr-output" style="display:none">
     <div class="qr-actions">
       <button class="btn btn-gold" onclick="printQR()">🖨 Print / Save PDF</button>
+      <button class="btn btn-ghost" onclick="downloadSVGSheet()">⬇ Download SVG</button>
       <button class="btn btn-ghost" onclick="document.getElementById('qr-output').style.display='none'">Tutup Preview</button>
       <span style="font-size:0.68rem;color:var(--dim)" id="qr-count-label"></span>
     </div>
@@ -741,6 +742,76 @@ function printQR(){
     </body></html>
   `);
   w.document.close();
+}
+
+// =================== DOWNLOAD SVG SHEET ===================
+function downloadSVGSheet(){
+  const items = document.querySelectorAll('#qr-grid .qr-item');
+  if(!items.length){ showToast('Generate QR dulu ya kak'); return; }
+
+  const title = document.getElementById('qr-sheet-title').textContent;
+  const cols = 5;
+  const cellSize = 140;      // px per cell
+  const qrSize = 110;        // px QR per item
+  const labelH = 28;         // tinggi area label
+  const pad = 12;            // padding antar cell
+  const headerH = 50;
+
+  const rows = Math.ceil(items.length / cols);
+  const totalW = cols * (cellSize + pad) + pad;
+  const totalH = headerH + rows * (cellSize + pad) + pad;
+
+  // Kumpulkan semua SVG + label dari DOM
+  let cells = '';
+  items.forEach((item, idx) => {
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const x = pad + col * (cellSize + pad);
+    const y = headerH + pad + row * (cellSize + pad);
+
+    // Ambil SVG QR dari dalam .qr-svg-wrap
+    const svgEl = item.querySelector('.qr-svg-wrap svg');
+    const idLabel = item.querySelector('.qr-code-id')?.textContent || '';
+    const brand = item.querySelector('.qr-brand')?.textContent || '';
+
+    // Serialize SVG inner content (rect + g)
+    let qrContent = '';
+    if(svgEl){
+      const vb = svgEl.getAttribute('viewBox') || '0 0 160 160';
+      const vbSize = parseFloat(vb.split(' ')[2]) || 160;
+      // Embed seluruh SVG sebagai nested <svg>
+      qrContent = `<svg x="${x + (cellSize-qrSize)/2}" y="${y}" width="${qrSize}" height="${qrSize}" viewBox="${vb}" shape-rendering="crispEdges">${svgEl.innerHTML}</svg>`;
+    }
+
+    // Border cell
+    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="white" stroke="#ddd" stroke-width="0.5"/>`;
+    cells += qrContent;
+    // ID label
+    cells += `<text x="${x + cellSize/2}" y="${y + qrSize + 16}" text-anchor="middle" font-family="Courier New, monospace" font-size="8" fill="#333">${idLabel}</text>`;
+    // Brand
+    cells += `<text x="${x + cellSize/2}" y="${y + qrSize + 26}" text-anchor="middle" font-family="Courier New, monospace" font-size="7" fill="#aaa">${brand}</text>`;
+  });
+
+  // Header
+  const header = `<text x="${totalW/2}" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#111" letter-spacing="2">${title}</text>`;
+
+  const svgFull = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}">
+  <rect width="${totalW}" height="${totalH}" fill="white"/>
+  ${header}
+  ${cells}
+</svg>`;
+
+  // Download
+  const blob = new Blob([svgFull], {type:'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const prefix = document.getElementById('qr-prefix')?.value || 'blumbang';
+  a.href = url;
+  a.download = `QR_${prefix}_${items.length}pcs.svg`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`✓ SVG ${items.length} QR code didownload`);
 }
 
 // =================== STATS ===================

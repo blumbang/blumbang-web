@@ -132,6 +132,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   .qr-grid{grid-template-columns:repeat(3,1fr);}
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -488,193 +489,7 @@ function editMockup(id,idx){
   }).then(()=>{showToast(`✓ Mockup ${id} diupdate`);setTimeout(loadGarments,1000);});
 }
 
-// =================== QR GENERATOR (SVG — no library) ===================
-
-// QR Code generator — pure JS, output SVG
-// Implementasi Reed-Solomon + QR matrix untuk versi 1–10
-(function(){
-  // ---- GF(256) arithmetic ----
-  const GF_EXP=new Uint8Array(512),GF_LOG=new Uint8Array(256);
-  (function(){let x=1;for(let i=0;i<255;i++){GF_EXP[i]=x;GF_LOG[x]=i;x<<=1;if(x&256)x^=285;}for(let i=255;i<512;i++)GF_EXP[i]=GF_EXP[i-255];}());
-  function gfMul(x,y){return(!x||!y)?0:GF_EXP[GF_LOG[x]+GF_LOG[y]];}
-  function gfPoly(n){let p=[1];for(let i=0;i<n;i++){const q=[1,GF_EXP[i]];const r=new Uint8Array(p.length+1);for(let a=0;a<p.length;a++)for(let b=0;b<2;b++)r[a+b]^=gfMul(p[a],q[b]);p=Array.from(r);}return p;}
-  function rsEncode(data,n){const gen=gfPoly(n);const msg=[...data,...new Array(n).fill(0)];for(let i=0;i<data.length;i++){const c=msg[i];if(c)for(let j=0;j<gen.length;j++)msg[i+j]^=gfMul(gen[j],c);}return msg.slice(data.length);}
-
-  // ---- Alphanumeric table ----
-  const ALPHANUM='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:';
-
-  // ---- Encoding ----
-  function encodeUrl(text){
-    // byte mode
-    const bytes=[];for(let i=0;i<text.length;i++)bytes.push(text.charCodeAt(i)&0xFF);
-    return{mode:4,data:bytes,len:bytes.length};
-  }
-
-  // ---- Version/capacity table (byte mode, ECC M) ----
-  // [version, totalCodewords, ecCodewords, dataCodewords, size]
-  const VERSIONS=[
-    null,
-    [1,26,10,16,21],[2,44,16,28,25],[3,70,26,44,29],[4,100,36,64,33],
-    [5,134,48,86,37],[6,172,64,108,41],[7,196,72,124,45],[8,242,88,154,49],
-    [9,292,110,182,53],[10,346,130,216,57]
-  ];
-
-  function getVersion(dataLen){
-    for(let v=1;v<=10;v++){if(VERSIONS[v][3]>=dataLen+3)return v;}
-    return 10;
-  }
-
-  // ---- Bit stream ----
-  function BitStream(){
-    const bits=[];
-    return{
-      push(val,len){for(let i=len-1;i>=0;i--)bits.push((val>>i)&1);},
-      pad(total){while(bits.length%8)bits.push(0);const pads=[0xEC,0x11];let p=0;while(bits.length<total*8)for(let b=7;b>=0;b--)bits.push((pads[p++%2]>>b)&1);},
-      toBytes(total){const out=[];for(let i=0;i<total*8;i+=8){let b=0;for(let j=0;j<8;j++)b=(b<<1)|(bits[i+j]||0);out.push(b);}return out;}
-    };
-  }
-
-  // ---- Matrix helpers ----
-  function makeMatrix(size){return Array.from({length:size},()=>new Int8Array(size).fill(-1));}
-  function setModule(m,r,c,v){m[r][c]=v;}
-  function isSet(m,r,c){return m[r][c]!==void 0&&m[r][c]>=0;}
-
-  function placeFinder(m,row,col){
-    const pat=[[1,1,1,1,1,1,1],[1,0,0,0,0,0,1],[1,0,1,1,1,0,1],[1,0,1,1,1,0,1],[1,0,1,1,1,0,1],[1,0,0,0,0,0,1],[1,1,1,1,1,1,1]];
-    for(let r=0;r<7;r++)for(let c=0;c<7;c++)m[row+r][col+c]=pat[r][c];
-  }
-  function placeSeparator(m,size){
-    for(let i=0;i<8;i++){if(m[7][i]<0)m[7][i]=0;if(m[i][7]<0)m[i][7]=0;if(m[size-8][i]<0)m[size-8][i]=0;if(m[i][size-8]<0)m[i][size-8]=0;if(m[7][size-8+i]<0)m[7][size-8+i]=0;if(m[size-8+i][7]<0)m[size-8+i][7]=0;}
-  }
-  function placeTimingH(m,size){for(let c=8;c<size-8;c++)m[6][c]=(c%2===0)?1:0;}
-  function placeTimingV(m,size){for(let r=8;r<size-8;r++)m[r][6]=(r%2===0)?1:0;}
-  function placeDark(m,size){m[size-8][8]=1;}
-
-  // Alignment pattern positions for v2+
-  const ALIGN_POS=[null,null,[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,28,46],[6,32,50]];
-  function placeAlignment(m,ver){
-    const pos=ALIGN_POS[ver];if(!pos)return;
-    for(let r=0;r<pos.length;r++)for(let c=0;c<pos.length;c++){
-      const row=pos[r],col=pos[c];
-      if(m[row][col]>=0)continue;
-      for(let dr=-2;dr<=2;dr++)for(let dc=-2;dc<=2;dc++)m[row+dr][col+dc]=(Math.max(Math.abs(dr),Math.abs(dc))===2||dr===0&&dc===0)?1:0;
-    }
-  }
-
-  // Format info (ECC M, mask 0)
-  const FORMAT_INFO=[
-    0x77C4,0x72F3,0x7DAA,0x789D,0x662F,0x6318,0x6C41,0x6976,
-    0x5412,0x5125,0x5E7C,0x5B4B,0x45F9,0x40CE,0x4F97,0x4AA0
-  ];
-  function placeFormat(m,size,mask){
-    const fi=FORMAT_INFO[mask]; // ECC M
-    const bits=[];for(let i=14;i>=0;i--)bits.push((fi>>i)&1);
-    // horizontal
-    for(let i=0;i<6;i++)m[8][i]=bits[i];
-    m[8][7]=bits[6];m[8][8]=bits[7];m[8][9]=bits[8];
-    for(let i=9;i<15;i++)m[8][size-15+i]=bits[i];
-    // vertical
-    for(let i=0;i<6;i++)m[i][8]=bits[14-i];
-    m[7][8]=bits[8];m[8][8]=bits[7];
-    for(let i=9;i<15;i++)m[size-15+i][8]=bits[14-i];
-  }
-
-  function dataModules(size){
-    // returns list of [row,col] in zigzag order
-    const modules=[];
-    let right=size-1;
-    let goingUp=true;
-    while(right>=1){
-      if(right===6)right--;
-      for(let vert=0;vert<size;vert++){
-        const row=goingUp?size-1-vert:vert;
-        for(let col=right;col>=right-1;col--){
-          if(col<0)continue;
-          modules.push([row,col]);
-        }
-      }
-      right-=2;goingUp=!goingUp;
-    }
-    return modules;
-  }
-
-  function applyMask(m,mask,row,col){
-    switch(mask){
-      case 0:return(row+col)%2===0;
-      case 1:return row%2===0;
-      case 2:return col%3===0;
-      case 3:return(row+col)%3===0;
-      case 4:return(Math.floor(row/2)+Math.floor(col/3))%2===0;
-      case 5:return(row*col)%2+(row*col)%3===0;
-      case 6:return((row*col)%2+(row*col)%3)%2===0;
-      case 7:return((row+col)%2+(row*col)%3)%2===0;
-    }
-  }
-
-  function generateQRMatrix(text){
-    const enc=encodeUrl(text);
-    const ver=getVersion(enc.len);
-    const vInfo=VERSIONS[ver];
-    const size=vInfo[4];
-    const dataCW=vInfo[3];
-    const ecCW=vInfo[2];
-
-    // Build bitstream
-    const bs=BitStream();
-    bs.push(4,4); // byte mode
-    bs.push(enc.len,8);
-    enc.data.forEach(b=>bs.push(b,8));
-    bs.pad(dataCW);
-    const dataBytes=bs.toBytes(dataCW);
-    const ecBytes=rsEncode(dataBytes,ecCW);
-    const allBytes=[...dataBytes,...ecBytes];
-
-    // Build matrix
-    const m=makeMatrix(size);
-    placeFinder(m,0,0);
-    placeFinder(m,0,size-7);
-    placeFinder(m,size-7,0);
-    placeSeparator(m,size);
-    placeTimingH(m,size);
-    placeTimingV(m,size);
-    placeDark(m,size);
-    placeAlignment(m,ver);
-    placeFormat(m,size,0); // mask 0
-
-    // Place data
-    const mods=dataModules(size);
-    let bitIdx=0;
-    for(const [row,col] of mods){
-      if(m[row][col]>=0)continue;
-      const bit=(bitIdx<allBytes.length*8)?((allBytes[bitIdx>>3]>>(7-(bitIdx&7)))&1):0;
-      bitIdx++;
-      m[row][col]=applyMask(m,0,row,col)?(bit^1):bit;
-    }
-    // fill remaining -1 with 0
-    for(let r=0;r<size;r++)for(let c=0;c<size;c++)if(m[r][c]<0)m[r][c]=0;
-
-    return{matrix:m,size};
-  }
-
-  function matrixToSVG(matrix,size,svgSize){
-    const mod=svgSize/size;
-    let rects='';
-    for(let r=0;r<size;r++)for(let c=0;c<size;c++){
-      if(matrix[r][c])rects+=`<rect x="${c*mod}" y="${r*mod}" width="${mod}" height="${mod}"/>`;
-    }
-    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgSize} ${svgSize}" width="${svgSize}" height="${svgSize}" shape-rendering="crispEdges"><rect width="${svgSize}" height="${svgSize}" fill="white"/><g fill="black">${rects}</g></svg>`;
-  }
-
-  window.generateQRSVG=function(text,svgSize=160){
-    try{
-      const{matrix,size}=generateQRMatrix(text);
-      return matrixToSVG(matrix,size,svgSize);
-    }catch(e){
-      // fallback: simple error placeholder
-      return`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${svgSize}" height="${svgSize}"><rect width="100" height="100" fill="white"/><text x="50" y="50" text-anchor="middle" font-size="8" fill="red">QR Error</text></svg>`;
-    }
-  };
-}());
+// =================== QR GENERATOR (qrcodejs — proven library) ===================
 
 function generateQR(){
   const prefix=document.getElementById('qr-prefix').value.trim().toUpperCase();
@@ -685,8 +500,6 @@ function generateQR(){
 
   const grid=document.getElementById('qr-grid');
   grid.innerHTML='';
-  document.getElementById('qr-sheet-title').textContent=`BLUMBANG · ${prefix} · QR Sheet (${qty} pcs)`;
-  document.getElementById('qr-count-label').textContent=`${qty} QR code · ${Math.ceil(qty/10)} halaman`;
 
   for(let i=0;i<qty;i++){
     const num=String(start+i).padStart(3,'0');
@@ -695,17 +508,23 @@ function generateQR(){
 
     const item=document.createElement('div');
     item.className='qr-item';
+    item.dataset.id=garmentId;
+    item.dataset.url=url;
 
-    // SVG QR — vector, tidak pernah pecah
-    const svgStr=window.generateQRSVG(url,120);
-    const svgWrap=document.createElement('div');
-    svgWrap.className='qr-svg-wrap';
-    svgWrap.innerHTML=svgStr;
-    item.appendChild(svgWrap);
-
-
-
+    const qrDiv=document.createElement('div');
+    qrDiv.className='qr-svg-wrap';
+    item.appendChild(qrDiv);
     grid.appendChild(item);
+
+    // Generate QR pakai library resmi — pasti bisa discan
+    new QRCode(qrDiv, {
+      text: url,
+      width: 132,
+      height: 132,
+      colorDark: '#000000',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
   }
 
   document.getElementById('qr-output').style.display='block';
@@ -713,92 +532,45 @@ function generateQR(){
   showToast(`✓ ${qty} QR code siap`);
 }
 
+// =================== PRINT & DOWNLOAD ===================
+
 function printQR(){
-  const area=document.getElementById('qr-print-area');
-  const w=window.open('','_blank');
+  const items = document.querySelectorAll('#qr-grid .qr-item');
+  if(!items.length){showToast('Generate QR dulu');return;}
+
+  const w = window.open('','_blank');
+  let cells = '';
+  items.forEach(item => {
+    const canvas = item.querySelector('canvas');
+    if(!canvas) return;
+    const dataUrl = canvas.toDataURL('image/png');
+    cells += `<div class="qr-item"><img src="${dataUrl}" width="132" height="132"></div>`;
+  });
+
   w.document.write(`
     <html><head><title>Blumbang QR Sheet</title>
     <style>
-      body{margin:0;padding:20px;font-family:'Courier New',monospace;background:white;}
+      body{margin:0;padding:10mm;background:white;}
       .qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(3.5cm,1fr));gap:5mm;}
-      .qr-item{display:flex;flex-direction:column;align-items:center;padding:0;border:none;page-break-inside:avoid;}
-      .qr-svg-wrap svg{width:3.5cm;height:3.5cm;display:block;}
-      h2{font-family:sans-serif;font-size:14px;text-align:center;margin-bottom:16px;letter-spacing:2px;}
+      .qr-item{display:flex;align-items:center;justify-content:center;width:3.5cm;height:3.5cm;page-break-inside:avoid;}
+      .qr-item img{width:3.5cm;height:3.5cm;display:block;}
       @media print{@page{margin:10mm;}body{padding:0;}}
-    </style></head><body>
-    ${area.innerHTML}
-    <script>window.onload=()=>window.print()<\/script>
+    </style></head>
+    <body><div class="qr-grid">${cells}</div>
+    <script>window.onload=function(){window.print();}<\/script>
     </body></html>
   `);
   w.document.close();
 }
 
-// =================== DOWNLOAD SVG SHEET ===================
 function downloadSVGSheet(){
   const items = document.querySelectorAll('#qr-grid .qr-item');
-  if(!items.length){ showToast('Generate QR dulu ya kak'); return; }
+  if(!items.length){showToast('Generate QR dulu');return;}
+  const prefix = document.getElementById('qr-prefix').value.trim().toUpperCase()||'QR';
 
-  const title = document.getElementById('qr-sheet-title').textContent;
-  const cols = 5;
-  const cellSize = 140;      // px per cell
-  const qrSize = 110;        // px QR per item
-  const labelH = 28;         // tinggi area label
-  const pad = 12;            // padding antar cell
-  const headerH = 50;
-
-  const rows = Math.ceil(items.length / cols);
-  const totalW = cols * (cellSize + pad) + pad;
-  const totalH = headerH + rows * (cellSize + pad) + pad;
-
-  // Kumpulkan semua SVG + label dari DOM
-  let cells = '';
-  items.forEach((item, idx) => {
-    const col = idx % cols;
-    const row = Math.floor(idx / cols);
-    const x = pad + col * (cellSize + pad);
-    const y = headerH + pad + row * (cellSize + pad);
-
-    // Ambil SVG QR dari dalam .qr-svg-wrap
-    const svgEl = item.querySelector('.qr-svg-wrap svg');
-
-
-    // Serialize SVG inner content (rect + g)
-    let qrContent = '';
-    if(svgEl){
-      const vb = svgEl.getAttribute('viewBox') || '0 0 160 160';
-      const vbSize = parseFloat(vb.split(' ')[2]) || 160;
-      // Embed seluruh SVG sebagai nested <svg>
-      qrContent = `<svg x="${x + (cellSize-qrSize)/2}" y="${y}" width="${qrSize}" height="${qrSize}" viewBox="${vb}" shape-rendering="crispEdges">${svgEl.innerHTML}</svg>`;
-    }
-
-    // Border cell
-    cells += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="white" stroke="#ddd" stroke-width="0.5"/>`;
-    cells += qrContent;
-    // ID label
-    // Brand
-
-  });
-
-  // Header
-  const header = `<text x="${totalW/2}" y="32" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#111" letter-spacing="2">${title}</text>`;
-
-  const svgFull = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${totalW}" height="${totalH}" viewBox="0 0 ${totalW} ${totalH}">
-  <rect width="${totalW}" height="${totalH}" fill="white"/>
-  ${header}
-  ${cells}
-</svg>`;
-
-  // Download
-  const blob = new Blob([svgFull], {type:'image/svg+xml;charset=utf-8'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const prefix = document.getElementById('qr-prefix')?.value || 'blumbang';
-  a.href = url;
-  a.download = `QR_${prefix}_${items.length}pcs.svg`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast(`✓ SVG ${items.length} QR code didownload`);
+  // Download sebagai ZIP of PNG tidak praktis — download print-ready HTML saja
+  printQR();
+  showToast('Gunakan Print → Save as PDF untuk simpan file');
 }
 
 // =================== STATS ===================

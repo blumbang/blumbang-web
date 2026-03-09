@@ -568,9 +568,32 @@ function downloadSVGSheet(){
   if(!items.length){showToast('Generate QR dulu');return;}
   const prefix = document.getElementById('qr-prefix').value.trim().toUpperCase()||'QR';
 
-  // Download sebagai ZIP of PNG tidak praktis — download print-ready HTML saja
-  printQR();
-  showToast('Gunakan Print → Save as PDF untuk simpan file');
+  const cols = 5;
+  const cellSize = 140;
+  const gap = 20;
+  const rows = Math.ceil(items.length / cols);
+  const W = cols * cellSize + (cols-1) * gap;
+  const H = rows * cellSize + (rows-1) * gap;
+
+  let svgCells = '';
+  items.forEach((item, idx) => {
+    const canvas = item.querySelector('canvas');
+    if(!canvas) return;
+    const dataUrl = canvas.toDataURL('image/png');
+    const col = idx % cols;
+    const row = Math.floor(idx / cols);
+    const x = col * (cellSize + gap);
+    const y = row * (cellSize + gap);
+    svgCells += `<image x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" href="${dataUrl}"/>`;
+  });
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${svgCells}</svg>`;
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `QR_${prefix}_${items.length}pcs.svg`;
+  a.click();
+  showToast(`✓ SVG ${items.length} QR code didownload`);
 }
 
 // =================== STATS ===================

@@ -472,8 +472,8 @@ async function updateStatus(rowIdx,status){
   showToast(`Mengupdate status...`);
   try{
     await fetch(SCRIPT_URL,{
-      method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({action:'updateStatus',garment_id:garmentId,name,status,row_index:rowIdx+2})
     });
     row.c[5]={v:status};
@@ -536,12 +536,17 @@ async function addGarment(){
   if(!id||!name){showToast('ID dan Nama wajib diisi');return;}
   showToast('Menyimpan garment...');
   try{
-    await fetch(SCRIPT_URL,{
-      method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({action:'addGarment',garment_id:id,name,origin,year,edition,mockup})
     });
-    showToast(`✓ ${id} berhasil ditambahkan`);
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast(`✓ ${id} berhasil ditambahkan`);
+    } else {
+      showToast('Error: '+json.message);
+    }
     ['new-id','new-name','new-edition','new-mockup'].forEach(i=>document.getElementById(i).value='');
     setTimeout(loadGarments,1000);
   }catch(e){showToast('Gagal menyimpan');}
@@ -609,13 +614,18 @@ async function saveEdit(){
   if(!id||!name){showToast('ID dan Nama wajib diisi');return;}
   showToast('Menyimpan...');
   try{
-    await fetch(SCRIPT_URL,{
-      method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({action:'updateGarment',orig_id:origId,garment_id:id,name,origin,year,edition,mockup})
     });
-    showToast('✓ '+id+' berhasil diupdate');
-    closeEditModal();
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ '+id+' berhasil diupdate');
+      closeEditModal();
+    } else {
+      showToast('Error: '+json.message);
+    }
     setTimeout(loadGarments,1200);
   }catch(e){showToast('Gagal menyimpan');}
 }
@@ -624,14 +634,19 @@ async function deleteGarment(id){
   if(!confirm('Hapus garment '+id+' dari website?\n\nData akan hilang permanen dari Google Sheets.')) return;
   showToast('Menghapus '+id+'...');
   try{
-    await fetch(SCRIPT_URL,{
-      method:'POST',mode:'no-cors',
-      headers:{'Content-Type':'application/json'},
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
       body:JSON.stringify({action:'deleteGarment',garment_id:id})
     });
-    showToast('✓ '+id+' dihapus');
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ '+id+' berhasil dihapus');
+    } else {
+      showToast('Error: '+json.message);
+    }
     setTimeout(loadGarments,1200);
-  }catch(e){showToast('Gagal menghapus');}
+  }catch(e){showToast('Gagal: '+e.message);}
 }
 
 // =================== QR GENERATOR ===================

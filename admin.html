@@ -132,7 +132,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   .qr-grid{grid-template-columns:repeat(3,1fr);}
 }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -489,7 +488,318 @@ function editMockup(id,idx){
   }).then(()=>{showToast(`✓ Mockup ${id} diupdate`);setTimeout(loadGarments,1000);});
 }
 
-// =================== QR GENERATOR (qrcodejs — proven library) ===================
+// =================== QR GENERATOR ===================
+
+// QR Code generator — implementasi lengkap dan benar
+// Referensi: https://www.thonky.com/qr-code-tutorial/
+
+// ---- GF(256) ----
+const GF_EXP = new Uint8Array(512);
+const GF_LOG = new Uint8Array(256);
+(function() {
+    let x = 1;
+    for (let i = 0; i < 255; i++) {
+        GF_EXP[i] = x;
+        GF_LOG[x] = i;
+        x = x << 1;
+        if (x & 256) x ^= 285;
+    }
+    for (let i = 255; i < 512; i++) GF_EXP[i] = GF_EXP[i - 255];
+})();
+
+function gfMul(x, y) { return (!x || !y) ? 0 : GF_EXP[GF_LOG[x] + GF_LOG[y]]; }
+
+function gfPolyMul(p, q) {
+    const r = new Uint8Array(p.length + q.length - 1);
+    for (let i = 0; i < p.length; i++)
+        for (let j = 0; j < q.length; j++)
+            r[i + j] ^= gfMul(p[i], q[j]);
+    return r;
+}
+
+function gfPolyDiv(dividend, divisor) {
+    let r = Uint8Array.from(dividend);
+    for (let i = 0; i < dividend.length - divisor.length + 1; i++) {
+        const c = r[i];
+        if (c === 0) continue;
+        for (let j = 1; j < divisor.length; j++)
+            r[i + j] ^= gfMul(divisor[j], c);
+    }
+    return r.slice(dividend.length - divisor.length + 1);
+}
+
+function makeGenerator(n) {
+    let p = new Uint8Array([1]);
+    for (let i = 0; i < n; i++)
+        p = gfPolyMul(p, new Uint8Array([1, GF_EXP[i]]));
+    return p;
+}
+
+// ---- QR Tables ----
+// Version 1-10, Error H
+const EC_CODEWORDS = [
+    null,
+    [17,1,9,0],[28,1,16,0],[22,2,13,0],[16,4,9,0],
+    [22,2,11,2],[28,4,11,0],[26,4,13,0],[26,4,14,0],
+    [24,4,12,2],[28,6,12,2]
+];
+
+function getVersion(dataLen) {
+    // Byte mode, H correction
+    const caps = [0,7,14,24,36,48,64,72,80,96,108];
+    for (let v = 1; v <= 10; v++)
+        if (dataLen <= caps[v]) return v;
+    return -1;
+}
+
+function encodeData(text, version) {
+    const bytes = [];
+    for (let i = 0; i < text.length; i++) bytes.push(text.charCodeAt(i));
+    
+    const [totalEC, b1, dc1, b2, dc2] = EC_CODEWORDS[version];
+    const totalDC = b1 * dc1 + b2 * dc2;
+    
+    // Bit buffer
+    const bits = [];
+    function addBits(val, len) {
+        for (let i = len - 1; i >= 0; i--) bits.push((val >> i) & 1);
+    }
+    
+    addBits(0b0100, 4); // byte mode
+    addBits(bytes.length, 8); // char count
+    for (const b of bytes) addBits(b, 8);
+    
+    // Terminator
+    for (let i = 0; i < 4 && bits.length < totalDC * 8; i++) bits.push(0);
+    while (bits.length % 8 !== 0) bits.push(0);
+    
+    // Padding
+    const pads = [0xEC, 0x11];
+    let pi = 0;
+    while (bits.length < totalDC * 8) {
+        addBits(pads[pi++ % 2], 8);
+    }
+    
+    // Convert to bytes
+    const codewords = [];
+    for (let i = 0; i < bits.length; i += 8) {
+        let b = 0;
+        for (let j = 0; j < 8; j++) b = (b << 1) | bits[i + j];
+        codewords.push(b);
+    }
+    
+    return { codewords, totalDC, totalEC: totalEC, b1, dc1, b2, dc2 };
+}
+
+function addEC(codewords, version) {
+    const [totalEC, b1, dc1, b2, dc2] = EC_CODEWORDS[version];
+    const ecPerBlock = totalEC / (b1 + b2);
+    const gen = makeGenerator(ecPerBlock);
+    
+    const blocks = [];
+    let idx = 0;
+    for (let i = 0; i < b1; i++) blocks.push(codewords.slice(idx, idx += dc1));
+    for (let i = 0; i < b2; i++) blocks.push(codewords.slice(idx, idx += dc2));
+    
+    const ecBlocks = blocks.map(block => {
+        const padded = new Uint8Array(block.length + gen.length - 1);
+        block.forEach((v, i) => padded[i] = v);
+        return Array.from(gfPolyDiv(padded, gen));
+    });
+    
+    // Interleave
+    const result = [];
+    const maxDC = Math.max(dc1, dc2);
+    for (let i = 0; i < maxDC; i++)
+        blocks.forEach(b => { if (i < b.length) result.push(b[i]); });
+    for (let i = 0; i < ecBlocks[0].length; i++)
+        ecBlocks.forEach(b => result.push(b[i]));
+    
+    return result;
+}
+
+// ---- QR Matrix ----
+const FINDER = [
+    [1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1],
+    [1,0,1,1,1,0,1],
+    [1,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1]
+];
+
+function makeMatrix(version) {
+    const size = version * 4 + 17;
+    const mat = Array.from({length: size}, () => new Array(size).fill(-1));
+    const func = Array.from({length: size}, () => new Array(size).fill(false));
+    
+    function setFinder(r, c) {
+        for (let i = 0; i < 7; i++)
+            for (let j = 0; j < 7; j++) {
+                mat[r+i][c+j] = FINDER[i][j];
+                func[r+i][c+j] = true;
+            }
+    }
+    
+    function setSeparator(r, c, horiz, len) {
+        for (let i = 0; i < len; i++) {
+            const row = horiz ? r : r + i;
+            const col = horiz ? c + i : c;
+            if (row >= 0 && row < size && col >= 0 && col < size) {
+                mat[row][col] = 0;
+                func[row][col] = true;
+            }
+        }
+    }
+    
+    // Finder patterns
+    setFinder(0, 0);
+    setFinder(0, size - 7);
+    setFinder(size - 7, 0);
+    
+    // Separators
+    setSeparator(7, 0, true, 8);
+    setSeparator(7, size-8, true, 8);
+    setSeparator(size-8, 0, true, 8);
+    setSeparator(0, 7, false, 8);
+    setSeparator(0, size-8, false, 8);
+    setSeparator(size-8, 7, false, 8);
+    
+    // Timing
+    for (let i = 8; i < size - 8; i++) {
+        mat[6][i] = mat[i][6] = (i % 2 === 0) ? 1 : 0;
+        func[6][i] = func[i][6] = true;
+    }
+    
+    // Dark module
+    mat[size-8][8] = 1;
+    func[size-8][8] = true;
+    
+    // Alignment patterns (v2+)
+    const AP_LOC = [null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,28,46],[6,32,50]];
+    const locs = AP_LOC[version];
+    for (const r of locs) for (const c of locs) {
+        if (func[r][c]) continue;
+        for (let dr = -2; dr <= 2; dr++) for (let dc = -2; dc <= 2; dc++) {
+            const v = (Math.abs(dr) === 2 || Math.abs(dc) === 2) ? 1 : (dr === 0 && dc === 0) ? 1 : 0;
+            mat[r+dr][c+dc] = v;
+            func[r+dr][c+dc] = true;
+        }
+    }
+    
+    return { mat, func, size };
+}
+
+function placeData(mat, func, data, size) {
+    let bit = 0;
+    let up = true;
+    for (let col = size - 1; col >= 0; col -= 2) {
+        if (col === 6) col--;
+        for (let row = 0; row < size; row++) {
+            const r = up ? size - 1 - row : row;
+            for (let c = col; c >= col - 1; c--) {
+                if (!func[r][c] && bit < data.length * 8) {
+                    mat[r][c] = (data[Math.floor(bit/8)] >> (7 - bit%8)) & 1;
+                    bit++;
+                }
+            }
+        }
+        up = !up;
+    }
+}
+
+function applyMask(mat, func, size, mask) {
+    for (let r = 0; r < size; r++)
+        for (let c = 0; c < size; c++)
+            if (!func[r][c]) {
+                let apply = false;
+                switch(mask) {
+                    case 0: apply = (r+c)%2===0; break;
+                    case 1: apply = r%2===0; break;
+                    case 2: apply = c%3===0; break;
+                    case 3: apply = (r+c)%3===0; break;
+                    case 4: apply = (Math.floor(r/2)+Math.floor(c/3))%2===0; break;
+                    case 5: apply = (r*c)%2+(r*c)%3===0; break;
+                    case 6: apply = ((r*c)%2+(r*c)%3)%2===0; break;
+                    case 7: apply = ((r+c)%2+(r*c)%3)%2===0; break;
+                }
+                if (apply) mat[r][c] ^= 1;
+            }
+}
+
+function setFormatInfo(mat, func, size, ecLevel, mask) {
+    const EC_BITS = {L:1, M:0, Q:3, H:2};
+    const fmt = (EC_BITS['H'] << 3) | mask;
+    const G = 0b10100110111;
+    let d = fmt << 10;
+    for (let i = 14; i >= 10; i--)
+        if (d & (1 << i)) d ^= G << (i - 10);
+    const bits = ((fmt << 10) | d) ^ 0b101010000010010;
+    
+    const pos = [0,1,2,3,4,5,7,8];
+    const pos2 = [size-1,size-2,size-3,size-4,size-5,size-6,size-7,size-8];
+    
+    for (let i = 0; i < 6; i++) {
+        const b = (bits >> (14-i)) & 1;
+        mat[8][pos[i]] = b; func[8][pos[i]] = true;
+        mat[pos[i]][8] = b; func[pos[i]][8] = true;
+    }
+    const b6 = (bits >> 8) & 1;
+    mat[8][7] = b6; func[8][7] = true;
+    mat[7][8] = (bits >> 9) & 1; func[7][8] = true;
+    mat[8][8] = (bits >> 7) & 1; func[8][8] = true;
+    
+    for (let i = 0; i < 8; i++) {
+        const b = (bits >> i) & 1;
+        mat[8][pos2[7-i]] = b; func[8][pos2[7-i]] = true;
+        mat[pos2[i]][8] = b; func[pos2[i]][8] = true;
+    }
+}
+
+function scoreMatrix(mat, size) {
+    let score = 0;
+    // Rule 1: 5+ in a row
+    for (let r = 0; r < size; r++) {
+        let run = 1;
+        for (let c = 1; c < size; c++) {
+            if (mat[r][c] === mat[r][c-1]) { run++; if (run===5) score+=3; else if(run>5) score++; }
+            else run = 1;
+        }
+    }
+    return score;
+}
+
+function generateQR_internal(text) {
+    const version = getVersion(text.length);
+    if (version < 0) return null;
+    
+    const { codewords } = encodeData(text, version);
+    const finalData = addEC(codewords, version);
+    
+    let bestMat = null, bestScore = Infinity, bestMask = 0;
+    for (let mask = 0; mask < 8; mask++) {
+        const { mat, func, size } = makeMatrix(version);
+        placeData(mat, func, finalData, size);
+        const m2 = mat.map(r => [...r]);
+        applyMask(m2, func, size, mask);
+        setFormatInfo(m2, func, size, 'H', mask);
+        const score = scoreMatrix(m2, size);
+        if (score < bestScore) { bestScore = score; bestMat = m2; bestMask = mask; }
+    }
+    
+    return { mat: bestMat, version, size: bestMat.length };
+}
+
+function toSVG(mat, size, svgSize) {
+    const cell = svgSize / size;
+    let cells = '';
+    for (let r = 0; r < size; r++)
+        for (let c = 0; c < size; c++)
+            if (mat[r][c] === 1)
+                cells += `<rect x="${(c*cell).toFixed(2)}" y="${(r*cell).toFixed(2)}" width="${cell.toFixed(2)}" height="${cell.toFixed(2)}"/>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${svgSize} ${svgSize}" width="${svgSize}" height="${svgSize}" shape-rendering="crispEdges"><rect width="${svgSize}" height="${svgSize}" fill="white"/><g fill="black">${cells}</g></svg>`;
+}
 
 function generateQR(){
   const prefix=document.getElementById('qr-prefix').value.trim().toUpperCase();
@@ -511,20 +821,15 @@ function generateQR(){
     item.dataset.id=garmentId;
     item.dataset.url=url;
 
-    const qrDiv=document.createElement('div');
-    qrDiv.className='qr-svg-wrap';
-    item.appendChild(qrDiv);
-    grid.appendChild(item);
+    const result=generateQR_internal(url);
+    if(!result){ console.error('QR gagal:', url); continue; }
+    const svgStr=toSVG(result.mat, result.size, 132);
 
-    // Generate QR pakai library resmi — pasti bisa discan
-    new QRCode(qrDiv, {
-      text: url,
-      width: 132,
-      height: 132,
-      colorDark: '#000000',
-      colorLight: '#ffffff',
-      correctLevel: QRCode.CorrectLevel.H
-    });
+    const wrap=document.createElement('div');
+    wrap.className='qr-svg-wrap';
+    wrap.innerHTML=svgStr;
+    item.appendChild(wrap);
+    grid.appendChild(item);
   }
 
   document.getElementById('qr-output').style.display='block';
@@ -541,10 +846,10 @@ function printQR(){
   const w = window.open('','_blank');
   let cells = '';
   items.forEach(item => {
-    const canvas = item.querySelector('canvas');
-    if(!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
-    cells += `<div class="qr-item"><img src="${dataUrl}" width="132" height="132"></div>`;
+    const svgEl = item.querySelector('svg');
+    if(!svgEl) return;
+    const svgStr = svgEl.outerHTML;
+    cells += `<div class="qr-item">${svgStr}</div>`;
   });
 
   w.document.write(`
@@ -569,30 +874,38 @@ function downloadSVGSheet(){
   const prefix = document.getElementById('qr-prefix').value.trim().toUpperCase()||'QR';
 
   const cols = 5;
-  const cellSize = 140;
-  const gap = 20;
+  const qrSize = 132;
+  const gap = 19; // 5mm ~ 19px at 96dpi
   const rows = Math.ceil(items.length / cols);
-  const W = cols * cellSize + (cols-1) * gap;
-  const H = rows * cellSize + (rows-1) * gap;
+  const W = cols * qrSize + (cols - 1) * gap;
+  const H = rows * qrSize + (rows - 1) * gap;
 
-  let svgCells = '';
+  let groups = '';
   items.forEach((item, idx) => {
-    const canvas = item.querySelector('canvas');
-    if(!canvas) return;
-    const dataUrl = canvas.toDataURL('image/png');
+    const svgEl = item.querySelector('svg');
+    if(!svgEl) return;
     const col = idx % cols;
     const row = Math.floor(idx / cols);
-    const x = col * (cellSize + gap);
-    const y = row * (cellSize + gap);
-    svgCells += `<image x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" href="${dataUrl}"/>`;
+    const x = col * (qrSize + gap);
+    const y = row * (qrSize + gap);
+    // Ambil konten rect dari SVG individual
+    const inner = svgEl.innerHTML;
+    groups += `<g transform="translate(${x},${y})">${inner}</g>`;
   });
 
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${svgCells}</svg>`;
-  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" shape-rendering="crispEdges">
+<rect width="${W}" height="${H}" fill="white"/>
+${groups}
+</svg>`;
+
+  const blob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `QR_${prefix}_${items.length}pcs.svg`;
+  document.body.appendChild(a);
   a.click();
+  document.body.removeChild(a);
   showToast(`✓ SVG ${items.length} QR code didownload`);
 }
 

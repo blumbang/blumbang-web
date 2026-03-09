@@ -82,7 +82,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 
 /* QR SHEET */
 .qr-preview{border:1px solid var(--border);background:white;padding:20px;margin-top:24px;}
-.qr-sheet-title{font-family:var(--font-logo);font-size:1rem;letter-spacing:0.2em;color:#111;margin-bottom:16px;text-align:center;}
+.qr-sheet-title{display:none;}
 .qr-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
 .qr-item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border:1px solid #ddd;}
 .qr-svg-wrap svg{width:80px;height:80px;display:block;}
@@ -251,7 +251,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <button class="btn btn-gold" onclick="printQR()">🖨 Print / Save PDF</button>
       <button class="btn btn-ghost" onclick="downloadSVGSheet()">⬇ Download SVG</button>
       <button class="btn btn-ghost" onclick="document.getElementById('qr-output').style.display='none'">Tutup Preview</button>
-      <span style="font-size:0.68rem;color:var(--dim)" id="qr-count-label"></span>
+      <span style="display:none" id="qr-count-label"></span>
     </div>
     <div class="qr-preview" id="qr-print-area">
       <div class="qr-sheet-title" id="qr-sheet-title">BLUMBANG · QR CODE SHEET</div>

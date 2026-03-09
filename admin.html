@@ -873,39 +873,59 @@ function downloadSVGSheet(){
   if(!items.length){showToast('Generate QR dulu');return;}
   const prefix = document.getElementById('qr-prefix').value.trim().toUpperCase()||'QR';
 
-  const cols = 5;
   const qrSize = 132;
-  const gap = 19; // 5mm ~ 19px at 96dpi
+  const gap = 19;
+  const cols = 5;
   const rows = Math.ceil(items.length / cols);
-  const W = cols * qrSize + (cols - 1) * gap;
-  const H = rows * qrSize + (rows - 1) * gap;
+  const W = cols * qrSize + (cols-1) * gap;
+  const H = rows * qrSize + (rows-1) * gap;
 
-  let groups = '';
+  // Buat SVG baru di DOM — bukan string manipulation
+  const ns = 'http://www.w3.org/2000/svg';
+  const rootSVG = document.createElementNS(ns, 'svg');
+  rootSVG.setAttribute('xmlns', ns);
+  rootSVG.setAttribute('width', W);
+  rootSVG.setAttribute('height', H);
+  rootSVG.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  rootSVG.setAttribute('shape-rendering', 'crispEdges');
+
+  const bg = document.createElementNS(ns, 'rect');
+  bg.setAttribute('width', W);
+  bg.setAttribute('height', H);
+  bg.setAttribute('fill', 'white');
+  rootSVG.appendChild(bg);
+
   items.forEach((item, idx) => {
-    const svgEl = item.querySelector('svg');
-    if(!svgEl) return;
+    const srcSVG = item.querySelector('svg');
+    if(!srcSVG) return;
     const col = idx % cols;
     const row = Math.floor(idx / cols);
     const x = col * (qrSize + gap);
     const y = row * (qrSize + gap);
-    // Ambil konten rect dari SVG individual
-    const inner = svgEl.innerHTML;
-    groups += `<g transform="translate(${x},${y})">${inner}</g>`;
+
+    const g = document.createElementNS(ns, 'g');
+    g.setAttribute('transform', `translate(${x},${y})`);
+
+    // Clone semua child dari SVG source
+    Array.from(srcSVG.childNodes).forEach(node => {
+      g.appendChild(node.cloneNode(true));
+    });
+    rootSVG.appendChild(g);
   });
 
-  const svg = `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" shape-rendering="crispEdges">
-<rect width="${W}" height="${H}" fill="white"/>
-${groups}
-</svg>`;
+  // Serialize ke string
+  const serializer = new XMLSerializer();
+  const svgStr = '<?xml version="1.0" encoding="UTF-8"?>
+' + serializer.serializeToString(rootSVG);
 
-  const blob = new Blob([svg], {type:'image/svg+xml;charset=utf-8'});
+  const blob = new Blob([svgStr], {type:'image/svg+xml;charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `QR_${prefix}_${items.length}pcs.svg`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
   showToast(`✓ SVG ${items.length} QR code didownload`);
 }
 

@@ -18,6 +18,23 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--black);color:var(--white);font-family:var(--font);min-height:100vh;}
 
+/* LOGIN SCREEN */
+#login-screen{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;align-items:center;justify-content:center;}
+.login-box{background:var(--charcoal);border:1px solid var(--border);padding:48px 40px;width:100%;max-width:360px;text-align:center;}
+.login-logo{font-family:var(--font-logo);font-size:2rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px;}
+.login-sub{font-size:0.68rem;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:32px;}
+.login-input{width:100%;background:var(--black);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:0.95rem;padding:12px 16px;margin-bottom:12px;outline:none;text-align:center;letter-spacing:0.1em;}
+.login-input:focus{border-color:var(--gold);}
+.login-btn{width:100%;background:var(--gold);color:var(--black);font-family:var(--font);font-size:0.75rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:13px;border:none;cursor:pointer;}
+.login-btn:hover{background:var(--white);}
+.login-err{font-size:0.72rem;color:#dc2626;margin-top:10px;min-height:18px;}
+
+/* MODAL EDIT */
+#edit-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
+#edit-modal.open{display:flex;}
+.edit-box{background:var(--charcoal);border:1px solid var(--border);padding:32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;}
+.edit-title{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:24px;}
+
 /* HEADER */
 header{border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--black);z-index:100;}
 .hbrand{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.15em;color:var(--gold);}
@@ -134,6 +151,57 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 </style>
 </head>
 <body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">BLUMBANG</div>
+    <div class="login-sub">Admin Panel · Restricted Access</div>
+    <input type="password" class="login-input" id="pwd-input" placeholder="••••••••••••" onkeydown="if(event.key==='Enter')checkLogin()">
+    <button class="login-btn" onclick="checkLogin()">Masuk →</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="edit-modal">
+  <div class="edit-box">
+    <div class="edit-title" id="edit-modal-title">Edit Garment</div>
+    <input type="hidden" id="edit-id-orig">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Garment ID</label>
+        <input type="text" class="form-input" id="edit-id" oninput="this.value=this.value.toUpperCase()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Seri *</label>
+        <input type="text" class="form-input" id="edit-name">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kota Asal</label>
+        <input type="text" class="form-input" id="edit-origin">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tahun</label>
+        <input type="text" class="form-input" id="edit-year">
+      </div>
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label class="form-label">Edisi (misal: 50 pcs)</label>
+      <input type="text" class="form-input" id="edit-edition">
+    </div>
+    <div class="form-group" style="margin-top:12px">
+      <label class="form-label">URL Mockup (Google Drive)</label>
+      <input type="text" class="form-input" id="edit-mockup" placeholder="https://drive.google.com/uc?id=...">
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px;">
+      <button class="btn" style="flex:1;background:var(--gold);color:var(--black);border:none;cursor:pointer;" onclick="saveEdit()">✓ Simpan</button>
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeEditModal()">Batal</button>
+    </div>
+  </div>
+</div>
 
 <header>
   <div>
@@ -447,8 +515,9 @@ async function loadGarments(){
           📦 ${edition} · 🔍 ${scanCount} scans
         </div>
         <div class="gcard-actions">
-          <button class="btn btn-ghost btn-sm" onclick="editMockup('${id}',${i})">📷 Mockup</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${id}',${i})">✏️ Edit</button>
           <a href="https://blumbang.id/id/${id}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">🔗 Lihat</a>
+          <button class="btn btn-sm" style="background:var(--red);color:#fff;border:none;cursor:pointer;" onclick="deleteGarment('${id}')">🗑 Hapus</button>
         </div>
       </div>`;
     }).join('');
@@ -478,14 +547,91 @@ async function addGarment(){
   }catch(e){showToast('Gagal menyimpan');}
 }
 
-function editMockup(id,idx){
-  const url=prompt(`Paste URL Google Drive untuk mockup ${id}:\n\nContoh: https://drive.google.com/uc?id=XXXX`);
-  if(!url) return;
-  fetch(SCRIPT_URL,{
-    method:'POST',mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({action:'updateMockup',garment_id:id,mockup:url})
-  }).then(()=>{showToast(`✓ Mockup ${id} diupdate`);setTimeout(loadGarments,1000);});
+// editMockup replaced by openEditModal
+
+// =================== LOGIN ===================
+const ADMIN_HASH = '5e6b4f0c7a0d9e1f3b2c8d4a6e0f5c9b1d3e7a2f4c8b0e6d'; // hash of password
+function simpleHash(str){
+  // Simple hash untuk verifikasi password di client
+  let h = 0;
+  for(let i=0;i<str.length;i++) h = (Math.imul(31,h)+str.charCodeAt(i))|0;
+  return Math.abs(h).toString(16);
+}
+const CORRECT_HASH = simpleHash('20embuhiki1802');
+
+function checkLogin(){
+  const pwd = document.getElementById('pwd-input').value;
+  if(simpleHash(pwd) === CORRECT_HASH){
+    document.getElementById('login-screen').style.display='none';
+    sessionStorage.setItem('blmb_auth','1');
+  } else {
+    document.getElementById('login-err').textContent='Password salah. Coba lagi.';
+    document.getElementById('pwd-input').value='';
+  }
+}
+
+// Cek session — kalau sudah login sebelumnya langsung masuk
+if(sessionStorage.getItem('blmb_auth')==='1'){
+  document.getElementById('login-screen').style.display='none';
+}
+
+// =================== EDIT MODAL ===================
+let editingIdx = -1;
+
+function openEditModal(id, idx){
+  const r = garmentData[idx];
+  if(!r) return;
+  document.getElementById('edit-id-orig').value = id;
+  document.getElementById('edit-id').value = id;
+  document.getElementById('edit-name').value = r.c[1]?.v||'';
+  document.getElementById('edit-origin').value = r.c[2]?.v||'Klaten';
+  document.getElementById('edit-year').value = r.c[3]?.v||'2026';
+  document.getElementById('edit-edition').value = r.c[4]?.v||'';
+  document.getElementById('edit-mockup').value = r.c[5]?.v||'';
+  document.getElementById('edit-modal-title').textContent = 'Edit · ' + id;
+  editingIdx = idx;
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal(){
+  document.getElementById('edit-modal').classList.remove('open');
+  editingIdx = -1;
+}
+
+async function saveEdit(){
+  const origId = document.getElementById('edit-id-orig').value;
+  const id = document.getElementById('edit-id').value.trim().toUpperCase();
+  const name = document.getElementById('edit-name').value.trim();
+  const origin = document.getElementById('edit-origin').value.trim()||'Klaten';
+  const year = document.getElementById('edit-year').value.trim()||'2026';
+  const edition = document.getElementById('edit-edition').value.trim();
+  const mockup = document.getElementById('edit-mockup').value.trim();
+  if(!id||!name){showToast('ID dan Nama wajib diisi');return;}
+  showToast('Menyimpan...');
+  try{
+    await fetch(SCRIPT_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'updateGarment',orig_id:origId,garment_id:id,name,origin,year,edition,mockup})
+    });
+    showToast('✓ '+id+' berhasil diupdate');
+    closeEditModal();
+    setTimeout(loadGarments,1200);
+  }catch(e){showToast('Gagal menyimpan');}
+}
+
+async function deleteGarment(id){
+  if(!confirm('Hapus garment '+id+' dari website?\n\nData akan hilang permanen dari Google Sheets.')) return;
+  showToast('Menghapus '+id+'...');
+  try{
+    await fetch(SCRIPT_URL,{
+      method:'POST',mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({action:'deleteGarment',garment_id:id})
+    });
+    showToast('✓ '+id+' dihapus');
+    setTimeout(loadGarments,1200);
+  }catch(e){showToast('Gagal menghapus');}
 }
 
 // =================== QR GENERATOR ===================

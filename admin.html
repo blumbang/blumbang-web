@@ -915,8 +915,7 @@ function downloadSVGSheet(){
 
   // Serialize ke string
   const serializer = new XMLSerializer();
-  const svgStr = '<?xml version="1.0" encoding="UTF-8"?>
-' + serializer.serializeToString(rootSVG);
+  const svgStr = serializer.serializeToString(rootSVG);
 
   const blob = new Blob([svgStr], {type:'image/svg+xml;charset=utf-8'});
   const a = document.createElement('a');

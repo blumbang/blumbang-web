@@ -512,6 +512,9 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
           <div style="font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Memuat data...</div>
         </div>
       </div>
+      <div id="garments-more" style="display:none;text-align:center;margin-top:32px;">
+        <a href="/catalog" style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid var(--gold);padding:12px 32px;display:inline-block;">Lihat Semua <span id="garments-count"></span> Kaos &#x2192;</a>
+      </div>
     </div>
   </section>
 
@@ -670,7 +673,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 </div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwrEE391bby4jUATJ8jd95tcb8OCpchI8fRs-TAt8s2NLD2CDmdeCScDHm0ERlsucs2/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyM7IPyEuLNPj2vzjA0IGeHW2DrDwk7cAx4ROBnEs4LtBtuKuqg02CbhzygW5-zvS6J/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 
 // City coordinate lookup (lon→x%, lat→y% on world map)
@@ -786,7 +789,17 @@ function renderGarmentsList(){
     </div>`;
     return;
   }
-  el.innerHTML=ids.map(id=>{
+  // Tampilkan hanya 6 terbaru di homepage
+  const showIds=ids.slice(-6).reverse();
+  const totalIds=ids.length;
+  // Tampilkan tombol "Lihat Semua" kalau lebih dari 6
+  if(totalIds>6){
+    const moreEl=document.getElementById('garments-more');
+    const countEl=document.getElementById('garments-count');
+    if(moreEl) moreEl.style.display='block';
+    if(countEl) countEl.textContent='('+totalIds+')';
+  }
+  el.innerHTML=showIds.map(id=>{
     const g=GARMENTS[id];
     const mockupHtml=g.mockup
       ?`<img src="${g.mockup}" alt="${g.name}" style="width:100%;height:180px;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`

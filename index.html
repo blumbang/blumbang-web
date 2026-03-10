@@ -342,6 +342,8 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
   .spark-map-section{max-width:100%;}
 }
 </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 </head>
 <body>
 <div class="grid-bg"></div>
@@ -416,39 +418,8 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       <div class="spark-map-box">
         <div class="world-map" id="world-map">
           <div class="world-map-bg"></div>
-          <!-- SVG Peta Dunia Sederhana -->
-          <svg class="world-map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-            <!-- Amerika Utara -->
-            <path fill="#4a7ab5" d="M80,80 L160,70 L200,90 L220,130 L200,160 L180,180 L150,190 L120,170 L90,150 L70,120 Z"/>
-            <!-- Amerika Tengah -->
-            <path fill="#4a7ab5" d="M150,190 L180,180 L190,210 L170,230 L150,220 Z"/>
-            <!-- Amerika Selatan -->
-            <path fill="#4a7ab5" d="M150,230 L190,210 L210,240 L220,290 L210,340 L190,370 L160,360 L140,320 L130,270 L140,240 Z"/>
-            <!-- Europa -->
-            <path fill="#4a7ab5" d="M440,60 L490,55 L510,70 L500,90 L480,100 L460,95 L440,80 Z"/>
-            <!-- Skandinavia -->
-            <path fill="#4a7ab5" d="M460,40 L480,35 L490,55 L470,60 L455,55 Z"/>
-            <!-- Afrika -->
-            <path fill="#4a7ab5" d="M440,100 L490,95 L520,110 L530,150 L520,200 L500,240 L470,260 L450,240 L440,200 L430,150 L430,120 Z"/>
-            <!-- Russia / Asia Utara -->
-            <path fill="#4a7ab5" d="M500,40 L650,30 L750,45 L800,60 L790,90 L700,100 L600,95 L510,85 L500,65 Z"/>
-            <!-- Asia Tengah / China -->
-            <path fill="#4a7ab5" d="M600,90 L750,80 L820,100 L830,140 L800,160 L720,165 L650,155 L600,135 L590,110 Z"/>
-            <!-- India -->
-            <path fill="#4a7ab5" d="M620,150 L660,145 L670,180 L650,210 L630,200 L615,170 Z"/>
-            <!-- Asia Tenggara -->
-            <path fill="#4a7ab5" d="M700,160 L760,155 L790,175 L780,200 L740,205 L700,190 Z"/>
-            <!-- Indonesia / Jawa -->
-            <path fill="#C9A84C" stroke="#C9A84C" stroke-width="1" d="M730,210 L760,207 L775,215 L765,222 L735,220 Z"/>
-            <!-- Australia -->
-            <path fill="#4a7ab5" d="M780,250 L850,240 L890,260 L900,310 L880,340 L840,350 L800,340 L770,310 L765,270 Z"/>
-            <!-- Jepang -->
-            <path fill="#4a7ab5" d="M840,90 L855,85 L865,100 L855,110 L840,105 Z"/>
-            <!-- UK -->
-            <path fill="#4a7ab5" d="M435,65 L445,60 L448,72 L438,75 Z"/>
-            <!-- Greenland -->
-            <path fill="#4a7ab5" d="M260,30 L310,25 L320,50 L300,65 L270,60 L255,45 Z"/>
-          </svg>
+          <!-- Peta dunia render D3 -->
+          <svg id="d3-world-map" style="position:absolute;inset:0;width:100%;height:100%;"></svg>
           <div class="world-grid"></div>
           <svg class="spark-line" id="spark-svg" viewBox="0 0 100 50" preserveAspectRatio="none"></svg>
           <!-- Dots injected by JS -->
@@ -677,32 +648,43 @@ const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyM7IPyEuLNPj2vzjA0IGe
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 
 // City coordinate lookup (lon→x%, lat→y% on world map)
+// Format: lonlat = [longitude, latitude] untuk D3 projection
 const CITY_COORDS={
-  'klaten':{x:80.7,y:54.3,label:'Klaten'},
-  'jeto':{x:80.7,y:54.3,label:'Klaten'},
-  'yogyakarta':{x:80.6,y:54.5,label:'Yogyakarta'},
-  'jakarta':{x:79.7,y:53.4,label:'Jakarta'},
-  'surabaya':{x:81.3,y:54.1,label:'Surabaya'},
-  'pontianak':{x:80.4,y:50.0,label:'Pontianak'},
-  'bandung':{x:79.8,y:53.9,label:'Bandung'},
-  'semarang':{x:80.5,y:53.8,label:'Semarang'},
-  'bali':{x:82.2,y:54.8,label:'Bali'},
-  'singapore':{x:79.9,y:49.6,label:'Singapore'},
-  'kuala lumpur':{x:79.5,y:48.8,label:'Kuala Lumpur'},
-  'bangkok':{x:78.0,y:45.7,label:'Bangkok'},
-  'tokyo':{x:88.8,y:30.2,label:'Tokyo'},
-  'seoul':{x:85.3,y:29.2,label:'Seoul'},
-  'hong kong':{x:83.9,y:40.3,label:'Hong Kong'},
-  'dubai':{x:65.4,y:36.0,label:'Dubai'},
-  'london':{x:49.97,y:21.4,label:'London'},
-  'paris':{x:50.9,y:22.2,label:'Paris'},
-  'amsterdam':{x:50.5,y:19.4,label:'Amsterdam'},
-  'new york':{x:29.4,y:27.4,label:'New York'},
-  'los angeles':{x:21.9,y:31.2,label:'Los Angeles'},
-  'sydney':{x:91.9,y:68.8,label:'Sydney'},
-  'melbourne':{x:91.0,y:70.2,label:'Melbourne'},
-  'victoria':{x:65.4,y:52.6,label:'Victoria'},
-  'seychelles':{x:65.4,y:52.6,label:'Seychelles'},
+  'klaten':    {lonlat:[110.6,-7.7],  label:'Klaten'},
+  'jeto':      {lonlat:[110.6,-7.7],  label:'Klaten'},
+  'yogyakarta':{lonlat:[110.4,-7.8],  label:'Yogyakarta'},
+  'jakarta':   {lonlat:[106.8,-6.2],  label:'Jakarta'},
+  'surabaya':  {lonlat:[112.7,-7.3],  label:'Surabaya'},
+  'pontianak': {lonlat:[109.3,-0.0],  label:'Pontianak'},
+  'bandung':   {lonlat:[107.6,-6.9],  label:'Bandung'},
+  'semarang':  {lonlat:[110.4,-7.0],  label:'Semarang'},
+  'bali':      {lonlat:[115.2,-8.4],  label:'Bali'},
+  'makassar':  {lonlat:[119.4,-5.1],  label:'Makassar'},
+  'medan':     {lonlat:[98.7,3.6],    label:'Medan'},
+  'singapore': {lonlat:[103.8,1.3],   label:'Singapore'},
+  'kuala lumpur':{lonlat:[101.7,3.1], label:'Kuala Lumpur'},
+  'bangkok':   {lonlat:[100.5,13.8],  label:'Bangkok'},
+  'tokyo':     {lonlat:[139.7,35.7],  label:'Tokyo'},
+  'seoul':     {lonlat:[126.9,37.6],  label:'Seoul'},
+  'hong kong': {lonlat:[114.2,22.3],  label:'Hong Kong'},
+  'dubai':     {lonlat:[55.3,25.2],   label:'Dubai'},
+  'london':    {lonlat:[-0.1,51.5],   label:'London'},
+  'paris':     {lonlat:[2.3,48.9],    label:'Paris'},
+  'amsterdam': {lonlat:[4.9,52.4],    label:'Amsterdam'},
+  'new york':  {lonlat:[-74.0,40.7],  label:'New York'},
+  'los angeles':{lonlat:[-118.2,34.1],label:'Los Angeles'},
+  'sydney':    {lonlat:[151.2,-33.9], label:'Sydney'},
+  'melbourne': {lonlat:[144.9,-37.8], label:'Melbourne'},
+  'victoria':  {lonlat:[55.5,-4.6],   label:'Victoria · Seychelles'},
+  'seychelles':{lonlat:[55.5,-4.6],   label:'Seychelles'},
+  'riyadh':    {lonlat:[46.7,24.7],   label:'Riyadh'},
+  'jeddah':    {lonlat:[39.2,21.5],   label:'Jeddah'},
+  'doha':      {lonlat:[51.5,25.3],   label:'Doha'},
+  'amsterdam': {lonlat:[4.9,52.4],    label:'Amsterdam'},
+  'frankfurt': {lonlat:[8.7,50.1],    label:'Frankfurt'},
+  'beijing':   {lonlat:[116.4,39.9],  label:'Beijing'},
+  'shanghai':  {lonlat:[121.5,31.2],  label:'Shanghai'},
+  'taipei':    {lonlat:[121.5,25.0],  label:'Taipei'},
 };
 
 function getCityCoord(cityStr){
@@ -935,48 +917,136 @@ function animateNum(elId,target){
 /* =========================================
    SPARK MAP
 ========================================= */
+// ===== D3 WORLD MAP =====
 function buildSparkMap(rows){
-  const mapEl=document.getElementById('world-map');
-  const svgEl=document.getElementById('spark-svg');
-  const citiesRow=document.getElementById('spark-cities-row');
+  const mapEl = document.getElementById('world-map');
+  const citiesRow = document.getElementById('spark-cities-row');
 
-  // Collect unique cities with coordinates
-  const cityMap={};
-  rows.forEach(r=>{
-    const c=r.c[2]?.v;
+  // Kumpulkan kota unik
+  const cityMap = {};
+  rows.forEach(r => {
+    const c = r.c[2]?.v;
     if(!c) return;
-    const coord=getCityCoord(c);
+    const coord = getCityCoord(c);
     if(!coord) return;
-    const key=coord.label;
-    if(!cityMap[key]) cityMap[key]={coord,count:0,cityStr:c};
-    cityMap[key].count++;
+    if(!cityMap[coord.label]) cityMap[coord.label] = {coord, count:0};
+    cityMap[coord.label].count++;
   });
 
-  // Always add Klaten as origin
-  const svgLines=[];
-  const dotEls=[];
+  const w = mapEl.offsetWidth || 600;
+  const h = mapEl.offsetHeight || 300;
 
-  // Origin dot (Klaten)
-  const originDot=makeDot(ORIGIN.x,ORIGIN.y,'Klaten · Origin',true);
-  mapEl.appendChild(originDot);
+  // Render D3 peta dunia
+  const svg = d3.select('#d3-world-map')
+    .attr('width', w)
+    .attr('height', h)
+    .attr('viewBox', `0 0 ${w} ${h}`)
+    .style('position','absolute')
+    .style('inset','0');
 
-  // Other city dots + lines from Klaten
-  Object.values(cityMap).forEach((item,i)=>{
-    if(item.coord.label==='Klaten') return;
-    // Line from Klaten to city
-    svgLines.push(`<line x1="${ORIGIN.x}" y1="${ORIGIN.y*0.5}" x2="${item.coord.x}" y2="${item.coord.y*0.5}" stroke="rgba(201,168,76,0.2)" stroke-width="0.3" stroke-dasharray="1,1"/>`);
-    // Dot
-    const dot=makeDot(item.coord.x,item.coord.y,item.coord.label,false,i*120);
-    mapEl.appendChild(dot);
-  });
+  const projection = d3.geoNaturalEarth1()
+    .scale(w / 6.5)
+    .translate([w / 2, h / 2]);
 
-  svgEl.innerHTML=svgLines.join('');
+  const pathGen = d3.geoPath().projection(projection);
+
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r => r.json())
+    .then(world => {
+      const countries = topojson.feature(world, world.objects.countries);
+      const graticule = d3.geoGraticule()();
+
+      // Graticule (grid garis koordinat)
+      svg.append('path')
+        .datum(graticule)
+        .attr('d', pathGen)
+        .attr('fill','none')
+        .attr('stroke','rgba(255,255,255,0.04)')
+        .attr('stroke-width','0.5');
+
+      // Negara
+      svg.selectAll('path.country')
+        .data(countries.features)
+        .enter().append('path')
+        .attr('class','country')
+        .attr('d', pathGen)
+        .attr('fill', d => {
+          // Indonesia (id=360) warna emas
+          return d.id === 360 ? 'rgba(201,168,76,0.5)' : 'rgba(74,122,181,0.25)';
+        })
+        .attr('stroke','rgba(255,255,255,0.12)')
+        .attr('stroke-width','0.4');
+
+      // Garis batas negara
+      svg.append('path')
+        .datum(topojson.mesh(world, world.objects.countries, (a,b) => a !== b))
+        .attr('d', pathGen)
+        .attr('fill','none')
+        .attr('stroke','rgba(255,255,255,0.08)')
+        .attr('stroke-width','0.3');
+
+      // Plot titik kota
+      // Origin: Klaten [110.6, -7.7]
+      const KLATEN_LONLAT = [110.6, -7.7];
+      const klatenPx = projection(KLATEN_LONLAT);
+
+      // Garis dari Klaten ke tiap kota
+      Object.values(cityMap).forEach((item, i) => {
+        const ll = item.coord.lonlat;
+        if(!ll) return;
+        const px = projection(ll);
+        if(!px) return;
+        svg.append('line')
+          .attr('x1', klatenPx[0]).attr('y1', klatenPx[1])
+          .attr('x2', px[0]).attr('y2', px[1])
+          .attr('stroke','rgba(201,168,76,0.3)')
+          .attr('stroke-width','0.8')
+          .attr('stroke-dasharray','3,3');
+      });
+
+      // Dot tiap kota scan
+      Object.values(cityMap).forEach((item, i) => {
+        const ll = item.coord.lonlat;
+        if(!ll) return;
+        const px = projection(ll);
+        if(!px) return;
+        // Dot
+        svg.append('circle')
+          .attr('cx', px[0]).attr('cy', px[1])
+          .attr('r', 4)
+          .attr('fill','rgba(201,168,76,0.9)')
+          .attr('stroke','#fff')
+          .attr('stroke-width','1');
+        // Label
+        svg.append('text')
+          .attr('x', px[0]+6).attr('y', px[1]-4)
+          .text(item.coord.label)
+          .attr('font-size','8px')
+          .attr('font-family','sans-serif')
+          .attr('fill','rgba(245,240,232,0.8)');
+      });
+
+      // Dot Klaten origin (besar + berdenyut via CSS)
+      const kg = svg.append('g').attr('transform', `translate(${klatenPx[0]},${klatenPx[1]})`);
+      kg.append('circle').attr('r',8).attr('fill','rgba(201,168,76,0.15)').attr('stroke','rgba(201,168,76,0.5)').attr('stroke-width','1');
+      kg.append('circle').attr('r',4).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+      kg.append('text').attr('x',8).attr('y',-6).text('Klaten · Origin').attr('font-size','8px').attr('font-family','sans-serif').attr('fill','#C9A84C').attr('font-weight','bold');
+    })
+    .catch(err => {
+      console.warn('Gagal load world map:', err);
+      // Fallback: tampilkan teks saja
+      svg.append('text')
+        .attr('x', w/2).attr('y', h/2)
+        .attr('text-anchor','middle')
+        .attr('fill','rgba(201,168,76,0.4)')
+        .attr('font-size','14px')
+        .text('Peta Perjalanan Kaos');
+    });
 
   // City tags row
-  citiesRow.innerHTML='<div class="spark-city-tag origin-tag"><span class="dot"></span>Klaten · Origin</div>';
-  Object.values(cityMap).forEach(item=>{
-    if(item.coord.label==='Klaten') return;
-    citiesRow.innerHTML+=`<div class="spark-city-tag"><span class="dot"></span>${item.coord.label}</div>`;
+  citiesRow.innerHTML = '<div class="spark-city-tag origin-tag"><span class="dot"></span>Klaten · Origin</div>';
+  Object.keys(cityMap).forEach(label => {
+    citiesRow.innerHTML += `<div class="spark-city-tag"><span class="dot"></span>${label}</div>`;
   });
 }
 
@@ -985,8 +1055,6 @@ function makeDot(x,y,label,isOrigin,delay=0){
   dot.className='spark-dot'+(isOrigin?' origin':'');
   dot.style.left=x+'%';
   dot.style.top=y+'%';
-  dot.style.animationDelay=delay+'ms';
-  dot.style.animation=`sparkAppear 0.6s ease ${delay}ms both`;
   dot.innerHTML=`<div class="spark-dot-inner"></div><div class="spark-dot-label">${label}</div>`;
   return dot;
 }

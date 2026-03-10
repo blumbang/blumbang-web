@@ -29,6 +29,14 @@ body{background:var(--black);color:var(--white);font-family:var(--font);min-heig
 .login-btn:hover{background:var(--white);}
 .login-err{font-size:0.72rem;color:#dc2626;margin-top:10px;min-height:18px;}
 
+/* GALERI MANAGER */
+.galeri-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.galeri-row{display:grid;grid-template-columns:80px 1fr auto;gap:16px;align-items:center;background:var(--charcoal);border:1px solid var(--border);padding:14px;}
+.galeri-thumb{width:80px;height:80px;object-fit:cover;background:var(--grey);display:block;}
+.galeri-thumb-ph{width:80px;height:80px;background:var(--grey);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:1.4rem;}
+.galeri-desk{font-size:0.85rem;color:var(--light);word-break:break-all;}
+.galeri-url{font-size:0.68rem;color:var(--muted);margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:300px;}
+
 /* MODAL EDIT */
 #edit-modal{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center;padding:20px;}
 #edit-modal.open{display:flex;}
@@ -214,6 +222,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="tabs">
   <button class="tab active" onclick="switchTab('approval')">✦ Approval</button>
   <button class="tab" onclick="switchTab('garments')">Garment Manager</button>
+  <button class="tab" onclick="switchTab('galeri')">Galeri</button>
   <button class="tab" onclick="switchTab('qr')">QR Generator</button>
   <button class="tab" onclick="switchTab('stats')">Statistik</button>
 </div>
@@ -285,6 +294,28 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 </div>
 
 <!-- ===================== QR GENERATOR ===================== -->
+<!-- ===================== GALERI MANAGER ===================== -->
+<div id="panel-galeri" class="panel">
+  <div class="sec-title">Galeri Homepage</div>
+  <div class="sec-sub">Maksimal 6 foto. Foto ditampilkan sesuai urutan. Upload foto ke Google Drive dulu, lalu paste URL-nya di sini.</div>
+
+  <div class="add-form" style="margin-top:24px;">
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">URL Foto (Google Drive) *</label>
+        <input type="text" class="form-input" id="gal-url" placeholder="https://drive.google.com/uc?id=XXXX">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deskripsi *</label>
+        <input type="text" class="form-input" id="gal-desk" placeholder="Kaos CC30s Navy · 50 pcs · Klaten">
+      </div>
+    </div>
+    <button class="btn" style="margin-top:12px;background:var(--gold);color:var(--black);border:none;cursor:pointer;font-weight:700;padding:10px 28px;font-size:0.75rem;letter-spacing:0.15em;" onclick="addGaleri()">+ Tambah Foto</button>
+  </div>
+
+  <div id="galeri-list" class="galeri-list"><div class="loading">Memuat galeri...</div></div>
+</div>
+
 <div id="panel-qr" class="panel">
   <div class="sec-title">QR Code Generator</div>
   <div class="sec-sub">Generate QR code untuk satu seri kaos. Output berupa sheet PNG siap kirim ke percetakan.</div>
@@ -354,7 +385,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <div class="toast" id="toast"></div>
 
 <script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyHz3ictRjLdBdGEtDWfvMPGWmUGtTyspRBY3xl41s29_KTiywwuXOINlfBVRU8h4hY/exec';
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxd5-AycnF8uDlXtSe5lDrYGuhb8IyL0yufCRQ9gZqdkWdKtwkM9wvyRahF8KBRG0w/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 const BASE_URL='https://blumbang.id/id/';
 
@@ -371,6 +402,7 @@ function switchTab(name){
   document.getElementById('panel-'+name).classList.add('active');
   if(name==='approval') loadApproval('PENDING');
   if(name==='garments') loadGarments();
+  if(name==='galeri') loadGaleri();
   if(name==='stats') loadStats();
 }
 
@@ -648,6 +680,106 @@ async function deleteGarment(id){
     setTimeout(loadGarments,1200);
   }catch(e){showToast('Gagal: '+e.message);}
 }
+
+// =================== GALERI MANAGER ===================
+async function loadGaleri(){
+  const list = document.getElementById('galeri-list');
+  if(!list) return;
+  try{
+    const SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+    const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=GALERI`;
+    const r = await fetch(url);
+    const txt = await r.text();
+    const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match){ list.innerHTML='<div class="empty">Belum ada foto</div>'; return; }
+    const json = JSON.parse(match[1]);
+    const rows = (json.table.rows||[]).filter(r=>r.c[0]?.v);
+    if(!rows.length){ list.innerHTML='<div class="empty">Belum ada foto di galeri</div>'; return; }
+    list.innerHTML = rows.map((row,i)=>{
+      const foto = row.c[0]?.v||'';
+      const desk = row.c[1]?.v||'';
+      const urutan = row.c[2]?.v||i+1;
+      return `<div class="galeri-row">
+        <img src="${foto}" class="galeri-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="galeri-thumb-ph" style="display:none;">✦</div>
+        <div>
+          <div class="galeri-desk">${desk||'(tanpa deskripsi)'}</div>
+          <div class="galeri-url">${foto}</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:4px;">Urutan: ${urutan}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="editGaleri(${i},'${encodeURIComponent(foto)}','${encodeURIComponent(desk)}',${urutan})">✏️ Edit</button>
+          <button class="btn btn-sm" style="background:var(--red);color:#fff;border:none;cursor:pointer;" onclick="deleteGaleri('${encodeURIComponent(foto)}')">🗑 Hapus</button>
+        </div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML='<div class="empty">Gagal memuat galeri</div>';
+  }
+}
+
+async function addGaleri(){
+  const url = document.getElementById('gal-url').value.trim();
+  const desk = document.getElementById('gal-desk').value.trim();
+  if(!url||!desk){showToast('URL dan deskripsi wajib diisi');return;}
+  showToast('Menyimpan...');
+  try{
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'addGaleri',foto_url:url,deskripsi:desk})
+    });
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ Foto berhasil ditambahkan');
+      document.getElementById('gal-url').value='';
+      document.getElementById('gal-desk').value='';
+      setTimeout(loadGaleri,1200);
+    } else {
+      showToast('Error: '+json.message);
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
+}
+
+async function deleteGaleri(encodedUrl){
+  const url = decodeURIComponent(encodedUrl);
+  if(!confirm('Hapus foto ini dari galeri?')) return;
+  showToast('Menghapus...');
+  try{
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'deleteGaleri',foto_url:url})
+    });
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ Foto dihapus');
+      setTimeout(loadGaleri,1200);
+    } else {
+      showToast('Error: '+json.message);
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
+}
+
+function editGaleri(idx, encodedUrl, encodedDesk, urutan){
+  const url = decodeURIComponent(encodedUrl);
+  const desk = decodeURIComponent(encodedDesk);
+  const newDesk = prompt('Deskripsi baru:', desk);
+  if(newDesk===null) return;
+  const newUrl = prompt('URL foto baru (kosongkan jika sama):', url);
+  if(newUrl===null) return;
+  fetch(SCRIPT_URL,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain'},
+    body:JSON.stringify({action:'updateGaleri',orig_url:url,foto_url:newUrl||url,deskripsi:newDesk,urutan})
+  }).then(r=>r.json()).then(json=>{
+    if(json.status==='ok'){showToast('✓ Galeri diupdate');setTimeout(loadGaleri,1200);}
+    else showToast('Error: '+json.message);
+  }).catch(e=>showToast('Gagal: '+e.message));
+}
+
+// Load galeri saat tab dibuka
+const _origSwitchTab = typeof switchTab === 'function' ? switchTab : null;
 
 // =================== QR GENERATOR ===================
 

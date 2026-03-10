@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Blok halaman admin
+Disallow: /admin
+Disallow: /admin.html
+
+Sitemap: https://blumbang.id/sitemap.xml

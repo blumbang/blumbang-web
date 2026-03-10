@@ -148,13 +148,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .spark-map-label::before,.spark-map-label::after{content:'';flex:1;height:1px;background:var(--border);}
 .spark-map-box{border:1px solid var(--border);background:var(--charcoal);position:relative;overflow:hidden;}
 /* World map visual */
-.world-map{position:relative;width:100%;padding-bottom:50%;background:var(--black);overflow:hidden;}
+.world-map{position:relative;width:100%;padding-bottom:50%;background:#0a0f1a;overflow:hidden;}
 .world-map-bg{position:absolute;inset:0;background:
-  radial-gradient(ellipse 60% 40% at 80% 54%,rgba(201,168,76,0.04) 0%,transparent 70%),
-  radial-gradient(ellipse 100% 60% at 50% 50%,rgba(255,255,255,0.015) 0%,transparent 100%);}
+  radial-gradient(ellipse 60% 40% at 80% 54%,rgba(201,168,76,0.06) 0%,transparent 70%),
+  radial-gradient(ellipse 100% 60% at 50% 50%,rgba(30,60,120,0.15) 0%,transparent 100%);}
+.world-map-svg{position:absolute;inset:0;width:100%;height:100%;opacity:0.18;}
 .world-grid{position:absolute;inset:0;background-image:
-  linear-gradient(rgba(255,255,255,0.025) 1px,transparent 1px),
-  linear-gradient(90deg,rgba(255,255,255,0.025) 1px,transparent 1px);
+  linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:20% 25%;}
 /* Spark dots */
 .spark-dot{position:absolute;transform:translate(-50%,-50%);cursor:default;}
@@ -415,6 +416,39 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       <div class="spark-map-box">
         <div class="world-map" id="world-map">
           <div class="world-map-bg"></div>
+          <!-- SVG Peta Dunia Sederhana -->
+          <svg class="world-map-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+            <!-- Amerika Utara -->
+            <path fill="#4a7ab5" d="M80,80 L160,70 L200,90 L220,130 L200,160 L180,180 L150,190 L120,170 L90,150 L70,120 Z"/>
+            <!-- Amerika Tengah -->
+            <path fill="#4a7ab5" d="M150,190 L180,180 L190,210 L170,230 L150,220 Z"/>
+            <!-- Amerika Selatan -->
+            <path fill="#4a7ab5" d="M150,230 L190,210 L210,240 L220,290 L210,340 L190,370 L160,360 L140,320 L130,270 L140,240 Z"/>
+            <!-- Europa -->
+            <path fill="#4a7ab5" d="M440,60 L490,55 L510,70 L500,90 L480,100 L460,95 L440,80 Z"/>
+            <!-- Skandinavia -->
+            <path fill="#4a7ab5" d="M460,40 L480,35 L490,55 L470,60 L455,55 Z"/>
+            <!-- Afrika -->
+            <path fill="#4a7ab5" d="M440,100 L490,95 L520,110 L530,150 L520,200 L500,240 L470,260 L450,240 L440,200 L430,150 L430,120 Z"/>
+            <!-- Russia / Asia Utara -->
+            <path fill="#4a7ab5" d="M500,40 L650,30 L750,45 L800,60 L790,90 L700,100 L600,95 L510,85 L500,65 Z"/>
+            <!-- Asia Tengah / China -->
+            <path fill="#4a7ab5" d="M600,90 L750,80 L820,100 L830,140 L800,160 L720,165 L650,155 L600,135 L590,110 Z"/>
+            <!-- India -->
+            <path fill="#4a7ab5" d="M620,150 L660,145 L670,180 L650,210 L630,200 L615,170 Z"/>
+            <!-- Asia Tenggara -->
+            <path fill="#4a7ab5" d="M700,160 L760,155 L790,175 L780,200 L740,205 L700,190 Z"/>
+            <!-- Indonesia / Jawa -->
+            <path fill="#C9A84C" stroke="#C9A84C" stroke-width="1" d="M730,210 L760,207 L775,215 L765,222 L735,220 Z"/>
+            <!-- Australia -->
+            <path fill="#4a7ab5" d="M780,250 L850,240 L890,260 L900,310 L880,340 L840,350 L800,340 L770,310 L765,270 Z"/>
+            <!-- Jepang -->
+            <path fill="#4a7ab5" d="M840,90 L855,85 L865,100 L855,110 L840,105 Z"/>
+            <!-- UK -->
+            <path fill="#4a7ab5" d="M435,65 L445,60 L448,72 L438,75 Z"/>
+            <!-- Greenland -->
+            <path fill="#4a7ab5" d="M260,30 L310,25 L320,50 L300,65 L270,60 L255,45 Z"/>
+          </svg>
           <div class="world-grid"></div>
           <svg class="spark-line" id="spark-svg" viewBox="0 0 100 50" preserveAspectRatio="none"></svg>
           <!-- Dots injected by JS -->

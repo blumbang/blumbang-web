@@ -411,7 +411,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 
     <!-- SPARK MAP -->
     <div class="spark-map-section">
-      <div class="spark-map-label">Kaos Blumbang Sudah Sampai</div>
+      <div class="spark-map-label">Kaos Blumbang Sudah Sampai Di</div>
       <div class="spark-map-box">
         <div class="world-map" id="world-map">
           <div class="world-map-bg"></div>
@@ -1058,9 +1058,13 @@ function storyCard(s){
 
 function addJourney(sparks){
   const list=document.getElementById('jlist');
-  sparks.slice(-5).reverse().forEach((r,i)=>{
+  // Tampilkan semua rows yang punya kota (scan maupun story)
+  const withCity = sparks.filter(r=>r.c[2]?.v);
+  if(!withCity.length) return;
+  withCity.slice(-5).reverse().forEach((r,i)=>{
     const city=r.c[2]?.v;
-    if(!city) return;
+    const type=r.c[7]?.v||'scan';
+    const time=r.c[6]?.v||'Baru saja';
     const el=document.createElement('div');
     el.className='ji';
     el.innerHTML=`
@@ -1070,7 +1074,7 @@ function addJourney(sparks){
       </div>
       <div>
         <div class="jcity">${city}</div>
-        <div class="jtime">${r.c[6]?.v||'Baru saja'}</div>
+        <div class="jtime">${time}</div>
         ${i===0?'<div class="jbadge">Terbaru</div>':''}
       </div>`;
     list.appendChild(el);

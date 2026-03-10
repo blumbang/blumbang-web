@@ -254,6 +254,45 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <div class="sec-title">Tambah Garment Baru</div>
   <div class="sec-sub">Isi data garment — akan langsung tersimpan ke Google Sheets dan tampil di website.</div>
 
+  <!-- BULK GENERATE -->
+  <div class="add-form" style="border-color:var(--gold-dim);background:var(--gold-bg);margin-bottom:16px;">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">⚡ Generate Massal</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Prefix ID *</label>
+        <input type="text" class="form-input" id="bulk-prefix" placeholder="INS" oninput="this.value=this.value.toUpperCase();previewBulk()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Seri *</label>
+        <input type="text" class="form-input" id="bulk-name" placeholder="Insanak">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Jumlah Kaos *</label>
+        <input type="number" class="form-input" id="bulk-qty" placeholder="70" min="1" max="500" oninput="previewBulk()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mulai Dari Nomor</label>
+        <input type="number" class="form-input" id="bulk-start" placeholder="1" value="1" min="1" oninput="previewBulk()">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kota Asal</label>
+        <input type="text" class="form-input" id="bulk-origin" placeholder="Klaten" value="Klaten">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tahun</label>
+        <input type="text" class="form-input" id="bulk-year" placeholder="2026" value="2026">
+      </div>
+    </div>
+    <div id="bulk-preview" style="font-size:0.72rem;color:var(--gold-dim);margin:12px 0 16px;min-height:18px;"></div>
+    <button class="btn" style="background:var(--gold);color:var(--black);border:none;cursor:pointer;font-weight:700;padding:10px 28px;font-size:0.75rem;letter-spacing:0.15em;" onclick="bulkGenerate()">⚡ Generate Sekarang</button>
+  </div>
+
+  <!-- TAMBAH SATU -->
+  <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--dim);text-transform:uppercase;margin-bottom:12px;">+ Tambah Satu</div>
   <div class="add-form">
     <div class="form-row">
       <div class="form-group">
@@ -556,6 +595,62 @@ async function loadGarments(){
   }catch(e){
     grid.innerHTML='<div class="empty">Gagal memuat data</div>';
   }
+}
+
+function previewBulk(){
+  const prefix = document.getElementById('bulk-prefix').value.trim().toUpperCase();
+  const qty = parseInt(document.getElementById('bulk-qty').value)||0;
+  const start = parseInt(document.getElementById('bulk-start').value)||1;
+  const el = document.getElementById('bulk-preview');
+  if(!prefix||!qty){ el.textContent=''; return; }
+  const first = `${prefix}-${String(start).padStart(3,'0')}`;
+  const last = `${prefix}-${String(start+qty-1).padStart(3,'0')}`;
+  el.textContent = `Akan dibuat: ${first} sampai ${last} (${qty} garment)`;
+}
+
+async function bulkGenerate(){
+  const prefix = document.getElementById('bulk-prefix').value.trim().toUpperCase();
+  const name = document.getElementById('bulk-name').value.trim();
+  const qty = parseInt(document.getElementById('bulk-qty').value)||0;
+  const start = parseInt(document.getElementById('bulk-start').value)||1;
+  const origin = document.getElementById('bulk-origin').value.trim()||'Klaten';
+  const year = document.getElementById('bulk-year').value.trim()||'2026';
+
+  if(!prefix||!name){showToast('Prefix dan Nama wajib diisi');return;}
+  if(!qty||qty<1||qty>500){showToast('Jumlah harus 1–500');return;}
+  if(!confirm(`Generate ${qty} garment: ${prefix}-${String(start).padStart(3,'0')} s/d ${prefix}-${String(start+qty-1).padStart(3,'0')}?`)) return;
+
+  showToast(`Menyimpan ${qty} garment... harap tunggu`);
+
+  // Kirim semua sekaligus ke Apps Script
+  try{
+    const garments = [];
+    for(let i=0;i<qty;i++){
+      const num = String(start+i).padStart(3,'0');
+      garments.push({
+        garment_id: `${prefix}-${num}`,
+        name,
+        origin,
+        year,
+        edition: `${qty} pcs`
+      });
+    }
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'bulkAddGarment', garments})
+    });
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast(`✓ ${qty} garment berhasil disimpan!`);
+      ['bulk-prefix','bulk-name','bulk-qty'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('bulk-start').value='1';
+      document.getElementById('bulk-preview').textContent='';
+      setTimeout(loadGarments,1500);
+    } else {
+      showToast('Error: '+json.message);
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
 }
 
 async function addGarment(){

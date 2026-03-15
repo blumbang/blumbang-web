@@ -495,15 +495,15 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
   <section class="section" id="living-garments" style="border-top:1px solid var(--border);">
     <div class="section-inner">
       <span class="section-tag">✦ Living Garments</span>
-      <h2 class="section-title">KAOS YANG<br>SUDAH HIDUP</h2>
+      <h2 class="section-title">KAOS YANG<br>PUNYA CERITA</h2>
       <p class="section-body">Setiap kaos di bawah ini memiliki identitas unik. Klik untuk melihat perjalanan dan cerita di baliknya.</p>
-      <div id="garments-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:48px;">
+      <div id="garments-more" style="display:none;margin-top:24px;">
+        <a href="/catalog" style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid var(--gold);padding:12px 32px;display:inline-block;">Lihat Semua <span id="garments-count"></span> Kaos &#x2192;</a>
+      </div>
+      <div id="garments-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:32px;">
         <div style="background:var(--charcoal);padding:32px;text-align:center;">
           <div style="font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Memuat data...</div>
         </div>
-      </div>
-      <div id="garments-more" style="display:none;text-align:center;margin-top:32px;">
-        <a href="/catalog" style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid var(--gold);padding:12px 32px;display:inline-block;">Lihat Semua <span id="garments-count"></span> Kaos &#x2192;</a>
       </div>
     </div>
   </section>
@@ -669,41 +669,309 @@ const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 // City coordinate lookup (lon→x%, lat→y% on world map)
 // Format: lonlat = [longitude, latitude] untuk D3 projection
 const CITY_COORDS={
-  'klaten':    {lonlat:[110.6,-7.7],  label:'Klaten'},
-  'jeto':      {lonlat:[110.6,-7.7],  label:'Klaten'},
-  'yogyakarta':{lonlat:[110.4,-7.8],  label:'Yogyakarta'},
-  'jakarta':   {lonlat:[106.8,-6.2],  label:'Jakarta'},
-  'surabaya':  {lonlat:[112.7,-7.3],  label:'Surabaya'},
-  'pontianak': {lonlat:[109.3,-0.0],  label:'Pontianak'},
-  'bandung':   {lonlat:[107.6,-6.9],  label:'Bandung'},
-  'semarang':  {lonlat:[110.4,-7.0],  label:'Semarang'},
-  'bali':      {lonlat:[115.2,-8.4],  label:'Bali'},
-  'makassar':  {lonlat:[119.4,-5.1],  label:'Makassar'},
-  'medan':     {lonlat:[98.7,3.6],    label:'Medan'},
-  'singapore': {lonlat:[103.8,1.3],   label:'Singapore'},
-  'kuala lumpur':{lonlat:[101.7,3.1], label:'Kuala Lumpur'},
-  'bangkok':   {lonlat:[100.5,13.8],  label:'Bangkok'},
-  'tokyo':     {lonlat:[139.7,35.7],  label:'Tokyo'},
-  'seoul':     {lonlat:[126.9,37.6],  label:'Seoul'},
-  'hong kong': {lonlat:[114.2,22.3],  label:'Hong Kong'},
-  'dubai':     {lonlat:[55.3,25.2],   label:'Dubai'},
-  'london':    {lonlat:[-0.1,51.5],   label:'London'},
-  'paris':     {lonlat:[2.3,48.9],    label:'Paris'},
-  'amsterdam': {lonlat:[4.9,52.4],    label:'Amsterdam'},
-  'new york':  {lonlat:[-74.0,40.7],  label:'New York'},
-  'los angeles':{lonlat:[-118.2,34.1],label:'Los Angeles'},
-  'sydney':    {lonlat:[151.2,-33.9], label:'Sydney'},
-  'melbourne': {lonlat:[144.9,-37.8], label:'Melbourne'},
-  'victoria':  {lonlat:[55.5,-4.6],   label:'Victoria · Seychelles'},
-  'seychelles':{lonlat:[55.5,-4.6],   label:'Seychelles'},
-  'riyadh':    {lonlat:[46.7,24.7],   label:'Riyadh'},
-  'jeddah':    {lonlat:[39.2,21.5],   label:'Jeddah'},
-  'doha':      {lonlat:[51.5,25.3],   label:'Doha'},
-  'amsterdam': {lonlat:[4.9,52.4],    label:'Amsterdam'},
-  'frankfurt': {lonlat:[8.7,50.1],    label:'Frankfurt'},
-  'beijing':   {lonlat:[116.4,39.9],  label:'Beijing'},
-  'shanghai':  {lonlat:[121.5,31.2],  label:'Shanghai'},
-  'taipei':    {lonlat:[121.5,25.0],  label:'Taipei'},
+  // ── JAWA TENGAH ──
+  'klaten':      {lonlat:[110.6,-7.7],  label:'Klaten'},
+  'jeto':        {lonlat:[110.6,-7.7],  label:'Klaten'},
+  'trucuk':      {lonlat:[110.6,-7.7],  label:'Klaten'},
+  'semarang':    {lonlat:[110.4,-7.0],  label:'Semarang'},
+  'solo':        {lonlat:[110.8,-7.6],  label:'Solo'},
+  'surakarta':   {lonlat:[110.8,-7.6],  label:'Solo'},
+  'salatiga':    {lonlat:[110.5,-7.3],  label:'Salatiga'},
+  'magelang':    {lonlat:[110.2,-7.5],  label:'Magelang'},
+  'pekalongan':  {lonlat:[109.7,-6.9],  label:'Pekalongan'},
+  'tegal':       {lonlat:[109.1,-6.9],  label:'Tegal'},
+  'banyumas':    {lonlat:[109.2,-7.5],  label:'Banyumas'},
+  'purwokerto':  {lonlat:[109.2,-7.4],  label:'Purwokerto'},
+  'cilacap':     {lonlat:[109.0,-7.7],  label:'Cilacap'},
+  'kebumen':     {lonlat:[109.7,-7.7],  label:'Kebumen'},
+  'purworejo':   {lonlat:[110.0,-7.7],  label:'Purworejo'},
+  'wonosobo':    {lonlat:[109.9,-7.4],  label:'Wonosobo'},
+  'temanggung':  {lonlat:[110.2,-7.3],  label:'Temanggung'},
+  'kendal':      {lonlat:[110.2,-7.0],  label:'Kendal'},
+  'demak':       {lonlat:[110.6,-6.9],  label:'Demak'},
+  'kudus':       {lonlat:[110.8,-6.8],  label:'Kudus'},
+  'jepara':      {lonlat:[110.7,-6.6],  label:'Jepara'},
+  'pati':        {lonlat:[111.0,-6.8],  label:'Pati'},
+  'rembang':     {lonlat:[111.3,-6.7],  label:'Rembang'},
+  'blora':       {lonlat:[111.4,-7.0],  label:'Blora'},
+  'grobogan':    {lonlat:[110.9,-7.1],  label:'Grobogan'},
+  'boyolali':    {lonlat:[110.6,-7.5],  label:'Boyolali'},
+  'sragen':      {lonlat:[111.0,-7.4],  label:'Sragen'},
+  'karanganyar': {lonlat:[111.1,-7.6],  label:'Karanganyar'},
+  'wonogiri':    {lonlat:[110.9,-7.8],  label:'Wonogiri'},
+  'sukoharjo':   {lonlat:[110.8,-7.7],  label:'Sukoharjo'},
+  'brebes':      {lonlat:[109.0,-6.9],  label:'Brebes'},
+  'pemalang':    {lonlat:[109.4,-6.9],  label:'Pemalang'},
+  'batang':      {lonlat:[109.7,-7.0],  label:'Batang'},
+  'banjarnegara':{lonlat:[109.7,-7.4],  label:'Banjarnegara'},
+  'purbalingga': {lonlat:[109.4,-7.4],  label:'Purbalingga'},
+  // ── JAWA TIMUR ──
+  'surabaya':    {lonlat:[112.7,-7.3],  label:'Surabaya'},
+  'malang':      {lonlat:[112.6,-8.0],  label:'Malang'},
+  'kediri':      {lonlat:[112.0,-7.8],  label:'Kediri'},
+  'blitar':      {lonlat:[112.2,-8.1],  label:'Blitar'},
+  'madiun':      {lonlat:[111.5,-7.6],  label:'Madiun'},
+  'mojokerto':   {lonlat:[112.4,-7.5],  label:'Mojokerto'},
+  'jombang':     {lonlat:[112.2,-7.5],  label:'Jombang'},
+  'nganjuk':     {lonlat:[111.9,-7.6],  label:'Nganjuk'},
+  'tulungagung': {lonlat:[111.9,-8.1],  label:'Tulungagung'},
+  'trenggalek':  {lonlat:[111.7,-8.0],  label:'Trenggalek'},
+  'ponorogo':    {lonlat:[111.5,-7.9],  label:'Ponorogo'},
+  'pacitan':     {lonlat:[111.1,-8.2],  label:'Pacitan'},
+  'magetan':     {lonlat:[111.3,-7.6],  label:'Magetan'},
+  'ngawi':       {lonlat:[111.4,-7.4],  label:'Ngawi'},
+  'bojonegoro':  {lonlat:[111.9,-7.2],  label:'Bojonegoro'},
+  'tuban':       {lonlat:[111.9,-6.9],  label:'Tuban'},
+  'lamongan':    {lonlat:[112.4,-7.1],  label:'Lamongan'},
+  'gresik':      {lonlat:[112.7,-7.2],  label:'Gresik'},
+  'sidoarjo':    {lonlat:[112.7,-7.5],  label:'Sidoarjo'},
+  'pasuruan':    {lonlat:[112.9,-7.6],  label:'Pasuruan'},
+  'probolinggo': {lonlat:[113.2,-7.8],  label:'Probolinggo'},
+  'lumajang':    {lonlat:[113.2,-8.1],  label:'Lumajang'},
+  'jember':      {lonlat:[113.7,-8.2],  label:'Jember'},
+  'banyuwangi':  {lonlat:[114.4,-8.2],  label:'Banyuwangi'},
+  'bondowoso':   {lonlat:[113.8,-8.0],  label:'Bondowoso'},
+  'situbondo':   {lonlat:[114.0,-7.7],  label:'Situbondo'},
+  'sampang':     {lonlat:[113.2,-7.2],  label:'Sampang'},
+  'pamekasan':   {lonlat:[113.5,-7.2],  label:'Pamekasan'},
+  'sumenep':     {lonlat:[113.9,-7.0],  label:'Sumenep'},
+  'bangkalan':   {lonlat:[112.7,-7.0],  label:'Bangkalan'},
+  // ── JAWA BARAT ──
+  'bandung':     {lonlat:[107.6,-6.9],  label:'Bandung'},
+  'bekasi':      {lonlat:[107.0,-6.2],  label:'Bekasi'},
+  'depok':       {lonlat:[106.8,-6.4],  label:'Depok'},
+  'bogor':       {lonlat:[106.8,-6.6],  label:'Bogor'},
+  'cimahi':      {lonlat:[107.5,-6.9],  label:'Cimahi'},
+  'tasikmalaya': {lonlat:[108.2,-7.4],  label:'Tasikmalaya'},
+  'cirebon':     {lonlat:[108.6,-6.7],  label:'Cirebon'},
+  'sukabumi':    {lonlat:[106.9,-6.9],  label:'Sukabumi'},
+  'garut':       {lonlat:[107.9,-7.2],  label:'Garut'},
+  'cianjur':     {lonlat:[107.1,-6.8],  label:'Cianjur'},
+  'sumedang':    {lonlat:[107.9,-6.9],  label:'Sumedang'},
+  'majalengka':  {lonlat:[108.2,-6.8],  label:'Majalengka'},
+  'kuningan':    {lonlat:[108.5,-7.0],  label:'Kuningan'},
+  'indramayu':   {lonlat:[108.3,-6.3],  label:'Indramayu'},
+  'subang':      {lonlat:[107.8,-6.6],  label:'Subang'},
+  'purwakarta':  {lonlat:[107.4,-6.6],  label:'Purwakarta'},
+  'karawang':    {lonlat:[107.3,-6.3],  label:'Karawang'},
+  'ciamis':      {lonlat:[108.4,-7.3],  label:'Ciamis'},
+  'banjar':      {lonlat:[108.5,-7.4],  label:'Banjar'},
+  'pangandaran': {lonlat:[108.7,-7.7],  label:'Pangandaran'},
+  // ── DKI JAKARTA ──
+  'jakarta':     {lonlat:[106.8,-6.2],  label:'Jakarta'},
+  'jakarta pusat':{lonlat:[106.8,-6.2], label:'Jakarta Pusat'},
+  'jakarta selatan':{lonlat:[106.8,-6.3],label:'Jakarta Selatan'},
+  'jakarta utara':{lonlat:[106.9,-6.1], label:'Jakarta Utara'},
+  'jakarta timur':{lonlat:[106.9,-6.2], label:'Jakarta Timur'},
+  'jakarta barat':{lonlat:[106.7,-6.2], label:'Jakarta Barat'},
+  // ── DI YOGYAKARTA ──
+  'yogyakarta':  {lonlat:[110.4,-7.8],  label:'Yogyakarta'},
+  'jogja':       {lonlat:[110.4,-7.8],  label:'Yogyakarta'},
+  'sleman':      {lonlat:[110.4,-7.7],  label:'Sleman'},
+  'bantul':      {lonlat:[110.3,-7.9],  label:'Bantul'},
+  'gunungkidul': {lonlat:[110.6,-8.0],  label:'Gunungkidul'},
+  'kulonprogo':  {lonlat:[110.2,-7.8],  label:'Kulonprogo'},
+  // ── BANTEN ──
+  'tangerang':   {lonlat:[106.6,-6.2],  label:'Tangerang'},
+  'serang':      {lonlat:[106.1,-6.1],  label:'Serang'},
+  'cilegon':     {lonlat:[106.0,-6.0],  label:'Cilegon'},
+  'lebak':       {lonlat:[106.2,-6.6],  label:'Lebak'},
+  'pandeglang':  {lonlat:[106.1,-6.3],  label:'Pandeglang'},
+  // ── BALI ──
+  'bali':        {lonlat:[115.2,-8.4],  label:'Bali'},
+  'denpasar':    {lonlat:[115.2,-8.7],  label:'Denpasar'},
+  'badung':      {lonlat:[115.2,-8.6],  label:'Badung'},
+  'gianyar':     {lonlat:[115.3,-8.5],  label:'Gianyar'},
+  'tabanan':     {lonlat:[115.1,-8.5],  label:'Tabanan'},
+  'buleleng':    {lonlat:[115.1,-8.1],  label:'Buleleng'},
+  'jembrana':    {lonlat:[114.7,-8.4],  label:'Jembrana'},
+  'klungkung':   {lonlat:[115.4,-8.5],  label:'Klungkung'},
+  'bangli':      {lonlat:[115.4,-8.4],  label:'Bangli'},
+  'karangasem':  {lonlat:[115.6,-8.5],  label:'Karangasem'},
+  // ── NUSA TENGGARA BARAT ──
+  'mataram':     {lonlat:[116.1,-8.6],  label:'Mataram'},
+  'lombok':      {lonlat:[116.3,-8.6],  label:'Lombok'},
+  'sumbawa':     {lonlat:[117.4,-8.5],  label:'Sumbawa'},
+  'dompu':       {lonlat:[118.5,-8.5],  label:'Dompu'},
+  'bima':        {lonlat:[118.7,-8.5],  label:'Bima'},
+  // ── NUSA TENGGARA TIMUR ──
+  'kupang':      {lonlat:[123.6,-10.2], label:'Kupang'},
+  'ende':        {lonlat:[121.7,-8.8],  label:'Ende'},
+  'maumere':     {lonlat:[122.2,-8.6],  label:'Maumere'},
+  'labuan bajo': {lonlat:[119.9,-8.5],  label:'Labuan Bajo'},
+  // ── KALIMANTAN ──
+  'pontianak':   {lonlat:[109.3,-0.0],  label:'Pontianak'},
+  'palangkaraya':{lonlat:[113.9,-2.2],  label:'Palangka Raya'},
+  'banjarmasin': {lonlat:[114.6,-3.3],  label:'Banjarmasin'},
+  'banjarbaru':  {lonlat:[114.8,-3.4],  label:'Banjarbaru'},
+  'samarinda':   {lonlat:[117.1,-0.5],  label:'Samarinda'},
+  'balikpapan':  {lonlat:[116.8,-1.3],  label:'Balikpapan'},
+  'tarakan':     {lonlat:[117.6,3.3],   label:'Tarakan'},
+  'berau':       {lonlat:[117.4,2.2],   label:'Berau'},
+  'kotabaru':    {lonlat:[116.2,-3.3],  label:'Kotabaru'},
+  'singkawang':  {lonlat:[108.9,0.9],   label:'Singkawang'},
+  'sambas':      {lonlat:[109.3,1.4],   label:'Sambas'},
+  'sintang':     {lonlat:[111.5,-0.1],  label:'Sintang'},
+  'ketapang':    {lonlat:[110.0,-1.8],  label:'Ketapang'},
+  'nunukan':     {lonlat:[117.7,4.1],   label:'Nunukan'},
+  'bulungan':    {lonlat:[117.4,2.8],   label:'Bulungan'},
+  'penajam':     {lonlat:[116.5,-1.2],  label:'Penajam'},
+  'kutai':       {lonlat:[117.0,-0.5],  label:'Kutai'},
+  // ── SULAWESI ──
+  'makassar':    {lonlat:[119.4,-5.1],  label:'Makassar'},
+  'manado':      {lonlat:[124.8,1.5],   label:'Manado'},
+  'palu':        {lonlat:[119.9,-0.9],  label:'Palu'},
+  'kendari':     {lonlat:[122.5,-3.9],  label:'Kendari'},
+  'gorontalo':   {lonlat:[123.1,0.5],   label:'Gorontalo'},
+  'mamuju':      {lonlat:[118.9,-2.7],  label:'Mamuju'},
+  'pare pare':   {lonlat:[119.6,-4.0],  label:'Parepare'},
+  'palopo':      {lonlat:[120.2,-3.0],  label:'Palopo'},
+  'luwu':        {lonlat:[120.5,-2.5],  label:'Luwu'},
+  'bone':        {lonlat:[120.4,-4.5],  label:'Bone'},
+  'gowa':        {lonlat:[119.5,-5.3],  label:'Gowa'},
+  'bulukumba':   {lonlat:[120.2,-5.6],  label:'Bulukumba'},
+  'bitung':      {lonlat:[125.2,1.4],   label:'Bitung'},
+  'tomohon':     {lonlat:[124.8,1.3],   label:'Tomohon'},
+  'kotamobagu':  {lonlat:[124.3,0.7],   label:'Kotamobagu'},
+  // ── SUMATERA ──
+  'medan':       {lonlat:[98.7,3.6],    label:'Medan'},
+  'palembang':   {lonlat:[104.7,-3.0],  label:'Palembang'},
+  'pekanbaru':   {lonlat:[101.4,0.5],   label:'Pekanbaru'},
+  'padang':      {lonlat:[100.4,-0.9],  label:'Padang'},
+  'banda aceh':  {lonlat:[95.3,5.5],    label:'Banda Aceh'},
+  'bandar lampung':{lonlat:[105.3,-5.4],label:'Bandar Lampung'},
+  'jambi':       {lonlat:[103.6,-1.6],  label:'Jambi'},
+  'bengkulu':    {lonlat:[102.3,-3.8],  label:'Bengkulu'},
+  'pangkal pinang':{lonlat:[106.1,-2.1],label:'Pangkal Pinang'},
+  'tanjung pinang':{lonlat:[104.5,0.9], label:'Tanjung Pinang'},
+  'batam':       {lonlat:[104.0,1.1],   label:'Batam'},
+  'binjai':      {lonlat:[98.5,3.6],    label:'Binjai'},
+  'tebing tinggi':{lonlat:[99.2,3.3],   label:'Tebing Tinggi'},
+  'pematang siantar':{lonlat:[99.1,2.9],label:'Pematang Siantar'},
+  'dumai':       {lonlat:[101.4,1.7],   label:'Dumai'},
+  'payakumbuh':  {lonlat:[100.6,-0.2],  label:'Payakumbuh'},
+  'bukittinggi': {lonlat:[100.4,-0.3],  label:'Bukittinggi'},
+  'lubuk linggau':{lonlat:[102.9,-3.3], label:'Lubuk Linggau'},
+  'prabumulih':  {lonlat:[104.2,-3.4],  label:'Prabumulih'},
+  'lahat':       {lonlat:[103.5,-3.8],  label:'Lahat'},
+  // ── MALUKU & PAPUA ──
+  'ambon':       {lonlat:[128.2,-3.7],  label:'Ambon'},
+  'ternate':     {lonlat:[127.4,0.8],   label:'Ternate'},
+  'jayapura':    {lonlat:[140.7,-2.5],  label:'Jayapura'},
+  'sorong':      {lonlat:[131.3,-0.9],  label:'Sorong'},
+  'manokwari':   {lonlat:[134.1,-0.9],  label:'Manokwari'},
+  'merauke':     {lonlat:[140.4,-8.5],  label:'Merauke'},
+  'timika':      {lonlat:[136.9,-4.5],  label:'Timika'},
+  'biak':        {lonlat:[136.1,-1.2],  label:'Biak'},
+  'nabire':      {lonlat:[135.5,-3.4],  label:'Nabire'},
+  // ── JEPANG ──
+  'tokyo':       {lonlat:[139.7,35.7],  label:'Tokyo'},
+  'osaka':       {lonlat:[135.5,34.7],  label:'Osaka'},
+  'kyoto':       {lonlat:[135.8,35.0],  label:'Kyoto'},
+  'yokohama':    {lonlat:[139.6,35.4],  label:'Yokohama'},
+  'nagoya':      {lonlat:[136.9,35.2],  label:'Nagoya'},
+  'sapporo':     {lonlat:[141.4,43.1],  label:'Sapporo'},
+  'fukuoka':     {lonlat:[130.4,33.6],  label:'Fukuoka'},
+  'kobe':        {lonlat:[135.2,34.7],  label:'Kobe'},
+  'kawasaki':    {lonlat:[139.7,35.5],  label:'Kawasaki'},
+  'hiroshima':   {lonlat:[132.5,34.4],  label:'Hiroshima'},
+  'sendai':      {lonlat:[140.9,38.3],  label:'Sendai'},
+  'chiba':       {lonlat:[140.1,35.6],  label:'Chiba'},
+  'saitama':     {lonlat:[139.6,35.9],  label:'Saitama'},
+  'naha':        {lonlat:[127.7,26.2],  label:'Naha · Okinawa'},
+  'okinawa':     {lonlat:[127.7,26.2],  label:'Okinawa'},
+  'nagasaki':    {lonlat:[129.9,32.7],  label:'Nagasaki'},
+  'kumamoto':    {lonlat:[130.7,32.8],  label:'Kumamoto'},
+  'nara':        {lonlat:[135.8,34.7],  label:'Nara'},
+  'kanazawa':    {lonlat:[136.6,36.6],  label:'Kanazawa'},
+  'matsuyama':   {lonlat:[132.8,33.8],  label:'Matsuyama'},
+  'takamatsu':   {lonlat:[134.0,34.3],  label:'Takamatsu'},
+  // ── ASIA TENGGARA ──
+  'singapore':   {lonlat:[103.8,1.3],   label:'Singapore'},
+  'kuala lumpur':{lonlat:[101.7,3.1],   label:'Kuala Lumpur'},
+  'johor bahru': {lonlat:[103.7,1.5],   label:'Johor Bahru'},
+  'penang':      {lonlat:[100.3,5.4],   label:'Penang'},
+  'kota kinabalu':{lonlat:[116.1,5.9],  label:'Kota Kinabalu'},
+  'kuching':     {lonlat:[110.3,1.6],   label:'Kuching'},
+  'manila':      {lonlat:[121.0,14.6],  label:'Manila'},
+  'cebu':        {lonlat:[123.9,10.3],  label:'Cebu'},
+  'bangkok':     {lonlat:[100.5,13.8],  label:'Bangkok'},
+  'chiang mai':  {lonlat:[98.9,18.8],   label:'Chiang Mai'},
+  'phuket':      {lonlat:[98.4,7.9],    label:'Phuket'},
+  'ho chi minh': {lonlat:[106.7,10.8],  label:'Ho Chi Minh'},
+  'hanoi':       {lonlat:[105.8,21.0],  label:'Hanoi'},
+  'phnom penh':  {lonlat:[104.9,11.6],  label:'Phnom Penh'},
+  'vientiane':   {lonlat:[102.6,18.0],  label:'Vientiane'},
+  'yangon':      {lonlat:[96.2,16.9],   label:'Yangon'},
+  'brunei':      {lonlat:[114.9,4.9],   label:'Brunei'},
+  'dili':        {lonlat:[125.6,-8.6],  label:'Dili'},
+  // ── ASIA TIMUR ──
+  'seoul':       {lonlat:[126.9,37.6],  label:'Seoul'},
+  'busan':       {lonlat:[129.1,35.1],  label:'Busan'},
+  'hong kong':   {lonlat:[114.2,22.3],  label:'Hong Kong'},
+  'taipei':      {lonlat:[121.5,25.0],  label:'Taipei'},
+  'beijing':     {lonlat:[116.4,39.9],  label:'Beijing'},
+  'shanghai':    {lonlat:[121.5,31.2],  label:'Shanghai'},
+  'guangzhou':   {lonlat:[113.3,23.1],  label:'Guangzhou'},
+  'shenzhen':    {lonlat:[114.1,22.5],  label:'Shenzhen'},
+  'macau':       {lonlat:[113.5,22.2],  label:'Macau'},
+  // ── ASIA SELATAN ──
+  'new delhi':   {lonlat:[77.2,28.6],   label:'New Delhi'},
+  'mumbai':      {lonlat:[72.9,19.1],   label:'Mumbai'},
+  'colombo':     {lonlat:[79.9,6.9],    label:'Colombo'},
+  'dhaka':       {lonlat:[90.4,23.7],   label:'Dhaka'},
+  'kathmandu':   {lonlat:[85.3,27.7],   label:'Kathmandu'},
+  // ── TIMUR TENGAH ──
+  'dubai':       {lonlat:[55.3,25.2],   label:'Dubai'},
+  'abu dhabi':   {lonlat:[54.4,24.5],   label:'Abu Dhabi'},
+  'riyadh':      {lonlat:[46.7,24.7],   label:'Riyadh'},
+  'jeddah':      {lonlat:[39.2,21.5],   label:'Jeddah'},
+  'makkah':      {lonlat:[39.8,21.4],   label:'Makkah'},
+  'madinah':     {lonlat:[39.6,24.5],   label:'Madinah'},
+  'doha':        {lonlat:[51.5,25.3],   label:'Doha'},
+  'kuwait':      {lonlat:[47.9,29.4],   label:'Kuwait'},
+  'muscat':      {lonlat:[58.6,23.6],   label:'Muscat'},
+  'manama':      {lonlat:[50.6,26.2],   label:'Manama'},
+  'amman':       {lonlat:[35.9,31.9],   label:'Amman'},
+  'beirut':      {lonlat:[35.5,33.9],   label:'Beirut'},
+  // ── EROPA ──
+  'london':      {lonlat:[-0.1,51.5],   label:'London'},
+  'paris':       {lonlat:[2.3,48.9],    label:'Paris'},
+  'amsterdam':   {lonlat:[4.9,52.4],    label:'Amsterdam'},
+  'frankfurt':   {lonlat:[8.7,50.1],    label:'Frankfurt'},
+  'berlin':      {lonlat:[13.4,52.5],   label:'Berlin'},
+  'madrid':      {lonlat:[-3.7,40.4],   label:'Madrid'},
+  'rome':        {lonlat:[12.5,41.9],   label:'Roma'},
+  'vienna':      {lonlat:[16.4,48.2],   label:'Vienna'},
+  'zurich':      {lonlat:[8.5,47.4],    label:'Zurich'},
+  'brussels':    {lonlat:[4.4,50.8],    label:'Brussels'},
+  'stockholm':   {lonlat:[18.1,59.3],   label:'Stockholm'},
+  'oslo':        {lonlat:[10.7,59.9],   label:'Oslo'},
+  'copenhagen':  {lonlat:[12.6,55.7],   label:'Copenhagen'},
+  'helsinki':    {lonlat:[25.0,60.2],   label:'Helsinki'},
+  'lisbon':      {lonlat:[-9.1,38.7],   label:'Lisbon'},
+  'athens':      {lonlat:[23.7,38.0],   label:'Athena'},
+  // ── AUSTRALIA & NZ ──
+  'sydney':      {lonlat:[151.2,-33.9], label:'Sydney'},
+  'melbourne':   {lonlat:[144.9,-37.8], label:'Melbourne'},
+  'brisbane':    {lonlat:[153.0,-27.5], label:'Brisbane'},
+  'perth':       {lonlat:[115.9,-32.0], label:'Perth'},
+  'adelaide':    {lonlat:[138.6,-34.9], label:'Adelaide'},
+  'auckland':    {lonlat:[174.8,-36.9], label:'Auckland'},
+  // ── AMERIKA ──
+  'new york':    {lonlat:[-74.0,40.7],  label:'New York'},
+  'los angeles': {lonlat:[-118.2,34.1], label:'Los Angeles'},
+  'chicago':     {lonlat:[-87.6,41.9],  label:'Chicago'},
+  'houston':     {lonlat:[-95.4,29.8],  label:'Houston'},
+  'san francisco':{lonlat:[-122.4,37.8],label:'San Francisco'},
+  'toronto':     {lonlat:[-79.4,43.7],  label:'Toronto'},
+  'vancouver':   {lonlat:[-123.1,49.3], label:'Vancouver'},
+  // ── LAINNYA ──
+  'victoria':    {lonlat:[55.5,-4.6],   label:'Victoria · Seychelles'},
+  'seychelles':  {lonlat:[55.5,-4.6],   label:'Seychelles'},
+  'cairo':       {lonlat:[31.2,30.1],   label:'Kairo'},
+  'johannesburg':{lonlat:[28.0,-26.2],  label:'Johannesburg'},
+  'nairobi':     {lonlat:[36.8,-1.3],   label:'Nairobi'},
 };
 
 function getCityCoord(cityStr){
@@ -742,7 +1010,8 @@ async function fetchGarments(){
         origin:row.c[2]?.v||'Klaten',
         year:row.c[3]?.v||'2026',
         edition:row.c[4]?.v||'',
-        mockup:convertDriveUrl(row.c[5]?.v||'')
+        mockup:convertDriveUrl(row.c[5]?.v||''),
+        featured:row.c[6]?.v||''
       };
     });
     console.log('GARMENTS loaded:',Object.keys(GARMENTS).length,'items');
@@ -783,23 +1052,20 @@ init();
 function renderGarmentsList(){
   const el=document.getElementById('garments-list');
   if(!el) return;
-  const ids=Object.keys(GARMENTS);
-  if(ids.length===0){
-    el.innerHTML=`<div style="background:var(--charcoal);padding:40px;text-align:center;grid-column:1/-1;">
-      <div style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Belum ada garment terdaftar</div>
-    </div>`;
+  const allIds=Object.keys(GARMENTS);
+  if(allIds.length===0){
+    el.innerHTML='<div style="background:var(--charcoal);padding:40px;text-align:center;grid-column:1/-1;"><div style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Belum ada garment terdaftar</div></div>';
     return;
   }
-  // Tampilkan hanya 6 terbaru di homepage
-  const showIds=ids.slice(-6).reverse();
-  const totalIds=ids.length;
-  // Tampilkan tombol "Lihat Semua" kalau lebih dari 6
-  if(totalIds>6){
-    const moreEl=document.getElementById('garments-more');
-    const countEl=document.getElementById('garments-count');
-    if(moreEl) moreEl.style.display='block';
-    if(countEl) countEl.textContent='('+totalIds+')';
-  }
+  // Tampilkan tombol Lihat Semua
+  const totalIds=allIds.length;
+  const moreEl=document.getElementById('garments-more');
+  const countEl=document.getElementById('garments-count');
+  if(moreEl) moreEl.style.display='block';
+  if(countEl) countEl.textContent='('+totalIds+')';
+  // Prioritaskan featured, fallback ke 6 terbaru
+  const featuredIds=allIds.filter(id=>GARMENTS[id].featured==='YES');
+  const showIds=(featuredIds.length>0?featuredIds:allIds.slice(-6).reverse()).slice(0,6);
   el.innerHTML=showIds.map(id=>{
     const g=GARMENTS[id];
     const mockupHtml=g.mockup

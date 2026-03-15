@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog Garment · Blumbang.id</title>
+<meta name="description" content="Semua garment Blumbang.id — kaos yang punya cerita. Scan QR dan lihat perjalanan setiap kaos.">
+<link rel="canonical" href="https://blumbang.id/catalog">
+<meta property="og:title" content="Katalog Garment · Blumbang.id">
+<meta property="og:description" content="Semua garment Blumbang.id — kaos yang punya cerita.">
+<meta property="og:url" content="https://blumbang.id/catalog">
+<meta property="og:image" content="https://blumbang.id/og-image.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
+  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
+.nav-back{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-back:hover{color:var(--gold);}
+.hero{padding:120px 40px 60px;text-align:center;}
+.hero-tag{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;display:block;text-transform:uppercase;}
+.hero-title{font-family:var(--font-logo);font-size:clamp(3rem,8vw,6rem);letter-spacing:0.05em;line-height:1.0;margin-bottom:20px;}
+.hero-sub{font-family:var(--font-body);font-size:1rem;font-weight:300;font-style:italic;color:var(--light);margin-bottom:8px;}
+.hero-count{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
+.filter-bar{padding:0 40px 40px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
+.filter-btn{font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:var(--light);border:1px solid var(--border);background:var(--charcoal);padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);}
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
+.garment-card{background:var(--charcoal);display:block;text-decoration:none;transition:background 0.2s;position:relative;overflow:hidden;}
+.garment-card:hover{background:var(--grey);}
+.garment-card img{width:100%;height:200px;object-fit:cover;display:block;}
+.card-ph{width:100%;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--grey);}
+.card-body{padding:20px 24px;}
+.card-id{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px;}
+.card-name{font-family:var(--font-body);font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:8px;}
+.card-meta{display:flex;gap:12px;flex-wrap:wrap;}
+.card-meta span{font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;}
+.card-link{margin-top:14px;font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;}
+.loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
+.empty{padding:80px 40px;text-align:center;}
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .hero{padding:90px 20px 40px;}
+  .filter-bar{padding:0 20px 30px;}
+  .catalog-grid{margin:0 0 60px;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <a href="/" class="nav-back">← Kembali</a>
+</nav>
+
+<div class="hero">
+  <span class="hero-tag">✦ Living Garments</span>
+  <h1 class="hero-title">KAOS YANG<br>PUNYA CERITA</h1>
+  <p class="hero-sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
+  <div class="hero-count" id="hero-count">Memuat...</div>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterGarments('all',this)">Semua</button>
+  <button class="filter-btn" onclick="filterGarments('2026',this)">2026</button>
+  <button class="filter-btn" onclick="filterGarments('2025',this)">2025</button>
+</div>
+
+<div class="catalog-grid" id="catalog-grid">
+  <div class="loading">Memuat garment...</div>
+</div>
+
+<script>
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+let GARMENTS={};
+let currentFilter='all';
+
+function convertDriveUrl(url){
+  if(!url) return '';
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(match) return 'https://drive.google.com/uc?export=view&id='+match[1];
+  return url;
+}
+
+async function fetchGarments(){
+  try{
+    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS';
+    const r=await fetch(url);
+    const txt=await r.text();
+    const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match) throw new Error('No response');
+    const json=JSON.parse(match[1]);
+    const rows=json.table.rows||[];
+    rows.forEach(function(row){
+      const id=row.c[0]&&row.c[0].v;
+      if(!id) return;
+      GARMENTS[id]={
+        name:((row.c[1]&&row.c[1].v)||id).replace(/\n/g,'<br>'),
+        origin:(row.c[2]&&row.c[2].v)||'Klaten',
+        year:(row.c[3]&&row.c[3].v)||'2026',
+        edition:(row.c[4]&&row.c[4].v)||'',
+        mockup:convertDriveUrl((row.c[5]&&row.c[5].v)||'')
+      };
+    });
+    renderCatalog();
+  }catch(e){
+    document.getElementById('catalog-grid').innerHTML='<div class="loading">Gagal memuat data. Coba refresh.</div>';
+  }
+}
+
+function filterGarments(filter, btn){
+  currentFilter=filter;
+  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
+  btn.classList.add('active');
+  renderCatalog();
+}
+
+function renderCatalog(){
+  const grid=document.getElementById('catalog-grid');
+  const countEl=document.getElementById('hero-count');
+  const allIds=Object.keys(GARMENTS);
+
+  const filtered=allIds.filter(function(id){
+    if(currentFilter==='all') return true;
+    return GARMENTS[id].year==currentFilter;
+  });
+
+  countEl.textContent=filtered.length+' Garment Terdaftar';
+
+  if(filtered.length===0){
+    grid.innerHTML='<div class="loading">Belum ada garment untuk filter ini.</div>';
+    return;
+  }
+
+  grid.innerHTML=filtered.map(function(id){
+    const g=GARMENTS[id];
+    const img=g.mockup
+      ?'<img src="'+g.mockup+'" alt="'+g.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+      :'';
+    return '<a href="/id/'+id+'" class="garment-card">'
+      +img
+      +'<div class="card-ph" style="display:'+(g.mockup?'none':'flex')+'">'
+      +'<span style="font-size:2rem;color:var(--gold-dim);">✦</span>'
+      +'<span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.15em;color:var(--muted);margin-top:6px;text-transform:uppercase;">Mockup Coming Soon</span>'
+      +'</div>'
+      +'<div class="card-body">'
+      +'<div class="card-id">'+id+'</div>'
+      +'<div class="card-name">'+g.name+'</div>'
+      +'<div class="card-meta">'
+      +'<span>'+g.origin+'</span>'
+      +'<span>·</span>'
+      +'<span>'+(g.edition||g.year)+'</span>'
+      +'</div>'
+      +'<div class="card-link">Lihat Perjalanan →</div>'
+      +'</div>'
+      +'</a>';
+  }).join('');
+}
+
+fetchGarments();
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tentang Blumbang.id — Made Slowly. Felt Deeply.</title>
+<meta name="description" content="Blumbang.id adalah konveksi kaos dan sablon independen dari Jeto, Klaten, Jawa Tengah. Dibuat perlahan, dirasakan dalam.">
+<link rel="canonical" href="https://blumbang.id/about">
+<meta property="og:title" content="Tentang Blumbang.id">
+<meta property="og:description" content="Konveksi kaos dan sablon dari Klaten. Made Slowly. Felt Deeply.">
+<meta property="og:url" content="https://blumbang.id/about">
+<meta property="og:image" content="https://blumbang.id/og-image.jpg">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
+  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+.grid-bg{position:fixed;inset:0;background-image:linear-gradient(rgba(255,255,255,0.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.018) 1px,transparent 1px);background-size:72px 72px;pointer-events:none;z-index:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.97);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;line-height:1;}
+.spark-spin{display:inline-block;animation:spin 6s linear infinite;font-size:1rem;vertical-align:middle;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+.section{padding:100px 40px;position:relative;z-index:1;border-top:1px solid var(--border);}
+.section-inner{max-width:1100px;margin:0 auto;}
+.section-tag{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;display:block;text-transform:uppercase;}
+.section-title{font-family:var(--font-logo);font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.05em;line-height:1.05;margin-bottom:20px;}
+.section-body{font-family:var(--font-body);font-size:1.05rem;font-weight:300;font-style:italic;line-height:1.9;color:var(--white);max-width:560px;}
+.hero-about{padding:140px 40px 80px;text-align:center;position:relative;z-index:1;}
+.hero-about h1{font-family:var(--font-logo);font-size:clamp(4rem,10vw,8rem);letter-spacing:0.05em;line-height:0.95;margin-bottom:32px;}
+.hero-about .sub{font-family:var(--font-body);font-size:1.1rem;font-weight:300;font-style:italic;color:var(--white);line-height:1.8;max-width:560px;margin:0 auto;}
+.identity-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:64px;}
+.identity-card{background:var(--charcoal);padding:40px;position:relative;overflow:hidden;transition:background 0.3s;}
+.identity-card:hover{background:var(--grey);}
+.identity-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,var(--gold-dim),transparent);opacity:0;transition:opacity 0.3s;}
+.identity-card:hover::before{opacity:1;}
+.ic-num{font-family:var(--font-logo);font-size:2rem;letter-spacing:0.1em;color:var(--gold-dim);margin-bottom:14px;}
+.ic-title{font-family:var(--font-body);font-size:1.2rem;font-weight:600;margin-bottom:10px;color:var(--white);}
+.ic-body{font-family:var(--font-body);font-size:0.93rem;line-height:1.85;color:var(--light);}
+.ic-spark{position:absolute;bottom:20px;right:20px;font-size:1.1rem;color:var(--gold-dim);opacity:0.4;}
+.process-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:64px;}
+.ps-item{background:var(--charcoal);padding:40px 32px;}
+.ps-num{font-family:var(--font-logo);font-size:3rem;letter-spacing:0.1em;color:var(--gold-dim);margin-bottom:18px;line-height:1;}
+.ps-title{font-family:var(--font-body);font-size:1.1rem;font-weight:600;margin-bottom:10px;color:var(--white);}
+.ps-body{font-family:var(--font-body);font-size:0.93rem;line-height:1.9;color:var(--light);}
+.manifesto{padding:120px 40px;text-align:center;position:relative;z-index:1;border-top:1px solid var(--border);}
+.manifesto-inner{max-width:720px;margin:0 auto;}
+.manifesto-quote{font-family:var(--font-body);font-size:clamp(1.5rem,3.2vw,2.4rem);font-weight:300;font-style:italic;line-height:1.6;color:var(--white);margin-bottom:32px;}
+.manifesto-quote em{font-style:normal;color:var(--gold);font-weight:600;}
+.manifesto-attr{font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.35em;color:var(--dim);text-transform:uppercase;margin-bottom:48px;}
+.btn-primary{padding:16px 36px;background:var(--gold);border:1px solid var(--gold);color:var(--black);font-family:var(--font-ui);font-size:0.78rem;font-weight:700;letter-spacing:0.25em;text-decoration:none;transition:all 0.25s;text-transform:uppercase;display:inline-block;}
+.btn-primary:hover{background:var(--white);border-color:var(--white);}
+footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-index:1;}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-brand{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:0.15em;color:var(--gold);}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.15em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
+@keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
+@media(max-width:768px){
+  nav{padding:14px 18px;}.nav-links{display:none;}.nav-order{display:none;}.nav-hamburger{display:block;}
+  .hero-about{padding:100px 20px 60px;}
+  .section{padding:72px 20px;}
+  .identity-grid,.process-steps{grid-template-columns:1fr;}
+  .manifesto{padding:72px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<nav>
+  <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
+  <div class="nav-links">
+    <a href="/catalog">Karya</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/about" class="active">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
+
+<div class="hero-about">
+  <h1>MADE<br>SLOWLY.<br><span style="color:transparent;-webkit-text-stroke:2px rgba(245,240,232,0.2);">FELT DEEPLY.</span></h1>
+  <p class="sub">Konveksi kaos dan sablon independen dari Jeto, Klaten, Jawa Tengah. Tempat para pembuat yang tenang, tangan-tangan yang bekerja dengan sabar.</p>
+</div>
+
+<section class="section" style="border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <span class="section-tag">✦ Garment Identity System</span>
+    <h2 class="section-title">PERJALANAN KAOS<br>DIMULAI DI SINI</h2>
+    <p class="section-body">Bukan sekadar kaos. Setiap produk memiliki identitas unik yang hidup bersama pemiliknya.</p>
+    <div class="identity-grid">
+      <div class="identity-card">
+        <div class="ic-num">01</div>
+        <div class="ic-title">Identitas Unik</div>
+        <div class="ic-body">Setiap kaos memiliki nomor seri tersendiri. Scan QR code — kamu terhubung dengan halaman unik yang hidup bersama pemiliknya.</div>
+        <div class="ic-spark">✦</div>
+      </div>
+      <div class="identity-card">
+        <div class="ic-num">02</div>
+        <div class="ic-title">Perjalanan Tercatat</div>
+        <div class="ic-body">Setiap scan meninggalkan jejak di peta dunia. Kaos yang lahir di Klaten dapat mencatat perjalanannya hingga Tokyo, London, atau kota mana pun.</div>
+        <div class="ic-spark">✦</div>
+      </div>
+      <div class="identity-card">
+        <div class="ic-num">03</div>
+        <div class="ic-title">Cerita Owner</div>
+        <div class="ic-body">Pemilik kaos dapat menambahkan cerita, foto, dan kenangan. Halaman kaos menjadi ruang hidup yang terus menemani pemiliknya.</div>
+        <div class="ic-spark">✦</div>
+      </div>
+      <div class="identity-card">
+        <div class="ic-num">04</div>
+        <div class="ic-title">Rebuilding</div>
+        <div class="ic-body">Kaos rusak bukan akhir cerita. Jika sebagian masih layak, cerita dapat dilanjutkan dan identitas tetap hidup.</div>
+        <div class="ic-spark">✦</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="section-inner">
+    <span class="section-tag">✦ Cara Kerja</span>
+    <h2 class="section-title">TIGA LANGKAH<br>MENUJU KAOS BERIDENTITAS</h2>
+    <div class="process-steps">
+      <div class="ps-item">
+        <div class="ps-num">01</div>
+        <div class="ps-title">Order & Desain</div>
+        <div class="ps-body">Chat via WhatsApp. Ceritakan kebutuhanmu — jenis kaos, desain, dan jumlah. Tim Blumbang membantu dari konsep hingga siap produksi.</div>
+      </div>
+      <div class="ps-item">
+        <div class="ps-num">02</div>
+        <div class="ps-title">Produksi di Klaten</div>
+        <div class="ps-body">Dibuat dengan tangan di Klaten, Indonesia. Tempat para pekerja yang tenang. Para pembuat yang sering tidak tercatat. Tangan-tangan yang bekerja dengan sabar.<br><br>Di tempat ini cahaya-cahaya kecil mulai muncul.</div>
+      </div>
+      <div class="ps-item">
+        <div class="ps-num">03</div>
+        <div class="ps-title">Perjalanan Kaos Dimulai</div>
+        <div class="ps-body">Scan QR — halaman garment aktif. Tambahkan cerita. Catat perjalanan.<br><br>Cahaya kecil ini menemanimu ke mana saja.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="manifesto">
+  <div class="manifesto-inner">
+    <div class="manifesto-quote">"Cahaya kecil ini menemanimu <em>sampai mana saja.</em>"</div>
+    <div class="manifesto-attr">Blumbang · Made Slowly · Felt Deeply</div>
+    <a href="https://wa.me/6281234561146" class="btn-primary">✦ &nbsp; MULAI ORDER</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
+    <div class="footer-links">
+      <a href="/catalog">Karya</a>
+      <a href="/sparks">Perjalanan</a>
+      <a href="/about">Tentang</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
+  </div>
+</footer>
+<script>
+function toggleMenu(){
+  const m=document.getElementById('nav-mobile');
+  const h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent=m.classList.contains('open')?'✕':'☰';
+}
+</script>
+</body>
+</html>

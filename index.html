@@ -29,7 +29,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-kanan a:hover{color:var(--emas);}
 .nav-kanan .order{background:var(--emas);color:var(--hitam);padding:9px 20px;font-weight:700;}
 .nav-kanan .order:hover{background:var(--putih);}
-.nav-burger{display:none;background:none;border:none;color:var(--emas);font-size:1.3rem;cursor:pointer;}
+.nav-burger{display:none;background:none;border:none;color:var(--emas);font-size:1.3rem;cursor:pointer;margin-top:4px;}
 .nav-mob{display:none;position:fixed;top:60px;left:0;right:0;background:var(--abu);border-bottom:1px solid var(--border);z-index:199;flex-direction:column;padding:16px 24px;}
 .nav-mob.buka{display:flex;}
 .nav-mob a{font-family:var(--fu);font-size:.82rem;font-weight:500;letter-spacing:.12em;color:var(--terang);text-decoration:none;padding:13px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
@@ -278,7 +278,15 @@ footer{padding:26px 40px;border-top:1px solid var(--border);}
     <div class="hero-stats">
       <div class="hs-item">
         <div class="hs-num" id="stat-garment">—</div>
-        <div class="hs-lbl">Garment</div>
+        <div class="hs-lbl">Garment Terdaftar</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-num" id="stat-berjalan">—</div>
+        <div class="hs-lbl">Sudah Berjalan</div>
+      </div>
+      <div class="hs-item">
+        <div class="hs-num" id="stat-scan">—</div>
+        <div class="hs-lbl">Total Scan</div>
       </div>
       <div class="hs-item">
         <div class="hs-num" id="stat-kota">—</div>
@@ -526,32 +534,45 @@ async function muatFoto(){
   }catch(e){}
 }
 
-// Load angka live dari Sheets SPARKS
+// Load angka live dari Sheets
 async function muatStats(){
   try{
-    const txt=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
-    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    if(!m) return;
-    const baris=JSON.parse(m[1]).table.rows||[];
-    const garmentSet=new Set(baris.filter(r=>r.c[0]?.v).map(r=>r.c[0].v));
+    // Garment dari sheet GARMENTS
+    const txtG=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS')).text();
+    const mG=txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisG=mG?JSON.parse(mG[1]).table.rows||[]:[];
+    const totalGarment=barisG.filter(r=>r.c[0]?.v).length||140;
+
+    // Kota, negara, berjalan & scan dari sheet SPARKS
+    const txtS=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
+    const mS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisS=mS?JSON.parse(mS[1]).table.rows||[]:[];
     const kotaSet=new Set(['Klaten']);
     const negaraSet=new Set(['Indonesia']);
-    baris.forEach(r=>{
+    const garmentBerjalan=new Set();
+    let totalScan=0;
+    barisS.forEach(r=>{
+      const id=r.c[0]?.v;
       const c=r.c[2]?.v;
+      if(id) garmentBerjalan.add(id);
       if(c){
+        totalScan++;
         kotaSet.add(c.split(',')[0].trim());
         if(c.includes(',')) negaraSet.add(c.split(',').pop().trim());
       }
     });
-    animNum('stat-garment', garmentSet.size||140);
+
+    animNum('stat-garment', totalGarment);
+    animNum('stat-berjalan', garmentBerjalan.size);
+    animNum('stat-scan', totalScan);
     animNum('stat-kota', kotaSet.size);
     animNum('stat-negara', negaraSet.size);
-    // Update angka di CTA
     const ctaEl=document.getElementById('stat-cta');
-    if(ctaEl) ctaEl.textContent=garmentSet.size||140;
+    if(ctaEl) ctaEl.textContent=totalGarment;
   }catch(e){
-    // Fallback statis
     document.getElementById('stat-garment').textContent='140';
+    document.getElementById('stat-berjalan').textContent='6';
+    document.getElementById('stat-scan').textContent='—';
     document.getElementById('stat-kota').textContent='12';
     document.getElementById('stat-negara').textContent='3';
   }

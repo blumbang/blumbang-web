@@ -196,4 +196,450 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
   .hero{padding:90px 20px 60px;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
   .section{padding:72px 20px;}
-  .footer-inner{flex-direction:column;text-align:cent
+  .footer-inner{flex-direction:column;text-align:center;}
+  .gw{padding:0 14px;}
+  .g-fs{padding:18px;}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<noscript>
+<div style="font-family:sans-serif;max-width:800px;margin:40px auto;padding:20px;color:#333;">
+<h1>Blumbang.id — Konveksi & Sablon Kaos Klaten</h1>
+<p>Konveksi kaos polos dan sablon terpercaya di Klaten, Jawa Tengah. Kaos CC 30s, CC 24s, Bambu, PDH, Polo. Grosir mulai 12 pcs.</p>
+<p>WA: 081234561146 | Buka Senin–Sabtu 08.00–17.00</p>
+</div>
+</noscript>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
+  <div class="nav-links">
+    <a href="/catalog">Karya</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <span class="nav-id" id="nav-id"></span>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
+
+<!-- HOME PAGE -->
+<div id="page-home">
+  <section class="hero">
+    <div class="hero-eyebrow">BLUMB✦NG ID · EST. 2022</div>
+    <div class="hero-location">Jeto, Klaten, Jawa Tengah · Indonesia</div>
+    <h1 class="hero-title">
+      MADE<br>
+      SLOWLY.<br>
+      <span class="outline">FELT DEEPLY.</span>
+    </h1>
+    <div class="hero-sub-en">Independent T-Shirt Studio & Screen Printing</div>
+    <div class="hero-sub-id">Konveksi kaos polos dan sablon dari Klaten untuk seluruh Indonesia.</div>
+    <div class="hero-vline"></div>
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-label">LIVING GARMENTS</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-label">PERJALANAN</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-kota">—</div><div class="stat-label">KOTA</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-negara">—</div><div class="stat-label">NEGARA</div></div>
+    </div>
+    <div class="latest-spark" id="latest-spark" style="display:none">
+      <div class="latest-spark-inner">
+        <div class="ls-dot"></div>
+        <div class="ls-text">Baru saja discan di <span class="ls-city" id="ls-city">—</span></div>
+      </div>
+    </div>
+    <div class="hero-cta" style="margin-top:40px;">
+      <a href="https://wa.me/6281234561146" class="btn-primary">✦ &nbsp; ORDER SEKARANG</a>
+      <a href="/catalog" class="btn-ghost">Lihat Karya →</a>
+    </div>
+  </section>
+
+  <!-- GALERI -->
+  <section class="section" id="galeri">
+    <div class="section-inner">
+      <span class="section-tag">✦ Karya Blumbang</span>
+      <h2 class="section-title">DIBUAT DI KLATEN,<br>DIPAKAI DI MANA SAJA</h2>
+      <p class="section-body">Screen printing, DTF, konveksi kaos polos — semuanya satu atap di Jeto, Klaten.</p>
+      <div id="galeri-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:48px;"></div>
+      <div style="text-align:center;margin-top:24px;">
+        <a href="https://www.tiktok.com/@blumbang.id" target="_blank" style="font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.2em;color:var(--dim);text-decoration:none;text-transform:uppercase;border:1px solid var(--border);padding:10px 24px;display:inline-block;transition:all 0.2s;" onmouseover="this.style.color='var(--gold)';this.style.borderColor='var(--gold-dim)'" onmouseout="this.style.color='var(--dim)';this.style.borderColor='var(--border)'">Lihat Lebih di TikTok @blumbang.id →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVING GARMENTS -->
+  <section class="section" id="living-garments">
+    <div class="section-inner">
+      <span class="section-tag">✦ Living Garments</span>
+      <h2 class="section-title">KAOS YANG<br>PUNYA CERITA</h2>
+      <p class="section-body">Setiap kaos memiliki identitas unik. Klik untuk melihat perjalanan dan cerita di baliknya.</p>
+      <div id="garments-more" style="display:none;margin-top:24px;">
+        <a href="/catalog" style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;text-decoration:none;border:1px solid var(--gold);padding:12px 32px;display:inline-block;">Lihat Semua <span id="garments-count"></span> Kaos &#x2192;</a>
+      </div>
+      <div id="garments-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin-top:32px;">
+        <div style="background:var(--charcoal);padding:32px;text-align:center;">
+          <div style="font-family:var(--font-ui);font-size:0.7rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Memuat data...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
+      <div class="footer-links">
+        <a href="/catalog">Karya</a>
+        <a href="/sparks">Perjalanan</a>
+        <a href="/about">Tentang</a>
+        <a href="https://wa.me/6281234561146">WhatsApp</a>
+      </div>
+      <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
+    </div>
+  </footer>
+</div>
+
+<!-- GARMENT PAGE -->
+<div id="page-garment">
+  <div class="qc-banner" id="qc-banner">⚠ QC Mode — Scan ini tidak dihitung sebagai perjalanan</div>
+  <div class="gw">
+    <div class="spark-moment" id="spark-moment" style="display:none">
+      <div class="sm-num" id="sm-num">—</div>
+      <div class="sm-text" id="sm-text">perjalanan kaos ini</div>
+      <div class="sm-badge" id="sm-badge">✦ Kamu Spark Ke-</div>
+    </div>
+    <div class="first-spark-banner" id="first-spark-banner">
+      <div class="fsb-text">🔥 Kamu menyalakan Spark pertama di kotamu!</div>
+    </div>
+    <div class="g-hdr">
+      <div class="g-lbl">Garment Identity</div>
+      <div class="g-id" id="g-id">—</div>
+      <div class="g-nm" id="g-nm">—</div>
+    </div>
+    <div class="g-div"><span>✦</span></div>
+    <div class="g-mock">
+      <div class="g-ph" id="g-ph"><div class="ps">✦</div><p>Mockup Coming Soon</p></div>
+      <img id="g-img" src="" alt="Mockup" style="display:none">
+      <div class="g-mtag" id="g-mtag">—</div>
+    </div>
+    <div class="g-ori">
+      <div class="g-oi"><div class="lbl">Dibuat Di</div><div class="val" id="g-ori-val">Klaten</div></div>
+      <div class="g-oi"><div class="lbl">Tahun</div><div class="val" id="g-yr">2026</div></div>
+      <div class="g-oi"><div class="lbl">Edisi</div><div class="val" id="g-ed">—</div></div>
+    </div>
+    <div class="g-jrn">
+      <div class="g-stl">✦ Perjalanan Kaos Ini</div>
+      <div class="jlist" id="jlist">
+        <div class="ji">
+          <div style="position:relative"><div class="jdot"></div><div class="jline"></div></div>
+          <div><div class="jcity">Klaten, Jawa Tengah</div><div class="jtime">Lahir di sini · 2026</div><div class="jbadge">Origin</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="g-sto">
+      <div class="g-stl">✦ Cerita Dari Pemilik</div>
+      <div id="sto-wrap"><div class="semp">Memuat cerita...</div></div>
+    </div>
+    <div class="g-fs">
+      <div id="form-body">
+        <div class="g-ft">Tambah Ceritamu</div>
+        <div class="g-fsb">Cerita ini akan diulas terlebih dahulu sebelum ditampilkan.</div>
+        <div class="fg"><label class="fl">Nama Kamu *</label><input type="text" class="fi" id="f-name" placeholder="Nama atau panggilan..."></div>
+        <div class="fg"><label class="fl">Kota Kamu Sekarang *</label><input type="text" class="fi" id="f-city" placeholder="Yogyakarta, Singapore, Tokyo..."></div>
+        <div class="fg"><label class="fl">Ceritamu (opsional)</label><textarea class="fta" id="f-story" placeholder="Cerita singkat tentang kaos ini bersamamu..."></textarea></div>
+        <div class="fg">
+          <label class="fl">Foto Kamu (opsional)</label>
+          <div class="fup"><img class="uprev" id="u-prev" src="" alt=""><div class="uico" id="u-ico">📷</div><div class="utxt" id="u-txt">Tap untuk pilih foto</div><input type="file" accept="image/*" id="f-photo" onchange="prevPhoto(this)"></div>
+        </div>
+        <button class="fbtn" id="f-btn" onclick="submitStory()">✦ &nbsp; Kirim Ceritaku</button>
+        <div class="ferr" id="f-err"></div>
+      </div>
+      <div class="fok" id="form-ok"><span class="bsp">✦</span><h3>Ceritamu sudah diterima!</h3><p>Sedang diulas · Akan segera tayang</p></div>
+    </div>
+    <div class="g-ftr"><a href="/">blumb✦ng·id</a> &nbsp;·&nbsp; <a href="/">Made Slowly. Felt Deeply.</a></div>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyM7IPyEuLNPj2vzjA0IGeHW2DrDwk7cAx4ROBnEs4LtBtuKuqg02CbhzygW5-zvS6J/exec';
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+
+function toggleMenu(){
+  const m=document.getElementById('nav-mobile');
+  const h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent=m.classList.contains('open')?'✕':'☰';
+}
+
+let GARMENTS={};
+const pagePath=window.location.pathname;
+const isQC=pagePath.includes('/qc/');
+const isGarment=pagePath.includes('/id/')||isQC;
+
+function convertDriveUrl(url){
+  if(!url) return '';
+  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if(match) return 'https://drive.google.com/uc?export=view&id='+match[1];
+  return url;
+}
+
+async function fetchGarments(){
+  try{
+    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS';
+    const r=await fetch(url);
+    const txt=await r.text();
+    const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match) throw new Error('No gviz response');
+    const json=JSON.parse(match[1]);
+    const rows=json.table.rows||[];
+    rows.forEach(row=>{
+      const id=row.c[0]&&row.c[0].v;
+      if(!id) return;
+      GARMENTS[id]={
+        name:((row.c[1]&&row.c[1].v)||id).replace(/\n/g,'<br>'),
+        origin:(row.c[2]&&row.c[2].v)||'Klaten',
+        year:(row.c[3]&&row.c[3].v)||'2026',
+        edition:(row.c[4]&&row.c[4].v)||'',
+        mockup:convertDriveUrl((row.c[5]&&row.c[5].v)||''),
+        featured:(row.c[6]&&row.c[6].v)||''
+      };
+    });
+  }catch(e){console.warn('Gagal load GARMENTS',e);}
+}
+
+async function init(){
+  await fetchGarments();
+  if(isGarment){
+    document.getElementById('page-home').style.display='none';
+    const id=pagePath.split('/').filter(Boolean).pop().toUpperCase();
+    document.getElementById('nav-id').textContent=id;
+    showGarment(id,isQC);
+  }else{
+    renderGarmentsList();
+    loadHomeData();
+    loadGaleri();
+  }
+}
+init();
+
+function renderGarmentsList(){
+  const el=document.getElementById('garments-list');
+  if(!el) return;
+  const allIds=Object.keys(GARMENTS);
+  if(allIds.length===0){
+    el.innerHTML='<div style="background:var(--charcoal);padding:40px;text-align:center;grid-column:1/-1;"><div style="font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Belum ada garment terdaftar</div></div>';
+    return;
+  }
+  const moreEl=document.getElementById('garments-more');
+  const countEl=document.getElementById('garments-count');
+  if(moreEl) moreEl.style.display='block';
+  if(countEl) countEl.textContent='('+allIds.length+')';
+  const featuredIds=allIds.filter(id=>GARMENTS[id].featured==='YES');
+  const showIds=(featuredIds.length>0?featuredIds:allIds.slice(-6).reverse()).slice(0,6);
+  el.innerHTML=showIds.map(id=>{
+    const g=GARMENTS[id];
+    const img=g.mockup?'<img src="'+g.mockup+'" alt="'+g.name+'" style="width:100%;height:180px;object-fit:cover;display:block;" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">':'';
+    return '<a href="/id/'+id+'" class="garment-card-link">'+img
+      +'<div style="display:'+(g.mockup?'none':'flex')+';flex-direction:column;align-items:center;justify-content:center;height:180px;background:var(--grey);"><span style="font-size:2rem;color:var(--gold-dim);">✦</span><span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.15em;color:var(--muted);margin-top:6px;text-transform:uppercase;">Mockup Coming Soon</span></div>'
+      +'<div style="padding:20px 24px;">'
+      +'<div style="font-family:var(--font-logo);font-size:1.1rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px;">'+id+'</div>'
+      +'<div style="font-family:var(--font-body);font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:8px;">'+g.name+'</div>'
+      +'<div style="display:flex;gap:12px;flex-wrap:wrap;">'
+      +'<span style="font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;">'+g.origin+'</span>'
+      +'<span style="font-family:var(--font-ui);font-size:0.65rem;color:var(--muted);">·</span>'
+      +'<span style="font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;">'+(g.edition||g.year)+'</span>'
+      +'</div>'
+      +'<div style="margin-top:14px;font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;">Lihat Perjalanan →</div>'
+      +'</div></a>';
+  }).join('');
+}
+
+async function loadGaleri(){
+  const grid=document.getElementById('galeri-grid');
+  if(!grid) return;
+  try{
+    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GALERI';
+    const r=await fetch(url);
+    const txt=await r.text();
+    const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!match) throw new Error('No response');
+    const json=JSON.parse(match[1]);
+    const rows=(json.table.rows||[]).filter(r=>r.c[0]&&r.c[0].v);
+    if(!rows.length){
+      grid.innerHTML=Array(6).fill(0).map(()=>'<div style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:absolute;inset:0;"><span style="font-size:2rem;color:var(--gold-dim);">✦</span><span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:6px;">Foto Produk</span></div></div>').join('');
+      return;
+    }
+    grid.innerHTML=rows.slice(0,6).map(row=>{
+      const foto=row.c[0].v||'';
+      const desk=(row.c[1]&&row.c[1].v)||'';
+      return '<div style="background:var(--charcoal);aspect-ratio:1;position:relative;overflow:hidden;">'
+        +'<img src="'+foto+'" alt="'+desk+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0;transition:transform 0.4s;" onmouseover="this.style.transform=\'scale(1.04)\'" onmouseout="this.style.transform=\'scale(1)\'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
+        +'<div style="display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;position:absolute;inset:0;"><span style="font-size:2rem;color:var(--gold-dim);">✦</span></div>'
+        +(desk?'<div style="position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.75));padding:20px 12px 10px;font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.1em;color:var(--white);text-transform:uppercase;">'+desk+'</div>':'')
+        +'</div>';
+    }).join('');
+  }catch(e){console.warn('Galeri gagal load',e);}
+}
+
+function loadHomeData(){
+  const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS';
+  fetch(url).then(r=>r.text()).then(txt=>{
+    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const json=JSON.parse(m[1]);
+    const rows=json.table.rows||[];
+    const uniqueG=new Set(rows.filter(r=>r.c[0]&&r.c[0].v).map(r=>r.c[0].v));
+    animateNum('stat-garments',uniqueG.size);
+    animateNum('stat-perjalanan',rows.filter(r=>r.c[0]&&r.c[0].v).length);
+    const citySet=new Set(['klaten']);
+    rows.forEach(r=>{const c=r.c[2]&&r.c[2].v;if(c)citySet.add(c.split(',')[0].trim().toLowerCase());});
+    animateNum('stat-kota',citySet.size);
+    const negSet=new Set(['Indonesia']);
+    rows.forEach(r=>{const c=r.c[2]&&r.c[2].v;if(c){const p=c.split(',');if(p.length>1)negSet.add(p[p.length-1].trim());}});
+    animateNum('stat-negara',negSet.size);
+    const scans=rows.filter(r=>r.c[2]&&r.c[2].v);
+    if(scans.length){
+      const last=scans[scans.length-1];
+      document.getElementById('ls-city').textContent=last.c[2].v.split(',')[0];
+      document.getElementById('latest-spark').style.display='block';
+    }
+  }).catch(()=>{['stat-garments','stat-perjalanan','stat-kota','stat-negara'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='0';});});
+}
+
+function animateNum(elId,target){
+  const el=document.getElementById(elId);
+  if(!el) return;
+  let cur=0;
+  const step=Math.ceil(target/30);
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+function showGarment(id,isQC){
+  document.getElementById('page-garment').classList.add('active');
+  document.getElementById('g-id').textContent=id;
+  document.getElementById('g-mtag').textContent=id;
+  if(isQC) document.getElementById('qc-banner').style.display='block';
+  const d=GARMENTS[id];
+  if(d){
+    document.getElementById('g-nm').innerHTML=d.name;
+    document.getElementById('g-ori-val').textContent=d.origin;
+    document.getElementById('g-yr').textContent=d.year;
+    document.getElementById('g-ed').textContent=d.edition||'—';
+    if(d.mockup){
+      document.getElementById('g-ph').style.display='none';
+      const img=document.getElementById('g-img');
+      img.src=d.mockup;img.style.display='block';
+      img.onerror=function(){img.style.display='none';document.getElementById('g-ph').style.display='flex';};
+    }
+  }else{
+    document.getElementById('g-nm').innerHTML=id;
+    document.getElementById('g-ori-val').textContent='Blumbang · Klaten';
+    document.getElementById('g-yr').textContent='—';
+    document.getElementById('g-ed').textContent='—';
+    const notice=document.createElement('div');
+    notice.style.cssText='background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.2);padding:14px 20px;font-size:0.78rem;color:#8a7040;letter-spacing:0.05em;margin-top:16px;line-height:1.8;';
+    notice.innerHTML='Kaos ini belum terdaftar di sistem Blumbang.<br><span style="font-size:0.7rem;opacity:0.8">Hubungi <a href="https://wa.me/6281234561146" style="color:var(--gold)">081234561146</a> untuk konfirmasi.</span>';
+    document.getElementById('g-nm').after(notice);
+  }
+  loadStories(id);
+  if(!isQC) recordScan(id);
+}
+
+function loadStories(id){
+  const wrap=document.getElementById('sto-wrap');
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
+    .then(r=>r.text()).then(txt=>{
+      const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      const json=JSON.parse(m[1]);
+      const rows=json.table.rows||[];
+      const gRows=rows.filter(r=>r.c[0]&&r.c[0].v===id);
+      const cnt=gRows.length+1;
+      const mEl=document.getElementById('spark-moment');
+      document.getElementById('sm-num').textContent='#'+cnt;
+      document.getElementById('sm-text').textContent='Kamu adalah perjalanan ke-'+cnt+' kaos ini';
+      document.getElementById('sm-badge').textContent='✦ Spark ke-'+cnt;
+      mEl.style.display='block';
+      setTimeout(function(){checkFirstSpark(gRows);},2000);
+      const approved=gRows.filter(r=>r.c[5]&&r.c[5].v==='APPROVED'&&r.c[3]&&r.c[3].v);
+      wrap.innerHTML=approved.length?approved.map(r=>storyCard({name:(r.c[1]&&r.c[1].v)||'Anonim',city:(r.c[2]&&r.c[2].v)||'',story:(r.c[3]&&r.c[3].v)||'',photo:(r.c[4]&&r.c[4].v)||''})).join(''):'<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';
+      addJourney(gRows);
+    }).catch(()=>{wrap.innerHTML='<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';});
+}
+
+function checkFirstSpark(existingRows){
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+    const myCity=g.city?g.city.toLowerCase():'';
+    if(!myCity) return;
+    const cities=existingRows.map(r=>(r.c[2]&&r.c[2].v||'').toLowerCase());
+    if(!cities.some(c=>c.includes(myCity))) document.getElementById('first-spark-banner').style.display='block';
+  }).catch(function(){});
+}
+
+function storyCard(s){
+  const av=s.photo?'<img src="'+s.photo+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid var(--gold-dim)">'
+    :'<div class="savph">'+(s.name||'A').charAt(0).toUpperCase()+'</div>';
+  return '<div class="sc"><div class="sow">'+av+'<div><div class="snm">'+s.name+'</div>'+(s.city?'<div class="sct">✦ '+s.city+'</div>':'')+'</div></div><div class="stxt">"'+s.story+'"</div></div>';
+}
+
+function addJourney(sparks){
+  const list=document.getElementById('jlist');
+  const withCity=sparks.filter(r=>r.c[2]&&r.c[2].v);
+  if(!withCity.length) return;
+  withCity.slice(-5).reverse().forEach(function(r,i){
+    const city=r.c[2].v;
+    const time=(r.c[6]&&r.c[6].v)||'Baru saja';
+    const el=document.createElement('div');
+    el.className='ji';
+    el.innerHTML='<div style="position:relative"><div class="jdot '+(i===0?'latest':'')+'"></div><div class="jline"></div></div><div><div class="jcity">'+city+'</div><div class="jtime">'+time+'</div>'+(i===0?'<div class="jbadge">Terbaru</div>':'')+'</div>';
+    list.appendChild(el);
+  });
+}
+
+function recordScan(id){
+  const params=new URLSearchParams(window.location.search);
+  if(params.get('src')!=='qr') return;
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+    fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'scan',garment_id:id,city:g.city+', '+g.country_name,timestamp:new Date().toISOString()})}).catch(function(){});
+  }).catch(function(){});
+}
+
+function prevPhoto(input){
+  if(!input.files||!input.files[0]) return;
+  const r=new FileReader();
+  r.onload=function(e){
+    const p=document.getElementById('u-prev');
+    p.src=e.target.result;p.style.display='block';
+    document.getElementById('u-ico').style.display='none';
+    document.getElementById('u-txt').textContent='Foto dipilih ✓';
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+async function submitStory(){
+  const name=document.getElementById('f-name').value.trim();
+  const city=document.getElementById('f-city').value.trim();
+  const story=document.getElementById('f-story').value.trim();
+  const photo=document.getElementById('f-photo').files[0];
+  const err=document.getElementById('f-err');
+  const btn=document.getElementById('f-btn');
+  err.style.display='none';
+  if(!name){err.textContent='Nama tidak boleh kosong';err.style.display='block';return;}
+  if(!city){err.textContent='Kota tidak boleh kosong';err.style.display='block';return;}
+  btn.disabled=true;btn.textContent='Mengirim...';
+  let pb='';
+  if(photo){pb=await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(photo);});}
+  const id=document.getElementById('g-id').textContent;
+  try{await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'story',garment_id:id,name:name,city:city,story:story,photo:pb,timestamp:new Date().toISOString()})});}catch(e){}
+  document.getElementById('form-body').style.display='none';
+  document.getElementById('form-ok').style.display='block';
+}
+</script>
+</body>
+</html>

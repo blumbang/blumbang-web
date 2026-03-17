@@ -23,10 +23,19 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
-nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
 .nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
-.nav-back{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
-.nav-back:hover{color:var(--gold);}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
 .hero{padding:120px 40px 60px;text-align:center;}
 .hero-tag{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;display:block;text-transform:uppercase;}
 .hero-title{font-family:var(--font-logo);font-size:clamp(3rem,8vw,6rem);letter-spacing:0.05em;line-height:1.0;margin-bottom:20px;}
@@ -59,13 +68,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <body>
 <nav>
   <a href="/" class="nav-brand">BLUMB✦NG</a>
-  <a href="/" class="nav-back">← Kembali</a>
+  <div class="nav-links">
+    <a href="/catalog" class="active">Karya</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
 </nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
 
 <div class="hero">
   <span class="hero-tag">✦ Living Garments</span>
   <h1 class="hero-title">KAOS YANG<br>PUNYA CERITA</h1>
-  <p class="hero-sub">Setiap kaos memiliki identitas unik yang menyertai perjalanan pemiliknya.</p>
+  <p class="hero-sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
   <div class="hero-count" id="hero-count">Memuat...</div>
 </div>
 
@@ -84,6 +105,12 @@ const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 let GARMENTS={};
 let currentFilter='all';
 
+function toggleMenu(){
+  var m=document.getElementById('nav-mobile');
+  var h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent=m.classList.contains('open')?'✕':'☰';
+}
 function convertDriveUrl(url){
   if(!url) return '';
   const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);

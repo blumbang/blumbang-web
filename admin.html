@@ -223,6 +223,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <button class="tab active" onclick="switchTab('approval')">✦ Approval</button>
   <button class="tab" onclick="switchTab('garments')">Garment Manager</button>
   <button class="tab" onclick="switchTab('galeri')">Galeri</button>
+  <button class="tab" onclick="switchTab('homepage')">Homepage Foto</button>
   <button class="tab" onclick="switchTab('qr')">QR Generator</button>
   <button class="tab" onclick="switchTab('stats')">Statistik</button>
 </div>
@@ -355,6 +356,66 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <div id="galeri-list" class="galeri-list"><div class="loading">Memuat galeri...</div></div>
 </div>
 
+<!-- ===================== HOMEPAGE FOTO ===================== -->
+<div id="panel-homepage" class="panel">
+  <div class="sec-title">Foto Homepage</div>
+  <div class="sec-sub">Kelola foto yang tampil di halaman utama blumbang.id. Upload foto ke Google Drive → set akses "Siapa saja dengan link" → paste URL di sini → Simpan.</div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;">
+
+    <div class="add-form">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">Foto Hero (Background)</div>
+      <div style="font-size:.68rem;color:var(--dim);margin-bottom:14px;line-height:1.7;">Background section pertama. Foto kaos atau suasana studio. Landscape, min 1200×800px.</div>
+      <div id="hp-prev-hero" style="width:100%;height:110px;background:var(--grey);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--muted);letter-spacing:.1em;">Preview</div>
+      <div class="form-group">
+        <label class="form-label">URL Google Drive</label>
+        <input type="text" class="form-input" id="hp-url-hero" placeholder="https://drive.google.com/file/d/..." oninput="hpPreview('hero',this.value)">
+      </div>
+      <button class="btn btn-gold" style="margin-top:10px;width:100%;" onclick="hpSimpan('foto_hero','hero')">✓ Simpan</button>
+    </div>
+
+    <div class="add-form">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">Foto Kerah / Label QR</div>
+      <div style="font-size:.68rem;color:var(--dim);margin-bottom:14px;line-height:1.7;">Close-up label QR di kerah kaos. Muncul besar di section ke-2. Min 800×600px.</div>
+      <div id="hp-prev-kerah" style="width:100%;height:110px;background:var(--grey);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--muted);letter-spacing:.1em;">Preview</div>
+      <div class="form-group">
+        <label class="form-label">URL Google Drive</label>
+        <input type="text" class="form-input" id="hp-url-kerah" placeholder="https://drive.google.com/file/d/..." oninput="hpPreview('kerah',this.value)">
+      </div>
+      <button class="btn btn-gold" style="margin-top:10px;width:100%;" onclick="hpSimpan('foto_kerah','kerah')">✓ Simpan</button>
+    </div>
+
+    <div class="add-form">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;">Foto Peta Malam (Opsional)</div>
+      <div style="font-size:.68rem;color:var(--dim);margin-bottom:14px;line-height:1.7;">Background section Spark Map. Foto peta dunia malam. Landscape, min 1400×600px.</div>
+      <div id="hp-prev-peta" style="width:100%;height:110px;background:var(--grey);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:.62rem;color:var(--muted);letter-spacing:.1em;">Preview</div>
+      <div class="form-group">
+        <label class="form-label">URL Google Drive</label>
+        <input type="text" class="form-input" id="hp-url-peta" placeholder="https://drive.google.com/file/d/..." oninput="hpPreview('peta',this.value)">
+      </div>
+      <button class="btn btn-gold" style="margin-top:10px;width:100%;" onclick="hpSimpan('foto_peta','peta')">✓ Simpan</button>
+    </div>
+
+    <div class="add-form" style="border-color:var(--gold-dim);background:var(--gold-bg);">
+      <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">Cara Upload Foto</div>
+      <ol style="font-size:.72rem;color:var(--light);line-height:2;padding-left:16px;">
+        <li>Upload foto ke <strong style="color:var(--gold)">Google Drive</strong></li>
+        <li>Klik kanan foto → <strong style="color:var(--gold)">Bagikan</strong></li>
+        <li>Ubah akses ke <strong style="color:var(--gold)">"Siapa saja dengan link"</strong></li>
+        <li>Klik <strong style="color:var(--gold)">Salin link</strong></li>
+        <li>Paste di kolom URL → <strong style="color:var(--gold)">Simpan</strong></li>
+        <li>Refresh homepage — foto langsung tampil ✓</li>
+      </ol>
+    </div>
+
+  </div>
+
+  <div style="margin-top:24px;">
+    <div class="sec-title" style="font-size:1rem;margin-bottom:8px;">Foto Terpasang Sekarang</div>
+    <div id="hp-terpasang" style="font-size:.72rem;color:var(--dim);padding:16px;border:1px solid var(--border);background:var(--charcoal);">Memuat...</div>
+  </div>
+</div>
+
 <div id="panel-qr" class="panel">
   <div class="sec-title">QR Code Generator</div>
   <div class="sec-sub">Generate QR code untuk satu seri kaos. Output berupa sheet PNG siap kirim ke percetakan.</div>
@@ -442,7 +503,66 @@ function switchTab(name){
   if(name==='approval') loadApproval('PENDING');
   if(name==='garments') loadGarments();
   if(name==='galeri') loadGaleri();
+  if(name==='homepage') loadHomepageFoto();
   if(name==='stats') loadStats();
+}
+
+// =================== HOMEPAGE FOTO ===================
+function hpDriveUrl(u){
+  if(!u) return '';
+  const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?'https://drive.google.com/uc?export=view&id='+m[1]:u;
+}
+
+function hpPreview(slot, url){
+  const el=document.getElementById('hp-prev-'+slot);
+  if(!el) return;
+  const converted=hpDriveUrl(url.trim());
+  if(!converted){el.innerHTML='<span style="font-size:.62rem;color:var(--muted)">Preview</span>';return;}
+  el.innerHTML=`<img src="${converted}" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.innerHTML='<span style=font-size:.62rem;color:var(--muted)>Gagal load — pastikan akses Drive sudah publik</span>'">`;
+}
+
+async function hpSimpan(key, slot){
+  const url=document.getElementById('hp-url-'+slot).value.trim();
+  if(!url){showToast('URL tidak boleh kosong');return;}
+  showToast('Menyimpan foto '+key+'...');
+  try{
+    const res=await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'setHomepageFoto',key,url})
+    });
+    const json=await res.json();
+    if(json.status==='ok'){
+      showToast('✓ '+key+' berhasil disimpan — homepage langsung update');
+      setTimeout(loadHomepageFoto,1200);
+    } else {
+      showToast('Error: '+(json.message||'Gagal simpan'));
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
+}
+
+async function loadHomepageFoto(){
+  const el=document.getElementById('hp-terpasang');
+  if(!el) return;
+  try{
+    const txt=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=HOMEPAGE')).text();
+    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m){el.innerHTML='<span style="color:var(--muted)">Tab HOMEPAGE belum ada di Sheets</span>';return;}
+    const baris=JSON.parse(m[1]).table.rows||[];
+    if(!baris.length){el.innerHTML='<span style="color:var(--muted)">Belum ada foto terpasang</span>';return;}
+    const d={};
+    baris.forEach(b=>{const k=b.c[0]?.v,v=b.c[1]?.v;if(k&&v)d[k.trim()]=v.trim();});
+    // Isi input fields
+    if(d.foto_hero){document.getElementById('hp-url-hero').value=d.foto_hero;hpPreview('hero',d.foto_hero);}
+    if(d.foto_kerah){document.getElementById('hp-url-kerah').value=d.foto_kerah;hpPreview('kerah',d.foto_kerah);}
+    if(d.foto_peta){document.getElementById('hp-url-peta').value=d.foto_peta;hpPreview('peta',d.foto_peta);}
+    el.innerHTML=Object.entries(d).map(([k,v])=>`
+      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);">
+        <img src="${hpDriveUrl(v)}" style="width:60px;height:40px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;" onerror="this.style.display='none'">
+        <div><div style="color:var(--gold);font-weight:600;letter-spacing:.1em;">${k}</div><div style="color:var(--muted);font-size:.65rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px;">${v}</div></div>
+      </div>`).join('');
+  }catch(e){el.innerHTML='<span style="color:var(--muted)">Gagal memuat</span>';}
 }
 
 // =================== LOAD ALL DATA ===================

@@ -242,8 +242,9 @@ function buildMap(rows){
     cityMap[coord.label].count++;
   });
 
-  const w=window.innerWidth;
-  const h=Math.max(window.innerHeight-61, 300);
+  // Tunggu layout selesai dulu
+  const w=Math.max(window.innerWidth, document.documentElement.clientWidth, 320);
+  const h=Math.max(window.innerHeight-61, document.documentElement.clientHeight-61, 300);
   const svg=d3.select('#d3-world-map').attr('width',w).attr('height',h).attr('viewBox','0 0 '+w+' '+h);
   const projection=d3.geoNaturalEarth1().scale(w/5.8).translate([w/2,h/2]);
   const pathGen=d3.geoPath().projection(projection);
@@ -329,13 +330,16 @@ function buildMap(rows){
     });
 
     document.getElementById('loading').style.display='none';
-  }).catch(function(){document.getElementById('loading').style.display='none';});
+    }).catch(function(){document.getElementById('loading').style.display='none';});
 }
 
 // Load SPARKS data
-fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
-  .then(function(r){return r.text();})
-  .then(function(txt){
+// Tunggu browser selesai render layout sebelum fetch dan draw map
+requestAnimationFrame(function(){
+  setTimeout(function(){
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
+    .then(function(r){return r.text();})
+    .then(function(txt){
     const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     const json=JSON.parse(m[1]);
     const rows=json.table.rows||[];
@@ -359,6 +363,8 @@ fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&
 
     buildMap(rows);
   }).catch(function(){document.getElementById('loading').style.display='none';});
+  }, 100);
+});
 </script>
 </body>
 </html>

@@ -516,7 +516,7 @@ const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 function urlDrive(u){
   if(!u) return '';
   const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m?'https://drive.google.com/uc?export=view&id='+m[1]:u;
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u;
 }
 
 // Load foto dari tab HOMEPAGE

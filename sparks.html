@@ -78,10 +78,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 @keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes sparkPulse{0%{r:4;opacity:0.8;}70%{r:16;opacity:0;}100%{r:16;opacity:0;}}
+@keyframes originPulse{0%{r:6;opacity:0.6;}70%{r:22;opacity:0;}100%{r:22;opacity:0;}}
 
 @media(max-width:768px){
   nav{padding:14px 18px;}.nav-links{display:none;}.nav-order{display:none;}.nav-hamburger{display:block;}
-  .stats-overlay{top:76px;left:16px;flex-direction:row;flex-wrap:wrap;gap:6px;}
+  .stats-overlay{top:76px;left:16px;right:16px;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
   .stat-box{padding:8px 12px;}.stat-box .num{font-size:1.4rem;}
   .title-overlay{display:none;}
   .cities-row{padding:0 16px;bottom:16px;}
@@ -240,8 +242,8 @@ function buildMap(rows){
     cityMap[coord.label].count++;
   });
 
-  const w=mapEl.offsetWidth||window.innerWidth;
-  const h=mapEl.offsetHeight||window.innerHeight-61;
+  const w=window.innerWidth;
+  const h=Math.max(window.innerHeight-61, 300);
   const svg=d3.select('#d3-world-map').attr('width',w).attr('height',h).attr('viewBox','0 0 '+w+' '+h);
   const projection=d3.geoNaturalEarth1().scale(w/5.8).translate([w/2,h/2]);
   const pathGen=d3.geoPath().projection(projection);
@@ -267,17 +269,59 @@ function buildMap(rows){
     Object.values(cityMap).forEach(function(item){
       const px=projection(item.coord.lonlat);
       if(!px) return;
-      const r=Math.min(3+item.count*0.5,8);
-      svg.append('circle').attr('cx',px[0]).attr('cy',px[1]).attr('r',r+4).attr('fill','rgba(201,168,76,0.08)');
-      svg.append('circle').attr('cx',px[0]).attr('cy',px[1]).attr('r',r).attr('fill','rgba(201,168,76,0.85)').attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width','0.8');
-      svg.append('text').attr('x',px[0]+r+3).attr('y',px[1]-3).text(item.coord.label)
-        .attr('font-size','7px').attr('font-family','sans-serif').attr('fill','rgba(245,240,232,0.7)');
+      const cx=px[0], cy=px[1];
+
+      // Pulse ring animasi
+      const pulseCircle = svg.append('circle')
+        .attr('cx',cx).attr('cy',cy).attr('r',4)
+        .attr('fill','none')
+        .attr('stroke','rgba(201,168,76,0.6)')
+        .attr('stroke-width','1');
+      
+      function animatePulse(el){
+        el.attr('r',4).attr('opacity',0.8)
+          .transition().duration(1800).ease(d3.easeLinear)
+          .attr('r',16).attr('opacity',0)
+          .on('end', function(){ animatePulse(el); });
+      }
+      animatePulse(pulseCircle);
+
+      // Titik inti kecil
+      svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3)
+        .attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.8)').attr('stroke-width','0.8');
+
+      // Label - deteksi posisi agar tidak terpotong
+      const labelX = cx > w * 0.78 ? cx - 6 : cx + 6;
+      const anchor = cx > w * 0.78 ? 'end' : 'start';
+      svg.append('text').attr('x',labelX).attr('y',cy-5).text(item.coord.label)
+        .attr('text-anchor', anchor)
+        .attr('font-size','8px').attr('font-family','sans-serif')
+        .attr('fill','rgba(245,240,232,0.75)');
     });
 
     const kg=svg.append('g').attr('transform','translate('+kPx[0]+','+kPx[1]+')');
-    kg.append('circle').attr('r',12).attr('fill','rgba(201,168,76,0.1)').attr('stroke','rgba(201,168,76,0.4)').attr('stroke-width','1');
-    kg.append('circle').attr('r',5).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
-    kg.append('text').attr('x',9).attr('y',-7).text('Klaten · Origin').attr('font-size','9px').attr('font-family','sans-serif').attr('fill','#C9A84C').attr('font-weight','bold');
+    
+    // Pulse ring Klaten - lebih besar, lebih lambat
+    const kPulse = kg.append('circle').attr('r',6).attr('fill','none')
+      .attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1.5');
+    function animateKlaten(el){
+      el.attr('r',6).attr('opacity',0.8)
+        .transition().duration(2400).ease(d3.easeLinear)
+        .attr('r',24).attr('opacity',0)
+        .on('end', function(){ animateKlaten(el); });
+    }
+    animateKlaten(kPulse);
+    
+    // Titik inti Klaten
+    kg.append('circle').attr('r',6).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+    
+    // Label Klaten - deteksi posisi
+    const kLabelX = kPx[0] > w * 0.78 ? -9 : 9;
+    const kAnchor = kPx[0] > w * 0.78 ? 'end' : 'start';
+    kg.append('text').attr('x',kLabelX).attr('y',-9).text('Klaten · Origin')
+      .attr('text-anchor', kAnchor)
+      .attr('font-size','9px').attr('font-family','sans-serif')
+      .attr('fill','#C9A84C').attr('font-weight','bold');
 
     // City tags
     Object.keys(cityMap).forEach(function(label){

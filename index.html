@@ -202,18 +202,65 @@ footer{padding:26px 40px;border-top:1px solid var(--border);}
   nav{padding:13px 20px;}
   .nav-kanan a:not(.order){display:none;}
   .nav-burger{display:block;}
-  .hero-isi{padding:0 24px 56px;max-width:100%;}
-  .hero-stats{flex-wrap:wrap;}
+  .hero-isi{padding:0 24px 60px;max-width:100%;}
+  
+  /* Stats: grid 3 kolom atas, 2 kolom bawah */
+  .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:0;
+    background:var(--border);
+    border:1px solid var(--border);
+    flex-wrap:unset;
+    margin-bottom:24px;
+  }
+  .hero-stats a.hs-item,
+  .hero-stats .hs-item{border:none;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .hero-stats .hs-item:nth-child(3){border-right:none;}
+  .hero-stats .hs-item:nth-child(4){border-right:1px solid var(--border);border-bottom:none;}
+  .hero-stats .hs-item:nth-child(5){border-right:none;border-bottom:none;grid-column:span 1;}
+  /* Baris 2: kota dan negara ambil setengah-setengah */
+  .hero-stats .hs-item:nth-child(4){grid-column:1/span 2;}
+  .hero-stats .hs-item:nth-child(5){grid-column:3/span 1;}
+  .hs-num{font-size:1.3rem;}
+  .hs-lbl{font-size:.52rem;letter-spacing:.08em;}
+
+  /* Cara kerja: horizontal scroll */
+  #s3{padding:56px 0 56px 24px;}
+  #s3 h2,.s3 .stag{padding-right:24px;}
+  .langkah-wrap{
+    flex-direction:row;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    gap:0;
+    max-width:100%;
+    scrollbar-width:none;
+    justify-content:flex-start;
+    padding-right:24px;
+    margin-top:40px;
+  }
+  .langkah-wrap::-webkit-scrollbar{display:none;}
+  .langkah{
+    min-width:180px;
+    flex:0 0 180px;
+    scroll-snap-align:start;
+    padding:0 16px;
+    border-right:1px solid var(--border);
+  }
+  .langkah:last-child{border-right:none;}
+  .l-panah{display:none;}
+
   #s2{grid-template-columns:1fr;}
   .s2-foto .s2-ph{min-height:260px;}
-  .s2-teks{padding:48px 24px;}
-  .langkah-wrap{flex-direction:column;align-items:center;gap:28px;}
-  .l-panah{display:none;}
+  .s2-teks{padding:40px 24px;}
   .demo-card{grid-template-columns:1fr;}
-  .demo-kiri{border-right:none;border-bottom:1px solid var(--border);}
+  .demo-kiri{border-right:none;border-bottom:1px solid var(--border);padding:32px 24px;}
+  .demo-kanan{padding:32px 24px;}
   .k-grid{grid-template-columns:repeat(2,1fr);}
   .k-grid .k-card:last-child{display:none;}
-  #s3,#s4,#s6,#s7,#s8,#s9{padding:64px 24px;}
+  #s3 h2{padding-right:24px;}
+  #s4,#s6,#s7,#s8,#s9{padding:64px 24px;}
   .s5-isi{padding:64px 24px;}
   footer{padding:18px 24px;}
   .ft{flex-direction:column;text-align:center;}
@@ -289,6 +336,73 @@ footer{padding:26px 40px;border-top:1px solid var(--border);}
 .g-ftr a:hover{color:var(--emas);}
 .qc-banner{background:#1a0a00;border:1px solid #8a4a00;padding:10px 20px;text-align:center;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:#c87a00;text-transform:uppercase;display:none;}
 
+
+/* ── DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;}
+.drawer-overlay.aktif{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--abu);border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:0 0 40px;max-height:75vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.drawer.aktif{transform:translateY(0);}
+.drawer-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+.drawer-judul{font-family:var(--fd);font-size:1.4rem;letter-spacing:.08em;color:var(--emas);padding:16px 24px 12px;border-bottom:1px solid var(--border);}
+.drawer-list{display:flex;flex-direction:column;}
+.drawer-item{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);text-decoration:none;transition:background .2s;}
+.drawer-item:hover{background:var(--abu2);}
+.drawer-item:last-child{border-bottom:none;}
+.di-kiri{display:flex;flex-direction:column;gap:3px;}
+.di-id{font-family:var(--fd);font-size:1rem;letter-spacing:.15em;color:var(--emas);}
+.di-info{font-size:.75rem;font-weight:600;color:var(--redup);}
+.di-arrow{font-size:1rem;color:var(--redup);}
+.drawer-empty{text-align:center;padding:32px;font-size:.85rem;font-weight:600;color:var(--redup);letter-spacing:.1em;}
+
+/* ── STATS CLICKABLE ── */
+.hs-item{padding:12px 20px;border:1px solid var(--border);background:rgba(8,8,8,.6);text-align:center;cursor:pointer;transition:background .2s;}
+.hs-item:hover{background:rgba(201,168,76,.08);}
+.hs-item.clickable{cursor:pointer;}
+a.hs-item{text-decoration:none;}
+
+/* ── CARA KERJA MOBILE HORIZONTAL ── */
+@media(max-width:860px){
+  .langkah-wrap{
+    flex-direction:row;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    gap:0;
+    padding-bottom:16px;
+    justify-content:flex-start;
+    max-width:100%;
+    scrollbar-width:none;
+  }
+  .langkah-wrap::-webkit-scrollbar{display:none;}
+  .langkah{
+    min-width:200px;
+    flex:0 0 200px;
+    scroll-snap-align:start;
+    padding:0 16px;
+    border-right:1px solid var(--border);
+  }
+  .langkah:last-child{border-right:none;}
+  .l-panah{display:none;}
+  
+  /* Stats: 3 baris atas, 2 baris bawah */
+  .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    flex-wrap:unset;
+  }
+  .hs-item{border:none;border-right:none;}
+  .hs-item+.hs-item{border-left:none;}
+  .hs-item:nth-child(4),.hs-item:nth-child(5){
+    grid-column:span 1;
+  }
+  /* Baris kedua: kota dan negara jadi 2 kolom */
+  .hero-stats .hs-item:nth-child(4){grid-column:1/span 2 !important;}
+  /* Nope - bagi rata saja 3-2 */
+}
+
 </style>
 </head>
 <body>
@@ -346,23 +460,23 @@ footer{padding:26px 40px;border-top:1px solid var(--border);}
 
     <!-- Angka live dari Sheets -->
     <div class="hero-stats">
-      <div class="hs-item">
+      <a href="/catalog" class="hs-item" title="Lihat semua koleksi">
         <div class="hs-num" id="stat-garment">—</div>
         <div class="hs-lbl">Garment Terdaftar</div>
-      </div>
-      <div class="hs-item">
+      </a>
+      <div class="hs-item clickable" onclick="bukaDrawer('berjalan')" title="Lihat kaos yang sudah berjalan">
         <div class="hs-num" id="stat-berjalan">—</div>
         <div class="hs-lbl">Sudah Berjalan</div>
       </div>
-      <div class="hs-item">
+      <div class="hs-item" title="Total scan QR">
         <div class="hs-num" id="stat-scan">—</div>
         <div class="hs-lbl">Total Scan</div>
       </div>
-      <div class="hs-item">
+      <div class="hs-item clickable" onclick="bukaDrawer('kota')" title="Lihat kota yang sudah discan">
         <div class="hs-num" id="stat-kota">—</div>
         <div class="hs-lbl">Kota</div>
       </div>
-      <div class="hs-item">
+      <div class="hs-item clickable" onclick="bukaDrawer('negara')" title="Lihat negara yang sudah discan">
         <div class="hs-num" id="stat-negara">—</div>
         <div class="hs-lbl">Negara</div>
       </div>
@@ -583,6 +697,7 @@ footer{padding:26px 40px;border-top:1px solid var(--border);}
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+let rawSparks = []; // Cache data SPARKS untuk drawer
 
 function urlDrive(u){
   if(!u) return '';
@@ -618,6 +733,7 @@ async function muatStats(){
     const txtS=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
     const mS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     const barisS=mS?JSON.parse(mS[1]).table.rows||[]:[];
+    rawSparks = barisS; // Simpan untuk drawer
     const kotaSet=new Set(['Klaten']);
     const negaraSet=new Set(['Indonesia']);
     const garmentBerjalan=new Set();
@@ -862,6 +978,117 @@ if(isGarment){
   muatFoto();
   muatStats();
 }
+
+// ── DRAWER SYSTEM ──────────────────────────
+let drawerData = { berjalan: null, kota: null, negara: null };
+
+function bukaDrawer(tipe) {
+  tutupSemua();
+  document.getElementById('drawer-overlay').classList.add('aktif');
+  document.getElementById('drawer-' + tipe).classList.add('aktif');
+  document.body.style.overflow = 'hidden';
+  if (!drawerData[tipe]) isiDrawer(tipe);
+}
+
+function tutupDrawer() {
+  tutupSemua();
+  document.body.style.overflow = '';
+}
+
+function tutupSemua() {
+  document.getElementById('drawer-overlay').classList.remove('aktif');
+  ['berjalan','kota','negara'].forEach(t => {
+    document.getElementById('drawer-' + t).classList.remove('aktif');
+  });
+}
+
+async function isiDrawer(tipe) {
+  try {
+    // Pakai data yang sudah di-cache saat load homepage
+    let rows = rawSparks;
+    // Kalau belum ada (misal drawer dibuka sebelum stats selesai), fetch dulu
+    if (!rows.length) {
+      const txt = await (await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
+      const m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      if (!m) return;
+      rows = JSON.parse(m[1]).table.rows || [];
+      rawSparks = rows;
+    }
+
+    if (tipe === 'berjalan') {
+      // Kumpulkan garment unik yang punya spark
+      const garmentMap = {};
+      rows.forEach(r => {
+        const id = r.c[0] && r.c[0].v;
+        const city = r.c[2] && r.c[2].v;
+        if (!id) return;
+        if (!garmentMap[id]) garmentMap[id] = { id, kota: [], count: 0 };
+        garmentMap[id].count++;
+        if (city) garmentMap[id].kota.push(city.split(',')[0].trim());
+      });
+      const list = Object.values(garmentMap);
+      drawerData.berjalan = list;
+      const el = document.getElementById('drawer-berjalan-list');
+      if (!list.length) { el.innerHTML = '<div class="drawer-empty">Belum ada kaos yang berjalan</div>'; return; }
+      el.innerHTML = list.map(g => {
+        const kotaStr = [...new Set(g.kota)].slice(0, 3).join(' → ');
+        return '<a href="/id/' + g.id + '" class="drawer-item"><div class="di-kiri"><div class="di-id">' + g.id + '</div><div class="di-info">' + g.count + ' scan · ' + (kotaStr || 'Belum ada kota') + '</div></div><div class="di-arrow">›</div></a>';
+      }).join('');
+    }
+
+    if (tipe === 'kota') {
+      const kotaCount = {};
+      rows.forEach(r => {
+        const c = r.c[2] && r.c[2].v;
+        if (!c) return;
+        const kota = c.split(',')[0].trim();
+        kotaCount[kota] = (kotaCount[kota] || 0) + 1;
+      });
+      // Tambah Klaten sebagai origin
+      kotaCount['Klaten'] = kotaCount['Klaten'] || 0;
+      const sorted = Object.entries(kotaCount).sort((a,b) => b[1]-a[1]);
+      drawerData.kota = sorted;
+      const el = document.getElementById('drawer-kota-list');
+      if (!sorted.length) { el.innerHTML = '<div class="drawer-empty">Belum ada data kota</div>'; return; }
+      el.innerHTML = sorted.map(([kota, count]) =>
+        '<div class="drawer-item"><div class="di-kiri"><div class="di-id">' + kota + '</div><div class="di-info">' + (count || 'Origin') + (count > 0 ? ' scan' : '') + '</div></div></div>'
+      ).join('');
+    }
+
+    if (tipe === 'negara') {
+      const negaraCount = {};
+      rows.forEach(r => {
+        const c = r.c[2] && r.c[2].v;
+        if (!c) return;
+        const parts = c.split(',');
+        const negara = parts.length > 1 ? parts[parts.length-1].trim() : 'Indonesia';
+        negaraCount[negara] = (negaraCount[negara] || 0) + 1;
+      });
+      negaraCount['Indonesia'] = negaraCount['Indonesia'] || 0;
+      const sorted = Object.entries(negaraCount).sort((a,b) => b[1]-a[1]);
+      drawerData.negara = sorted;
+      const el = document.getElementById('drawer-negara-list');
+      if (!sorted.length) { el.innerHTML = '<div class="drawer-empty">Belum ada data negara</div>'; return; }
+      el.innerHTML = sorted.map(([negara, count]) =>
+        '<div class="drawer-item"><div class="di-kiri"><div class="di-id">' + negara + '</div><div class="di-info">' + (count || 'Origin') + (count > 0 ? ' scan' : '') + '</div></div></div>'
+      ).join('');
+    }
+  } catch(e) {
+    console.warn('Drawer gagal load:', e);
+  }
+}
+
+// Swipe down to close drawer
+let touchStartY = 0;
+document.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
+document.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (dy > 80) {
+    const activeDrawer = document.querySelector('.drawer.aktif');
+    if (activeDrawer) tutupDrawer();
+  }
+});
+
 </script>
 
 <!-- GARMENT PAGE - handles /id/ and /qc/ routes -->
@@ -924,5 +1151,36 @@ if(isGarment){
     <div class="g-ftr"><a href="/">blumb✦ng·id</a> &nbsp;·&nbsp; <a href="/">Made Slowly. Felt Deeply.</a></div>
   </div>
 </div>
+
+<!-- ════ DRAWER OVERLAY ════ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
+
+<!-- DRAWER: Kaos yang Sudah Berjalan -->
+<div class="drawer" id="drawer-berjalan">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Sudah Berjalan</div>
+  <div class="drawer-list" id="drawer-berjalan-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
+<!-- DRAWER: Kota -->
+<div class="drawer" id="drawer-kota">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Kota yang Sudah Discan</div>
+  <div class="drawer-list" id="drawer-kota-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
+<!-- DRAWER: Negara -->
+<div class="drawer" id="drawer-negara">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Negara yang Sudah Discan</div>
+  <div class="drawer-list" id="drawer-negara-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
 </body>
 </html>

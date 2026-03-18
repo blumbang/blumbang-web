@@ -44,7 +44,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .mobile-order{color:var(--gold)!important;font-weight:700!important;}
 
 /* MAP FULLSCREEN */
-.map-wrap{position:fixed;inset:0;top:61px;bottom:0;background:#050c18;}
+.map-wrap{position:fixed;inset:0;top:61px;bottom:0;background:#0a1628;}
 #world-map{width:100%;height:100%;position:relative;}
 #d3-world-map{position:absolute;inset:0;width:100%;height:100%;}
 
@@ -88,25 +88,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   .latest-overlay{bottom:70px;left:16px;}
 }
 
-/* TOOLTIP */
-.map-tooltip{
-  position:fixed;
-  background:rgba(8,8,8,0.92);
-  border:1px solid #C9A84C;
-  color:#F5F0E8;
-  font-family:'Inter',sans-serif;
-  font-size:0.72rem;
-  font-weight:600;
-  letter-spacing:0.1em;
-  padding:6px 14px;
-  pointer-events:none;
-  z-index:200;
-  display:none;
-  white-space:nowrap;
-  transform:translate(-50%, -120%);
-}
-.map-tooltip.aktif{display:block;}
-
+.map-tooltip{position:fixed;background:rgba(8,8,8,0.92);border:1px solid #C9A84C;color:#F5F0E8;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;padding:5px 12px;pointer-events:none;z-index:200;display:none;white-space:nowrap;transform:translate(-50%,-130%);border-radius:2px;}
+.map-tooltip.on{display:block;}
 </style>
 </head>
 <body>
@@ -128,9 +111,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
 </div>
 
-<!-- TOOLTIP -->
 <div class="map-tooltip" id="map-tooltip"></div>
-
 <!-- LOADING -->
 <div class="loading-overlay" id="loading">
   <div class="loading-text">Memuat peta perjalanan...</div>
@@ -189,234 +170,187 @@ function animateNum(elId,target){
 }
 
 const CITY_COORDS={
-  'klaten':{lonlat:[110.6,-7.7],label:'Klaten'},'jeto':{lonlat:[110.6,-7.7],label:'Klaten'},'trucuk':{lonlat:[110.6,-7.7],label:'Klaten'},
-  'semarang':{lonlat:[110.4,-7.0],label:'Semarang'},'solo':{lonlat:[110.8,-7.6],label:'Solo'},'surakarta':{lonlat:[110.8,-7.6],label:'Solo'},
-  'salatiga':{lonlat:[110.5,-7.3],label:'Salatiga'},'magelang':{lonlat:[110.2,-7.5],label:'Magelang'},'pekalongan':{lonlat:[109.7,-6.9],label:'Pekalongan'},
-  'tegal':{lonlat:[109.1,-6.9],label:'Tegal'},'purwokerto':{lonlat:[109.2,-7.4],label:'Purwokerto'},'cilacap':{lonlat:[109.0,-7.7],label:'Cilacap'},
-  'kebumen':{lonlat:[109.7,-7.7],label:'Kebumen'},'purworejo':{lonlat:[110.0,-7.7],label:'Purworejo'},'wonosobo':{lonlat:[109.9,-7.4],label:'Wonosobo'},
-  'temanggung':{lonlat:[110.2,-7.3],label:'Temanggung'},'boyolali':{lonlat:[110.6,-7.5],label:'Boyolali'},'sragen':{lonlat:[111.0,-7.4],label:'Sragen'},
-  'karanganyar':{lonlat:[111.1,-7.6],label:'Karanganyar'},'wonogiri':{lonlat:[110.9,-7.8],label:'Wonogiri'},'sukoharjo':{lonlat:[110.8,-7.7],label:'Sukoharjo'},
-  'surabaya':{lonlat:[112.7,-7.3],label:'Surabaya'},'malang':{lonlat:[112.6,-8.0],label:'Malang'},'kediri':{lonlat:[112.0,-7.8],label:'Kediri'},
-  'blitar':{lonlat:[112.2,-8.1],label:'Blitar'},'madiun':{lonlat:[111.5,-7.6],label:'Madiun'},'mojokerto':{lonlat:[112.4,-7.5],label:'Mojokerto'},
-  'jombang':{lonlat:[112.2,-7.5],label:'Jombang'},'tulungagung':{lonlat:[111.9,-8.1],label:'Tulungagung'},'ponorogo':{lonlat:[111.5,-7.9],label:'Ponorogo'},
-  'jember':{lonlat:[113.7,-8.2],label:'Jember'},'banyuwangi':{lonlat:[114.4,-8.2],label:'Banyuwangi'},'sidoarjo':{lonlat:[112.7,-7.5],label:'Sidoarjo'},
-  'bandung':{lonlat:[107.6,-6.9],label:'Bandung'},'bekasi':{lonlat:[107.0,-6.2],label:'Bekasi'},'depok':{lonlat:[106.8,-6.4],label:'Depok'},
-  'bogor':{lonlat:[106.8,-6.6],label:'Bogor'},'tasikmalaya':{lonlat:[108.2,-7.4],label:'Tasikmalaya'},'cirebon':{lonlat:[108.6,-6.7],label:'Cirebon'},
-  'jakarta':{lonlat:[106.8,-6.2],label:'Jakarta'},'tangerang':{lonlat:[106.6,-6.2],label:'Tangerang'},'serang':{lonlat:[106.1,-6.1],label:'Serang'},
-  'yogyakarta':{lonlat:[110.4,-7.8],label:'Yogyakarta'},'jogja':{lonlat:[110.4,-7.8],label:'Yogyakarta'},'sleman':{lonlat:[110.4,-7.7],label:'Sleman'},
-  'bantul':{lonlat:[110.3,-7.9],label:'Bantul'},'gunungkidul':{lonlat:[110.6,-8.0],label:'Gunungkidul'},
-  'bali':{lonlat:[115.2,-8.4],label:'Bali'},'denpasar':{lonlat:[115.2,-8.7],label:'Denpasar'},
-  'mataram':{lonlat:[116.1,-8.6],label:'Mataram'},'lombok':{lonlat:[116.3,-8.6],label:'Lombok'},
-  'kupang':{lonlat:[123.6,-10.2],label:'Kupang'},'labuan bajo':{lonlat:[119.9,-8.5],label:'Labuan Bajo'},
-  'pontianak':{lonlat:[109.3,-0.0],label:'Pontianak'},'palangkaraya':{lonlat:[113.9,-2.2],label:'Palangka Raya'},
-  'banjarmasin':{lonlat:[114.6,-3.3],label:'Banjarmasin'},'banjarbaru':{lonlat:[114.8,-3.4],label:'Banjarbaru'},
-  'samarinda':{lonlat:[117.1,-0.5],label:'Samarinda'},'balikpapan':{lonlat:[116.8,-1.3],label:'Balikpapan'},
-  'singkawang':{lonlat:[108.9,0.9],label:'Singkawang'},
-  'makassar':{lonlat:[119.4,-5.1],label:'Makassar'},'manado':{lonlat:[124.8,1.5],label:'Manado'},
-  'palu':{lonlat:[119.9,-0.9],label:'Palu'},'kendari':{lonlat:[122.5,-3.9],label:'Kendari'},'gorontalo':{lonlat:[123.1,0.5],label:'Gorontalo'},
-  'medan':{lonlat:[98.7,3.6],label:'Medan'},'palembang':{lonlat:[104.7,-3.0],label:'Palembang'},'pekanbaru':{lonlat:[101.4,0.5],label:'Pekanbaru'},
-  'padang':{lonlat:[100.4,-0.9],label:'Padang'},'banda aceh':{lonlat:[95.3,5.5],label:'Banda Aceh'},
-  'bandar lampung':{lonlat:[105.3,-5.4],label:'Bandar Lampung'},'batam':{lonlat:[104.0,1.1],label:'Batam'},
-  'ambon':{lonlat:[128.2,-3.7],label:'Ambon'},'ternate':{lonlat:[127.4,0.8],label:'Ternate'},
-  'jayapura':{lonlat:[140.7,-2.5],label:'Jayapura'},'sorong':{lonlat:[131.3,-0.9],label:'Sorong'},
-  'tokyo':{lonlat:[139.7,35.7],label:'Tokyo'},'osaka':{lonlat:[135.5,34.7],label:'Osaka'},'kyoto':{lonlat:[135.8,35.0],label:'Kyoto'},
-  'yokohama':{lonlat:[139.6,35.4],label:'Yokohama'},'nagoya':{lonlat:[136.9,35.2],label:'Nagoya'},'sapporo':{lonlat:[141.4,43.1],label:'Sapporo'},
-  'fukuoka':{lonlat:[130.4,33.6],label:'Fukuoka'},'kobe':{lonlat:[135.2,34.7],label:'Kobe'},'hiroshima':{lonlat:[132.5,34.4],label:'Hiroshima'},
-  'sendai':{lonlat:[140.9,38.3],label:'Sendai'},'naha':{lonlat:[127.7,26.2],label:'Okinawa'},'okinawa':{lonlat:[127.7,26.2],label:'Okinawa'},
-  'singapore':{lonlat:[103.8,1.3],label:'Singapore'},'kuala lumpur':{lonlat:[101.7,3.1],label:'Kuala Lumpur'},
-  'johor bahru':{lonlat:[103.7,1.5],label:'Johor Bahru'},'penang':{lonlat:[100.3,5.4],label:'Penang'},
-  'kota kinabalu':{lonlat:[116.1,5.9],label:'Kota Kinabalu'},'kuching':{lonlat:[110.3,1.6],label:'Kuching'},
-  'manila':{lonlat:[121.0,14.6],label:'Manila'},'bangkok':{lonlat:[100.5,13.8],label:'Bangkok'},
-  'ho chi minh':{lonlat:[106.7,10.8],label:'Ho Chi Minh'},'hanoi':{lonlat:[105.8,21.0],label:'Hanoi'},
-  'seoul':{lonlat:[126.9,37.6],label:'Seoul'},'hong kong':{lonlat:[114.2,22.3],label:'Hong Kong'},
-  'taipei':{lonlat:[121.5,25.0],label:'Taipei'},'beijing':{lonlat:[116.4,39.9],label:'Beijing'},'shanghai':{lonlat:[121.5,31.2],label:'Shanghai'},
-  'dubai':{lonlat:[55.3,25.2],label:'Dubai'},'riyadh':{lonlat:[46.7,24.7],label:'Riyadh'},
-  'jeddah':{lonlat:[39.2,21.5],label:'Jeddah'},'makkah':{lonlat:[39.8,21.4],label:'Makkah'},'madinah':{lonlat:[39.6,24.5],label:'Madinah'},
-  'doha':{lonlat:[51.5,25.3],label:'Doha'},'kuwait':{lonlat:[47.9,29.4],label:'Kuwait'},
-  'london':{lonlat:[-0.1,51.5],label:'London'},'paris':{lonlat:[2.3,48.9],label:'Paris'},
-  'amsterdam':{lonlat:[4.9,52.4],label:'Amsterdam'},'frankfurt':{lonlat:[8.7,50.1],label:'Frankfurt'},
-  'berlin':{lonlat:[13.4,52.5],label:'Berlin'},'madrid':{lonlat:[-3.7,40.4],label:'Madrid'},
-  'sydney':{lonlat:[151.2,-33.9],label:'Sydney'},'melbourne':{lonlat:[144.9,-37.8],label:'Melbourne'},
-  'new york':{lonlat:[-74.0,40.7],label:'New York'},'los angeles':{lonlat:[-118.2,34.1],label:'Los Angeles'},
-  'toronto':{lonlat:[-79.4,43.7],label:'Toronto'},'victoria':{lonlat:[55.5,-4.6],label:'Seychelles'},'seychelles':{lonlat:[55.5,-4.6],label:'Seychelles'}
-};
-
-function getCityCoord(cityStr){
-  if(!cityStr) return null;
-  const lower=cityStr.toLowerCase();
-  for(const key of Object.keys(CITY_COORDS)){
-    if(lower.includes(key)) return CITY_COORDS[key];
-  }
-  return null;
-}
-
-function buildMap(rows){
-  const citiesRow=document.getElementById('cities-row');
-  const tooltip=document.getElementById('map-tooltip');
-  const cityMap={};
-  rows.forEach(function(r){
-    const c=r.c[2]&&r.c[2].v;
-    if(!c) return;
-    const coord=getCityCoord(c);
-    if(!coord) return;
-    if(!cityMap[coord.label]) cityMap[coord.label]={coord,count:0};
-    cityMap[coord.label].count++;
-  });
-
-  const w = window.innerWidth || document.documentElement.clientWidth;
-  const h = (window.innerHeight || document.documentElement.clientHeight) - 61;
-
-  const svg = d3.select('#d3-world-map')
-    .attr('width', w).attr('height', h)
-    .attr('viewBox', '0 0 ' + w + ' ' + h);
-
-  // Center peta di Indonesia - rotate -118 agar Indonesia di tengah
-  const scale = Math.min(w, h) * 0.9;
-  const projection = d3.geoNaturalEarth1()
-    .scale(scale)
-    .rotate([-118, 5, 0])
-    .translate([w / 2, h / 2]);
-
-  const pathGen = d3.geoPath().projection(projection);
-
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-    .then(function(r){return r.json();})
-    .then(function(world){
-      const countries = topojson.feature(world, world.objects.countries);
-
-      svg.append('path').datum(d3.geoGraticule()()).attr('d', pathGen)
-        .attr('fill','none').attr('stroke','rgba(255,255,255,0.03)').attr('stroke-width','0.5');
-
-      svg.selectAll('path.country').data(countries.features).enter().append('path')
-        .attr('class','country').attr('d', pathGen)
-        .attr('fill', function(d){ return d.id===360 ? 'rgba(201,168,76,0.5)' : 'rgba(30,60,100,0.2)'; })
-        .attr('stroke','rgba(255,255,255,0.1)').attr('stroke-width','0.3');
-
-      const KLATEN = [110.6, -7.7];
-      const kPx = projection(KLATEN);
-      if(!kPx) return;
-
-      // Garis dari Klaten ke kota lain
-      Object.values(cityMap).forEach(function(item){
-        const px = projection(item.coord.lonlat);
-        if(!px) return;
-        svg.append('line')
-          .attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
-          .attr('stroke','rgba(201,168,76,0.18)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
-      });
-
-      // Titik kota - kecil, kelap-kelip seperti dot di bawah
-      Object.values(cityMap).forEach(function(item){
-        const px = projection(item.coord.lonlat);
-        if(!px) return;
-        const cx = px[0], cy = px[1];
-
-        // Pulse ring - tipis seperti sinyal
-        const ring = svg.append('circle')
-          .attr('cx',cx).attr('cy',cy).attr('r',2)
-          .attr('fill','none')
-          .attr('stroke','rgba(201,168,76,0.6)')
-          .attr('stroke-width','0.8');
-
-        function blink(){
-          ring.attr('r',2).attr('opacity',1)
-            .transition().duration(1600).ease(d3.easeLinear)
-            .attr('r',10).attr('opacity',0)
-            .on('end', blink);
-        }
-        blink();
-
-        // Titik inti - kecil seperti dot di city-tag bawah
-        svg.append('circle')
-          .attr('cx',cx).attr('cy',cy).attr('r',2.5)
-          .attr('fill','#C9A84C')
-          .attr('stroke','rgba(255,255,255,0.5)')
-          .attr('stroke-width','0.5');
-
-        // Label kota - selalu tampil, kecil
-        const labelX = cx + 5;
-        const labelAnchor = cx > w * 0.8 ? 'end' : 'start';
-        const lx = cx > w * 0.8 ? cx - 5 : cx + 5;
-        svg.append('text')
-          .attr('x', lx).attr('y', cy - 4)
-          .attr('text-anchor', labelAnchor)
-          .attr('font-size','8px')
-          .attr('font-family','Inter,sans-serif')
-          .attr('fill','rgba(245,240,232,0.75)')
-          .attr('font-weight','500')
-          .text(item.coord.label);
-      });
-
-      // Klaten - titik origin, sedikit lebih besar
-      const kRing = svg.append('circle')
-        .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
-        .attr('fill','none')
-        .attr('stroke','rgba(201,168,76,0.8)')
-        .attr('stroke-width','1');
-
-      function blinkKlaten(){
-        kRing.attr('r',3).attr('opacity',1)
-          .transition().duration(2200).ease(d3.easeLinear)
-          .attr('r',16).attr('opacity',0)
-          .on('end', blinkKlaten);
-      }
-      blinkKlaten();
-
-      svg.append('circle')
-        .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',4)
-        .attr('fill','#C9A84C')
-        .attr('stroke','#fff')
-        .attr('stroke-width','1');
-
-      // Label Klaten
-      svg.append('text')
-        .attr('x', kPx[0] + 7).attr('y', kPx[1] - 5)
-        .attr('font-size','9px')
-        .attr('font-family','Inter,sans-serif')
-        .attr('fill','#C9A84C')
-        .attr('font-weight','700')
-        .text('Klaten · Origin');
-
-      // City tags bawah
-      Object.keys(cityMap).forEach(function(label){
-        citiesRow.innerHTML += '<div class="city-tag"><span class="dot"></span>'+label+'</div>';
-      });
-
-      document.getElementById('loading').style.display='none';
-    }).catch(function(){
-      document.getElementById('loading').style.display='none';
-    });
-}
-
-// Load SPARKS data
-requestAnimationFrame(function(){
-fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
-  .then(function(r){return r.text();})
-  .then(function(txt){
-    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    const json=JSON.parse(m[1]);
-    const rows=json.table.rows||[];
-
-    const uniqueG=new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
-    animateNum('stat-garments',uniqueG.size);
-    animateNum('stat-perjalanan',rows.filter(function(r){return r.c[0]&&r.c[0].v;}).length);
-    const citySet=new Set(['klaten']);
-    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c)citySet.add(c.split(',')[0].trim().toLowerCase());});
-    animateNum('stat-kota',citySet.size);
-    const negSet=new Set(['Indonesia']);
-    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c){const p=c.split(',');if(p.length>1)negSet.add(p[p.length-1].trim());}});
-    animateNum('stat-negara',negSet.size);
-
-    const scans=rows.filter(function(r){return r.c[2]&&r.c[2].v;});
-    if(scans.length){
-      const last=scans[scans.length-1];
-      document.getElementById('ls-city').textContent=last.c[2].v.split(',')[0];
-      document.getElementById('latest-spark').style.display='block';
-    }
-
-    buildMap(rows);
-  }).catch(function(){document.getElementById('loading').style.display='none';});
-});
-</script>
-</body>
-</html>
+  'abu dhabi':{lonlat:[54.367,24.453],label:'Abu Dhabi'},
+  'accra':{lonlat:[-0.186,5.556],label:'Accra'},
+  'addis ababa':{lonlat:[38.747,8.996],label:'Addis Ababa'},
+  'adelaide':{lonlat:[138.6,-34.929],label:'Adelaide'},
+  'ahmedabad':{lonlat:[72.587,23.023],label:'Ahmedabad'},
+  'ambon':{lonlat:[128.192,-3.695],label:'Ambon'},
+  'amman':{lonlat:[35.945,31.963],label:'Amman'},
+  'amsterdam':{lonlat:[4.905,52.37],label:'Amsterdam'},
+  'ankara':{lonlat:[32.859,39.92],label:'Ankara'},
+  'athens':{lonlat:[23.728,37.984],label:'Athens'},
+  'atlanta':{lonlat:[-84.388,33.749],label:'Atlanta'},
+  'auckland':{lonlat:[174.763,-36.848],label:'Auckland'},
+  'baghdad':{lonlat:[44.361,33.341],label:'Baghdad'},
+  'balikpapan':{lonlat:[116.854,-1.268],label:'Balikpapan'},
+  'banda aceh':{lonlat:[95.323,5.548],label:'Banda Aceh'},
+  'bandar lampung':{lonlat:[105.261,-5.454],label:'Bandar Lampung'},
+  'bandar seri begawan':{lonlat:[114.941,4.89],label:'Bandar Seri Begawan'},
+  'bandung':{lonlat:[107.608,-6.917],label:'Bandung'},
+  'bangalore':{lonlat:[77.594,12.972],label:'Bangalore'},
+  'bangkalan':{lonlat:[112.73,-7.044],label:'Bangkalan'},
+  'bangkok':{lonlat:[100.501,13.756],label:'Bangkok'},
+  'banjar':{lonlat:[108.54,-7.368],label:'Banjar'},
+  'banjarbaru':{lonlat:[114.831,-3.442],label:'Banjarbaru'},
+  'banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
+  'banjarnegara':{lonlat:[109.693,-7.388],label:'Banjarnegara'},
+  'bantul':{lonlat:[110.328,-7.888],label:'Bantul'},
+  'banyumas':{lonlat:[109.215,-7.513],label:'Banyumas'},
+  'banyuwangi':{lonlat:[114.37,-8.219],label:'Banyuwangi'},
+  'barcelona':{lonlat:[2.154,41.389],label:'Barcelona'},
+  'batam':{lonlat:[104.03,1.136],label:'Batam'},
+  'batang':{lonlat:[109.729,-6.915],label:'Batang'},
+  'batu':{lonlat:[122.516,-7.871],label:'Batu'},
+  'bau-bau':{lonlat:[122.626,-5.467],label:'Bau-bau'},
+  'beijing':{lonlat:[116.407,39.904],label:'Beijing'},
+  'beirut':{lonlat:[35.502,33.889],label:'Beirut'},
+  'bekasi':{lonlat:[107.017,-6.234],label:'Bekasi'},
+  'bengkulu':{lonlat:[102.261,-3.8],label:'Bengkulu'},
+  'berlin':{lonlat:[13.405,52.52],label:'Berlin'},
+  'bima':{lonlat:[118.689,-8.458],label:'Bima'},
+  'binjai':{lonlat:[98.485,3.6],label:'Binjai'},
+  'bitung':{lonlat:[125.192,1.44],label:'Bitung'},
+  'blitar':{lonlat:[112.168,-8.096],label:'Blitar'},
+  'blora':{lonlat:[111.407,-6.962],label:'Blora'},
+  'bogor':{lonlat:[106.8,-6.6],label:'Bogor'},
+  'bogota':{lonlat:[-74.085,4.711],label:'Bogota'},
+  'bojonegoro':{lonlat:[111.881,-7.151],label:'Bojonegoro'},
+  'bondowoso':{lonlat:[113.823,-7.912],label:'Bondowoso'},
+  'bontang':{lonlat:[117.5,0.132],label:'Bontang'},
+  'boston':{lonlat:[-71.058,42.36],label:'Boston'},
+  'boyolali':{lonlat:[110.593,-7.53],label:'Boyolali'},
+  'brebes':{lonlat:[108.754,-6.873],label:'Brebes'},
+  'brisbane':{lonlat:[153.028,-27.468],label:'Brisbane'},
+  'brunei':{lonlat:[114.941,4.89],label:'Brunei'},
+  'brussels':{lonlat:[4.352,50.85],label:'Brussels'},
+  'bucharest':{lonlat:[26.097,44.44],label:'Bucharest'},
+  'budapest':{lonlat:[19.04,47.498],label:'Budapest'},
+  'buenos aires':{lonlat:[-58.382,-34.614],label:'Buenos Aires'},
+  'bukit tinggi':{lonlat:[100.372,-0.308],label:'Bukit Tinggi'},
+  'busan':{lonlat:[129.075,35.18],label:'Busan'},
+  'cairo':{lonlat:[31.235,30.045],label:'Cairo'},
+  'calgary':{lonlat:[-114.066,51.045],label:'Calgary'},
+  'canberra':{lonlat:[149.128,-35.282],label:'Canberra'},
+  'cape town':{lonlat:[18.424,-33.925],label:'Cape Town'},
+  'caracas':{lonlat:[-66.914,10.48],label:'Caracas'},
+  'casablanca':{lonlat:[-7.59,33.573],label:'Casablanca'},
+  'cebu':{lonlat:[123.892,10.317],label:'Cebu'},
+  'chengdu':{lonlat:[104.066,30.572],label:'Chengdu'},
+  'chennai':{lonlat:[80.27,13.083],label:'Chennai'},
+  'chiang mai':{lonlat:[98.993,18.788],label:'Chiang Mai'},
+  'chiba':{lonlat:[140.116,35.605],label:'Chiba'},
+  'chicago':{lonlat:[-87.63,41.878],label:'Chicago'},
+  'chittagong':{lonlat:[91.832,22.335],label:'Chittagong'},
+  'chongqing':{lonlat:[106.553,29.563],label:'Chongqing'},
+  'christchurch':{lonlat:[172.637,-43.531],label:'Christchurch'},
+  'ciamis':{lonlat:[108.349,-7.332],label:'Ciamis'},
+  'cianjur':{lonlat:[107.139,-6.82],label:'Cianjur'},
+  'cilacap':{lonlat:[108.83,-7.719],label:'Cilacap'},
+  'cilegon':{lonlat:[106.052,-5.988],label:'Cilegon'},
+  'cirebon':{lonlat:[108.552,-6.732],label:'Cirebon'},
+  'colombo':{lonlat:[79.862,6.927],label:'Colombo'},
+  'copenhagen':{lonlat:[12.568,55.676],label:'Copenhagen'},
+  'da nang':{lonlat:[108.22,16.054],label:'Da Nang'},
+  'dallas':{lonlat:[-96.797,32.781],label:'Dallas'},
+  'dar es salaam':{lonlat:[39.289,-6.813],label:'Dar Es Salaam'},
+  'davao':{lonlat:[125.613,7.073],label:'Davao'},
+  'demak':{lonlat:[110.639,-6.894],label:'Demak'},
+  'denpasar':{lonlat:[115.217,-8.65],label:'Denpasar'},
+  'depok':{lonlat:[106.776,-6.385],label:'Depok'},
+  'dhaka':{lonlat:[90.407,23.724],label:'Dhaka'},
+  'dili':{lonlat:[125.575,-8.559],label:'Dili'},
+  'doha':{lonlat:[51.531,25.286],label:'Doha'},
+  'dubai':{lonlat:[55.296,25.276],label:'Dubai'},
+  'dumai':{lonlat:[101.454,1.672],label:'Dumai'},
+  'ende':{lonlat:[121.66,-8.843],label:'Ende'},
+  'frankfurt':{lonlat:[8.682,50.111],label:'Frankfurt'},
+  'fukuoka':{lonlat:[130.402,33.589],label:'Fukuoka'},
+  'garut':{lonlat:[107.905,-7.22],label:'Garut'},
+  'gianyar':{lonlat:[115.331,-8.538],label:'Gianyar'},
+  'gold coast':{lonlat:[153.431,-28.002],label:'Gold Coast'},
+  'gorontalo':{lonlat:[123.062,0.544],label:'Gorontalo'},
+  'gresik':{lonlat:[112.655,-7.157],label:'Gresik'},
+  'grobogan':{lonlat:[110.895,-7.042],label:'Grobogan'},
+  'guadalajara':{lonlat:[-103.344,20.659],label:'Guadalajara'},
+  'guangzhou':{lonlat:[113.264,23.129],label:'Guangzhou'},
+  'gunungkidul':{lonlat:[110.614,-7.97],label:'Gunungkidul'},
+  'gunungsitoli':{lonlat:[97.613,1.289],label:'Gunungsitoli'},
+  'hamamatsu':{lonlat:[137.727,34.711],label:'Hamamatsu'},
+  'hamburg':{lonlat:[9.993,53.551],label:'Hamburg'},
+  'hanoi':{lonlat:[105.804,21.028],label:'Hanoi'},
+  'helsinki':{lonlat:[24.941,60.17],label:'Helsinki'},
+  'hiroshima':{lonlat:[132.46,34.385],label:'Hiroshima'},
+  'ho chi minh':{lonlat:[106.66,10.823],label:'Ho Chi Minh'},
+  'hong kong':{lonlat:[114.109,22.397],label:'Hong Kong'},
+  'hongkong':{lonlat:[114.109,22.397],label:'Hongkong'},
+  'houston':{lonlat:[-95.37,29.76],label:'Houston'},
+  'hyderabad':{lonlat:[78.474,17.385],label:'Hyderabad'},
+  'ile au cerf':{lonlat:[55.508,-4.64],label:'Ile Au Cerf'},
+  'incheon':{lonlat:[126.705,37.456],label:'Incheon'},
+  'indramayu':{lonlat:[108.316,-6.325],label:'Indramayu'},
+  'ipoh':{lonlat:[101.083,4.597],label:'Ipoh'},
+  'islamabad':{lonlat:[73.048,33.725],label:'Islamabad'},
+  'istanbul':{lonlat:[28.979,41.015],label:'Istanbul'},
+  'jakarta':{lonlat:[106.845,-6.208],label:'Jakarta'},
+  'jakarta barat':{lonlat:[106.754,-6.168],label:'Jakarta Barat'},
+  'jakarta pusat':{lonlat:[106.83,-6.186],label:'Jakarta Pusat'},
+  'jakarta selatan':{lonlat:[106.814,-6.261],label:'Jakarta Selatan'},
+  'jakarta timur':{lonlat:[106.9,-6.225],label:'Jakarta Timur'},
+  'jakarta utara':{lonlat:[106.938,-6.121],label:'Jakarta Utara'},
+  'jambi':{lonlat:[103.612,-1.61],label:'Jambi'},
+  'jayapura':{lonlat:[140.717,-2.534],label:'Jayapura'},
+  'jeddah':{lonlat:[39.192,21.543],label:'Jeddah'},
+  'jember':{lonlat:[113.7,-8.172],label:'Jember'},
+  'jepara':{lonlat:[110.668,-6.587],label:'Jepara'},
+  'jogja':{lonlat:[110.364,-7.803],label:'Jogja'},
+  'johannesburg':{lonlat:[28.045,-26.202],label:'Johannesburg'},
+  'johor bahru':{lonlat:[103.758,1.492],label:'Johor Bahru'},
+  'jombang':{lonlat:[112.23,-7.547],label:'Jombang'},
+  'kagoshima':{lonlat:[130.558,31.56],label:'Kagoshima'},
+  'kanazawa':{lonlat:[136.626,36.561],label:'Kanazawa'},
+  'kandangan':{lonlat:[115.267,-2.78],label:'Kandangan'},
+  'kaohsiung':{lonlat:[120.312,22.621],label:'Kaohsiung'},
+  'karachi':{lonlat:[67.011,24.861],label:'Karachi'},
+  'karanganyar':{lonlat:[111.024,-7.601],label:'Karanganyar'},
+  'karawang':{lonlat:[107.302,-6.321],label:'Karawang'},
+  'kathmandu':{lonlat:[85.314,27.717],label:'Kathmandu'},
+  'kawasaki':{lonlat:[139.703,35.53],label:'Kawasaki'},
+  'kebumen':{lonlat:[109.652,-7.668],label:'Kebumen'},
+  'kediri':{lonlat:[112.008,-7.816],label:'Kediri'},
+  'kendal':{lonlat:[110.196,-6.921],label:'Kendal'},
+  'kendari':{lonlat:[122.515,-3.972],label:'Kendari'},
+  'kiev':{lonlat:[30.523,50.45],label:'Kiev'},
+  'kinshasa':{lonlat:[15.322,-4.324],label:'Kinshasa'},
+  'kitakyushu':{lonlat:[130.842,33.883],label:'Kitakyushu'},
+  'kl':{lonlat:[101.687,3.139],label:'Kl'},
+  'klaten':{lonlat:[110.61,-7.706],label:'Klaten'},
+  'kobe':{lonlat:[135.195,34.69],label:'Kobe'},
+  'kolkata':{lonlat:[88.363,22.573],label:'Kolkata'},
+  'kota kinabalu':{lonlat:[116.075,5.979],label:'Kota Kinabalu'},
+  'kotabaru':{lonlat:[116.182,-3.297],label:'Kotabaru'},
+  'kotamobagu':{lonlat:[124.317,0.728],label:'Kotamobagu'},
+  'kuala lumpur':{lonlat:[101.687,3.139],label:'Kuala Lumpur'},
+  'kuching':{lonlat:[110.33,1.55],label:'Kuching'},
+  'kudus':{lonlat:[110.836,-6.805],label:'Kudus'},
+  'kulonprogo':{lonlat:[110.155,-7.828],label:'Kulonprogo'},
+  'kumamoto':{lonlat:[130.742,32.79],label:'Kumamoto'},
+  'kuningan':{lonlat:[108.479,-6.976],label:'Kuningan'},
+  'kupang':{lonlat:[123.607,-10.169],label:'Kupang'},
+  'kuwait city':{lonlat:[47.978,29.375],label:'Kuwait City'},
+  'kyiv':{lonlat:[30.523,50.45],label:'Kyiv'},
+  'kyoto':{lonlat:[135.768,35.012],label:'Kyoto'},
+  'lagos':{lonlat:[3.379,6.455],label:'Lagos'},
+  'lahore':{lonlat:[74.344,31.549],label:'Lahore'},
+  'lamongan':{lonlat:[112.413,-7.117],label:'Lamongan'},
+  'langsa':{lonlat:[97.968,4.47],label:'Langsa'},
+  'lebak':{lonlat:[106.25,-6.56],label:'Lebak'},
+  'lhokseumawe':{lonlat:[97.14,5.181],label:'Lhokseumawe'},
+  'lima':{lonlat:[-77.028,-12.046],label:'Lima'},
+  'lisbon':{lonlat:[-9.139,38.722],label:'Lisbon'},
+  'london':{lonlat:[-0.128,51.507],label:'London'},
+  'los angeles':{lonlat:[-118.244,34.052],label:'Los Angeles'},
+  'lubuklinggau':{lonlat:[102.861,-3.3],label:'Lubuklinggau'},
+  'lumajang':{lonlat:[113.222,-8.131],label:'Lumajang'},
+  'macau':{lonlat:[113.549,22.199],label:'Macau'},
+  'madinah':{lonlat:[39.6

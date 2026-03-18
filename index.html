@@ -689,8 +689,6 @@ const obs=new IntersectionObserver(es=>{
 },{threshold:.1});
 document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 
-muatFoto();
-muatStats();
 
 // ── GARMENT HANDLER ──────────────────────────
 const pagePath = window.location.pathname;
@@ -699,12 +697,7 @@ const isGarment = pagePath.includes('/id/') || isQC;
 
 let GARMENTS = {};
 
-function driveUrlGarment(url){
-  if(!url) return '';
-  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(match) return 'https://drive.google.com/thumbnail?id='+match[1]+'&sz=w800';
-  return url;
-}
+function driveUrlGarment(url){ if(!url) return ''; var id=(url.split('/d/')[1]||'').split('/')[0].split('?')[0]; return id?'https://drive.google.com/thumbnail?id='+id+'&sz=w800':url; }
 
 async function fetchGarments(){
   try{
@@ -716,8 +709,7 @@ async function fetchGarments(){
       const id = row.c[0] && row.c[0].v;
       if(!id) return;
       GARMENTS[id] = {
-        name: ((row.c[1]&&row.c[1].v)||id).replace(/
-/g,'<br>'),
+        name: ((row.c[1]&&row.c[1].v)||id).replace(/\n/g,'<br>'),
         origin: (row.c[2]&&row.c[2].v)||'Klaten',
         year: (row.c[3]&&row.c[3].v)||'2026',
         edition: (row.c[4]&&row.c[4].v)||'',

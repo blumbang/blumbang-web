@@ -511,7 +511,7 @@ function switchTab(name){
 function hpDriveUrl(u){
   if(!u) return '';
   const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m?'https://drive.google.com/uc?export=view&id='+m[1]:u;
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800':u;
 }
 
 function hpPreview(slot, url){

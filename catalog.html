@@ -44,19 +44,66 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .filter-bar{padding:0 40px 40px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
 .filter-btn{font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:var(--light);border:1px solid var(--border);background:var(--charcoal);padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
 .filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);}
-.catalog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
-.garment-card{background:var(--charcoal);display:block;text-decoration:none;transition:background 0.2s;position:relative;overflow:hidden;}
-.garment-card:hover{background:var(--grey);}
-.garment-card img{width:100%;height:200px;object-fit:cover;display:block;}
-.card-ph{width:100%;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--grey);}
-.card-body{padding:20px 24px;}
-.card-id{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:0.2em;color:var(--gold);margin-bottom:6px;}
-.card-name{font-family:var(--font-body);font-size:0.95rem;font-weight:600;color:var(--white);margin-bottom:8px;}
-.card-meta{display:flex;gap:12px;flex-wrap:wrap;}
-.card-meta span{font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.12em;color:var(--dim);text-transform:uppercase;}
-.card-link{margin-top:14px;font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;}
+
+
+
+
+
+
+
+
+
+
+
 .loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
-.empty{padding:80px 40px;text-align:center;}
+/* SERI CARD */
+.seri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
+.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;cursor:pointer;}
+.seri-card:hover{background:var(--grey);}
+.seri-mockup{width:100%;height:220px;object-fit:cover;display:block;}
+.seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--grey);gap:10px;}
+.seri-ph-ico{font-size:2.5rem;color:var(--gold-dim);}
+.seri-ph-txt{font-family:var(--font-ui);font-size:0.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;}
+.seri-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:6px;}
+.seri-nama{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.1em;color:var(--white);line-height:1.1;}
+.seri-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.seri-pcs{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;}
+.seri-scan{font-family:var(--font-ui);font-size:.65rem;font-weight:500;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.seri-sep{color:var(--border);}
+.seri-tombol{margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;text-decoration:none;border:1px solid var(--border);padding:9px 16px;background:var(--black);transition:all .2s;}
+.seri-tombol:hover{border-color:var(--gold);color:var(--gold);}
+.seri-barcodes{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.seri-bc{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.1em;color:var(--muted);background:var(--black);border:1px solid var(--border);padding:3px 8px;text-transform:uppercase;}
+
+/* HOT BADGE */
+.hot-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-ui);font-size:.58rem;font-weight:700;letter-spacing:.15em;color:#C9A84C;border:1px solid rgba(201,168,76,.3);padding:2px 8px;text-transform:uppercase;background:rgba(201,168,76,.07);}
+.hot-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;}
+@keyframes denyut{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.5);}}
+
+/* DRAWER */
+.drw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;}
+.drw-overlay.on{opacity:1;pointer-events:all;}
+.drw{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--charcoal);border-top:1px solid var(--border);border-radius:16px 16px 0 0;max-height:78vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.drw.on{transform:translateY(0);}
+.drw-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+.drw-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.drw-judul{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.08em;color:var(--gold);}
+.drw-sub{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.drw-tutup{background:none;border:1px solid var(--border);color:var(--dim);font-size:.8rem;padding:5px 12px;cursor:pointer;font-family:var(--font-ui);}
+.drw-tutup:hover{border-color:var(--gold);color:var(--gold);}
+.drw-list{display:flex;flex-direction:column;}
+.drw-item{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);text-decoration:none;transition:background .2s;}
+.drw-item:hover{background:var(--grey);}
+.drw-item:last-child{border-bottom:none;}
+.drw-item-id{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:.15em;color:var(--gold);}
+.drw-item-info{font-family:var(--font-ui);font-size:.65rem;font-weight:500;color:var(--dim);margin-top:2px;}
+.drw-item-arr{font-size:1rem;color:var(--dim);}
+
+@media(max-width:768px){
+  .seri-grid{margin:0 0 60px;}
+  .filter-bar{padding:0 20px 30px;}
+}
+
 @media(max-width:768px){
   nav{padding:14px 18px;}
   .hero{padding:90px 20px 40px;}
@@ -90,20 +137,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero-count" id="hero-count">Memuat...</div>
 </div>
 
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterGarments('all',this)">Semua</button>
-  <button class="filter-btn" onclick="filterGarments('2026',this)">2026</button>
-  <button class="filter-btn" onclick="filterGarments('2025',this)">2025</button>
+<div class="seri-grid" id="seri-grid">
+  <div class="loading" style="grid-column:1/-1">Memuat koleksi...</div>
 </div>
 
-<div class="catalog-grid" id="catalog-grid">
-  <div class="loading">Memuat garment...</div>
+<!-- DRAWER BARCODE -->
+<div class="drw-overlay" id="drw-overlay" onclick="tutupDrawer()"></div>
+<div class="drw" id="drw-seri">
+  <div class="drw-handle"></div>
+  <div class="drw-head">
+    <div>
+      <div class="drw-judul" id="drw-judul">—</div>
+      <div class="drw-sub" id="drw-sub">—</div>
+    </div>
+    <button class="drw-tutup" onclick="tutupDrawer()">✕ Tutup</button>
+  </div>
+  <div class="drw-list" id="drw-list"></div>
 </div>
 
 <script>
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
-let GARMENTS={};
-let currentFilter='all';
 
 function toggleMenu(){
   var m=document.getElementById('nav-mobile');
@@ -111,89 +164,194 @@ function toggleMenu(){
   m.classList.toggle('open');
   h.textContent=m.classList.contains('open')?'✕':'☰';
 }
-function convertDriveUrl(url){
+
+function driveUrl(url){
   if(!url) return '';
-  const match=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  if(match) return 'https://drive.google.com/uc?export=view&id='+match[1];
-  return url;
+  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800':url;
 }
 
-async function fetchGarments(){
-  try{
-    const url='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS';
-    const r=await fetch(url);
-    const txt=await r.text();
-    const match=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    if(!match) throw new Error('No response');
-    const json=JSON.parse(match[1]);
-    const rows=json.table.rows||[];
-    rows.forEach(function(row){
-      const id=row.c[0]&&row.c[0].v;
-      if(!id) return;
-      GARMENTS[id]={
-        name:((row.c[1]&&row.c[1].v)||id).replace(/\n/g,'<br>'),
-        origin:(row.c[2]&&row.c[2].v)||'Klaten',
-        year:(row.c[3]&&row.c[3].v)||'2026',
-        edition:(row.c[4]&&row.c[4].v)||'',
-        mockup:convertDriveUrl((row.c[5]&&row.c[5].v)||'')
-      };
-    });
-    renderCatalog();
-  }catch(e){
-    document.getElementById('catalog-grid').innerHTML='<div class="loading">Gagal memuat data. Coba refresh.</div>';
-  }
+// ── DRAWER ────────────────────────────────────
+function bukaDrawerIdx(idx){
+  var seri = window._seriList[idx];
+  if(!seri) return;
+  bukaDrawer(seri.nama, seri.garments);
 }
 
-function filterGarments(filter, btn){
-  currentFilter=filter;
-  document.querySelectorAll('.filter-btn').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  renderCatalog();
-}
-
-function renderCatalog(){
-  const grid=document.getElementById('catalog-grid');
-  const countEl=document.getElementById('hero-count');
-  const allIds=Object.keys(GARMENTS);
-
-  const filtered=allIds.filter(function(id){
-    if(currentFilter==='all') return true;
-    return GARMENTS[id].year==currentFilter;
-  });
-
-  countEl.textContent=filtered.length+' Garment Terdaftar';
-
-  if(filtered.length===0){
-    grid.innerHTML='<div class="loading">Belum ada garment untuk filter ini.</div>';
-    return;
-  }
-
-  grid.innerHTML=filtered.map(function(id){
-    const g=GARMENTS[id];
-    const img=g.mockup
-      ?'<img src="'+g.mockup+'" alt="'+g.name+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'
-      :'';
-    return '<a href="/id/'+id+'" class="garment-card">'
-      +img
-      +'<div class="card-ph" style="display:'+(g.mockup?'none':'flex')+'">'
-      +'<span style="font-size:2rem;color:var(--gold-dim);">✦</span>'
-      +'<span style="font-family:var(--font-ui);font-size:0.62rem;letter-spacing:0.15em;color:var(--muted);margin-top:6px;text-transform:uppercase;">Mockup Coming Soon</span>'
-      +'</div>'
-      +'<div class="card-body">'
-      +'<div class="card-id">'+id+'</div>'
-      +'<div class="card-name">'+g.name+'</div>'
-      +'<div class="card-meta">'
-      +'<span>'+g.origin+'</span>'
-      +'<span>·</span>'
-      +'<span>'+(g.edition||g.year)+'</span>'
-      +'</div>'
-      +'<div class="card-link">Lihat Perjalanan →</div>'
-      +'</div>'
+function bukaDrawer(nama, garments){
+  document.getElementById('drw-judul').textContent = nama;
+  document.getElementById('drw-sub').textContent = garments.length + ' Kaos dalam seri ini';
+  const list = document.getElementById('drw-list');
+  list.innerHTML = garments.map(function(g){
+    return '<a href="/id/'+g.id+'" class="drw-item">'
+      +'<div><div class="drw-item-id">'+g.id+'</div>'
+      +'<div class="drw-item-info">'+g.origin+' · '+(g.edition||g.year)+'</div></div>'
+      +'<div class="drw-item-arr">›</div>'
       +'</a>';
   }).join('');
+  document.getElementById('drw-overlay').classList.add('on');
+  document.getElementById('drw-seri').classList.add('on');
+  document.body.style.overflow = 'hidden';
 }
 
-fetchGarments();
+function tutupDrawer(){
+  document.getElementById('drw-overlay').classList.remove('on');
+  document.getElementById('drw-seri').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// Swipe down to close
+var touchY = 0;
+document.addEventListener('touchstart', function(e){ touchY = e.touches[0].clientY; });
+document.addEventListener('touchend', function(e){
+  if(e.changedTouches[0].clientY - touchY > 80){
+    var d = document.querySelector('.drw.on');
+    if(d) tutupDrawer();
+  }
+});
+
+// ── MAIN ──────────────────────────────────────
+function buildFoto(mockup){
+  var ph = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">Mockup Coming Soon</span></div>';
+  if(!mockup) return ph;
+  return '<img class="seri-mockup" src="' + mockup + '" alt="" loading="lazy" onerror="this.onerror=null;this.remove()">' + ph;
+}
+
+async function init(){
+  try{
+    // Fetch GARMENTS dan SPARKS paralel
+    const [garRes, spkRes] = await Promise.all([
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS'),
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
+    ]);
+    const [garTxt, spkTxt] = await Promise.all([garRes.text(), spkRes.text()]);
+
+    // Parse GARMENTS
+    const garMatch = garTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const garRows = garMatch ? JSON.parse(garMatch[1]).table.rows||[] : [];
+
+    // Parse SPARKS - hitung scan per garment dalam 30 hari terakhir
+    const spkMatch = spkTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const spkRows = spkMatch ? JSON.parse(spkMatch[1]).table.rows||[] : [];
+
+    const now = Date.now();
+    const tiga_puluh_hari = 30 * 24 * 60 * 60 * 1000;
+    const scanCount = {};
+    spkRows.forEach(function(r){
+      const gid = r.c[0]&&r.c[0].v;
+      const ts = r.c[6]&&r.c[6].v;
+      if(!gid) return;
+      // Hitung semua scan, prioritaskan yang terbaru
+      if(!scanCount[gid]) scanCount[gid] = {total:0, recent:0};
+      scanCount[gid].total++;
+      if(ts){
+        // Parse timestamp format Indonesia: DD/MM/YYYY HH.MM.SS
+        try{
+          const parts = ts.toString().split(' ');
+          const dateParts = parts[0].split('/');
+          const d = new Date(dateParts[2]+'-'+dateParts[1]+'-'+dateParts[0]);
+          if(now - d.getTime() < tiga_puluh_hari) scanCount[gid].recent++;
+        }catch(e){}
+      }
+    });
+
+    // Kelompokkan GARMENTS per seri/edition
+    const seriMap = {};
+    garRows.forEach(function(row){
+      const id = row.c[0]&&row.c[0].v;
+      if(!id) return;
+      const name = ((row.c[1]&&row.c[1].v)||id).replace(/\n/g,' ');
+      const origin = (row.c[2]&&row.c[2].v)||'Klaten';
+      const year = (row.c[3]&&row.c[3].v)||'2026';
+      const edition = (row.c[4]&&row.c[4].v)||'';
+      const mockup = driveUrl((row.c[5]&&row.c[5].v)||'');
+      const key = edition.trim() || '__umum__';
+
+      if(!seriMap[key]){
+        seriMap[key] = {
+          nama: edition.trim() || 'Koleksi Umum',
+          garments: [],
+          mockup: '',
+          scanRecent: 0,
+          scanTotal: 0
+        };
+      }
+      seriMap[key].garments.push({id, name, origin, year, edition, mockup});
+      if(mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
+
+      // Akumulasi scan seri
+      if(scanCount[id]){
+        seriMap[key].scanRecent += scanCount[id].recent;
+        seriMap[key].scanTotal += scanCount[id].total;
+      }
+    });
+
+    // Sort: scan recent terbanyak di atas, tie-break dengan total scan
+    const seriList = Object.values(seriMap).sort(function(a,b){
+      if(b.scanRecent !== a.scanRecent) return b.scanRecent - a.scanRecent;
+      return b.scanTotal - a.scanTotal;
+    });
+
+    // Update hero count
+    const totalGarment = garRows.filter(function(r){return r.c[0]&&r.c[0].v;}).length;
+    document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + seriList.length + ' Seri';
+
+    // Render
+    const grid = document.getElementById('seri-grid');
+    if(!seriList.length){
+      grid.innerHTML = '<div class="loading" style="grid-column:1/-1">Belum ada garment terdaftar.</div>';
+      return;
+    }
+
+    // Simpan seriList global agar bisa diakses dari onclick
+    window._seriList = seriList;
+
+    grid.innerHTML = seriList.map(function(seri, idx){
+      const jml = seri.garments.length;
+      const isHot = seri.scanRecent > 0;
+      const isSingle = jml === 1;
+      const g0 = seri.garments[0];
+
+      const fotoHtml = buildFoto(seri.mockup);
+
+      const hotHtml = isHot
+        ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
+        : '';
+
+      const scanHtml = seri.scanTotal > 0
+        ? '<span class="seri-sep">·</span><span class="seri-scan">'+seri.scanTotal+' scan</span>'
+        : '';
+
+      const bcHtml = '<div class="seri-barcodes">'
+        + seri.garments.slice(0,6).map(function(g){
+            return '<span class="seri-bc">'+g.id+'</span>';
+          }).join('')
+        + (jml > 6 ? '<span class="seri-bc">+' + (jml-6) + ' lagi</span>' : '')
+        + '</div>';
+
+      // Tombol: single langsung link, multi pakai data-index
+      const tombolHtml = isSingle
+        ? '<a href="/id/'+g0.id+'" class="seri-tombol">Lihat Perjalanan &#x2192;</a>'
+        : '<button class="seri-tombol" onclick="bukaDrawerIdx('+idx+')">Lihat '+jml+' Kaos &#x2192;</button>';
+
+      return '<div class="seri-card">'
+        + fotoHtml
+        + '<div class="seri-body">'
+        + hotHtml
+        + '<div class="seri-nama">'+seri.nama+'</div>'
+        + '<div class="seri-meta"><span class="seri-pcs">'+jml+' Kaos</span>'+scanHtml+'</div>'
+        + bcHtml
+        + tombolHtml
+        + '</div></div>';
+    }).join('');
+
+  }catch(e){
+    document.getElementById('seri-grid').innerHTML = '<div class="loading" style="grid-column:1/-1">Gagal memuat data. Coba refresh.</div>';
+    console.error(e);
+  }
+}
+
+init();
 </script>
 </body>
 </html>

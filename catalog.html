@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Katalog Garment · Blumbang.id</title>
-<meta name="description" content="Semua garment Blumbang.id — kaos yang punya cerita. Scan QR dan lihat perjalanan setiap kaos.">
+<title>Katalog · Blumbang.id</title>
+<meta name="description" content="Semua garment Blumbang.id — kaos yang punya cerita.">
 <link rel="canonical" href="https://blumbang.id/catalog">
-<meta property="og:title" content="Katalog Garment · Blumbang.id">
-<meta property="og:description" content="Semua garment Blumbang.id — kaos yang punya cerita.">
-<meta property="og:url" content="https://blumbang.id/catalog">
-<meta property="og:image" content="https://blumbang.id/og-image.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
-  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--abu2:#252525;
+  --border:#2a2a2a;--muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
   --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
   --font-logo:'Bebas Neue',sans-serif;
   --font-body:'Montserrat',sans-serif;
@@ -23,6 +19,8 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+
+/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
 .nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
 .nav-links{display:flex;gap:32px;}
@@ -36,32 +34,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
 .nav-mobile a:last-child{border-bottom:none;}
 .mobile-order{color:var(--gold)!important;font-weight:700!important;}
+
+/* HERO */
 .hero{padding:120px 40px 60px;text-align:center;}
 .hero-tag{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;display:block;text-transform:uppercase;}
 .hero-title{font-family:var(--font-logo);font-size:clamp(3rem,8vw,6rem);letter-spacing:0.05em;line-height:1.0;margin-bottom:20px;}
 .hero-sub{font-family:var(--font-body);font-size:1rem;font-weight:300;font-style:italic;color:var(--light);margin-bottom:8px;}
 .hero-count{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
-.filter-bar{padding:0 40px 40px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
-.filter-btn{font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:var(--light);border:1px solid var(--border);background:var(--charcoal);padding:8px 20px;cursor:pointer;text-transform:uppercase;transition:all 0.2s;}
-.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);}
 
+/* SEARCH */
+.search-wrap{padding:0 40px 32px;display:flex;justify-content:center;}
+.search-box{width:100%;max-width:480px;background:var(--charcoal);border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:0.95rem;padding:13px 18px;outline:none;transition:border-color .2s;}
+.search-box:focus{border-color:var(--gold);}
+.search-box::placeholder{color:var(--muted);font-style:italic;}
 
-
-
-
-
-
-
-
-
-
-.loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
-/* SERI CARD */
+/* GRID */
 .seri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
-.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;cursor:pointer;}
+.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;}
 .seri-card:hover{background:var(--grey);}
 .seri-mockup{width:100%;height:220px;object-fit:cover;display:block;}
-.seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--grey);gap:10px;}
+.seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--grey);}
 .seri-ph-ico{font-size:2.5rem;color:var(--gold-dim);}
 .seri-ph-txt{font-family:var(--font-ui);font-size:0.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;}
 .seri-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:6px;}
@@ -70,13 +62,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .seri-pcs{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;}
 .seri-scan{font-family:var(--font-ui);font-size:.65rem;font-weight:500;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
 .seri-sep{color:var(--border);}
-.seri-tombol{margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;text-decoration:none;border:1px solid var(--border);padding:9px 16px;background:var(--black);transition:all .2s;}
-.seri-tombol:hover{border-color:var(--gold);color:var(--gold);}
-.seri-barcodes{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;}
+.seri-barcodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
 .seri-bc{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.1em;color:var(--muted);background:var(--black);border:1px solid var(--border);padding:3px 8px;text-transform:uppercase;}
+.seri-tombol{margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;text-decoration:none;border:1px solid var(--border);padding:9px 16px;background:var(--black);transition:all .2s;cursor:pointer;}
+.seri-tombol:hover{border-color:var(--gold);color:var(--gold);}
 
 /* HOT BADGE */
-.hot-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-ui);font-size:.58rem;font-weight:700;letter-spacing:.15em;color:#C9A84C;border:1px solid rgba(201,168,76,.3);padding:2px 8px;text-transform:uppercase;background:rgba(201,168,76,.07);}
+.hot-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-ui);font-size:.58rem;font-weight:700;letter-spacing:.15em;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:2px 8px;text-transform:uppercase;background:rgba(201,168,76,.07);}
 .hot-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;}
 @keyframes denyut{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.5);}}
 
@@ -99,20 +91,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .drw-item-info{font-family:var(--font-ui);font-size:.65rem;font-weight:500;color:var(--dim);margin-top:2px;}
 .drw-item-arr{font-size:1rem;color:var(--dim);}
 
-@media(max-width:768px){
-  .seri-grid{margin:0 0 60px;}
-  .filter-bar{padding:0 20px 30px;}
-}
+/* STATES */
+.loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
+.search-empty{padding:60px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
 
 @media(max-width:768px){
   nav{padding:14px 18px;}
   .hero{padding:90px 20px 40px;}
-  .filter-bar{padding:0 20px 30px;}
-  .catalog-grid{margin:0 0 60px;}
+  .search-wrap{padding:0 20px 24px;}
+  .seri-grid{margin:0 0 60px;}
+  .nav-links{display:none;}
+  .nav-order{display:none;}
+  .nav-hamburger{display:block;}
 }
 </style>
 </head>
 <body>
+
 <nav>
   <a href="/" class="nav-brand">BLUMB✦NG</a>
   <div class="nav-links">
@@ -137,12 +132,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   <div class="hero-count" id="hero-count">Memuat...</div>
 </div>
 
-<div class="seri-grid" id="seri-grid">
-  <div class="loading" style="grid-column:1/-1">Memuat koleksi...</div>
+<div class="search-wrap">
+  <input class="search-box" id="search-box" type="text" placeholder="Cari nama seri...">
 </div>
 
-<!-- DRAWER BARCODE -->
-<div class="drw-overlay" id="drw-overlay" onclick="tutupDrawer()"></div>
+<div class="seri-grid" id="seri-grid">
+  <div class="loading">Memuat koleksi...</div>
+</div>
+
+<div class="drw-overlay" id="drw-overlay"></div>
 <div class="drw" id="drw-seri">
   <div class="drw-handle"></div>
   <div class="drw-head">
@@ -150,204 +148,213 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="drw-judul" id="drw-judul">—</div>
       <div class="drw-sub" id="drw-sub">—</div>
     </div>
-    <button class="drw-tutup" onclick="tutupDrawer()">✕ Tutup</button>
+    <button class="drw-tutup" id="drw-tutup">✕ Tutup</button>
   </div>
   <div class="drw-list" id="drw-list"></div>
 </div>
 
 <script>
-const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+var SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+var _seriList = [];
 
-function toggleMenu(){
-  var m=document.getElementById('nav-mobile');
-  var h=document.getElementById('hamburger');
+function toggleMenu() {
+  var m = document.getElementById('nav-mobile');
+  var h = document.getElementById('hamburger');
   m.classList.toggle('open');
-  h.textContent=m.classList.contains('open')?'✕':'☰';
+  h.textContent = m.classList.contains('open') ? '✕' : '☰';
 }
 
-function driveUrl(url){
-  if(!url) return '';
-  const m=url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800':url;
+function driveUrl(url) {
+  if (!url) return '';
+  var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800' : url;
 }
 
-// ── DRAWER ────────────────────────────────────
-function bukaDrawerIdx(idx){
-  var seri = window._seriList[idx];
-  if(!seri) return;
-  bukaDrawer(seri.nama, seri.garments);
-}
-
-function bukaDrawer(nama, garments){
-  document.getElementById('drw-judul').textContent = nama;
-  document.getElementById('drw-sub').textContent = garments.length + ' Kaos dalam seri ini';
-  const list = document.getElementById('drw-list');
-  list.innerHTML = garments.map(function(g){
-    return '<a href="/id/'+g.id+'" class="drw-item">'
-      +'<div><div class="drw-item-id">'+g.id+'</div>'
-      +'<div class="drw-item-info">'+g.origin+' · '+(g.edition||g.year)+'</div></div>'
-      +'<div class="drw-item-arr">›</div>'
-      +'</a>';
-  }).join('');
+// DRAWER
+function bukaDrawer(idx) {
+  var seri = _seriList[idx];
+  if (!seri) return;
+  document.getElementById('drw-judul').textContent = seri.nama;
+  document.getElementById('drw-sub').textContent = seri.garments.length + ' Kaos dalam seri ini';
+  var html = '';
+  for (var i = 0; i < seri.garments.length; i++) {
+    var g = seri.garments[i];
+    html += '<a href="/id/' + g.id + '" class="drw-item">';
+    html += '<div><div class="drw-item-id">' + g.id + '</div>';
+    html += '<div class="drw-item-info">' + g.origin + ' · ' + (g.edition || g.year) + '</div></div>';
+    html += '<div class="drw-item-arr">&#x203A;</div></a>';
+  }
+  document.getElementById('drw-list').innerHTML = html;
   document.getElementById('drw-overlay').classList.add('on');
   document.getElementById('drw-seri').classList.add('on');
   document.body.style.overflow = 'hidden';
 }
 
-function tutupDrawer(){
+function tutupDrawer() {
   document.getElementById('drw-overlay').classList.remove('on');
   document.getElementById('drw-seri').classList.remove('on');
   document.body.style.overflow = '';
 }
 
+document.getElementById('drw-overlay').addEventListener('click', tutupDrawer);
+document.getElementById('drw-tutup').addEventListener('click', tutupDrawer);
+
 // Swipe down to close
 var touchY = 0;
-document.addEventListener('touchstart', function(e){ touchY = e.touches[0].clientY; });
-document.addEventListener('touchend', function(e){
-  if(e.changedTouches[0].clientY - touchY > 80){
-    var d = document.querySelector('.drw.on');
-    if(d) tutupDrawer();
+document.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; });
+document.addEventListener('touchend', function(e) {
+  if (e.changedTouches[0].clientY - touchY > 80) {
+    if (document.querySelector('.drw.on')) tutupDrawer();
   }
 });
 
-// ── MAIN ──────────────────────────────────────
-function buildFoto(mockup){
-  var ph = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">Mockup Coming Soon</span></div>';
-  if(!mockup) return ph;
-  return '<img class="seri-mockup" src="' + mockup + '" alt="" loading="lazy" onerror="this.onerror=null;this.remove()">' + ph;
+// RENDER
+function renderGrid(list) {
+  var grid = document.getElementById('seri-grid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="search-empty">Tidak ada hasil ditemukan.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var seri = list[i];
+    var realIdx = _seriList.indexOf(seri);
+    var jml = seri.garments.length;
+    var g0 = seri.garments[0];
+
+    // Foto
+    var foto = '';
+    if (seri.mockup) {
+      foto = '<img class="seri-mockup" src="' + seri.mockup + '" alt="" loading="lazy">';
+    } else {
+      foto = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">Mockup Coming Soon</span></div>';
+    }
+
+    // Hot badge
+    var hot = seri.scanRecent > 0
+      ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
+      : '';
+
+    // Scan info
+    var scanInfo = seri.scanTotal > 0
+      ? '<span class="seri-sep">·</span><span class="seri-scan">' + seri.scanTotal + ' scan</span>'
+      : '';
+
+    // Barcodes
+    var bc = '';
+    var show = seri.garments.slice(0, 6);
+    for (var j = 0; j < show.length; j++) {
+      bc += '<span class="seri-bc">' + show[j].id + '</span>';
+    }
+    if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' lagi</span>';
+
+    // Tombol
+    var tombol = jml === 1
+      ? '<a href="/id/' + g0.id + '" class="seri-tombol">Lihat Perjalanan &#x2192;</a>'
+      : '<button class="seri-tombol" onclick="bukaDrawer(' + realIdx + ')">Lihat ' + jml + ' Kaos &#x2192;</button>';
+
+    html += '<div class="seri-card">' + foto;
+    html += '<div class="seri-body">' + hot;
+    html += '<div class="seri-nama">' + seri.nama + '</div>';
+    html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
+    html += '<div class="seri-barcodes">' + bc + '</div>';
+    html += tombol + '</div></div>';
+  }
+  grid.innerHTML = html;
 }
 
-async function init(){
-  try{
-    // Fetch GARMENTS dan SPARKS paralel
-    const [garRes, spkRes] = await Promise.all([
-      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS'),
-      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
-    ]);
-    const [garTxt, spkTxt] = await Promise.all([garRes.text(), spkRes.text()]);
+// SEARCH
+document.getElementById('search-box').addEventListener('input', function() {
+  var q = this.value.toLowerCase().trim();
+  if (!q) { renderGrid(_seriList); return; }
+  var filtered = _seriList.filter(function(s) {
+    return s.nama.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    document.getElementById('seri-grid').innerHTML = '<div class="search-empty">Tidak ada seri "' + this.value + '"</div>';
+    return;
+  }
+  renderGrid(filtered);
+});
 
-    // Parse GARMENTS
-    const garMatch = garTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    const garRows = garMatch ? JSON.parse(garMatch[1]).table.rows||[] : [];
+// MAIN
+async function init() {
+  try {
+    var garRes = await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=GARMENTS');
+    var garTxt = await garRes.text();
+    var garMatch = garTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    var garRows = garMatch ? JSON.parse(garMatch[1]).table.rows || [] : [];
 
-    // Parse SPARKS - hitung scan per garment dalam 30 hari terakhir
-    const spkMatch = spkTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    const spkRows = spkMatch ? JSON.parse(spkMatch[1]).table.rows||[] : [];
+    var spkRows = [];
+    try {
+      var spkRes = await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=SPARKS');
+      var spkTxt = await spkRes.text();
+      var spkMatch = spkTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      spkRows = spkMatch ? JSON.parse(spkMatch[1]).table.rows || [] : [];
+    } catch(e) {
+      console.warn('SPARKS tidak bisa dimuat');
+    }
 
-    const now = Date.now();
-    const tiga_puluh_hari = 30 * 24 * 60 * 60 * 1000;
-    const scanCount = {};
-    spkRows.forEach(function(r){
-      const gid = r.c[0]&&r.c[0].v;
-      const ts = r.c[6]&&r.c[6].v;
-      if(!gid) return;
-      // Hitung semua scan, prioritaskan yang terbaru
-      if(!scanCount[gid]) scanCount[gid] = {total:0, recent:0};
+    // Hitung scan per garment (30 hari terakhir)
+    var now = Date.now();
+    var batas = 30 * 24 * 60 * 60 * 1000;
+    var scanCount = {};
+    for (var i = 0; i < spkRows.length; i++) {
+      var r = spkRows[i];
+      var gid = r.c[0] && r.c[0].v;
+      if (!gid) continue;
+      if (!scanCount[gid]) scanCount[gid] = { total: 0, recent: 0 };
       scanCount[gid].total++;
-      if(ts){
-        // Parse timestamp format Indonesia: DD/MM/YYYY HH.MM.SS
-        try{
-          const parts = ts.toString().split(' ');
-          const dateParts = parts[0].split('/');
-          const d = new Date(dateParts[2]+'-'+dateParts[1]+'-'+dateParts[0]);
-          if(now - d.getTime() < tiga_puluh_hari) scanCount[gid].recent++;
-        }catch(e){}
+      var ts = r.c[6] && r.c[6].v;
+      if (ts) {
+        try {
+          var parts = ts.toString().split(' ');
+          var dp = parts[0].split('/');
+          var d = new Date(dp[2] + '-' + dp[1] + '-' + dp[0]);
+          if (now - d.getTime() < batas) scanCount[gid].recent++;
+        } catch(e) {}
       }
-    });
+    }
 
-    // Kelompokkan GARMENTS per seri/edition
-    const seriMap = {};
-    garRows.forEach(function(row){
-      const id = row.c[0]&&row.c[0].v;
-      if(!id) return;
-      const name = ((row.c[1]&&row.c[1].v)||id).replace(/\n/g,' ');
-      const origin = (row.c[2]&&row.c[2].v)||'Klaten';
-      const year = (row.c[3]&&row.c[3].v)||'2026';
-      const edition = (row.c[4]&&row.c[4].v)||'';
-      const mockup = driveUrl((row.c[5]&&row.c[5].v)||'');
-      const key = edition.trim() || '__umum__';
+    // Kelompokkan per seri
+    var seriMap = {};
+    for (var i = 0; i < garRows.length; i++) {
+      var row = garRows[i];
+      var id = row.c[0] && row.c[0].v;
+      if (!id) continue;
+      var name = ((row.c[1] && row.c[1].v) || id).replace(/\n/g, ' ');
+      var origin = (row.c[2] && row.c[2].v) || 'Klaten';
+      var year = (row.c[3] && row.c[3].v) || '2026';
+      var edition = (row.c[4] && row.c[4].v) || '';
+      var mockup = driveUrl((row.c[5] && row.c[5].v) || '');
+      var key = edition.trim() || '__umum__';
 
-      if(!seriMap[key]){
-        seriMap[key] = {
-          nama: edition.trim() || 'Koleksi Umum',
-          garments: [],
-          mockup: '',
-          scanRecent: 0,
-          scanTotal: 0
-        };
+      if (!seriMap[key]) {
+        seriMap[key] = { nama: edition.trim() || 'Koleksi Umum', garments: [], mockup: '', scanRecent: 0, scanTotal: 0 };
       }
-      seriMap[key].garments.push({id, name, origin, year, edition, mockup});
-      if(mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
-
-      // Akumulasi scan seri
-      if(scanCount[id]){
+      seriMap[key].garments.push({ id: id, name: name, origin: origin, year: year, edition: edition, mockup: mockup });
+      if (mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
+      if (scanCount[id]) {
         seriMap[key].scanRecent += scanCount[id].recent;
         seriMap[key].scanTotal += scanCount[id].total;
       }
-    });
+    }
 
-    // Sort: scan recent terbanyak di atas, tie-break dengan total scan
-    const seriList = Object.values(seriMap).sort(function(a,b){
-      if(b.scanRecent !== a.scanRecent) return b.scanRecent - a.scanRecent;
+    // Sort: scan recent terbanyak di atas
+    var keys = Object.keys(seriMap);
+    _seriList = keys.map(function(k) { return seriMap[k]; }).sort(function(a, b) {
+      if (b.scanRecent !== a.scanRecent) return b.scanRecent - a.scanRecent;
       return b.scanTotal - a.scanTotal;
     });
 
-    // Update hero count
-    const totalGarment = garRows.filter(function(r){return r.c[0]&&r.c[0].v;}).length;
-    document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + seriList.length + ' Seri';
+    var totalGarment = garRows.filter(function(r) { return r.c[0] && r.c[0].v; }).length;
+    document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + _seriList.length + ' Seri';
 
-    // Render
-    const grid = document.getElementById('seri-grid');
-    if(!seriList.length){
-      grid.innerHTML = '<div class="loading" style="grid-column:1/-1">Belum ada garment terdaftar.</div>';
-      return;
-    }
+    renderGrid(_seriList);
 
-    // Simpan seriList global agar bisa diakses dari onclick
-    window._seriList = seriList;
-
-    grid.innerHTML = seriList.map(function(seri, idx){
-      const jml = seri.garments.length;
-      const isHot = seri.scanRecent > 0;
-      const isSingle = jml === 1;
-      const g0 = seri.garments[0];
-
-      const fotoHtml = buildFoto(seri.mockup);
-
-      const hotHtml = isHot
-        ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
-        : '';
-
-      const scanHtml = seri.scanTotal > 0
-        ? '<span class="seri-sep">·</span><span class="seri-scan">'+seri.scanTotal+' scan</span>'
-        : '';
-
-      const bcHtml = '<div class="seri-barcodes">'
-        + seri.garments.slice(0,6).map(function(g){
-            return '<span class="seri-bc">'+g.id+'</span>';
-          }).join('')
-        + (jml > 6 ? '<span class="seri-bc">+' + (jml-6) + ' lagi</span>' : '')
-        + '</div>';
-
-      // Tombol: single langsung link, multi pakai data-index
-      const tombolHtml = isSingle
-        ? '<a href="/id/'+g0.id+'" class="seri-tombol">Lihat Perjalanan &#x2192;</a>'
-        : '<button class="seri-tombol" onclick="bukaDrawerIdx('+idx+')">Lihat '+jml+' Kaos &#x2192;</button>';
-
-      return '<div class="seri-card">'
-        + fotoHtml
-        + '<div class="seri-body">'
-        + hotHtml
-        + '<div class="seri-nama">'+seri.nama+'</div>'
-        + '<div class="seri-meta"><span class="seri-pcs">'+jml+' Kaos</span>'+scanHtml+'</div>'
-        + bcHtml
-        + tombolHtml
-        + '</div></div>';
-    }).join('');
-
-  }catch(e){
-    document.getElementById('seri-grid').innerHTML = '<div class="loading" style="grid-column:1/-1">Gagal memuat data. Coba refresh.</div>';
-    console.error(e);
+  } catch(e) {
+    console.error('Catalog error:', e.message || e);
+    document.getElementById('seri-grid').innerHTML = '<div class="loading">Gagal memuat data. Coba refresh halaman.</div>';
   }
 }
 

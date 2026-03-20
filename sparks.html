@@ -540,7 +540,7 @@ function getCityCoord(cityStr){
   return null;
 }
 
-function buildMap(rows){
+function buildMap(rows, preloadedWorld){
   const citiesRow = document.getElementById('cities-row');
   const tooltip = document.getElementById('map-tooltip');
 
@@ -583,9 +583,8 @@ function buildMap(rows){
   }
   function hideTip(){ tooltip.classList.remove('on'); }
 
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
-    .then(function(r){ return r.json(); })
-    .then(function(world){
+  // Gunakan data yang sudah diload paralel
+  Promise.resolve(preloadedWorld).then(function(world){
       const countries = topojson.feature(world, world.objects.countries);
 
       // Graticule - garis lintang/bujur tipis
@@ -707,13 +706,16 @@ function buildMap(rows){
 
 // Load SPARKS data
 requestAnimationFrame(function(){
-fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
-  .then(function(r){return r.text();})
-  .then(function(txt){
-    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    if(!m){ document.getElementById('loading').style.display='none'; return; }
-    const json=JSON.parse(m[1]);
-    const rows=json.table.rows||[];
+Promise.all([
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
+]).then(function(results){
+  var txt = results[0];
+  var worldData = results[1];
+  var m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+  if(!m){ document.getElementById('loading').style.display='none'; return; }
+  var json=JSON.parse(m[1]);
+  var rows=json.table.rows||[];
 
     const uniqueG=new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
     animateNum('stat-garments',uniqueG.size);
@@ -732,7 +734,7 @@ fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&
       document.getElementById('latest-spark').style.display='block';
     }
 
-    buildMap(rows);
+    buildMap(rows, worldData);
   }).catch(function(){document.getElementById('loading').style.display='none';});
 });
 </script>

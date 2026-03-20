@@ -152,11 +152,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 #s7{background:var(--hitam);padding:80px 48px;text-align:center;}
 .s7-sub{font-size:.93rem;font-weight:300;font-style:italic;color:var(--redup);margin:14px 0 44px;}
 .k-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:30px;}
-.k-card{background:var(--abu);padding:38px 18px 26px;display:flex;flex-direction:column;align-items:center;gap:14px;text-decoration:none;transition:background .2s;position:relative;}
+.k-card{background:var(--abu);padding:0;display:flex;flex-direction:column;align-items:center;text-decoration:none;transition:background .2s;position:relative;overflow:hidden;}
+.k-card-foto{width:100%;height:180px;object-fit:cover;display:block;}
+.k-card-body{padding:20px 18px 22px;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.k-card-ph{width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:var(--abu2);}
 .k-card:hover{background:var(--abu2);}
 .k-card:hover svg{transform:translateY(-5px);}
 .k-id{position:absolute;top:11px;right:11px;font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.2em;color:var(--emas);}
-.k-card svg{width:78px;transition:transform .3s;}
+.k-card-ph svg{width:78px;transition:transform .3s;}
+.k-card:hover .k-card-ph svg{transform:translateY(-5px);}
 .k-nama{font-family:var(--fb);font-size:.68rem;font-weight:600;letter-spacing:.2em;color:var(--putih);text-transform:uppercase;}
 .k-label{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--emas);border:1px solid var(--border);padding:2px 8px;text-transform:uppercase;}
 
@@ -634,21 +638,18 @@ a.hs-item{text-decoration:none;}
   <span class="stag rv">Portofolio</span>
   <h2 class="rv">PILIH KAOSMU.</h2>
   <p class="s7-sub rv">Setiap desain memiliki identitasnya sendiri.<br>Pilih satu, dan mulai perjalananmu.</p>
-  <div class="k-grid rv">
-    <a href="/catalog" class="k-card"><span class="k-id">BLB-001</span>
-      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/><text x="60" y="54" text-anchor="middle" font-family="'Bebas Neue'" font-size="7" letter-spacing="3" fill="rgba(201,168,76,.28)">BLUMBANG</text></svg>
-      <div class="k-nama">Series I — Awal</div>
-      <div class="k-label">Sablon Custom</div>
+  <div class="k-grid rv" id="koleksi-grid">
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
     </a>
-    <a href="/catalog" class="k-card"><span class="k-id">BLB-002</span>
-      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#222" stroke="#2a2a2a" stroke-width="1"/><text x="60" y="54" text-anchor="middle" font-family="'Bebas Neue'" font-size="7" letter-spacing="3" fill="rgba(201,168,76,.24)">BLUMBANG</text></svg>
-      <div class="k-nama">Series II — Jalan</div>
-      <div class="k-label">Sablon Custom</div>
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
     </a>
-    <a href="/catalog" class="k-card"><span class="k-id">BLB-003</span>
-      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#161616" stroke="#222" stroke-width="1"/><text x="60" y="54" text-anchor="middle" font-family="'Bebas Neue'" font-size="7" letter-spacing="3" fill="rgba(201,168,76,.28)">BLUMBANG</text></svg>
-      <div class="k-nama">Series III — Jejak</div>
-      <div class="k-label">Sablon Custom</div>
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
     </a>
   </div>
   <a href="/catalog" class="btn-putih rv">Lihat Semua Koleksi</a>
@@ -700,6 +701,7 @@ a.hs-item{text-decoration:none;}
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 let rawSparks = []; // Cache data SPARKS untuk drawer
+let rawGarments = []; // Cache data GARMENTS untuk section koleksi
 
 function urlDrive(u){
   if(!u) return '';
@@ -736,6 +738,8 @@ async function muatStats(){
     const mS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     const barisS=mS?JSON.parse(mS[1]).table.rows||[]:[];
     rawSparks = barisS; // Simpan untuk drawer
+    rawGarments = barisG; // Simpan untuk section koleksi
+    renderKoleksi();
     const kotaSet=new Set(['Klaten']);
     const negaraSet=new Set(['Indonesia']);
     const garmentBerjalan=new Set();
@@ -971,6 +975,65 @@ async function submitStory(){
   }catch(e){}
   document.getElementById('form-body').style.display='none';
   document.getElementById('form-ok').style.display='block';
+}
+
+
+// ── RENDER SECTION KOLEKSI (S7) ──────────────
+function renderKoleksi(){
+  const grid = document.getElementById('koleksi-grid');
+  if(!grid || !rawGarments.length) return;
+
+  // Kelompokkan per seri sama seperti catalog
+  const seriMap = {};
+  rawGarments.forEach(function(row){
+    const id = row.c[0]?.v;
+    if(!id) return;
+    const name = ((row.c[1]?.v)||id).replace(/\n/g,' ');
+    const origin = (row.c[2]?.v)||'Klaten';
+    const year = (row.c[3]?.v)||'2026';
+    const edition = (row.c[4]?.v)||'';
+    const mockup = driveUrlGarment((row.c[5]?.v)||'');
+    const key = edition.trim()||'__umum__';
+    if(!seriMap[key]) seriMap[key] = {nama:edition.trim()||'Koleksi Umum', id, mockup:'', scanRecent:0, year};
+    if(mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
+  });
+
+  // Hitung scan recent per seri
+  rawSparks.forEach(function(r){
+    const gid = r.c[0]?.v;
+    if(!gid) return;
+    // Cari seri yang punya garment ini
+    rawGarments.forEach(function(row){
+      if(row.c[0]?.v !== gid) return;
+      const edition = (row.c[4]?.v)||'';
+      const key = edition.trim()||'__umum__';
+      if(seriMap[key]) seriMap[key].scanRecent++;
+    });
+  });
+
+  // Sort: scan recent terbanyak di atas
+  const seriList = Object.values(seriMap).sort(function(a,b){
+    return b.scanRecent - a.scanRecent;
+  });
+
+  // Ambil 3 teratas
+  const top3 = seriList.slice(0,3);
+
+  // Render
+  grid.innerHTML = top3.map(function(seri){
+    const fotoHtml = seri.mockup
+      ? '<img class="k-card-foto" src="'+seri.mockup+'" alt="'+seri.nama+'" loading="lazy" onerror="this.onerror=null;this.remove()">'
+        +'<div class="k-card-ph" style="display:none"><svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg></div>'
+      : '<div class="k-card-ph"><svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg></div>';
+
+    return '<a href="/catalog" class="k-card">'
+      + fotoHtml
+      + '<div class="k-card-body">'
+      + '<span class="k-id">'+seri.nama+'</span>'
+      + '<div class="k-nama">'+(seri.year||'2026')+'</div>'
+      + '<div class="k-label">Lihat Koleksi →</div>'
+      + '</div></a>';
+  }).join('');
 }
 
 // Init

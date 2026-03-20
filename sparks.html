@@ -559,18 +559,15 @@ function buildMap(rows){
   const h = (window.innerHeight || document.documentElement.clientHeight) - 61;
 
   // Scale berdasarkan dimensi terkecil agar peta proporsional
-  const isPortrait = h > w;
-  const scale = isPortrait ? w / 1.8 : Math.min(w, h) / 1.6;
-
   const svg = d3.select('#d3-world-map')
     .attr('width', w).attr('height', h)
     .attr('viewBox', '0 0 ' + w + ' ' + h);
 
-  // Rotate ke Indonesia - longitude 118E di tengah
+  // Gunakan fitExtent agar D3 otomatis hitung scale & translate
+  // Center di Indonesia (lon 118, lat -5)
   const projection = d3.geoNaturalEarth1()
-    .scale(scale)
     .rotate([-118, 0, 0])
-    .translate([w / 2, h / 2]);
+    .fitExtent([[0, 0], [w, h]], {type:'Sphere'});
 
   const pathGen = d3.geoPath().projection(projection);
 
@@ -617,7 +614,7 @@ function buildMap(rows){
       Object.values(cityMap).forEach(function(item){
         const px = projection(item.coord.lonlat);
         if(!px) return;
-        if(px[0] < -50 || px[0] > w+50 || px[1] < -50 || px[1] > h+50) return;
+        // skip - garis tetap ditarik meski titik di luar
         svg.append('line')
           .attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
           .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
@@ -628,7 +625,7 @@ function buildMap(rows){
       Object.values(cityMap).forEach(function(item){
         const px = projection(item.coord.lonlat);
         if(!px) return;
-        if(px[0] < 0 || px[0] > w || px[1] < 0 || px[1] > h) return;
+        if(px[0] < -w || px[0] > w*2 || px[1] < -h || px[1] > h*2) return; // skip jika sangat jauh
         const cx = px[0], cy = px[1];
 
         // Pulse ring tipis
@@ -714,10 +711,9 @@ fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&
   .then(function(r){return r.text();})
   .then(function(txt){
     const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-    if(!m){ console.error('SPARKS: no match'); document.getElementById('loading').style.display='none'; return; }
+    if(!m){ document.getElementById('loading').style.display='none'; return; }
     const json=JSON.parse(m[1]);
     const rows=json.table.rows||[];
-    console.log('SPARKS rows:', rows.length);
 
     const uniqueG=new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
     animateNum('stat-garments',uniqueG.size);

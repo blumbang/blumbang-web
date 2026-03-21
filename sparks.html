@@ -6,10 +6,6 @@
 <title>Peta Perjalanan · Blumbang.id</title>
 <meta name="description" content="Lihat ke mana saja kaos Blumbang sudah bepergian. Peta perjalanan garment dari Klaten ke seluruh dunia.">
 <link rel="canonical" href="https://blumbang.id/sparks">
-<meta property="og:title" content="Peta Perjalanan · Blumbang.id">
-<meta property="og:description" content="Kaos Blumbang sudah sampai di mana saja? Lihat peta perjalanannya.">
-<meta property="og:url" content="https://blumbang.id/sparks">
-<meta property="og:image" content="https://blumbang.id/og-image.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
@@ -17,14 +13,14 @@
 :root{
   --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
   --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
-  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --gold:#C9A84C;--gold-dim:#7a6028;
   --font-logo:'Bebas Neue',sans-serif;
   --font-body:'Montserrat',sans-serif;
   --font-ui:'Inter',sans-serif;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html,body{height:100dvh;overflow:hidden;}
-body{background:var(--black);color:var(--white);font-family:var(--font-body);}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;}
 body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
 
 /* NAV */
@@ -43,53 +39,67 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-mobile a:last-child{border-bottom:none;}
 .mobile-order{color:var(--gold)!important;font-weight:700!important;}
 
-/* MAP FULLSCREEN */
-.map-wrap{position:fixed;inset:0;top:61px;bottom:0;background:#0a1628;}
-#world-map{width:100%;height:100%;position:relative;}
-#d3-world-map{position:absolute;inset:0;width:100%;height:100%;}
+/* PAGE WRAP */
+.page{padding-top:61px;}
 
-/* STATS OVERLAY */
-.stats-overlay{position:fixed;top:80px;left:32px;z-index:50;display:flex;flex-direction:column;gap:8px;}
-.stat-box{background:rgba(8,8,8,0.85);border:1px solid var(--border);padding:12px 18px;backdrop-filter:blur(8px);}
-.stat-box .num{font-family:var(--font-logo);font-size:2rem;color:var(--gold);letter-spacing:0.08em;line-height:1;}
-.stat-box .lbl{font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-top:4px;}
+/* HEADER */
+.sparks-header{padding:48px 40px 32px;text-align:center;border-bottom:1px solid var(--border);}
+.sparks-title{font-family:var(--font-logo);font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.08em;color:var(--white);line-height:1;margin-bottom:8px;}
+.sparks-sub{font-family:var(--font-ui);font-size:0.7rem;font-weight:500;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
 
-/* TITLE OVERLAY */
-.title-overlay{position:fixed;top:80px;right:32px;z-index:50;text-align:right;}
-.title-overlay h1{font-family:var(--font-logo);font-size:clamp(2rem,4vw,3.5rem);letter-spacing:0.08em;color:var(--white);line-height:1;opacity:0.9;}
-.title-overlay p{font-family:var(--font-ui);font-size:0.7rem;font-weight:500;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-top:8px;}
+/* STATS */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
+.stat-item{background:var(--charcoal);padding:20px 16px;text-align:center;}
+.stat-num{font-family:var(--font-logo);font-size:clamp(1.8rem,4vw,2.8rem);color:var(--gold);letter-spacing:0.08em;line-height:1;}
+.stat-lbl{font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
 
-/* LATEST SPARK */
-.latest-overlay{position:fixed;bottom:80px;left:32px;z-index:50;}
-.latest-inner{display:inline-flex;align-items:center;gap:10px;background:rgba(8,8,8,0.85);border:1px solid var(--border);padding:10px 18px;backdrop-filter:blur(8px);}
-.ls-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;flex-shrink:0;}
-.ls-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.08em;color:var(--light);}
-.ls-city{color:var(--gold);font-weight:600;}
+/* MAP */
+.map-section{background:#0a1628;position:relative;}
+.map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0a1628;z-index:10;}
+.map-loading-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;animation:denyut 2s ease-in-out infinite;}
+#d3-world-map{display:block;width:100%;}
 
-/* CITIES ROW */
-.cities-row{position:fixed;bottom:32px;left:0;right:0;z-index:50;padding:0 32px;display:flex;flex-wrap:wrap;gap:8px;max-height:60px;overflow:hidden;}
-.city-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-ui);font-size:0.65rem;font-weight:500;color:var(--light);background:rgba(8,8,8,0.7);border:1px solid var(--border);padding:4px 10px;backdrop-filter:blur(4px);}
-.city-tag .dot{width:4px;height:4px;border-radius:50%;background:var(--gold);animation:pulse 2s ease-in-out infinite;}
+/* MAP TOOLTIP */
+.map-tooltip{position:fixed;background:rgba(8,8,8,0.92);border:1px solid var(--gold);color:var(--white);font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;padding:5px 12px;pointer-events:none;z-index:200;display:none;white-space:nowrap;transform:translate(-50%,-130%);}
+.map-tooltip.on{display:block;}
+
+/* CITIES */
+.cities-section{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 24px;display:flex;flex-wrap:wrap;gap:8px;background:var(--charcoal);}
+.city-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-ui);font-size:0.65rem;font-weight:500;color:var(--light);background:var(--black);border:1px solid var(--border);padding:5px 12px;}
+.city-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:denyut 2s ease-in-out infinite;flex-shrink:0;}
 .city-tag.origin{border-color:var(--gold-dim);color:var(--gold);}
 
-/* LOADING */
-.loading-overlay{position:fixed;inset:0;top:61px;z-index:200;display:flex;align-items:center;justify-content:center;background:#050c18;}
-.loading-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;animation:pulse 2s ease-in-out infinite;}
+/* LATEST */
+.latest-section{padding:20px 24px;display:flex;align-items:center;gap:12px;}
+.latest-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;flex-shrink:0;}
+.latest-text{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.08em;color:var(--light);}
+.latest-city{color:var(--gold);font-weight:600;}
+
+/* FOOTER */
+footer{padding:36px 40px;border-top:1px solid var(--border);}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-brand{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:0.15em;color:var(--gold);}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.15em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
 
 @keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes denyut{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
 @media(max-width:768px){
-  nav{padding:14px 18px;}.nav-links{display:none;}.nav-order{display:none;}.nav-hamburger{display:block;}
-  .stats-overlay{top:76px;left:16px;right:16px;display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-  .stat-box{padding:8px 12px;}.stat-box .num{font-size:1.4rem;}
-  .title-overlay{display:none;}
-  .cities-row{padding:0 16px;bottom:16px;}
-  .latest-overlay{bottom:70px;left:16px;}
+  nav{padding:14px 18px;}
+  .nav-links{display:none;}
+  .nav-order{display:none;}
+  .nav-hamburger{display:block;}
+  .sparks-header{padding:32px 20px 24px;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .cities-section{padding:16px 20px;}
+  .latest-section{padding:16px 20px;}
+  footer{padding:24px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .footer-links{justify-content:center;}
 }
-
-.map-tooltip{position:fixed;background:rgba(8,8,8,0.92);border:1px solid #C9A84C;color:#F5F0E8;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;padding:5px 12px;pointer-events:none;z-index:200;display:none;white-space:nowrap;transform:translate(-50%,-130%);border-radius:2px;}
-.map-tooltip.on{display:block;}
 </style>
 </head>
 <body>
@@ -112,44 +122,56 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 </div>
 
 <div class="map-tooltip" id="map-tooltip"></div>
-<!-- LOADING -->
-<div class="loading-overlay" id="loading">
-  <div class="loading-text">Memuat peta perjalanan...</div>
-</div>
 
-<!-- MAP -->
-<div class="map-wrap">
-  <div id="world-map">
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="sparks-header">
+    <div class="sparks-title">PETA PERJALANAN</div>
+    <div class="sparks-sub">Dari Klaten · Ke Dunia</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Garments</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section" id="map-section">
+    <div class="map-loading" id="map-loading">
+      <div class="map-loading-text">Memuat peta perjalanan...</div>
+    </div>
     <svg id="d3-world-map"></svg>
   </div>
-</div>
 
-<!-- STATS -->
-<div class="stats-overlay">
-  <div class="stat-box"><div class="num" id="stat-garments">—</div><div class="lbl">Garments</div></div>
-  <div class="stat-box"><div class="num" id="stat-perjalanan">—</div><div class="lbl">Perjalanan</div></div>
-  <div class="stat-box"><div class="num" id="stat-kota">—</div><div class="lbl">Kota</div></div>
-  <div class="stat-box"><div class="num" id="stat-negara">—</div><div class="lbl">Negara</div></div>
-</div>
-
-<!-- TITLE -->
-<div class="title-overlay">
-  <h1>PETA<br>PERJALANAN</h1>
-  <p>Dari Klaten · Ke Dunia</p>
-</div>
-
-<!-- LATEST SPARK -->
-<div class="latest-overlay" id="latest-spark" style="display:none">
-  <div class="latest-inner">
-    <div class="ls-dot"></div>
-    <div class="ls-text">Terbaru dari <span class="ls-city" id="ls-city">—</span></div>
+  <!-- CITIES -->
+  <div class="cities-section" id="cities-row">
+    <div class="city-tag origin"><span class="dot"></span>Klaten · Origin</div>
   </div>
+
+  <!-- LATEST -->
+  <div class="latest-section" id="latest-section" style="display:none">
+    <div class="latest-dot"></div>
+    <div class="latest-text">Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
+  </div>
+
 </div>
 
-<!-- CITIES ROW -->
-<div class="cities-row" id="cities-row">
-  <div class="city-tag origin"><span class="dot"></span>Klaten · Origin</div>
-</div>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
+    <div class="footer-links">
+      <a href="/catalog">Karya</a>
+      <a href="/sparks">Perjalanan</a>
+      <a href="/about">Tentang</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
+  </div>
+</footer>
 
 <script>
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
@@ -543,8 +565,9 @@ function getCityCoord(cityStr){
 function buildMap(rows, preloadedWorld){
   const citiesRow = document.getElementById('cities-row');
   const tooltip = document.getElementById('map-tooltip');
+  const mapSection = document.getElementById('map-section');
 
-  // Kumpulkan hanya kota yang punya spark (dari Sheets)
+  // Kumpulkan kota yang punya spark
   const cityMap = {};
   rows.forEach(function(r){
     const c = r.c[2] && r.c[2].v;
@@ -555,23 +578,23 @@ function buildMap(rows, preloadedWorld){
     cityMap[coord.label].count++;
   });
 
+  // Dimensi peta: lebar penuh, tinggi 60vh
   const w = window.innerWidth || document.documentElement.clientWidth;
-  const h = (window.innerHeight || document.documentElement.clientHeight) - 61;
+  const h = Math.round(w * 0.56); // rasio 16:9 landscape
 
-  // Scale berdasarkan dimensi terkecil agar peta proporsional
   const svg = d3.select('#d3-world-map')
-    .attr('width', w).attr('height', h)
+    .attr('width', w)
+    .attr('height', h)
     .attr('viewBox', '0 0 ' + w + ' ' + h);
 
-  // Gunakan fitExtent agar D3 otomatis hitung scale & translate
-  // Center di Indonesia (lon 118, lat -5)
+  mapSection.style.height = h + 'px';
+
   const projection = d3.geoNaturalEarth1()
     .rotate([-118, 0, 0])
-    .fitExtent([[0, 0], [w, h]], {type:'Sphere'});
+    .fitExtent([[10, 10], [w-10, h-10]], {type:'Sphere'});
 
   const pathGen = d3.geoPath().projection(projection);
 
-  // Tooltip show/hide
   function showTip(evt, text){
     var cx, cy;
     if(evt.touches && evt.touches[0]){ cx=evt.touches[0].clientX; cy=evt.touches[0].clientY; }
@@ -583,159 +606,130 @@ function buildMap(rows, preloadedWorld){
   }
   function hideTip(){ tooltip.classList.remove('on'); }
 
-  // Gunakan data yang sudah diload paralel
   Promise.resolve(preloadedWorld).then(function(world){
-      const countries = topojson.feature(world, world.objects.countries);
+    const countries = topojson.feature(world, world.objects.countries);
 
-      // Graticule - garis lintang/bujur tipis
-      svg.append('path').datum(d3.geoGraticule()()).attr('d', pathGen)
-        .attr('fill','none').attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width','0.5');
+    svg.append('path').datum(d3.geoGraticule()()).attr('d', pathGen)
+      .attr('fill','none').attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width','0.5');
 
-      // Fill negara
-      svg.selectAll('path.country').data(countries.features).enter().append('path')
-        .attr('class','country').attr('d', pathGen)
-        .attr('fill', function(d){
-          return d.id === 360 ? 'rgba(201,168,76,0.5)' : 'rgba(40,80,140,0.35)';
-        })
-        .attr('stroke','rgba(255,255,255,0.18)').attr('stroke-width','0.3');
+    svg.selectAll('path.country').data(countries.features).enter().append('path')
+      .attr('class','country').attr('d', pathGen)
+      .attr('fill', function(d){ return d.id===360 ? 'rgba(201,168,76,0.5)' : 'rgba(40,80,140,0.35)'; })
+      .attr('stroke','rgba(255,255,255,0.18)').attr('stroke-width','0.3');
 
-      // Garis batas negara
-      svg.append('path')
-        .datum(topojson.mesh(world, world.objects.countries, function(a,b){ return a!==b; }))
-        .attr('d', pathGen).attr('fill','none')
-        .attr('stroke','rgba(255,255,255,0.1)').attr('stroke-width','0.2');
+    svg.append('path')
+      .datum(topojson.mesh(world, world.objects.countries, function(a,b){ return a!==b; }))
+      .attr('d', pathGen).attr('fill','none')
+      .attr('stroke','rgba(255,255,255,0.1)').attr('stroke-width','0.2');
 
-      const KLATEN = [110.6, -7.7];
-      const kPx = projection(KLATEN);
-      if(!kPx) return;
+    const KLATEN = [110.6, -7.7];
+    const kPx = projection(KLATEN);
+    if(!kPx) return;
 
-      // Garis dari Klaten ke kota yang sudah discan
-      Object.values(cityMap).forEach(function(item){
-        const px = projection(item.coord.lonlat);
-        if(!px) return;
-        // skip - garis tetap ditarik meski titik di luar
-        svg.append('line')
-          .attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
-          .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
-      });
+    // Garis Klaten ke kota lain
+    Object.values(cityMap).forEach(function(item){
+      const px = projection(item.coord.lonlat);
+      if(!px) return;
+      svg.append('line')
+        .attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
+        .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
+    });
 
-      // Titik kota yang punya spark - kecil, kelap-kelip
-      // Label HANYA untuk kota yang sudah discan (opsi 2)
-      Object.values(cityMap).forEach(function(item){
-        const px = projection(item.coord.lonlat);
-        if(!px) return;
-        if(px[0] < -w || px[0] > w*2 || px[1] < -h || px[1] > h*2) return; // skip jika sangat jauh
-        const cx = px[0], cy = px[1];
+    // Titik kota - pulse, TANPA label
+    Object.values(cityMap).forEach(function(item){
+      const px = projection(item.coord.lonlat);
+      if(!px) return;
+      if(px[0] < -w || px[0] > w*2 || px[1] < -h || px[1] > h*2) return;
+      const cx = px[0], cy = px[1];
 
-        // Pulse ring tipis
-        const ring = svg.append('circle')
-          .attr('cx',cx).attr('cy',cy).attr('r',2)
-          .attr('fill','none')
-          .attr('stroke','rgba(201,168,76,0.6)')
-          .attr('stroke-width','0.8');
+      const ring = svg.append('circle')
+        .attr('cx',cx).attr('cy',cy).attr('r',2)
+        .attr('fill','none')
+        .attr('stroke','rgba(201,168,76,0.6)')
+        .attr('stroke-width','0.8');
 
-        function blink(){
-          ring.attr('r',2).attr('stroke-opacity',0.8)
-            .transition().duration(1600).ease(d3.easeLinear)
-            .attr('r',11).attr('stroke-opacity',0)
-            .on('end', blink);
-        }
-        blink();
-
-        // Titik inti - kecil seperti dot city-tag
-        const dot = svg.append('circle')
-          .attr('cx',cx).attr('cy',cy).attr('r',2.5)
-          .attr('fill','#C9A84C')
-          .attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width','0.5')
-          .style('cursor','pointer');
-
-        // Label kota - selalu tampil untuk yang punya spark
-        const lx = cx > w * 0.8 ? cx - 5 : cx + 5;
-        const anchor = cx > w * 0.8 ? 'end' : 'start';
-        svg.append('text')
-          .attr('x',lx).attr('y',cy - 4)
-          .attr('text-anchor', anchor)
-          .attr('font-size','8px').attr('font-family','Inter,sans-serif')
-          .attr('fill','rgba(245,240,232,0.8)').attr('font-weight','500')
-          .text(item.coord.label);
-
-        dot.on('touchstart mouseover', function(evt){
-          evt.preventDefault();
-          showTip(evt, item.coord.label + ' · ' + item.count + ' scan');
-        });
-        dot.on('touchend mouseout', hideTip);
-      });
-
-      // Klaten - origin, sedikit lebih besar
-      const kRing = svg.append('circle')
-        .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
-        .attr('fill','none').attr('stroke','rgba(201,168,76,0.8)').attr('stroke-width','1');
-
-      function blinkKlaten(){
-        kRing.attr('r',3).attr('stroke-opacity',0.8)
-          .transition().duration(2200).ease(d3.easeLinear)
-          .attr('r',18).attr('stroke-opacity',0)
-          .on('end', blinkKlaten);
+      function blink(){
+        ring.attr('r',2).attr('stroke-opacity',0.8)
+          .transition().duration(1600).ease(d3.easeLinear)
+          .attr('r',11).attr('stroke-opacity',0)
+          .on('end', blink);
       }
-      blinkKlaten();
+      blink();
 
       svg.append('circle')
-        .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',4)
-        .attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1')
+        .attr('cx',cx).attr('cy',cy).attr('r',2.5)
+        .attr('fill','#C9A84C')
+        .attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width','0.5')
         .style('cursor','pointer')
-        .on('touchstart mouseover', function(evt){ evt.preventDefault(); showTip(evt,'Klaten · Origin'); })
+        .on('touchstart mouseover', function(evt){ evt.preventDefault(); showTip(evt, item.coord.label + ' · ' + item.count + ' scan'); })
         .on('touchend mouseout', hideTip);
-
-      // Label Klaten
-      svg.append('text')
-        .attr('x', kPx[0] + 7).attr('y', kPx[1] - 6)
-        .attr('font-size','9px').attr('font-family','Inter,sans-serif')
-        .attr('fill','#C9A84C').attr('font-weight','700')
-        .text('Klaten · Origin');
-
-      // City tags bawah
-      Object.keys(cityMap).forEach(function(label){
-        citiesRow.innerHTML += '<div class="city-tag"><span class="dot"></span>' + label + '</div>';
-      });
-
-      document.getElementById('loading').style.display = 'none';
-    }).catch(function(){
-      document.getElementById('loading').style.display = 'none';
     });
+
+    // Klaten origin
+    const kRing = svg.append('circle')
+      .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
+      .attr('fill','none').attr('stroke','rgba(201,168,76,0.8)').attr('stroke-width','1');
+
+    function blinkKlaten(){
+      kRing.attr('r',3).attr('stroke-opacity',0.8)
+        .transition().duration(2200).ease(d3.easeLinear)
+        .attr('r',18).attr('stroke-opacity',0)
+        .on('end', blinkKlaten);
+    }
+    blinkKlaten();
+
+    svg.append('circle')
+      .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',4)
+      .attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1')
+      .style('cursor','pointer')
+      .on('touchstart mouseover', function(evt){ evt.preventDefault(); showTip(evt,'Klaten · Origin'); })
+      .on('touchend mouseout', hideTip);
+
+    // City tags - tambah kota yang punya spark
+    Object.keys(cityMap).forEach(function(label){
+      citiesRow.innerHTML += '<div class="city-tag"><span class="dot"></span>' + label + '</div>';
+    });
+
+    document.getElementById('map-loading').style.display = 'none';
+
+  }).catch(function(){
+    document.getElementById('map-loading').style.display = 'none';
+  });
 }
 
-// Load SPARKS data
+// Load data
 requestAnimationFrame(function(){
-Promise.all([
-  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
-  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
-]).then(function(results){
-  var txt = results[0];
-  var worldData = results[1];
-  var m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-  if(!m){ document.getElementById('loading').style.display='none'; return; }
-  var json=JSON.parse(m[1]);
-  var rows=json.table.rows||[];
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
+  ]).then(function(results){
+    var txt = results[0];
+    var worldData = results[1];
+    var m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m){ document.getElementById('map-loading').style.display='none'; return; }
+    var rows = JSON.parse(m[1]).table.rows||[];
 
-    const uniqueG=new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
-    animateNum('stat-garments',uniqueG.size);
-    animateNum('stat-perjalanan',rows.filter(function(r){return r.c[0]&&r.c[0].v;}).length);
-    const citySet=new Set(['klaten']);
+    const uniqueG = new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
+    animateNum('stat-garments', uniqueG.size);
+    animateNum('stat-perjalanan', rows.filter(function(r){return r.c[0]&&r.c[0].v;}).length);
+    const citySet = new Set(['klaten']);
     rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c)citySet.add(c.split(',')[0].trim().toLowerCase());});
-    animateNum('stat-kota',citySet.size);
-    const negSet=new Set(['Indonesia']);
+    animateNum('stat-kota', citySet.size);
+    const negSet = new Set(['Indonesia']);
     rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c){const p=c.split(',');if(p.length>1)negSet.add(p[p.length-1].trim());}});
-    animateNum('stat-negara',negSet.size);
+    animateNum('stat-negara', negSet.size);
 
-    const scans=rows.filter(function(r){return r.c[2]&&r.c[2].v;});
+    const scans = rows.filter(function(r){return r.c[2]&&r.c[2].v;});
     if(scans.length){
-      const last=scans[scans.length-1];
-      document.getElementById('ls-city').textContent=last.c[2].v.split(',')[0];
-      document.getElementById('latest-spark').style.display='block';
+      const last = scans[scans.length-1];
+      document.getElementById('ls-city').textContent = last.c[2].v.split(',')[0];
+      document.getElementById('latest-section').style.display = 'flex';
     }
 
     buildMap(rows, worldData);
-  }).catch(function(){document.getElementById('loading').style.display='none';});
+  }).catch(function(){
+    document.getElementById('map-loading').style.display = 'none';
+  });
 });
 </script>
 </body>

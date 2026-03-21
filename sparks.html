@@ -589,9 +589,27 @@ function buildMap(rows, preloadedWorld){
 
   mapSection.style.height = h + 'px';
 
+  // Kumpulkan semua koordinat yang punya spark + Klaten
+  const KLATEN_COORD = [110.6, -7.7];
+  const allPoints = [KLATEN_COORD];
+  Object.values(cityMap).forEach(function(item){
+    allPoints.push(item.coord.lonlat);
+  });
+
+  // Buat GeoJSON dari titik-titik tersebut untuk fitExtent
+  const pointsGeo = {
+    type: 'FeatureCollection',
+    features: allPoints.map(function(pt){
+      return { type:'Feature', geometry:{ type:'Point', coordinates:pt }, properties:{} };
+    })
+  };
+
+  // Padding dinamis: makin sedikit titik makin besar padding
+  const pad = allPoints.length <= 2 ? 60 : allPoints.length <= 5 ? 40 : 20;
+
   const projection = d3.geoNaturalEarth1()
     .rotate([-118, 0, 0])
-    .fitExtent([[10, 10], [w-10, h-10]], {type:'Sphere'});
+    .fitExtent([[pad, pad], [w-pad, h-pad]], pointsGeo);
 
   const pathGen = d3.geoPath().projection(projection);
 

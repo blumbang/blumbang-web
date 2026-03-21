@@ -413,8 +413,8 @@ a.hs-item{text-decoration:none;}
 /* FLOATING WA */
 .wa-float{
   position:fixed;
-  bottom:48px;
-  right:24px;
+  bottom:24px;
+  left:24px;
   z-index:200;
   width:52px;
   height:52px;
@@ -709,8 +709,8 @@ a.hs-item{text-decoration:none;}
       <a href="/catalog">Koleksi</a>
       <a href="/sparks">Perjalanan</a>
       <a href="/about">Tentang</a>
-      <a href="https://wa.me/6281234561146">WhatsApp</a>
       <a href="https://vm.tiktok.com/ZS9R6sQtjS2MX-ihACV/" target="_blank">TikTok</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
     </div>
     <div class="ft-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
   </div>
@@ -941,12 +941,15 @@ function addJourney(sparks){
   const list = document.getElementById('jlist');
   const withCity = sparks.filter(r=>r.c[2]&&r.c[2].v);
   if(!withCity.length) return;
-  withCity.slice(-5).reverse().forEach((r,i)=>{
+  const show = withCity.slice(-5); // 5 terbaru, urut lama ke baru
+  const lastIdx = show.length - 1;
+  show.forEach((r,i)=>{
     const city = r.c[2].v;
     const time = (r.c[6]&&r.c[6].v) || 'Baru saja';
+    const isLatest = i === lastIdx;
     const el = document.createElement('div');
     el.className = 'ji';
-    el.innerHTML = '<div style="position:relative"><div class="jdot '+(i===0?'latest':'')+'"></div><div class="jline"></div></div><div><div class="jcity">'+city+'</div><div class="jtime">'+time+'</div>'+(i===0?'<div class="jbadge">Terbaru</div>':'')+'</div>';
+    el.innerHTML = '<div style="position:relative"><div class="jdot '+(isLatest?'latest':'')+'"></div><div class="jline"></div></div><div><div class="jcity">'+city+'</div><div class="jtime">'+time+'</div>'+(isLatest?'<div class="jbadge">Terbaru</div>':'')+'</div>';
     list.appendChild(el);
   });
 }

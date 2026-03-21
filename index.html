@@ -857,6 +857,23 @@ async function fetchGarments(){
         mockup: driveUrlGarment((row.c[5]&&row.c[5].v)||'')
       };
     });
+
+    // Foto fallback: kalau garment tidak punya foto,
+    // cari foto dari garment lain dengan nama seri yang sama
+    const fotoPerSeri = {};
+    Object.keys(GARMENTS).forEach(id => {
+      const g = GARMENTS[id];
+      const key = g.name.toLowerCase();
+      if(g.mockup && !fotoPerSeri[key]) fotoPerSeri[key] = g.mockup;
+    });
+    Object.keys(GARMENTS).forEach(id => {
+      const g = GARMENTS[id];
+      if(!g.mockup){
+        const key = g.name.toLowerCase();
+        if(fotoPerSeri[key]) g.mockup = fotoPerSeri[key];
+      }
+    });
+
   }catch(e){}
 }
 

@@ -156,6 +156,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <script>
 var SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 var _seriList = [];
+var _scanCount = {};
 
 function toggleMenu() {
   var m = document.getElementById('nav-mobile');
@@ -176,12 +177,22 @@ function bukaDrawer(idx) {
   if (!seri) return;
   document.getElementById('drw-judul').textContent = seri.nama;
   document.getElementById('drw-sub').textContent = seri.garments.length + ' Kaos dalam seri ini';
+
+  // Sort garments berdasarkan scan terbanyak
+  var sorted = seri.garments.slice().sort(function(a, b) {
+    var aTotal = (_scanCount[a.id] && _scanCount[a.id].total) || 0;
+    var bTotal = (_scanCount[b.id] && _scanCount[b.id].total) || 0;
+    return bTotal - aTotal;
+  });
+
   var html = '';
-  for (var i = 0; i < seri.garments.length; i++) {
-    var g = seri.garments[i];
+  for (var i = 0; i < sorted.length; i++) {
+    var g = sorted[i];
+    var scanTotal = (_scanCount[g.id] && _scanCount[g.id].total) || 0;
+    var scanInfo = scanTotal > 0 ? scanTotal + ' scan' : 'Belum discan';
     html += '<a href="/id/' + g.id + '" class="drw-item">';
     html += '<div><div class="drw-item-id">' + g.id + '</div>';
-    html += '<div class="drw-item-info">' + g.origin + ' · ' + (g.edition || g.year) + '</div></div>';
+    html += '<div class="drw-item-info">' + g.year + ' · ' + scanInfo + '</div></div>';
     html += '<div class="drw-item-arr">&#x203A;</div></a>';
   }
   document.getElementById('drw-list').innerHTML = html;
@@ -316,6 +327,7 @@ async function init() {
       }
     }
 
+    _scanCount = scanCount; // Simpan untuk drawer
     // Kelompokkan per seri
     var seriMap = {};
     for (var i = 0; i < garRows.length; i++) {

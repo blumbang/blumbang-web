@@ -1121,6 +1121,7 @@ function formatText(text) {
   return text
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:#C9A84C;text-decoration:underline;word-break:break-all;">$1</a>')
     .replace(/\n/g, '<br>');
 }
 

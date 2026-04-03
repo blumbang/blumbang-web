@@ -414,6 +414,62 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     <div class="sec-title" style="font-size:1rem;margin-bottom:8px;">Foto Terpasang Sekarang</div>
     <div id="hp-terpasang" style="font-size:.72rem;color:var(--dim);padding:16px;border:1px solid var(--border);background:var(--charcoal);">Memuat...</div>
   </div>
+
+  <div style="margin-top:40px;border-top:1px solid var(--border);padding-top:32px;">
+    <div class="sec-title" style="margin-bottom:4px;">Foto Tim</div>
+    <div class="sec-sub" style="margin-bottom:24px;">Foto muncul di halaman About. Upload ke Google Drive → set akses "Siapa saja dengan link" → paste URL → Simpan.</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Bu Mur</div>
+        <input type="text" class="form-input" id="tm-url-bumur" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_bumur','bumur')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Bu Har</div>
+        <input type="text" class="form-input" id="tm-url-buhar" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_buhar','buhar')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Ria</div>
+        <input type="text" class="form-input" id="tm-url-ria" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_ria','ria')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Paijo</div>
+        <input type="text" class="form-input" id="tm-url-paijo" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_paijo','paijo')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Bang Arie</div>
+        <input type="text" class="form-input" id="tm-url-arie" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_arie','arie')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Chandra</div>
+        <input type="text" class="form-input" id="tm-url-chandra" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_chandra','chandra')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Danang</div>
+        <input type="text" class="form-input" id="tm-url-danang" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_danang','danang')">✓ Simpan</button>
+      </div>
+
+      <div class="add-form">
+        <div style="font-size:.68rem;font-weight:700;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:10px;">Betchak</div>
+        <input type="text" class="form-input" id="tm-url-betchak" placeholder="URL Google Drive...">
+        <button class="btn btn-gold" style="margin-top:8px;width:100%;" onclick="tmSimpan('foto_betchak','betchak')">✓ Simpan</button>
+      </div>
+
+    </div>
+  </div>
 </div>
 
 <div id="panel-qr" class="panel">
@@ -505,6 +561,24 @@ function switchTab(name){
   if(name==='galeri') loadGaleri();
   if(name==='homepage') loadHomepageFoto();
   if(name==='stats') loadStats();
+}
+
+// =================== FOTO TIM ===================
+async function tmSimpan(key, slot) {
+  const url = document.getElementById('tm-url-' + slot).value.trim();
+  if (!url) { showToast('URL tidak boleh kosong'); return; }
+  showToast('Menyimpan foto ' + slot + '...');
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'setHomepageFoto', key, url })
+    });
+    const d = await res.json();
+    if (d.status === 'ok') showToast('✓ Foto ' + slot + ' tersimpan');
+    else showToast('Error: ' + d.message);
+  } catch(e) {
+    showToast('Gagal: ' + e.message);
+  }
 }
 
 // =================== HOMEPAGE FOTO ===================

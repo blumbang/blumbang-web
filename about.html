@@ -174,7 +174,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
     <div class="team-list" id="team-list">
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-bumur" src="" alt="Bu Mur" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-bumur" src="" alt="Bu Mur"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Bu Mur <span class="tm-title">— The Steady Hands</span></div>
@@ -185,7 +185,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-buhar" src="" alt="Bu Har" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-buhar" src="" alt="Bu Har"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Bu Har <span class="tm-title">— The Easygoing</span></div>
@@ -196,7 +196,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-ria" src="" alt="Ria" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-ria" src="" alt="Ria"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Ria <span class="tm-title">— The Relentless</span></div>
@@ -207,7 +207,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-paijo" src="" alt="Paijo" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-paijo" src="" alt="Paijo"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Paijo <span class="tm-title">— The Backbone</span></div>
@@ -219,7 +219,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-arie" src="" alt="Bang Arie" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-arie" src="" alt="Bang Arie"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Bang Arie <span class="tm-title">— The Fighter</span></div>
@@ -230,7 +230,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item tm-done">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-chandra" src="" alt="Chandra" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-chandra" src="" alt="Chandra"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Chandra <span class="tm-title">— The Explorer</span></div>
@@ -242,7 +242,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item tm-done">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-danang" src="" alt="Danang" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-danang" src="" alt="Danang"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Danang <span class="tm-title">— The Trigger</span></div>
@@ -254,7 +254,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
       </div>
 
       <div class="tm-item">
-        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-betchak" src="" alt="Betchak" onerror="this.parentElement.style.display='none'"></div>
+        <div class="tm-photo-wrap"><img class="tm-photo" id="foto-betchak" src="" alt="Betchak"></div>
         <div class="tm-content">
           <div class="tm-row">
             <div class="tm-name">Betchak <span class="tm-title">— The Problem Maker</span></div>
@@ -365,12 +365,17 @@ fetch(APPS_SCRIPT + '?action=get_homepage')
       const img = document.getElementById(imgId);
       if (img) {
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        if (match) {
-          img.src = 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w400';
-        } else {
-          img.src = url;
-        }
+        const src = match
+          ? 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w400'
+          : url;
+        img.onerror = () => { img.parentElement.style.display = 'none'; };
+        img.src = src;
       }
+    });
+    // Sembunyikan semua wrap yang tidak dapat foto
+    document.querySelectorAll('.tm-photo-wrap').forEach(wrap => {
+      const img = wrap.querySelector('img');
+      if (img && !img.src) wrap.style.display = 'none';
     });
   })
   .catch(() => {});

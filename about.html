@@ -383,7 +383,7 @@ fetch(APPS_SCRIPT + '?action=get_homepage')
       if (img) {
         const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
         if (match) {
-          img.src = 'https://drive.google.com/uc?export=view&id=' + match[1];
+          img.src = 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w400';
         } else {
           img.src = url;
         }

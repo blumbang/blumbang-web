@@ -226,6 +226,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <button class="tab" onclick="switchTab('homepage')">Homepage Foto</button>
   <button class="tab" onclick="switchTab('qr')">QR Generator</button>
   <button class="tab" onclick="switchTab('stats')">Statistik</button>
+  <button class="tab" onclick="switchTab('kelas')">Kelas / Event</button>
 </div>
 
 <!-- ===================== APPROVAL PANEL ===================== -->
@@ -537,6 +538,65 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 </div>
 </div>
 
+<!-- ===================== KELAS / EVENT ===================== -->
+<div id="panel-kelas" class="panel">
+  <div class="sec-title">Kelas / Event Manager</div>
+  <div class="sec-sub">Buat halaman QR untuk kaos kelas, event, atau komunitas. Scan QR → halaman berisi semua anggota + branding Blumbang.</div>
+
+  <!-- FORM TAMBAH KELAS -->
+  <div class="add-form" style="border-color:var(--gold-dim);background:var(--gold-bg);margin-bottom:24px;">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ Tambah Kelas / Event Baru</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Kode Unik *</label>
+        <input type="text" class="form-input" id="kls-kode" placeholder="KLS-7A-2026" oninput="this.value=this.value.toUpperCase();previewKlsUrl()">
+        <span style="font-size:0.65rem;color:var(--muted);margin-top:4px;">QR akan nunjuk ke: <span id="kls-url-preview" style="color:var(--gold)">blumbang.id/kelas/...</span></span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nama Kelas / Event *</label>
+        <input type="text" class="form-input" id="kls-nama" placeholder="Kelas 7A SMPN 1 Klaten 2026">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Sekolah / Institusi</label>
+        <input type="text" class="form-input" id="kls-institusi" placeholder="SMPN 1 Klaten">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tahun</label>
+        <input type="text" class="form-input" id="kls-tahun" placeholder="2026" value="2026">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label">URL Mockup / Foto (Google Drive, opsional)</label>
+      <input type="text" class="form-input" id="kls-mockup" placeholder="https://drive.google.com/uc?id=...">
+    </div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label class="form-label">Data Siswa * (Format: Nomor|Nama, satu per baris)</label>
+      <textarea class="form-input" id="kls-siswa" rows="8" placeholder="1|Ahmad Fauzi&#10;2|Budi Santoso&#10;3|Citra Dewi&#10;..." style="resize:vertical;line-height:1.7;font-size:0.82rem;"></textarea>
+      <span style="font-size:0.65rem;color:var(--muted);margin-top:4px;display:block;" id="kls-siswa-count">0 siswa</span>
+    </div>
+    <button class="btn" style="background:var(--gold);color:var(--black);border:none;cursor:pointer;font-weight:700;padding:10px 28px;font-size:0.75rem;letter-spacing:0.15em;" onclick="simpanKelas()">✦ Simpan & Generate QR</button>
+  </div>
+
+  <!-- DAFTAR KELAS -->
+  <div class="sec-title" style="font-size:1rem;margin-bottom:8px;">Kelas / Event Terdaftar</div>
+  <div id="kelas-list"><div class="loading">Memuat data...</div></div>
+
+  <!-- MODAL PREVIEW QR KELAS -->
+  <div id="kls-qr-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:600;align-items:center;justify-content:center;padding:20px;">
+    <div style="background:var(--charcoal);border:1px solid var(--border);padding:32px;width:100%;max-width:400px;text-align:center;">
+      <div style="font-family:var(--font-logo);font-size:1.2rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:6px;" id="kls-qr-modal-title">QR CODE</div>
+      <div style="font-size:0.72rem;color:var(--dim);margin-bottom:20px;" id="kls-qr-modal-url"></div>
+      <div id="kls-qr-svg-wrap" style="background:white;padding:16px;display:inline-block;margin-bottom:20px;"></div>
+      <div style="display:flex;gap:10px;justify-content:center;">
+        <button class="btn btn-gold" onclick="printKlsQR()">🖨 Print</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('kls-qr-modal').style.display='none'">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -561,6 +621,7 @@ function switchTab(name){
   if(name==='galeri') loadGaleri();
   if(name==='homepage') loadHomepageFoto();
   if(name==='stats') loadStats();
+  if(name==='kelas') loadKelasList();
 }
 
 // =================== FOTO TIM ===================
@@ -2473,7 +2534,147 @@ async function loadStats(){
   }catch(e){console.error(e);}
 }
 
-// =================== UTILS ===================
+// =================== KELAS / EVENT ===================
+
+function previewKlsUrl(){
+  const kode = document.getElementById('kls-kode').value.trim();
+  document.getElementById('kls-url-preview').textContent = kode ? 'blumbang.id/kelas/'+kode : 'blumbang.id/kelas/...';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  const ta = document.getElementById('kls-siswa');
+  if(ta) ta.addEventListener('input', function(){
+    const lines = this.value.split('\n').filter(l=>l.trim());
+    document.getElementById('kls-siswa-count').textContent = lines.length + ' siswa';
+  });
+});
+
+async function simpanKelas(){
+  const kode = document.getElementById('kls-kode').value.trim();
+  const nama = document.getElementById('kls-nama').value.trim();
+  const institusi = document.getElementById('kls-institusi').value.trim();
+  const tahun = document.getElementById('kls-tahun').value.trim()||'2026';
+  const mockup = document.getElementById('kls-mockup').value.trim();
+  const raw = document.getElementById('kls-siswa').value.trim();
+
+  if(!kode||!nama){showToast('Kode dan Nama wajib diisi');return;}
+  if(!raw){showToast('Data siswa tidak boleh kosong');return;}
+
+  const siswa = raw.split('\n').filter(l=>l.trim()).map(l=>{
+    const parts = l.split('|');
+    return {nomor: parts[0]?.trim()||'', nama: parts[1]?.trim()||parts[0]?.trim()||''};
+  });
+
+  if(!siswa.length){showToast('Format salah — gunakan: Nomor|Nama');return;}
+
+  showToast('Menyimpan '+siswa.length+' siswa...');
+  try{
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({
+        action:'saveKelas',
+        kode, nama, institusi, tahun, mockup,
+        siswa: JSON.stringify(siswa)
+      })
+    });
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ '+kode+' berhasil disimpan — '+siswa.length+' siswa');
+      ['kls-kode','kls-nama','kls-institusi','kls-mockup','kls-siswa'].forEach(id=>{
+        const el=document.getElementById(id);
+        if(el) el.value='';
+      });
+      document.getElementById('kls-siswa-count').textContent='0 siswa';
+      document.getElementById('kls-url-preview').textContent='blumbang.id/kelas/...';
+      setTimeout(loadKelasList, 1000);
+      setTimeout(()=>showKlsQR(kode, nama), 1200);
+    } else {
+      showToast('Error: '+(json.message||'Gagal simpan'));
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
+}
+
+async function loadKelasList(){
+  const el = document.getElementById('kelas-list');
+  try{
+    const rows = await fetchSheet('KELAS');
+    if(!rows.length){
+      el.innerHTML='<div class="empty">Belum ada kelas/event terdaftar</div>';
+      return;
+    }
+    const unique = {};
+    rows.forEach(r=>{
+      const kode = r.c[0]?.v;
+      if(!kode) return;
+      if(!unique[kode]) unique[kode]={kode, nama:r.c[1]?.v||'—', institusi:r.c[2]?.v||'—', tahun:r.c[3]?.v||'—', count:0};
+      unique[kode].count++;
+    });
+    const list = Object.values(unique);
+    el.innerHTML = `<div class="table-wrap"><table>
+      <thead><tr><th>Kode</th><th>Nama</th><th>Institusi</th><th>Tahun</th><th>Siswa</th><th>Aksi</th></tr></thead>
+      <tbody>${list.map(k=>`<tr>
+        <td><strong style="color:var(--gold);font-family:var(--font-logo);letter-spacing:.1em">${k.kode}</strong></td>
+        <td>${k.nama}</td>
+        <td style="color:var(--dim)">${k.institusi}</td>
+        <td style="color:var(--dim)">${k.tahun}</td>
+        <td><strong style="color:var(--white)">${k.count}</strong></td>
+        <td style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button class="btn btn-gold btn-sm" onclick="showKlsQR('${k.kode}','${k.nama}')">QR</button>
+          <a href="https://blumbang.id/kelas/${k.kode}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">Lihat</a>
+          <button class="btn btn-red btn-sm" onclick="hapusKelas('${k.kode}')">Hapus</button>
+        </td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }catch(e){
+    el.innerHTML='<div class="empty">Tab KELAS belum ada di Sheets — akan otomatis dibuat saat simpan pertama kali</div>';
+  }
+}
+
+function showKlsQR(kode, nama){
+  const url = 'https://blumbang.id/kelas/'+kode;
+  document.getElementById('kls-qr-modal-title').textContent = kode;
+  document.getElementById('kls-qr-modal-url').textContent = url;
+  document.getElementById('kls-qr-svg-wrap').innerHTML = toQRSVG(url, 200);
+  const modal = document.getElementById('kls-qr-modal');
+  modal.style.display = 'flex';
+}
+
+function printKlsQR(){
+  const wrap = document.getElementById('kls-qr-svg-wrap');
+  const title = document.getElementById('kls-qr-modal-title').textContent;
+  const url = document.getElementById('kls-qr-modal-url').textContent;
+  const svgStr = wrap.querySelector('svg')?.outerHTML||'';
+  const w = window.open('','_blank');
+  w.document.write(`<html><head><title>QR ${title}</title>
+  <style>body{margin:0;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;font-family:sans-serif;background:white;}
+  .label{font-size:13px;color:#555;margin-top:8px;letter-spacing:0.05em;} .title{font-size:18px;font-weight:700;letter-spacing:0.1em;margin-bottom:8px;}
+  @media print{@page{margin:10mm;}}</style></head>
+  <body><div class="title">${title}</div>${svgStr}<div class="label">${url}</div>
+  <script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
+}
+
+async function hapusKelas(kode){
+  if(!confirm('Hapus semua data kelas '+kode+'? Tindakan ini tidak bisa dibatalkan.')) return;
+  showToast('Menghapus '+kode+'...');
+  try{
+    const res = await fetch(SCRIPT_URL,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'hapusKelas', kode})
+    });
+    const json = await res.json();
+    if(json.status==='ok'){
+      showToast('✓ '+kode+' berhasil dihapus');
+      loadKelasList();
+    } else {
+      showToast('Error: '+(json.message||'Gagal hapus'));
+    }
+  }catch(e){showToast('Gagal: '+e.message);}
+}
+
+
 function showToast(msg){
   const t=document.getElementById('toast');
   t.textContent=msg;

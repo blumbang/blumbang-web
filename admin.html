@@ -2538,7 +2538,7 @@ async function loadStats(){
 
 function previewKlsUrl(){
   const kode = document.getElementById('kls-kode').value.trim();
-  document.getElementById('kls-url-preview').textContent = kode ? 'blumbang.id/kelas/'+kode : 'blumbang.id/kelas/...';
+  document.getElementById('kls-url-preview').textContent = kode ? 'blumbang.id/kelas.html?id='+kode : 'blumbang.id/kelas.html?id=...';
 }
 
 document.addEventListener('DOMContentLoaded', function(){
@@ -2632,7 +2632,7 @@ async function loadKelasList(){
 }
 
 function showKlsQR(kode, nama){
-  const url = 'https://blumbang.id/kelas/'+kode;
+  const url = 'https://blumbang.id/kelas.html?id='+kode;
   document.getElementById('kls-qr-modal-title').textContent = kode;
   document.getElementById('kls-qr-modal-url').textContent = url;
   document.getElementById('kls-qr-svg-wrap').innerHTML = toQRSVG(url, 200);

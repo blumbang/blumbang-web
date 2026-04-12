@@ -82,9 +82,9 @@ tbody tr:hover td{background:rgba(255,255,255,0.02);}
 const SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 
 function getKodeFromUrl(){
-  const path = window.location.pathname;
-  const match = path.match(/\/kelas\/([^\/\?]+)/);
-  return match ? match[1].toUpperCase() : null;
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  return id ? id.toUpperCase() : null;
 }
 
 async function fetchKelas(kode){

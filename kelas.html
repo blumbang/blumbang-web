@@ -94,7 +94,11 @@ async function fetchKelas(kode){
   const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
   if(!match) return null;
   const rows = JSON.parse(match[1]).table?.rows || [];
-  const filtered = rows.filter(r => r.c[0]?.v?.toUpperCase() === kode);
+  // row pertama = header, skip. Filter by kode
+  const filtered = rows.filter(r => {
+    const val = r.c[0]?.v;
+    return val && String(val).toUpperCase() === kode;
+  });
   if(!filtered.length) return null;
   const first = filtered[0];
   return {
@@ -103,7 +107,10 @@ async function fetchKelas(kode){
     institusi: first.c[2]?.v || '',
     tahun: first.c[3]?.v || '',
     mockup: first.c[4]?.v || '',
-    siswa: filtered.map(r => ({nomor: r.c[5]?.v||'', nama: r.c[6]?.v||''}))
+    siswa: filtered.map(r => ({
+      nomor: r.c[5]?.v !== null && r.c[5]?.v !== undefined ? String(r.c[5].v) : '',
+      nama:  r.c[6]?.v !== null && r.c[6]?.v !== undefined ? String(r.c[6].v) : ''
+    }))
   };
 }
 

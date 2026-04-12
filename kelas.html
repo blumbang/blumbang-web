@@ -94,22 +94,21 @@ async function fetchKelas(kode){
   const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
   if(!match) return null;
   const rows = JSON.parse(match[1]).table?.rows || [];
-  // row pertama = header, skip. Filter by kode
-  const filtered = rows.filter(r => {
-    const val = r.c[0]?.v;
-    return val && String(val).toUpperCase() === kode;
+  const filtered = rows.filter(row => {
+    const v = row.c && row.c[0] && row.c[0].v;
+    return v && String(v).toUpperCase() === kode.toUpperCase();
   });
   if(!filtered.length) return null;
   const first = filtered[0];
   return {
     kode,
-    nama: first.c[1]?.v || '—',
+    nama:      first.c[1]?.v || '—',
     institusi: first.c[2]?.v || '',
-    tahun: first.c[3]?.v || '',
-    mockup: first.c[4]?.v || '',
-    siswa: filtered.map(r => ({
-      nomor: r.c[5]?.v !== null && r.c[5]?.v !== undefined ? String(r.c[5].v) : '',
-      nama:  r.c[6]?.v !== null && r.c[6]?.v !== undefined ? String(r.c[6].v) : ''
+    tahun:     first.c[3]?.f || String(first.c[3]?.v || ''),
+    mockup:    first.c[4]?.v || '',
+    siswa: filtered.map(row => ({
+      nomor: row.c[5]?.f || String(row.c[5]?.v || ''),
+      nama:  row.c[6]?.v || ''
     }))
   };
 }

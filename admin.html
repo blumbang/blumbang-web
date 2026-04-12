@@ -550,7 +550,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="form-group">
         <label class="form-label">Kode Unik *</label>
         <input type="text" class="form-input" id="kls-kode" placeholder="KLS-7A-2026" oninput="this.value=this.value.toUpperCase();previewKlsUrl()">
-        <span style="font-size:0.65rem;color:var(--muted);margin-top:4px;">QR akan nunjuk ke: <span id="kls-url-preview" style="color:var(--gold)">blumbang.id/kelas/...</span></span>
+        <span style="font-size:0.65rem;color:var(--muted);margin-top:4px;">QR akan nunjuk ke: <span id="kls-url-preview" style="color:var(--gold)">blumbang.id/kelas.html?id=...</span></span>
       </div>
       <div class="form-group">
         <label class="form-label">Nama Kelas / Event *</label>
@@ -2586,7 +2586,7 @@ async function simpanKelas(){
         if(el) el.value='';
       });
       document.getElementById('kls-siswa-count').textContent='0 siswa';
-      document.getElementById('kls-url-preview').textContent='blumbang.id/kelas/...';
+      document.getElementById('kls-url-preview').textContent='blumbang.id/kelas.html?id=...';
       setTimeout(loadKelasList, 1000);
       setTimeout(()=>showKlsQR(kode, nama), 1200);
     } else {
@@ -2621,7 +2621,7 @@ async function loadKelasList(){
         <td><strong style="color:var(--white)">${k.count}</strong></td>
         <td style="display:flex;gap:6px;flex-wrap:wrap;">
           <button class="btn btn-gold btn-sm" onclick="showKlsQR('${k.kode}','${k.nama}')">QR</button>
-          <a href="https://blumbang.id/kelas/${k.kode}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">Lihat</a>
+          <a href="https://blumbang.id/kelas.html?id=${k.kode}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">Lihat</a>
           <button class="btn btn-red btn-sm" onclick="hapusKelas('${k.kode}')">Hapus</button>
         </td>
       </tr>`).join('')}</tbody>

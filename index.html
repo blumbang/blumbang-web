@@ -62,7 +62,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .btn-hijau{padding:13px 26px;background:var(--hijau);border:1px solid var(--hijau);color:var(--putih);font-family:var(--fb);font-size:.7rem;font-weight:600;letter-spacing:.18em;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
 .btn-hijau:hover{background:var(--hijau-h);}
 
-/* ═══ S2. PRODUK INTRO ═══ */
+/* ═══ S_BEDA. APA YANG MEMBUATNYA BERBEDA ═══ */
+#s-beda{background:#F5F0E8;padding:100px 48px;text-align:center;}
+.sbeda-dalam{max-width:560px;margin:0 auto;}
+.sbeda-h2{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,3.2rem);letter-spacing:.05em;color:var(--hitam);margin-bottom:28px;}
+.sbeda-sub{font-size:1.08rem;font-weight:400;line-height:1.9;color:#444;}
+@media(max-width:860px){
+  #s-beda{padding:72px 32px;}
+  .sbeda-sub{font-size:1rem;}
+}
+
+
 #s2{display:grid;grid-template-columns:55% 1fr;min-height:560px;}
 .s2-foto{position:relative;overflow:hidden;background:#090909;}
 .s2-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
@@ -483,34 +493,18 @@ a.hs-item{text-decoration:none;}
     <h1 class="hero-h1">INI BUKAN<br>KAOS BIASA</h1>
     <p class="hero-sub">Setiap kaos punya cerita. Ceritamu dimulai di sini.</p>
 
-    <!-- Angka live dari Sheets -->
-    <div class="hero-stats">
-      <a href="/catalog" class="hs-item" title="Lihat semua koleksi">
-        <div class="hs-num" id="stat-garment">—</div>
-        <div class="hs-lbl">Garment Terdaftar</div>
-      </a>
-      <div class="hs-item clickable" onclick="bukaDrawer('berjalan')" title="Lihat kaos yang sudah berjalan">
-        <div class="hs-num" id="stat-berjalan">—</div>
-        <div class="hs-lbl">Sudah Berjalan</div>
-      </div>
-      <div class="hs-item" title="Total scan QR">
-        <div class="hs-num" id="stat-scan">—</div>
-        <div class="hs-lbl">Total Scan</div>
-      </div>
-      <div class="hs-item clickable" onclick="bukaDrawer('kota')" title="Lihat kota yang sudah discan">
-        <div class="hs-num" id="stat-kota">—</div>
-        <div class="hs-lbl">Kota</div>
-      </div>
-      <div class="hs-item clickable" onclick="bukaDrawer('negara')" title="Lihat negara yang sudah discan">
-        <div class="hs-num" id="stat-negara">—</div>
-        <div class="hs-lbl">Negara</div>
-      </div>
-    </div>
-
     <div class="hero-tombol">
       <a href="/catalog" class="btn-outline-w">Lihat Koleksi</a>
       <a href="https://blumbang.id/sparks" class="btn-hijau">Lihat Contoh Kaos yang Sudah Jalan</a>
     </div>
+  </div>
+
+</section>
+<!-- ════ S_BEDA. APA YANG MEMBUATNYA BERBEDA ════ -->
+<section id="s-beda">
+  <div class="sbeda-dalam">
+    <h2 class="sbeda-h2">APA YANG MEMBUATNYA BERBEDA?</h2>
+    <p class="sbeda-sub">Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.</p>
   </div>
 </section>
 
@@ -535,12 +529,62 @@ a.hs-item{text-decoration:none;}
       onerror="this.style.display='none';">
   </div>
   <div class="s2-teks rv">
-    <h2><strong>Bukan sekadar pakaian.</strong>Ini identitas yang bisa hidup.</h2>
-    <p>Perjalanan dan kenangan tersimpan di dalamnya.<br><br>Tumbuh bersama pemiliknya.</p>
-    <p class="scan-hint">Scan QR di label kaosmu — dan lihat semua kota yang pernah ia singgahi.</p>
+    <h2><strong>Scan QR di label kaosmu —</strong>dan lihat semua kota yang pernah ia singgahi.</h2>
+    <p>Setiap kaos Blumbang punya ID unik. Setiap scan mencatat posisimu di peta dunia.<br><br>Perjalanan dan ceritanya tersimpan selamanya.</p>
+    <p class="scan-hint">QR ada di label bagian dalam. Tidak perlu app khusus.</p>
   </div>
-</section>
 
+</section>
+<div class="garis"></div>
+
+<!-- ════ S4. CONTOH NYATA ════ -->
+<section id="s4">
+  <span class="stag rv">Contoh Nyata</span>
+  <h2 class="rv">SATU KAOS. BANYAK CERITA.</h2>
+  <p class="s4-psiko rv">Kaos ini sudah melewati 4 kota dalam 3 bulan.</p>
+  <div class="demo-card rv">
+    <div class="demo-kiri">
+      <div class="demo-id">ID: BLB-001</div>
+      <div class="demo-rute">Jakarta<br>→ Bali<br>→ Tokyo</div>
+      <p class="demo-desc">Setiap perjalanan tersimpan.<br>Setiap scan menambah cerita baru.</p>
+      <a href="/id/BLB-001" class="btn-emas">Lihat Perjalanan Kaos Ini →</a>
+    </div>
+    <div class="demo-kanan">
+      <div class="p-label">✦ Perjalanan Kaos Ini</div>
+      <div class="p-list">
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Klaten, Jawa Tengah</div><div class="p-waktu">Lahir di sini · 2024</div><div class="p-badge">Origin</div></div></div>
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Jakarta</div><div class="p-waktu">3 bulan lalu</div></div></div>
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Bali</div><div class="p-waktu">2 bulan lalu</div></div></div>
+        <div class="p-item"><div class="p-dot hidup"></div><div><div class="p-kota">Tokyo, Japan</div><div class="p-waktu">Baru saja</div><div class="p-badge">Terbaru</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats dipindah ke sini -->
+  <div class="hero-stats" style="max-width:700px;margin:40px auto 0;">
+    <a href="/catalog" class="hs-item" title="Lihat semua koleksi">
+      <div class="hs-num" id="stat-garment">—</div>
+      <div class="hs-lbl">Garment Terdaftar</div>
+    </a>
+    <div class="hs-item clickable" onclick="bukaDrawer('berjalan')" title="Lihat kaos yang sudah berjalan">
+      <div class="hs-num" id="stat-berjalan">—</div>
+      <div class="hs-lbl">Sudah Berjalan</div>
+    </div>
+    <div class="hs-item" title="Total scan QR">
+      <div class="hs-num" id="stat-scan">—</div>
+      <div class="hs-lbl">Total Scan</div>
+    </div>
+    <div class="hs-item clickable" onclick="bukaDrawer('kota')" title="Lihat kota yang sudah discan">
+      <div class="hs-num" id="stat-kota">—</div>
+      <div class="hs-lbl">Kota</div>
+    </div>
+    <div class="hs-item clickable" onclick="bukaDrawer('negara')" title="Lihat negara yang sudah discan">
+      <div class="hs-num" id="stat-negara">—</div>
+      <div class="hs-lbl">Negara</div>
+    </div>
+  </div>
+
+</section>
 <div class="garis"></div>
 
 <!-- ════ S3. CARA KERJA ════ -->
@@ -567,34 +611,8 @@ a.hs-item{text-decoration:none;}
       <p class="l-desc">Jejakkan perjalananmu dan lihat riwayatnya.</p>
     </div>
   </div>
+
 </section>
-
-<div class="garis"></div>
-
-<!-- ════ S4. CONTOH NYATA ════ -->
-<section id="s4">
-  <span class="stag rv">Contoh Nyata</span>
-  <h2 class="rv">SATU KAOS. BANYAK CERITA.</h2>
-  <p class="s4-psiko rv">Kaos ini sudah melewati 4 kota dalam 3 bulan.</p>
-  <div class="demo-card rv">
-    <div class="demo-kiri">
-      <div class="demo-id">ID: BLB-001</div>
-      <div class="demo-rute">Jakarta<br>→ Bali<br>→ Tokyo</div>
-      <p class="demo-desc">Setiap perjalanan tersimpan.<br>Setiap scan menambah cerita baru.</p>
-      <a href="/id/BLB-001" class="btn-emas">Lihat Perjalanan Kaos Ini →</a>
-    </div>
-    <div class="demo-kanan">
-      <div class="p-label">✦ Perjalanan Kaos Ini</div>
-      <div class="p-list">
-        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Klaten, Jawa Tengah</div><div class="p-waktu">Lahir di sini · 2024</div><div class="p-badge">Origin</div></div></div>
-        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Jakarta</div><div class="p-waktu">3 bulan lalu</div></div></div>
-        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Bali</div><div class="p-waktu">2 bulan lalu</div></div></div>
-        <div class="p-item"><div class="p-dot hidup"></div><div><div class="p-kota">Tokyo, Japan</div><div class="p-waktu">Baru saja</div><div class="p-badge">Terbaru</div></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <div class="garis"></div>
 
 <!-- ════ S5. SPARK MAP ════ -->
@@ -634,8 +652,8 @@ a.hs-item{text-decoration:none;}
     </div>
     <p class="rute-tagline rv">Dan perjalanannya belum selesai.</p>
   </div>
-</section>
 
+</section>
 <div class="garis"></div>
 
 <!-- ════ S6. KENAPA BLUMBANG ════ -->
@@ -648,8 +666,25 @@ a.hs-item{text-decoration:none;}
     <li><span class="centang">✔</span><span class="cl-teks">Menyimpan <strong>perjalanan pemiliknya</strong></span></li>
     <li><span class="centang">✔</span><span class="cl-teks">Bisa <strong>diwariskan ceritanya</strong></span></li>
   </ul>
-</section>
 
+</section>
+<div class="garis"></div>
+
+<!-- ════ S9. FILOSOFI ════ -->
+<section id="s9">
+  <div class="s9-dalam">
+    <div class="s9-tag rv">Filosofi</div>
+    <h2 class="s9-h rv">LEBIH DARI SEKADAR PAKAIAN.</h2>
+    <div class="s9-kutipan rv">
+      Pakaian bukan hanya apa yang kita kenakan.<br><br>
+      Ia <strong>menemani langkah</strong>, menyerap waktu, dan menjadi saksi perjalanan hidup.<br><br>
+      Blumbang lahir dari gagasan sederhana:<br>
+      bahwa setiap pakaian memiliki <strong>cerita, perjalanan, dan cahayanya sendiri.</strong>
+    </div>
+    <div class="s9-attr rv"><span>Blumbang ID · Jeto, Klaten · Est. 2022</span></div>
+  </div>
+
+</section>
 <div class="garis"></div>
 
 <!-- ════ S7. PORTOFOLIO ════ -->
@@ -672,8 +707,8 @@ a.hs-item{text-decoration:none;}
     </a>
   </div>
   <a href="/catalog" class="btn-putih rv">Lihat Semua Koleksi</a>
-</section>
 
+</section>
 <div class="garis"></div>
 
 <!-- ════ S8. CTA UTAMA ════ -->
@@ -682,25 +717,8 @@ a.hs-item{text-decoration:none;}
   <h2 class="rv">MULAI PERJALANANMU<br>HARI INI.</h2>
   <p class="s8-psiko rv">Sudah <strong id="stat-cta">140</strong> orang memulai perjalanan mereka.<br>Kapan giliranmu?</p>
   <a href="/catalog" class="btn-putih rv">Dapatkan Kaosmu</a>
+
 </section>
-
-<div class="garis"></div>
-
-<!-- ════ S9. FILOSOFI ════ -->
-<section id="s9">
-  <div class="s9-dalam">
-    <div class="s9-tag rv">Filosofi</div>
-    <h2 class="s9-h rv">LEBIH DARI SEKADAR PAKAIAN.</h2>
-    <div class="s9-kutipan rv">
-      Pakaian bukan hanya apa yang kita kenakan.<br><br>
-      Ia <strong>menemani langkah</strong>, menyerap waktu, dan menjadi saksi perjalanan hidup.<br><br>
-      Blumbang lahir dari gagasan sederhana:<br>
-      bahwa setiap pakaian memiliki <strong>cerita, perjalanan, dan cahayanya sendiri.</strong>
-    </div>
-    <div class="s9-attr rv"><span>Blumbang ID · Jeto, Klaten · Est. 2022</span></div>
-  </div>
-</section>
-
 <!-- FOOTER -->
 <footer>
   <div class="ft">

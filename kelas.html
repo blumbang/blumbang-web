@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blumbang · Kelas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#080808;--charcoal:#111;--grey:#1a1a1a;--border:#2a2a2a;
+  --muted:#555;--dim:#777;--light:#bbb;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;
+  --font:'Inter',sans-serif;--font-logo:'Bebas Neue',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:var(--font);min-height:100vh;}
+
+/* HEADER */
+.top-bar{border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;}
+.brand{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.2em;color:var(--gold);text-decoration:none;}
+.brand-sub{font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;}
+
+/* HERO */
+.hero{padding:32px 20px 24px;border-bottom:1px solid var(--border);}
+.kelas-badge{display:inline-block;font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;padding:3px 10px;border:1px solid var(--gold-dim);color:var(--gold);background:rgba(201,168,76,0.08);margin-bottom:12px;}
+.kelas-nama{font-family:var(--font-logo);font-size:2rem;letter-spacing:0.08em;color:var(--white);line-height:1.1;margin-bottom:6px;}
+.kelas-institusi{font-size:0.82rem;color:var(--dim);margin-bottom:4px;}
+.kelas-tahun{font-size:0.72rem;color:var(--muted);}
+.kelas-mockup{width:100%;max-height:200px;object-fit:cover;margin-top:16px;border:1px solid var(--border);display:none;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stat-box{background:var(--charcoal);padding:16px;text-align:center;}
+.stat-num{font-family:var(--font-logo);font-size:1.6rem;color:var(--gold);letter-spacing:0.1em;}
+.stat-lbl{font-size:0.6rem;font-weight:600;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;margin-top:2px;}
+
+/* SEARCH */
+.search-wrap{padding:16px 20px;border-bottom:1px solid var(--border);}
+.search-input{width:100%;background:var(--charcoal);border:1px solid var(--border);color:var(--white);font-family:var(--font);font-size:0.9rem;padding:10px 14px;outline:none;}
+.search-input:focus{border-color:var(--gold);}
+.search-input::placeholder{color:var(--muted);}
+
+/* TABLE */
+.siswa-wrap{padding:0 0 80px;}
+table{width:100%;border-collapse:collapse;}
+thead th{font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:12px 20px;text-align:left;background:var(--charcoal);border-bottom:1px solid var(--border);position:sticky;top:0;}
+tbody td{font-size:0.85rem;padding:14px 20px;border-bottom:1px solid var(--border);color:var(--light);vertical-align:middle;}
+tbody tr:hover td{background:rgba(255,255,255,0.02);}
+.nomor-badge{font-family:var(--font-logo);font-size:1rem;letter-spacing:0.1em;color:var(--gold);}
+.empty-row{text-align:center;padding:40px;font-size:0.78rem;color:var(--muted);letter-spacing:0.15em;}
+
+/* FOOTER */
+.footer{position:fixed;bottom:0;left:0;right:0;background:var(--black);border-top:1px solid var(--border);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;}
+.footer-brand{font-family:var(--font-logo);font-size:1rem;letter-spacing:0.15em;color:var(--gold);}
+.footer-cta{font-size:0.68rem;color:var(--muted);}
+.footer-cta a{color:var(--gold);text-decoration:none;}
+
+/* LOADING */
+.loading{text-align:center;padding:60px 20px;font-size:0.72rem;color:var(--dim);letter-spacing:0.2em;text-transform:uppercase;}
+.not-found{text-align:center;padding:60px 20px;}
+.not-found h2{font-family:var(--font-logo);font-size:1.6rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
+.not-found p{font-size:0.78rem;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="https://blumbang.id" class="brand">BLUMB✦NG</a>
+  <div class="brand-sub">Konveksi · Sablon · Klaten</div>
+</div>
+
+<div id="main-content">
+  <div class="loading" id="loading-state">Memuat data...</div>
+</div>
+
+<div class="footer">
+  <div class="footer-brand">BLUMB✦NG</div>
+  <div class="footer-cta">Pesan kaos → <a href="https://wa.me/6281234561146">WA kami</a></div>
+</div>
+
+<script>
+const SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+
+function getKodeFromUrl(){
+  const path = window.location.pathname;
+  const match = path.match(/\/kelas\/([^\/\?]+)/);
+  return match ? match[1].toUpperCase() : null;
+}
+
+async function fetchKelas(kode){
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=KELAS`;
+  const r = await fetch(url);
+  const txt = await r.text();
+  const match = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+  if(!match) return null;
+  const rows = JSON.parse(match[1]).table?.rows || [];
+  const filtered = rows.filter(r => r.c[0]?.v?.toUpperCase() === kode);
+  if(!filtered.length) return null;
+  const first = filtered[0];
+  return {
+    kode,
+    nama: first.c[1]?.v || '—',
+    institusi: first.c[2]?.v || '',
+    tahun: first.c[3]?.v || '',
+    mockup: first.c[4]?.v || '',
+    siswa: filtered.map(r => ({nomor: r.c[5]?.v||'', nama: r.c[6]?.v||''}))
+  };
+}
+
+function driveThumb(url){
+  if(!url) return '';
+  const m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800' : url;
+}
+
+function renderKelas(data){
+  const main = document.getElementById('main-content');
+  main.innerHTML = `
+    <div class="hero">
+      <div class="kelas-badge">Kaos Kelas</div>
+      <div class="kelas-nama">${data.nama}</div>
+      ${data.institusi ? `<div class="kelas-institusi">${data.institusi}</div>` : ''}
+      ${data.tahun ? `<div class="kelas-tahun">${data.tahun}</div>` : ''}
+      ${data.mockup ? `<img src="${driveThumb(data.mockup)}" class="kelas-mockup" id="kelas-img" onerror="this.style.display='none'">` : ''}
+    </div>
+    <div class="stats">
+      <div class="stat-box"><div class="stat-num">${data.siswa.length}</div><div class="stat-lbl">Siswa</div></div>
+      <div class="stat-box"><div class="stat-num">${data.kode}</div><div class="stat-lbl">Kode</div></div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" class="search-input" id="search-input" placeholder="Cari nama siswa..." oninput="filterSiswa(this.value)">
+    </div>
+    <div class="siswa-wrap">
+      <table>
+        <thead><tr><th style="width:80px">No</th><th>Nama Siswa</th></tr></thead>
+        <tbody id="siswa-tbody">
+          ${renderRows(data.siswa)}
+        </tbody>
+      </table>
+    </div>
+  `;
+  // Show mockup after render
+  const img = document.getElementById('kelas-img');
+  if(img) img.style.display = 'block';
+
+  // Store for filter
+  window._siswaAll = data.siswa;
+}
+
+function renderRows(siswa){
+  if(!siswa.length) return `<tr><td colspan="2" class="empty-row">Tidak ada data ditemukan</td></tr>`;
+  return siswa.map(s => `<tr>
+    <td><span class="nomor-badge">${s.nomor||'—'}</span></td>
+    <td>${s.nama}</td>
+  </tr>`).join('');
+}
+
+function filterSiswa(q){
+  const filtered = q.trim()
+    ? window._siswaAll.filter(s => s.nama.toLowerCase().includes(q.toLowerCase()) || String(s.nomor).includes(q))
+    : window._siswaAll;
+  document.getElementById('siswa-tbody').innerHTML = renderRows(filtered);
+}
+
+function renderNotFound(kode){
+  document.getElementById('main-content').innerHTML = `
+    <div class="not-found">
+      <h2>Tidak Ditemukan</h2>
+      <p>Kelas dengan kode <strong style="color:var(--gold)">${kode}</strong> belum terdaftar.</p>
+    </div>`;
+}
+
+async function init(){
+  const kode = getKodeFromUrl();
+  if(!kode){
+    renderNotFound('—');
+    return;
+  }
+  try{
+    const data = await fetchKelas(kode);
+    if(!data) renderNotFound(kode);
+    else renderKelas(data);
+  }catch(e){
+    document.getElementById('main-content').innerHTML = `<div class="loading">Gagal memuat data. Coba refresh.</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -84,6 +84,31 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 .footer-links a:hover{color:var(--gold);}
 .footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
 
+/* DRAWER */
+.drw-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;backdrop-filter:blur(2px);}
+.drw-overlay.on{display:block;}
+.drw{position:fixed;bottom:0;left:0;right:0;background:var(--charcoal);border-top:1px solid var(--gold-dim);z-index:301;max-height:70vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.32,0.72,0,1);}
+.drw.on{transform:translateY(0);}
+.drw-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;flex-shrink:0;}
+.drw-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.drw-title{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:0.15em;color:var(--gold);}
+.drw-close{background:none;border:1px solid var(--border);color:var(--dim);font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.15em;padding:6px 12px;cursor:pointer;transition:all 0.2s;}
+.drw-close:hover{border-color:var(--gold);color:var(--gold);}
+.drw-body{overflow-y:auto;padding:8px 0 24px;flex:1;}
+.drw-item{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;border-bottom:1px solid rgba(42,42,42,0.5);cursor:pointer;transition:background 0.15s;}
+.drw-item:hover{background:rgba(201,168,76,0.06);}
+.drw-item:last-child{border-bottom:none;}
+.di-left{display:flex;align-items:center;gap:10px;}
+.di-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
+.di-dot.origin{background:var(--gold);box-shadow:0 0 6px var(--gold);}
+.di-name{font-family:var(--font-ui);font-size:0.8rem;font-weight:600;color:var(--white);letter-spacing:0.05em;}
+.di-sub{font-family:var(--font-ui);font-size:0.65rem;color:var(--dim);margin-top:2px;}
+.di-badge{font-family:var(--font-logo);font-size:1rem;color:var(--gold);letter-spacing:0.1em;}
+.di-link{font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.15em;color:var(--gold-dim);text-transform:uppercase;padding:4px 10px;border:1px solid var(--gold-dim);text-decoration:none;transition:all 0.2s;}
+.di-link:hover{border-color:var(--gold);color:var(--gold);}
+.stat-item{cursor:pointer;transition:background 0.2s;}
+.stat-item:hover{background:rgba(201,168,76,0.08);}
+
 @keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
 @keyframes denyut{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
@@ -133,10 +158,10 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 
   <!-- STATS -->
   <div class="stats-bar">
-    <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Garments</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
+    <div class="stat-item" onclick="bukaDrawer('garments')"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Garments</div></div>
+    <div class="stat-item" onclick="bukaDrawer('perjalanan')"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
+    <div class="stat-item" onclick="bukaDrawer('kota')"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
+    <div class="stat-item" onclick="bukaDrawer('negara')"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
   </div>
 
   <!-- MAP -->
@@ -160,6 +185,17 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 
 </div>
 
+<!-- DRAWER OVERLAY -->
+<div class="drw-overlay" id="drw-overlay" onclick="tutupDrawer()"></div>
+<div class="drw" id="drw">
+  <div class="drw-handle"></div>
+  <div class="drw-head">
+    <div class="drw-title" id="drw-title">—</div>
+    <button class="drw-close" onclick="tutupDrawer()">✕ TUTUP</button>
+  </div>
+  <div class="drw-body" id="drw-body"></div>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
@@ -175,6 +211,117 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 
 <script>
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+var _allRows = [];
+
+function bukaDrawer(tipe){
+  const overlay = document.getElementById('drw-overlay');
+  const drw = document.getElementById('drw');
+  const title = document.getElementById('drw-title');
+  const body = document.getElementById('drw-body');
+  const rows = _allRows;
+
+  if(tipe === 'garments'){
+    title.textContent = 'GARMENTS AKTIF';
+    const garmentMap = {};
+    rows.forEach(function(r){
+      const id = r.c[0] && r.c[0].v;
+      const nama = r.c[1] && r.c[1].v;
+      const kota = r.c[2] && r.c[2].v;
+      if(!id) return;
+      if(!garmentMap[id]) garmentMap[id] = {id, nama: nama||id, scan:0, kota:[]};
+      garmentMap[id].scan++;
+      if(kota && !garmentMap[id].kota.includes(kota.split(',')[0])) garmentMap[id].kota.push(kota.split(',')[0]);
+    });
+    const sorted = Object.values(garmentMap).sort(function(a,b){return b.scan-a.scan;});
+    body.innerHTML = sorted.length ? sorted.map(function(g){
+      return '<div class="drw-item" onclick="window.open(\'/id/'+g.id+'\',\'_blank\')">'
+        +'<div class="di-left"><div class="di-dot"></div><div><div class="di-name">'+g.id+'</div>'
+        +'<div class="di-sub">'+g.nama+(g.kota.length?' · '+g.kota.join(', '):'')+'</div></div></div>'
+        +'<div style="display:flex;align-items:center;gap:10px;">'
+        +'<div class="di-badge">'+g.scan+'✦</div>'
+        +'<a class="di-link" href="/id/'+g.id+'" target="_blank" onclick="event.stopPropagation()">LIHAT →</a>'
+        +'</div></div>';
+    }).join('') : '<div style="padding:24px 20px;color:var(--dim);font-family:var(--font-ui);font-size:0.75rem;">Belum ada data</div>';
+  }
+
+  else if(tipe === 'perjalanan'){
+    title.textContent = 'SEMUA PERJALANAN';
+    const scanRows = rows.filter(function(r){return r.c[0]&&r.c[0].v;}).reverse();
+    body.innerHTML = scanRows.length ? scanRows.map(function(r){
+      const id = r.c[0].v;
+      const nama = (r.c[1]&&r.c[1].v)||id;
+      const kota = (r.c[2]&&r.c[2].v)||'—';
+      const waktu = (r.c[6]&&r.c[6].v)||'';
+      return '<div class="drw-item" onclick="window.open(\'/id/'+id+'\',\'_blank\')">'
+        +'<div class="di-left"><div class="di-dot"></div><div>'
+        +'<div class="di-name">'+kota.split(',')[0]+'</div>'
+        +'<div class="di-sub">'+id+' · '+nama+(waktu?' · '+waktu:'')+'</div>'
+        +'</div></div>'
+        +'<a class="di-link" href="/id/'+id+'" target="_blank" onclick="event.stopPropagation()">→</a>'
+        +'</div>';
+    }).join('') : '<div style="padding:24px 20px;color:var(--dim);font-family:var(--font-ui);font-size:0.75rem;">Belum ada perjalanan</div>';
+  }
+
+  else if(tipe === 'kota'){
+    title.textContent = 'KOTA';
+    const kotaMap = {'Klaten':0};
+    rows.forEach(function(r){
+      const c = r.c[2]&&r.c[2].v;
+      if(!c) return;
+      const k = c.split(',')[0].trim();
+      kotaMap[k] = (kotaMap[k]||0)+1;
+    });
+    const sorted = Object.entries(kotaMap).sort(function(a,b){return b[1]-a[1];});
+    body.innerHTML = sorted.map(function(e){
+      const isOrigin = e[0].toLowerCase()==='klaten';
+      return '<div class="drw-item">'
+        +'<div class="di-left"><div class="di-dot'+(isOrigin?' origin':'')+'"></div>'
+        +'<div><div class="di-name">'+e[0]+(isOrigin?' · Origin':'')+'</div>'
+        +'<div class="di-sub">'+(e[1]>0?e[1]+' scan':'Titik asal')+'</div></div></div>'
+        +'<div class="di-badge">'+(e[1]||'—')+'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  else if(tipe === 'negara'){
+    title.textContent = 'NEGARA';
+    const negMap = {'Indonesia':0};
+    rows.forEach(function(r){
+      const c = r.c[2]&&r.c[2].v;
+      if(!c) return;
+      const parts = c.split(',');
+      const neg = parts.length>1 ? parts[parts.length-1].trim() : 'Indonesia';
+      negMap[neg] = (negMap[neg]||0)+1;
+    });
+    const sorted = Object.entries(negMap).sort(function(a,b){return b[1]-a[1];});
+    body.innerHTML = sorted.map(function(e){
+      const isOrigin = e[0]==='Indonesia';
+      return '<div class="drw-item">'
+        +'<div class="di-left"><div class="di-dot'+(isOrigin?' origin':'')+'"></div>'
+        +'<div><div class="di-name">'+e[0]+'</div>'
+        +'<div class="di-sub">'+(e[1]>0?e[1]+' scan':'Origin')+'</div></div></div>'
+        +'<div class="di-badge">'+(e[1]||'—')+'</div>'
+        +'</div>';
+    }).join('');
+  }
+
+  overlay.classList.add('on');
+  drw.classList.add('on');
+  document.body.style.overflow='hidden';
+}
+
+function tutupDrawer(){
+  document.getElementById('drw-overlay').classList.remove('on');
+  document.getElementById('drw').classList.remove('on');
+  document.body.style.overflow='';
+}
+
+// Swipe down tutup drawer
+var _touchY = 0;
+document.addEventListener('touchstart',function(e){_touchY=e.touches[0].clientY;});
+document.addEventListener('touchend',function(e){
+  if(e.changedTouches[0].clientY - _touchY > 80 && document.getElementById('drw').classList.contains('on')) tutupDrawer();
+});
 
 function toggleMenu(){
   const m=document.getElementById('nav-mobile');
@@ -726,6 +873,7 @@ requestAnimationFrame(function(){
     var m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     if(!m){ document.getElementById('map-loading').style.display='none'; return; }
     var rows = JSON.parse(m[1]).table.rows||[];
+    _allRows = rows;
 
     const uniqueG = new Set(rows.filter(function(r){return r.c[0]&&r.c[0].v;}).map(function(r){return r.c[0].v;}));
     animateNum('stat-garments', uniqueG.size);

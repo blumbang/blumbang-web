@@ -992,13 +992,20 @@ function addJourney(sparks){
 function recordScan(id){
   const params = new URLSearchParams(window.location.search);
   if(params.get('src') !== 'qr') return;
-  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+  const kirimScan = function(city){
     fetch(SCRIPT_URL, {
       method:'POST',
       headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'scan', garment_id:id, city:g.city+', '+g.country_name, timestamp:new Date().toISOString()})
+      body:JSON.stringify({action:'scan', garment_id:id, city:city, timestamp:new Date().toISOString()})
     }).catch(()=>{});
-  }).catch(()=>{});
+  };
+  fetch('https://ipapi.co/json/')
+    .then(r=>r.json())
+    .then(g=>{
+      const city = (g.city && g.city.trim()) ? (g.city + ', ' + (g.country_name||'Indonesia')) : 'Klaten, Indonesia';
+      kirimScan(city);
+    })
+    .catch(()=>{ kirimScan('Klaten, Indonesia'); });
 }
 
 function prevPhoto(input){

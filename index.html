@@ -440,6 +440,18 @@ a.hs-item{text-decoration:none;}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,0.5);}
 .wa-float svg{width:28px;height:28px;fill:#fff;}
 </style>
+<script>
+// Early hide: kalau URL /id/ atau /qc/, langsung inject CSS sebelum body render
+(function(){
+  var p = window.location.pathname;
+  if(p.includes('/id/') || p.includes('/qc/')){
+    var s = document.createElement('style');
+    s.id = 'garment-early-hide';
+    s.textContent = '.hero,#s2,#s3,#s4,#s5,#s6,#s7,#s8,#s9,.garis,footer,#s-beda{display:none!important;}';
+    document.head.appendChild(s);
+  }
+})();
+</script>
 </head>
 <body>
 
@@ -992,20 +1004,13 @@ function addJourney(sparks){
 function recordScan(id){
   const params = new URLSearchParams(window.location.search);
   if(params.get('src') !== 'qr') return;
-  const kirimScan = function(city){
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
     fetch(SCRIPT_URL, {
       method:'POST',
       headers:{'Content-Type':'text/plain'},
-      body:JSON.stringify({action:'scan', garment_id:id, city:city, timestamp:new Date().toISOString()})
+      body:JSON.stringify({action:'scan', garment_id:id, city:g.city+', '+g.country_name, timestamp:new Date().toISOString()})
     }).catch(()=>{});
-  };
-  fetch('https://ipapi.co/json/')
-    .then(r=>r.json())
-    .then(g=>{
-      const city = (g.city && g.city.trim()) ? (g.city + ', ' + (g.country_name||'Indonesia')) : 'Klaten, Indonesia';
-      kirimScan(city);
-    })
-    .catch(()=>{ kirimScan('Klaten, Indonesia'); });
+  }).catch(()=>{});
 }
 
 function prevPhoto(input){

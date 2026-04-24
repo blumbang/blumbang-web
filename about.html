@@ -76,6 +76,10 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 .footer-links a:hover{color:var(--gold);}
 .footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
 @keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
+.lang-toggle{display:flex;align-items:center;gap:0;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{background:none;border:none;color:var(--muted);font-family:var(--font-ui);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;padding:6px 10px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+.lang-btn.aktif{background:var(--gold);color:var(--black);}
+.lang-btn:hover:not(.aktif){color:var(--white);}
 @media(max-width:768px){
   nav{padding:14px 18px;}.nav-links{display:none;}.nav-order{display:none;}.nav-hamburger{display:block;}
   .hero-about{padding:100px 20px 60px;}
@@ -91,53 +95,57 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 <nav>
   <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
   <div class="nav-links">
-    <a href="/catalog">Karya</a>
-    <a href="/sparks">Perjalanan</a>
-    <a href="/about" class="active">Tentang</a>
+    <a href="/catalog" data-i18n="nav_karya">Karya</a>
+    <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/about" class="active" data-i18n="nav_tentang">Tentang</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
   </div>
-  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <a href="https://wa.me/6281234561146" class="nav-order" data-i18n="nav_order">✦ ORDER</a>
   <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
 </nav>
 <div class="nav-mobile" id="nav-mobile">
-  <a href="/catalog" onclick="toggleMenu()">Karya</a>
-  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
-  <a href="/about" onclick="toggleMenu()">Tentang</a>
-  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+  <a href="/catalog" onclick="toggleMenu()" data-i18n="nav_karya">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()" data-i18n="nav_tentang">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()" data-i18n="nav_order_mobile">✦ ORDER SEKARANG</a>
 </div>
 
 <div class="hero-about">
   <h1>MADE<br>SLOWLY.<br><span style="color:transparent;-webkit-text-stroke:2px rgba(245,240,232,0.2);">FELT DEEPLY.</span></h1>
-  <p class="sub">Konveksi kaos dan sablon independen dari Jeto, Klaten, Jawa Tengah. Tempat para pembuat yang tenang, tangan-tangan yang bekerja dengan sabar.</p>
+  <p class="sub" data-i18n="hero_sub">Konveksi kaos dan sablon independen dari Jeto, Klaten, Jawa Tengah. Tempat para pembuat yang tenang, tangan-tangan yang bekerja dengan sabar.</p>
 </div>
 
 <section class="section" style="border-top:1px solid var(--border);">
   <div class="section-inner">
-    <span class="section-tag">✦ Garment Identity System</span>
-    <h2 class="section-title">PERJALANAN KAOS<br>DIMULAI DI SINI</h2>
-    <p class="section-body">Bukan sekadar kaos. Setiap produk memiliki identitas unik yang hidup bersama pemiliknya.</p>
+    <span class="section-tag" data-i18n="s1_tag">✦ Garment Identity System</span>
+    <h2 class="section-title" data-i18n="s1_h2">PERJALANAN KAOS<br>DIMULAI DI SINI</h2>
+    <p class="section-body" data-i18n="s1_body">Bukan sekadar kaos. Setiap produk memiliki identitas unik yang hidup bersama pemiliknya.</p>
     <div class="identity-grid">
       <div class="identity-card">
         <div class="ic-num">01</div>
-        <div class="ic-title">Identitas Unik</div>
-        <div class="ic-body">Setiap kaos memiliki nomor seri tersendiri. Scan QR code — kamu terhubung dengan halaman unik yang hidup bersama pemiliknya.</div>
+        <div class="ic-title" data-i18n="ic1_title">Identitas Unik</div>
+        <div class="ic-body" data-i18n="ic1_body">Setiap kaos memiliki nomor seri tersendiri. Scan QR code — kamu terhubung dengan halaman unik yang hidup bersama pemiliknya.</div>
         <div class="ic-spark">✦</div>
       </div>
       <div class="identity-card">
         <div class="ic-num">02</div>
-        <div class="ic-title">Perjalanan Tercatat</div>
-        <div class="ic-body">Setiap scan meninggalkan jejak di peta dunia. Kaos yang lahir di Klaten dapat mencatat perjalanannya hingga Tokyo, London, atau kota mana pun.</div>
+        <div class="ic-title" data-i18n="ic2_title">Perjalanan Tercatat</div>
+        <div class="ic-body" data-i18n="ic2_body">Setiap scan meninggalkan jejak di peta dunia. Kaos yang lahir di Klaten dapat mencatat perjalanannya hingga Tokyo, London, atau kota mana pun.</div>
         <div class="ic-spark">✦</div>
       </div>
       <div class="identity-card">
         <div class="ic-num">03</div>
-        <div class="ic-title">Cerita Owner</div>
-        <div class="ic-body">Pemilik kaos dapat menambahkan cerita, foto, dan kenangan. Halaman kaos menjadi ruang hidup yang terus menemani pemiliknya.</div>
+        <div class="ic-title" data-i18n="ic3_title">Cerita Owner</div>
+        <div class="ic-body" data-i18n="ic3_body">Pemilik kaos dapat menambahkan cerita, foto, dan kenangan. Halaman kaos menjadi ruang hidup yang terus menemani pemiliknya.</div>
         <div class="ic-spark">✦</div>
       </div>
       <div class="identity-card">
         <div class="ic-num">04</div>
-        <div class="ic-title">Rebuilding</div>
-        <div class="ic-body">Kaos rusak bukan akhir cerita. Jika sebagian masih layak, cerita dapat dilanjutkan dan identitas tetap hidup.</div>
+        <div class="ic-title" data-i18n="ic4_title">Rebuilding</div>
+        <div class="ic-body" data-i18n="ic4_body">Kaos rusak bukan akhir cerita. Jika sebagian masih layak, cerita dapat dilanjutkan dan identitas tetap hidup.</div>
         <div class="ic-spark">✦</div>
       </div>
     </div>
@@ -146,23 +154,23 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 
 <section class="section">
   <div class="section-inner">
-    <span class="section-tag">✦ Cara Kerja</span>
-    <h2 class="section-title">TIGA LANGKAH<br>MENUJU KAOS BERIDENTITAS</h2>
+    <span class="section-tag" data-i18n="s2_tag">✦ Cara Kerja</span>
+    <h2 class="section-title" data-i18n="s2_h2">TIGA LANGKAH<br>MENUJU KAOS BERIDENTITAS</h2>
     <div class="process-steps">
       <div class="ps-item">
         <div class="ps-num">01</div>
-        <div class="ps-title">Order & Desain</div>
-        <div class="ps-body">Chat via WhatsApp. Ceritakan kebutuhanmu — jenis kaos, desain, dan jumlah. Tim Blumbang membantu dari konsep hingga siap produksi.</div>
+        <div class="ps-title" data-i18n="ps1_title">Order & Desain</div>
+        <div class="ps-body" data-i18n="ps1_body">Chat via WhatsApp. Ceritakan kebutuhanmu — jenis kaos, desain, dan jumlah. Tim Blumbang membantu dari konsep hingga siap produksi.</div>
       </div>
       <div class="ps-item">
         <div class="ps-num">02</div>
-        <div class="ps-title">Produksi di Klaten</div>
-        <div class="ps-body">Dibuat dengan tangan di Klaten, Indonesia. Tempat para pekerja yang tenang. Para pembuat yang sering tidak tercatat. Tangan-tangan yang bekerja dengan sabar.<br><br>Di tempat ini cahaya-cahaya kecil mulai muncul.</div>
+        <div class="ps-title" data-i18n="ps2_title">Produksi di Klaten</div>
+        <div class="ps-body" data-i18n="ps2_body">Dibuat dengan tangan di Klaten, Indonesia. Tempat para pekerja yang tenang. Para pembuat yang sering tidak tercatat. Tangan-tangan yang bekerja dengan sabar.<br><br>Di tempat ini cahaya-cahaya kecil mulai muncul.</div>
       </div>
       <div class="ps-item">
         <div class="ps-num">03</div>
-        <div class="ps-title">Perjalanan Kaos Dimulai</div>
-        <div class="ps-body">Scan QR — halaman garment aktif. Tambahkan cerita. Catat perjalanan.<br><br>Cahaya kecil ini menemanimu ke mana saja.</div>
+        <div class="ps-title" data-i18n="ps3_title">Perjalanan Kaos Dimulai</div>
+        <div class="ps-body" data-i18n="ps3_body">Scan QR — halaman garment aktif. Tambahkan cerita. Catat perjalanan.<br><br>Cahaya kecil ini menemanimu ke mana saja.</div>
       </div>
     </div>
   </div>
@@ -170,7 +178,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 
 <section class="section" style="border-top:1px solid var(--border);">
   <div class="section-inner">
-    <span class="section-tag">✦ Orang-Orang di Baliknya</span>
+    <span class="section-tag" data-i18n="s3_tag">✦ Orang-Orang di Baliknya</span>
     <div class="team-list" id="team-list">
 
       <div class="tm-item">
@@ -180,7 +188,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
             <div class="tm-name">Bu Mur <span class="tm-title">— The Steady Hands</span></div>
             <div class="tm-year">(2023—)</div>
           </div>
-          <div class="tm-quote">"sepuluh resep masakan terenak sudah di tanganku"</div>
+          <div class="tm-quote" data-i18n="q_bumur">"sepuluh resep masakan terenak sudah di tanganku"</div>
         </div>
       </div>
 
@@ -213,8 +221,8 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
             <div class="tm-name">Paijo <span class="tm-title">— The Backbone</span></div>
             <div class="tm-year">(2023—)</div>
           </div>
-          <div class="tm-quote">"menjahit pakaian untuk merajut dunia"</div>
-          <div class="tm-quote">"kalau tidak di Blumbang, mengulur benang di spot pemancingan"</div>
+          <div class="tm-quote" data-i18n="q_paijo1">"menjahit pakaian untuk merajut dunia"</div>
+          <div class="tm-quote" data-i18n="q_paijo2">"kalau tidak di Blumbang, mengulur benang di spot pemancingan"</div>
         </div>
       </div>
 
@@ -237,7 +245,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
             <div class="tm-year">(2024—2025)</div>
           </div>
           <div class="tm-quote">"sementara full time TikTok, part time jatuh cinta"</div>
-          <div class="tm-done-label">done, but was here</div>
+          <div class="tm-done-label" data-i18n="done_chandra">done, but was here</div>
         </div>
       </div>
 
@@ -249,7 +257,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
             <div class="tm-year">(2022—2025)</div>
           </div>
           <div class="tm-quote">"kalau sampai Blumbang gulung, kalian yang aku gulung duluan"</div>
-          <div class="tm-done-label">now in Japan, still stuck here somehow</div>
+          <div class="tm-done-label" data-i18n="done_danang">now in Japan, still stuck here somehow</div>
         </div>
       </div>
 
@@ -270,7 +278,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
             <div class="tm-name">Blumbang <span class="tm-title">— The Soul</span></div>
             <div class="tm-year">Origin</div>
           </div>
-          <div class="tm-quote">"Kita tidak ke mana-mana. Cukup membuat cahaya kecil yang menyala di seluruh dunia."</div>
+          <div class="tm-quote" data-i18n="q_soul">"Kita tidak ke mana-mana. Cukup membuat cahaya kecil yang menyala di seluruh dunia."</div>
         </div>
       </div>
 
@@ -280,7 +288,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 
 <section class="section" style="border-top:1px solid var(--border);padding-top:80px;padding-bottom:0;">
   <div class="section-inner">
-    <span class="section-tag">✦ Temukan Kami</span>
+    <span class="section-tag" data-i18n="s4_tag">✦ Temukan Kami</span>
     <div class="maps-wrap">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3922.4918727380846!2d110.66836467496859!3d-7.74970979226913!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7a479c26e97baf%3A0xde2709c79eebf74f!2sKaos%20polos%20dan%20sablon!5e1!3m2!1sid!2ssc!4v1775235860202!5m2!1sid!2ssc" width="100%" height="400" style="border:0;display:block;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
@@ -313,9 +321,9 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
 
 
   <div class="manifesto-inner">
-    <div class="manifesto-quote">"Cahaya kecil ini menemanimu <em>sampai mana saja.</em>"</div>
+    <div class="manifesto-quote" data-i18n="manifesto_quote">"Cahaya kecil ini menemanimu <em>sampai mana saja.</em>"</div>
     <div class="manifesto-attr">Blumbang · Made Slowly · Felt Deeply</div>
-    <a href="https://wa.me/6281234561146" class="btn-primary">✦ &nbsp; MULAI ORDER</a>
+    <a href="https://wa.me/6281234561146" class="btn-primary" data-i18n="cta_btn">✦ &nbsp; MULAI ORDER</a>
   </div>
 </section>
 
@@ -323,9 +331,9 @@ footer{padding:36px 40px;border-top:1px solid var(--border);position:relative;z-
   <div class="footer-inner">
     <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
     <div class="footer-links">
-      <a href="/catalog">Karya</a>
-      <a href="/sparks">Perjalanan</a>
-      <a href="/about">Tentang</a>
+      <a href="/catalog" data-i18n="nav_karya">Karya</a>
+      <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+      <a href="/about" data-i18n="nav_tentang">Tentang</a>
       <a href="https://wa.me/6281234561146">WhatsApp</a>
     </div>
     <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
@@ -380,6 +388,108 @@ fetch(APPS_SCRIPT + '?action=get_homepage')
   })
   .catch(() => {});
 
+// ── i18n SYSTEM ──────────────────────────────────────────
+const i18n = {
+  id: {
+    nav_karya:'Karya', nav_perjalanan:'Perjalanan', nav_tentang:'Tentang',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER SEKARANG',
+    hero_sub:'Konveksi kaos dan sablon independen dari Jeto, Klaten, Jawa Tengah. Tempat para pembuat yang tenang, tangan-tangan yang bekerja dengan sabar.',
+    s1_tag:'✦ Garment Identity System',
+    s1_h2:'PERJALANAN KAOS<br>DIMULAI DI SINI',
+    s1_body:'Bukan sekadar kaos. Setiap produk memiliki identitas unik yang hidup bersama pemiliknya.',
+    ic1_title:'Identitas Unik',
+    ic1_body:'Setiap kaos memiliki nomor seri tersendiri. Scan QR code — kamu terhubung dengan halaman unik yang hidup bersama pemiliknya.',
+    ic2_title:'Perjalanan Tercatat',
+    ic2_body:'Setiap scan meninggalkan jejak di peta dunia. Kaos yang lahir di Klaten dapat mencatat perjalanannya hingga Tokyo, London, atau kota mana pun.',
+    ic3_title:'Cerita Owner',
+    ic3_body:'Pemilik kaos dapat menambahkan cerita, foto, dan kenangan. Halaman kaos menjadi ruang hidup yang terus menemani pemiliknya.',
+    ic4_title:'Rebuilding',
+    ic4_body:'Kaos rusak bukan akhir cerita. Jika sebagian masih layak, cerita dapat dilanjutkan dan identitas tetap hidup.',
+    s2_tag:'✦ Cara Kerja',
+    s2_h2:'TIGA LANGKAH<br>MENUJU KAOS BERIDENTITAS',
+    ps1_title:'Order & Desain',
+    ps1_body:'Chat via WhatsApp. Ceritakan kebutuhanmu — jenis kaos, desain, dan jumlah. Tim Blumbang membantu dari konsep hingga siap produksi.',
+    ps2_title:'Produksi di Klaten',
+    ps2_body:'Dibuat dengan tangan di Klaten, Indonesia. Tempat para pekerja yang tenang. Para pembuat yang sering tidak tercatat. Tangan-tangan yang bekerja dengan sabar.<br><br>Di tempat ini cahaya-cahaya kecil mulai muncul.',
+    ps3_title:'Perjalanan Kaos Dimulai',
+    ps3_body:'Scan QR — halaman garment aktif. Tambahkan cerita. Catat perjalanan.<br><br>Cahaya kecil ini menemanimu ke mana saja.',
+    s3_tag:'✦ Orang-Orang di Baliknya',
+    q_bumur:'"sepuluh resep masakan terenak sudah di tanganku"',
+    q_paijo1:'"menjahit pakaian untuk merajut dunia"',
+    q_paijo2:'"kalau tidak di Blumbang, mengulur benang di spot pemancingan"',
+    done_chandra:'done, but was here',
+    done_danang:'now in Japan, still stuck here somehow',
+    q_soul:'"Kita tidak ke mana-mana. Cukup membuat cahaya kecil yang menyala di seluruh dunia."',
+    s4_tag:'✦ Temukan Kami',
+    manifesto_quote:'"Cahaya kecil ini menemanimu <em>sampai mana saja.</em>"',
+    cta_btn:'✦ &nbsp; MULAI ORDER',
+  },
+  en: {
+    nav_karya:'Work', nav_perjalanan:'Journey', nav_tentang:'About',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER NOW',
+    hero_sub:'An independent garment and screen printing studio from Jeto, Klaten, Central Java. A place of quiet makers. Hands that work with patience.',
+    s1_tag:'✦ Garment Identity System',
+    s1_h2:'THE TEE\'S JOURNEY<br>STARTS HERE',
+    s1_body:'More than just a tee. Every product carries a unique identity that lives alongside its owner.',
+    ic1_title:'Unique Identity',
+    ic1_body:'Every tee has its own serial number. Scan the QR — you connect to a unique page that lives and grows with the owner.',
+    ic2_title:'Journey Recorded',
+    ic2_body:'Every scan leaves a mark on the world map. A tee born in Klaten can record its journey all the way to Tokyo, London, or anywhere.',
+    ic3_title:'Owner\'s Story',
+    ic3_body:'Owners can add stories, photos, and memories. The garment page becomes a living space that stays with them.',
+    ic4_title:'Rebuilding',
+    ic4_body:'A worn tee is not the end of the story. If part of it still holds, the story can continue and the identity lives on.',
+    s2_tag:'✦ How It Works',
+    s2_h2:'THREE STEPS TO<br>A TEE WITH IDENTITY',
+    ps1_title:'Order & Design',
+    ps1_body:'Chat via WhatsApp. Tell us what you need — fabric type, design, and quantity. The Blumbang team guides you from concept to production.',
+    ps2_title:'Made in Klaten',
+    ps2_body:'Handmade in Klaten, Indonesia. A place of quiet workers. Makers who often go unrecorded. Hands that work with patience.<br><br>This is where the small lights begin.',
+    ps3_title:'The Journey Begins',
+    ps3_body:'Scan the QR — garment page activates. Add your story. Record your journey.<br><br>This small light travels with you everywhere.',
+    s3_tag:'✦ The People Behind It',
+    q_bumur:'"ten of the best recipes are already in my hands"',
+    q_paijo1:'"sewing clothes to stitch the world together"',
+    q_paijo2:'"when not at Blumbang, threading lines at a fishing spot"',
+    done_chandra:'done, but was here',
+    done_danang:'now in Japan, still stuck here somehow',
+    q_soul:'"We go nowhere. We just make small lights that glow across the world."',
+    s4_tag:'✦ Find Us',
+    manifesto_quote:'"This small light travels with you <em>wherever you go.</em>"',
+    cta_btn:'✦ &nbsp; START ORDER',
+  }
+};
+
+let currentLang = localStorage.getItem('blb_lang') || 'id';
+
+function applyLang(lang){
+  const dict = i18n[lang];
+  if(!dict) return;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  document.getElementById('btn-id').classList.toggle('aktif', lang==='id');
+  document.getElementById('btn-en').classList.toggle('aktif', lang==='en');
+  document.documentElement.lang = lang;
+  currentLang = lang;
+}
+
+function setLang(lang){
+  localStorage.setItem('blb_lang', lang);
+  applyLang(lang);
+}
+
+(async function detectLang(){
+  const saved = localStorage.getItem('blb_lang');
+  if(saved){ applyLang(saved); return; }
+  try{
+    const g = await (await fetch('https://ipapi.co/json/')).json();
+    applyLang(g.country_code === 'ID' ? 'id' : 'en');
+  } catch(e){
+    applyLang((navigator.language||'id').startsWith('id') ? 'id' : 'en');
+  }
+})();
 </script>
 </body>
 </html>

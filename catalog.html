@@ -94,6 +94,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 /* STATES */
 .loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
 .search-empty{padding:60px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
+.lang-toggle{display:flex;align-items:center;gap:0;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{background:none;border:none;color:var(--muted);font-family:var(--font-ui);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;padding:6px 10px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+.lang-btn.aktif{background:var(--gold);color:var(--black);}
+.lang-btn:hover:not(.aktif){color:var(--white);}
 
 @media(max-width:768px){
   nav{padding:14px 18px;}
@@ -111,29 +115,33 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 <nav>
   <a href="/" class="nav-brand">BLUMB✦NG</a>
   <div class="nav-links">
-    <a href="/catalog" class="active">Karya</a>
-    <a href="/sparks">Perjalanan</a>
-    <a href="/about">Tentang</a>
+    <a href="/catalog" class="active" data-i18n="nav_karya">Karya</a>
+    <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/about" data-i18n="nav_tentang">Tentang</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
   </div>
-  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <a href="https://wa.me/6281234561146" class="nav-order" data-i18n="nav_order">✦ ORDER</a>
   <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
 </nav>
 <div class="nav-mobile" id="nav-mobile">
-  <a href="/catalog" onclick="toggleMenu()">Karya</a>
-  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
-  <a href="/about" onclick="toggleMenu()">Tentang</a>
-  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+  <a href="/catalog" onclick="toggleMenu()" data-i18n="nav_karya">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()" data-i18n="nav_tentang">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()" data-i18n="nav_order_mobile">✦ ORDER SEKARANG</a>
 </div>
 
 <div class="hero">
-  <span class="hero-tag">✦ Living Garments</span>
-  <h1 class="hero-title">KAOS YANG<br>PUNYA CERITA</h1>
-  <p class="hero-sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
-  <div class="hero-count" id="hero-count">Memuat...</div>
+  <span class="hero-tag" data-i18n="hero_tag">✦ Living Garments</span>
+  <h1 class="hero-title" data-i18n="hero_title">KAOS YANG<br>PUNYA CERITA</h1>
+  <p class="hero-sub" data-i18n="hero_sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
+  <div class="hero-count" id="hero-count" data-i18n="hero_loading">Memuat...</div>
 </div>
 
 <div class="search-wrap">
-  <input class="search-box" id="search-box" type="text" placeholder="Cari nama seri...">
+  <input class="search-box" id="search-box" type="text" placeholder="Cari nama seri..." data-i18n-ph="search_ph">
 </div>
 
 <div class="seri-grid" id="seri-grid">
@@ -148,7 +156,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
       <div class="drw-judul" id="drw-judul">—</div>
       <div class="drw-sub" id="drw-sub">—</div>
     </div>
-    <button class="drw-tutup" id="drw-tutup">✕ Tutup</button>
+    <button class="drw-tutup" id="drw-tutup" data-i18n="drw_tutup">✕ Tutup</button>
   </div>
   <div class="drw-list" id="drw-list"></div>
 </div>
@@ -173,12 +181,12 @@ function driveUrl(url) {
 
 // DRAWER
 function bukaDrawer(idx) {
+  var dict = i18n[currentLang] || i18n.id;
   var seri = _seriList[idx];
   if (!seri) return;
   document.getElementById('drw-judul').textContent = seri.nama;
-  document.getElementById('drw-sub').textContent = seri.garments.length + ' Kaos dalam seri ini';
+  document.getElementById('drw-sub').textContent = seri.garments.length + ' ' + dict.kaos_seri;
 
-  // Sort garments berdasarkan scan terbanyak
   var sorted = seri.garments.slice().sort(function(a, b) {
     var aTotal = (_scanCount[a.id] && _scanCount[a.id].total) || 0;
     var bTotal = (_scanCount[b.id] && _scanCount[b.id].total) || 0;
@@ -189,7 +197,7 @@ function bukaDrawer(idx) {
   for (var i = 0; i < sorted.length; i++) {
     var g = sorted[i];
     var scanTotal = (_scanCount[g.id] && _scanCount[g.id].total) || 0;
-    var scanInfo = scanTotal > 0 ? scanTotal + ' scan' : 'Belum discan';
+    var scanInfo = scanTotal > 0 ? scanTotal + ' ' + dict.scan_txt : dict.belum_scan;
     html += '<a href="/id/' + g.id + '" class="drw-item">';
     html += '<div><div class="drw-item-id">' + g.id + '</div>';
     html += '<div class="drw-item-info">' + g.year + ' · ' + scanInfo + '</div></div>';
@@ -221,9 +229,10 @@ document.addEventListener('touchend', function(e) {
 
 // RENDER
 function renderGrid(list) {
+  var dict = i18n[currentLang] || i18n.id;
   var grid = document.getElementById('seri-grid');
   if (!list.length) {
-    grid.innerHTML = '<div class="search-empty">Tidak ada hasil ditemukan.</div>';
+    grid.innerHTML = '<div class="search-empty">' + dict.empty_txt + '</div>';
     return;
   }
   var html = '';
@@ -238,17 +247,17 @@ function renderGrid(list) {
     if (seri.mockup) {
       foto = '<img class="seri-mockup" src="' + seri.mockup + '" alt="" loading="lazy">';
     } else {
-      foto = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">Mockup Coming Soon</span></div>';
+      foto = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">' + dict.mockup_soon + '</span></div>';
     }
 
     // Hot badge
     var hot = seri.scanRecent > 0
-      ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
+      ? '<div class="hot-badge"><span class="hot-dot"></span>' + dict.aktif_scan + ' ' + seri.scanRecent + ' ' + dict.scan_txt + '</div>'
       : '';
 
     // Scan info
     var scanInfo = seri.scanTotal > 0
-      ? '<span class="seri-sep">·</span><span class="seri-scan">' + seri.scanTotal + ' scan</span>'
+      ? '<span class="seri-sep">·</span><span class="seri-scan">' + seri.scanTotal + ' ' + dict.scan_txt + '</span>'
       : '';
 
     // Barcodes
@@ -257,17 +266,17 @@ function renderGrid(list) {
     for (var j = 0; j < show.length; j++) {
       bc += '<span class="seri-bc">' + show[j].id + '</span>';
     }
-    if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' lagi</span>';
+    if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' ' + dict.lagi_txt + '</span>';
 
     // Tombol
     var tombol = jml === 1
-      ? '<a href="/id/' + g0.id + '" class="seri-tombol">Lihat Perjalanan &#x2192;</a>'
-      : '<button class="seri-tombol" onclick="bukaDrawer(' + realIdx + ')">Lihat ' + jml + ' Kaos &#x2192;</button>';
+      ? '<a href="/id/' + g0.id + '" class="seri-tombol">' + dict.lihat_perjalanan + '</a>'
+      : '<button class="seri-tombol" onclick="bukaDrawer(' + realIdx + ')">' + dict.lihat_kaos + ' ' + jml + ' ' + dict.kaos_txt + ' &#x2192;</button>';
 
     html += '<div class="seri-card">' + foto;
     html += '<div class="seri-body">' + hot;
     html += '<div class="seri-nama">' + seri.nama + '</div>';
-    html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
+    html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' ' + dict.kaos_txt + '</span>' + scanInfo + '</div>';
     html += '<div class="seri-barcodes">' + bc + '</div>';
     html += tombol + '</div></div>';
   }
@@ -360,15 +369,103 @@ async function init() {
     });
 
     var totalGarment = garRows.filter(function(r) { return r.c[0] && r.c[0].v; }).length;
-    document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + _seriList.length + ' Seri';
+    var dict = i18n[currentLang] || i18n.id;
+    document.getElementById('hero-count').textContent = totalGarment + ' ' + dict.garment_label + ' · ' + _seriList.length + ' ' + dict.seri_label;
 
     renderGrid(_seriList);
 
   } catch(e) {
+    var dict = i18n[currentLang] || i18n.id;
     console.error('Catalog error:', e.message || e);
-    document.getElementById('seri-grid').innerHTML = '<div class="loading">Gagal memuat data. Coba refresh halaman.</div>';
+    document.getElementById('seri-grid').innerHTML = '<div class="loading">' + dict.gagal_muat + '</div>';
   }
 }
+
+// ── i18n SYSTEM ──────────────────────────────────────────
+const i18n = {
+  id: {
+    nav_karya:'Karya', nav_perjalanan:'Perjalanan', nav_tentang:'Tentang',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER SEKARANG',
+    hero_tag:'✦ Living Garments',
+    hero_title:'KAOS YANG<br>PUNYA CERITA',
+    hero_sub:'Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.',
+    hero_loading:'Memuat...',
+    search_ph:'Cari nama seri...',
+    drw_tutup:'✕ Tutup',
+    loading_txt:'Memuat koleksi...',
+    empty_txt:'Tidak ada hasil ditemukan.',
+    scan_txt:'scan', belum_scan:'Belum discan',
+    kaos_txt:'Kaos', lagi_txt:'lagi',
+    lihat_perjalanan:'Lihat Perjalanan →',
+    lihat_kaos:'Lihat',
+    kaos_seri:'Kaos dalam seri ini',
+    aktif_scan:'Aktif',
+    mockup_soon:'Mockup Coming Soon',
+    garment_label:'Garment',
+    seri_label:'Seri',
+    gagal_muat:'Gagal memuat data. Coba refresh halaman.',
+  },
+  en: {
+    nav_karya:'Work', nav_perjalanan:'Journey', nav_tentang:'About',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER NOW',
+    hero_tag:'✦ Living Garments',
+    hero_title:'TEES WITH<br>A STORY',
+    hero_sub:'Every tee has a unique identity and a journey you can track.',
+    hero_loading:'Loading...',
+    search_ph:'Search collection...',
+    drw_tutup:'✕ Close',
+    loading_txt:'Loading collection...',
+    empty_txt:'No results found.',
+    scan_txt:'scans', belum_scan:'Not yet scanned',
+    kaos_txt:'Tee', lagi_txt:'more',
+    lihat_perjalanan:'View Journey →',
+    lihat_kaos:'View',
+    kaos_seri:'Tees in this series',
+    aktif_scan:'Active',
+    mockup_soon:'Mockup Coming Soon',
+    garment_label:'Garment',
+    seri_label:'Series',
+    gagal_muat:'Failed to load data. Please refresh.',
+  }
+};
+
+let currentLang = localStorage.getItem('blb_lang') || 'id';
+
+function applyLang(lang) {
+  const dict = i18n[lang];
+  if (!dict) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  // Placeholder untuk input
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (dict[key] !== undefined) el.placeholder = dict[key];
+  });
+  document.getElementById('btn-id').classList.toggle('aktif', lang === 'id');
+  document.getElementById('btn-en').classList.toggle('aktif', lang === 'en');
+  document.documentElement.lang = lang;
+  currentLang = lang;
+  // Re-render grid kalau data sudah ada
+  if (_seriList.length) renderGrid(_seriList);
+}
+
+function setLang(lang) {
+  localStorage.setItem('blb_lang', lang);
+  applyLang(lang);
+}
+
+(async function detectLang() {
+  const saved = localStorage.getItem('blb_lang');
+  if (saved) { applyLang(saved); return; }
+  try {
+    const g = await (await fetch('https://ipapi.co/json/')).json();
+    applyLang(g.country_code === 'ID' ? 'id' : 'en');
+  } catch(e) {
+    applyLang((navigator.language || 'id').startsWith('id') ? 'id' : 'en');
+  }
+})();
 
 init();
 </script>

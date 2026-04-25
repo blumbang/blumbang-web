@@ -86,6 +86,10 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 
 @keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
 @keyframes denyut{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.lang-toggle{display:flex;align-items:center;gap:0;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{background:none;border:none;color:var(--muted);font-family:var(--font-ui);font-size:0.62rem;font-weight:700;letter-spacing:0.12em;padding:6px 10px;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+.lang-btn.aktif{background:var(--gold);color:var(--black);}
+.lang-btn:hover:not(.aktif){color:var(--white);}
 
 @media(max-width:768px){
   nav{padding:14px 18px;}
@@ -107,18 +111,22 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 <nav>
   <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
   <div class="nav-links">
-    <a href="/catalog">Karya</a>
-    <a href="/sparks" class="active">Perjalanan</a>
-    <a href="/about">Tentang</a>
+    <a href="/catalog" data-i18n="nav_karya">Karya</a>
+    <a href="/sparks" class="active" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/about" data-i18n="nav_tentang">Tentang</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
   </div>
-  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <a href="https://wa.me/6281234561146" class="nav-order" data-i18n="nav_order">✦ ORDER</a>
   <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
 </nav>
 <div class="nav-mobile" id="nav-mobile">
-  <a href="/catalog" onclick="toggleMenu()">Karya</a>
-  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
-  <a href="/about" onclick="toggleMenu()">Tentang</a>
-  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+  <a href="/catalog" onclick="toggleMenu()" data-i18n="nav_karya">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()" data-i18n="nav_tentang">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()" data-i18n="nav_order_mobile">✦ ORDER SEKARANG</a>
 </div>
 
 <div class="map-tooltip" id="map-tooltip"></div>
@@ -127,22 +135,22 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
 
   <!-- HEADER -->
   <div class="sparks-header">
-    <div class="sparks-title">PETA PERJALANAN</div>
-    <div class="sparks-sub">Dari Klaten · Ke Dunia</div>
+    <div class="sparks-title" data-i18n="sparks_title">PETA PERJALANAN</div>
+    <div class="sparks-sub" data-i18n="sparks_sub">Dari Klaten · Ke Dunia</div>
   </div>
 
   <!-- STATS -->
   <div class="stats-bar">
-    <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Kaos Terdaftar</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl" data-i18n="stat_perjalanan">Perjalanan</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl" data-i18n="stat_kota">Kota</div></div>
+    <div class="stat-item"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl" data-i18n="stat_negara">Negara</div></div>
   </div>
 
   <!-- MAP -->
   <div class="map-section" id="map-section">
     <div class="map-loading" id="map-loading">
-      <div class="map-loading-text">Memuat peta perjalanan...</div>
+      <div class="map-loading-text" data-i18n="map_loading">Memuat peta perjalanan...</div>
     </div>
     <svg id="d3-world-map"></svg>
   </div>
@@ -155,7 +163,7 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
   <!-- LATEST -->
   <div class="latest-section" id="latest-section" style="display:none">
     <div class="latest-dot"></div>
-    <div class="latest-text">Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
+    <div class="latest-text" data-i18n-prefix="latest_from">Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
   </div>
 
 </div>
@@ -164,9 +172,9 @@ footer{padding:36px 40px;border-top:1px solid var(--border);}
   <div class="footer-inner">
     <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
     <div class="footer-links">
-      <a href="/catalog">Karya</a>
-      <a href="/sparks">Perjalanan</a>
-      <a href="/about">Tentang</a>
+      <a href="/catalog" data-i18n="nav_karya">Karya</a>
+      <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+      <a href="/about" data-i18n="nav_tentang">Tentang</a>
       <a href="https://wa.me/6281234561146">WhatsApp</a>
     </div>
     <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
@@ -753,6 +761,68 @@ requestAnimationFrame(function(){
     document.getElementById('map-loading').style.display = 'none';
   });
 });
+
+// ── i18n SYSTEM ──────────────────────────────────────────
+const i18n = {
+  id: {
+    nav_karya:'Karya', nav_perjalanan:'Perjalanan', nav_tentang:'Tentang',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER SEKARANG',
+    sparks_title:'PETA PERJALANAN',
+    sparks_sub:'Dari Klaten · Ke Dunia',
+    stat_kaos:'Kaos Terdaftar', stat_perjalanan:'Perjalanan',
+    stat_kota:'Kota', stat_negara:'Negara',
+    map_loading:'Memuat peta perjalanan...',
+    latest_from:'Terbaru dari',
+  },
+  en: {
+    nav_karya:'Work', nav_perjalanan:'Journey', nav_tentang:'About',
+    nav_order:'✦ ORDER', nav_order_mobile:'✦ ORDER NOW',
+    sparks_title:'JOURNEY MAP',
+    sparks_sub:'From Klaten · To the World',
+    stat_kaos:'Tees Registered', stat_perjalanan:'Journeys',
+    stat_kota:'Cities', stat_negara:'Countries',
+    map_loading:'Loading journey map...',
+    latest_from:'Latest from',
+  }
+};
+
+let currentLang = localStorage.getItem('blb_lang') || 'id';
+
+function applyLang(lang) {
+  const dict = i18n[lang];
+  if (!dict) return;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  // Update latest-from text, preserve city span
+  const latestEl = document.querySelector('[data-i18n-prefix="latest_from"]');
+  if (latestEl) {
+    const cityEl = document.getElementById('ls-city');
+    const cityText = cityEl ? cityEl.textContent : '—';
+    latestEl.innerHTML = dict.latest_from + ' <span class="latest-city" id="ls-city">' + cityText + '</span>';
+  }
+  document.getElementById('btn-id').classList.toggle('aktif', lang === 'id');
+  document.getElementById('btn-en').classList.toggle('aktif', lang === 'en');
+  document.documentElement.lang = lang;
+  currentLang = lang;
+}
+
+function setLang(lang) {
+  localStorage.setItem('blb_lang', lang);
+  applyLang(lang);
+}
+
+(async function detectLang() {
+  const saved = localStorage.getItem('blb_lang');
+  if (saved) { applyLang(saved); return; }
+  try {
+    const g = await (await fetch('https://ipapi.co/json/')).json();
+    applyLang(g.country_code === 'ID' ? 'id' : 'en');
+  } catch(e) {
+    applyLang((navigator.language || 'id').startsWith('id') ? 'id' : 'en');
+  }
+})();
 </script>
 </body>
 </html>

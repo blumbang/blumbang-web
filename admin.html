@@ -821,7 +821,7 @@ async function loadGarments(){
       grid.innerHTML='<div class="empty">Belum ada garment terdaftar</div>';
       return;
     }
-    grid.innerHTML=rows.map((r,i)=>{
+    grid.innerHTML=[...rows].reverse().map((r,i)=>{
       const id=r.c[0]?.v||'';
       const name=r.c[1]?.v||'';
       const origin=r.c[2]?.v||'Klaten';
@@ -829,6 +829,7 @@ async function loadGarments(){
       const edition=r.c[4]?.v||'—';
       const mockup=r.c[5]?.v||'';
       const scanCount=allRows.filter(row=>row.c[0]?.v===id).length;
+      const realIdx=rows.indexOf(r);
       return `
       <div class="gcard">
         ${mockup
@@ -841,7 +842,7 @@ async function loadGarments(){
           📦 ${edition} · 🔍 ${scanCount} scans
         </div>
         <div class="gcard-actions">
-          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${id}',${i})">✏️ Edit</button>
+          <button class="btn btn-ghost btn-sm" onclick="openEditModal('${id}',${realIdx})">✏️ Edit</button>
           <a href="https://blumbang.id/id/${id}" target="_blank" class="btn btn-ghost btn-sm" style="text-decoration:none">🔗 Lihat</a>
           <button class="btn btn-sm" style="background:var(--red);color:#fff;border:none;cursor:pointer;" onclick="deleteGarment('${id}')">🗑 Hapus</button>
         </div>

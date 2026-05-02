@@ -5,7 +5,7 @@ backend:
   base_url: https://blumbang.id
   auth_endpoint: api/auth
 
-media_folder: "uploads"
+media_folder: ""
 public_folder: "https://media.blumbang.id"
 
 locale: id
@@ -22,6 +22,7 @@ collections:
       - label: "Judul"
         name: "title"
         widget: "string"
+        hint: "Judul artikel — akan muncul di Google"
 
       - label: "Tanggal"
         name: "date"
@@ -42,52 +43,9 @@ collections:
         widget: "text"
         hint: "Maksimal 160 karakter — muncul di Google"
 
-      - label: "Gambar Cover"
-        name: "cover"
-        widget: "image"
-        required: false
-
       - label: "Konten"
         name: "body"
         widget: "markdown"
-
-      - label: "Publish"
-        name: "published"
-        widget: "boolean"
-        default: true
-
-  - name: "produk"
-    label: "Produk"
-    label_singular: "Produk"
-    folder: "_produk"
-    create: true
-    slug: "{{slug}}"
-    fields:
-      - label: "Nama Produk"
-        name: "title"
-        widget: "string"
-
-      - label: "Kategori"
-        name: "category"
-        widget: "select"
-        options:
-          - { label: "Kaos", value: "kaos" }
-          - { label: "Sablon", value: "sablon" }
-          - { label: "Custom", value: "custom" }
-
-      - label: "Deskripsi"
-        name: "description"
-        widget: "text"
-
-      - label: "Gambar Produk"
-        name: "cover"
-        widget: "image"
-        required: false
-
-      - label: "Konten Lengkap"
-        name: "body"
-        widget: "markdown"
-        required: false
 
       - label: "Publish"
         name: "published"

@@ -5,25 +5,12 @@ backend:
   base_url: https://blumbang.id
   auth_endpoint: api/auth
 
-# Media disimpan ke Cloudflare R2 via custom domain
-media_folder: ""
-public_folder: ""
-media_library:
-  name: cloudinary
-  config:
-    cloud_name: blumbang
-    api_key: ""
-
-# Pakai external media — upload ke media.blumbang.id
-# Karena R2 tidak support upload langsung dari Decap CMS,
-# gunakan folder di repo untuk sementara, lalu pindah ke R2 manual
 media_folder: "uploads"
 public_folder: "https://media.blumbang.id"
 
 locale: id
 
 collections:
-  # ── BLOG / CERITA ─────────────────────────────
   - name: "blog"
     label: "Blog & Cerita"
     label_singular: "Artikel"
@@ -35,13 +22,11 @@ collections:
       - label: "Judul"
         name: "title"
         widget: "string"
-        hint: "Judul artikel — akan muncul di Google"
 
       - label: "Tanggal"
         name: "date"
         widget: "datetime"
         format: "YYYY-MM-DD"
-        default: ""
 
       - label: "Kategori"
         name: "category"
@@ -55,13 +40,12 @@ collections:
       - label: "Deskripsi Singkat"
         name: "description"
         widget: "text"
-        hint: "Muncul di Google dan preview artikel — maksimal 160 karakter"
+        hint: "Maksimal 160 karakter — muncul di Google"
 
       - label: "Gambar Cover"
         name: "cover"
         widget: "image"
         required: false
-        hint: "Upload gambar cover artikel"
 
       - label: "Konten"
         name: "body"
@@ -71,16 +55,13 @@ collections:
         name: "published"
         widget: "boolean"
         default: true
-        hint: "Matikan untuk menyimpan sebagai draft"
 
-  # ── PRODUK ────────────────────────────────────
   - name: "produk"
     label: "Produk"
     label_singular: "Produk"
     folder: "_produk"
     create: true
     slug: "{{slug}}"
-    preview_path: "produk/{{slug}}"
     fields:
       - label: "Nama Produk"
         name: "title"

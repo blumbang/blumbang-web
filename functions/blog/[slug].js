@@ -1,5 +1,6 @@
 export async function onRequest(context) {
-  return context.env.ASSETS.fetch(
-    new URL('/blog/post.html', context.request.url)
-  );
+  const url = new URL(context.request.url);
+  url.pathname = '/blog/post.html';
+  const request = new Request(url.toString(), context.request);
+  return fetch(request);
 }

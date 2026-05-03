@@ -40,8 +40,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-mobile a:last-child{border-bottom:none;}
 .mobile-order{color:var(--gold)!important;font-weight:700!important;}
 .page{padding-top:61px;}
-.article-cover{width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center top;display:block;filter:grayscale(15%);}
+.article-cover{width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center top;display:block;filter:grayscale(15%);cursor:zoom-in;transition:filter 0.2s;}
+.article-cover:hover{filter:grayscale(0%);}
 .article-wrap{max-width:720px;margin:0 auto;padding:48px 40px 80px;}
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;transition:color 0.2s;}
+.lightbox-close:hover{color:#C9A84C;}
+.article-content img{cursor:zoom-in;transition:filter 0.2s;}
+.article-content img:hover{filter:grayscale(0%)!important;}
 .article-back{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);text-decoration:none;margin-bottom:32px;transition:color 0.2s;}
 .article-back:hover{color:var(--gold);}
 .article-meta{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
@@ -196,6 +205,8 @@ async function loadArticle() {
           <a href="https://wa.me/6281234561146" class="cta-btn">✦ &nbsp; Order Sekarang</a>
         </div>
       </div>`;
+    // Init lightbox setelah konten dirender
+    setTimeout(initLightbox, 100);
   } catch(e) {
     document.getElementById('page-content').innerHTML = `
       <div class="article-wrap">
@@ -207,6 +218,36 @@ async function loadArticle() {
       </div>`;
   }
 }
+
+function initLightbox() {
+  // Buat lightbox element jika belum ada
+  if (document.getElementById('lightbox')) return;
+  const lb = document.createElement('div');
+  lb.className = 'lightbox';
+  lb.id = 'lightbox';
+  lb.innerHTML = '<div class="lightbox-close">✕ Tutup</div><img id="lb-img" src="" alt="">';
+  document.body.appendChild(lb);
+  lb.addEventListener('click', closeLightbox);
+
+  // Tambah klik ke semua gambar
+  document.querySelectorAll('.article-content img, .article-cover').forEach(img => {
+    img.addEventListener('click', function() {
+      document.getElementById('lb-img').src = this.src;
+      document.getElementById('lightbox').classList.add('on');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+}
+
+function closeLightbox() {
+  const lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
 
 function stripFrontmatter(text) {
   if (text.startsWith('---')) {

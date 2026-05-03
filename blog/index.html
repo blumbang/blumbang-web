@@ -12,16 +12,8 @@
 <meta property="og:description" content="Cerita, perjalanan, dan behind the scene dari Blumbang.id.">
 <meta property="og:image" content="https://blumbang.id/og-image.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
-<script>
-window.dataLayer=window.dataLayer||[];
-function gtag(){dataLayer.push(arguments);}
-gtag("js",new Date());
-gtag("config","G-39SRRM5GKK");
-</script>
-
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-39SRRM5GKK");</script>
 <style>
 :root{
   --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
@@ -34,8 +26,6 @@ gtag("config","G-39SRRM5GKK");
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
 .nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
 .nav-links{display:flex;gap:32px;}
@@ -49,54 +39,38 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
 .nav-mobile a:last-child{border-bottom:none;}
 .mobile-order{color:var(--gold)!important;font-weight:700!important;}
-
-/* PAGE */
 .page{padding-top:61px;}
-
-/* HERO */
 .blog-hero{padding:64px 40px 40px;border-bottom:1px solid var(--border);text-align:center;}
 .blog-tag{font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;display:block;}
 .blog-title{font-family:var(--font-logo);font-size:clamp(3rem,7vw,6rem);letter-spacing:0.06em;line-height:1;margin-bottom:12px;}
 .blog-sub{font-family:var(--font-body);font-size:0.95rem;font-weight:300;color:var(--dim);letter-spacing:0.02em;}
-
-/* FILTER */
 .filter-bar{display:flex;gap:8px;padding:24px 40px;border-bottom:1px solid var(--border);overflow-x:auto;}
 .filter-btn{font-family:var(--font-ui);font-size:0.68rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;padding:7px 16px;border:1px solid var(--border);background:none;color:var(--dim);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .filter-btn:hover,.filter-btn.active{border-color:var(--gold-dim);color:var(--gold);background:var(--gold-bg);}
-
-/* GRID */
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);padding:0;margin:0;}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1px;background:var(--border);}
 .blog-wrap{background:var(--black);padding:40px;}
-
-/* CARD */
 .blog-card{background:var(--charcoal);border:1px solid var(--border);display:flex;flex-direction:column;transition:border-color 0.2s;text-decoration:none;color:inherit;}
 .blog-card:hover{border-color:var(--gold-dim);}
 .blog-card:hover .card-title{color:var(--gold);}
-.card-img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--grey);display:block;filter:grayscale(20%);}
+.card-img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;filter:grayscale(20%);}
 .card-img-placeholder{width:100%;aspect-ratio:16/9;background:var(--grey);display:flex;align-items:center;justify-content:center;}
-.card-img-placeholder span{font-family:var(--font-logo);font-size:2rem;color:var(--muted);letter-spacing:0.1em;}
+.card-img-placeholder span{font-family:var(--font-logo);font-size:2rem;color:var(--muted);}
 .card-body{padding:24px;}
 .card-meta{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
 .card-cat{font-family:var(--font-ui);font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:2px 8px;border:1px solid var(--gold-dim);background:var(--gold-bg);}
-.card-date{font-family:var(--font-ui);font-size:0.65rem;color:var(--muted);letter-spacing:0.05em;}
+.card-date{font-family:var(--font-ui);font-size:0.65rem;color:var(--muted);}
 .card-title{font-family:var(--font-logo);font-size:1.5rem;letter-spacing:0.04em;line-height:1.2;margin-bottom:10px;transition:color 0.2s;}
 .card-desc{font-family:var(--font-body);font-size:0.82rem;font-weight:300;color:var(--dim);line-height:1.7;}
-.card-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.card-footer{padding:16px 24px;border-top:1px solid var(--border);}
 .card-read{font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);}
-
-/* EMPTY STATE */
 .blog-empty{padding:80px 40px;text-align:center;}
 .empty-icon{font-family:var(--font-logo);font-size:3rem;color:var(--muted);margin-bottom:16px;}
 .empty-text{font-family:var(--font-body);font-size:0.9rem;color:var(--dim);}
-
-/* LOADING */
 .loading-wrap{padding:80px 40px;text-align:center;}
 .loading-dot{display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 1.2s infinite;}
 .loading-dot:nth-child(2){animation-delay:0.2s;}
 .loading-dot:nth-child(3){animation-delay:0.4s;}
 @keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
-
-/* FOOTER */
 footer{border-top:1px solid var(--border);padding:32px 40px;}
 .footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
 .footer-brand{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:0.2em;color:var(--gold);}
@@ -104,7 +78,6 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
 .footer-links a{font-family:var(--font-ui);font-size:0.68rem;font-weight:500;letter-spacing:0.15em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
 .footer-links a:hover{color:var(--gold);}
 .footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
-
 @media(max-width:768px){
   nav{padding:14px 18px;}
   .nav-links,.nav-order{display:none;}
@@ -120,7 +93,6 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
 </style>
 </head>
 <body>
-
 <nav>
   <a href="/" class="nav-brand">BLUMB✦NG</a>
   <div class="nav-links">
@@ -139,22 +111,19 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
   <a href="/about" onclick="toggleMenu()">Tentang</a>
   <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ Order Sekarang</a>
 </div>
-
 <div class="page">
   <div class="blog-hero">
     <span class="blog-tag">Blumbang · Studio</span>
     <h1 class="blog-title">CERITA & CATATAN</h1>
     <p class="blog-sub">Behind the scene, perjalanan kaos, dan segala yang terjadi di Jeto, Klaten.</p>
   </div>
-
-  <div class="filter-bar" id="filter-bar">
-    <button class="filter-btn active" onclick="filterPosts('semua', this)">Semua</button>
-    <button class="filter-btn" onclick="filterPosts('cerita', this)">Cerita</button>
-    <button class="filter-btn" onclick="filterPosts('produk', this)">Produk</button>
-    <button class="filter-btn" onclick="filterPosts('bts', this)">Behind the Scene</button>
-    <button class="filter-btn" onclick="filterPosts('perjalanan', this)">Perjalanan Kaos</button>
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterPosts('semua',this)">Semua</button>
+    <button class="filter-btn" onclick="filterPosts('cerita',this)">Cerita</button>
+    <button class="filter-btn" onclick="filterPosts('produk',this)">Produk</button>
+    <button class="filter-btn" onclick="filterPosts('bts',this)">Behind the Scene</button>
+    <button class="filter-btn" onclick="filterPosts('perjalanan',this)">Perjalanan Kaos</button>
   </div>
-
   <div class="blog-wrap">
     <div id="blog-container">
       <div class="loading-wrap">
@@ -165,7 +134,6 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
     </div>
   </div>
 </div>
-
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">BLUMB✦NG</div>
@@ -178,67 +146,45 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
     <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten</div>
   </div>
 </footer>
-
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
-// ── DATA ───────────────────────────────────────────────
-// Posts dimuat dari file JSON yang di-generate saat build
-// Format: [{slug, title, date, category, description, cover, published}]
+const catLabel = {cerita:'Cerita',produk:'Produk',bts:'Behind the Scene',perjalanan:'Perjalanan Kaos'};
 let allPosts = [];
 let currentFilter = 'semua';
 
-// ── LOAD POSTS ─────────────────────────────────────────
 async function loadPosts() {
   try {
     const res = await fetch('/blog/posts.json');
-    if (!res.ok) throw new Error('Belum ada artikel');
+    if (!res.ok) throw new Error();
     allPosts = await res.json();
     allPosts = allPosts.filter(p => p.published !== false);
-    allPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    allPosts.sort((a,b) => new Date(b.date) - new Date(a.date));
     renderPosts(allPosts);
-  } catch(e) {
-    renderEmpty();
-  }
+  } catch(e) { renderEmpty(); }
 }
 
-// ── RENDER ─────────────────────────────────────────────
 function renderPosts(posts) {
   const container = document.getElementById('blog-container');
   if (!posts.length) { renderEmpty(); return; }
-
-  const catLabel = {
-    cerita: 'Cerita',
-    produk: 'Produk',
-    bts: 'Behind the Scene',
-    perjalanan: 'Perjalanan Kaos'
-  };
-
-  const html = `<div class="blog-grid">` +
+  container.innerHTML = `<div class="blog-grid">` +
     posts.map(p => {
       const img = p.cover
         ? `<img class="card-img" src="${p.cover}" alt="${p.title}" loading="lazy">`
         : `<div class="card-img-placeholder"><span>✦</span></div>`;
-      const date = p.date ? new Date(p.date).toLocaleDateString('id-ID', {day:'numeric',month:'long',year:'numeric'}) : '';
+      const date = p.date ? new Date(p.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
       const cat = catLabel[p.category] || p.category || '';
-      return `
-        <a class="blog-card" href="/blog/${p.slug}">
-          ${img}
-          <div class="card-body">
-            <div class="card-meta">
-              ${cat ? `<span class="card-cat">${cat}</span>` : ''}
-              ${date ? `<span class="card-date">${date}</span>` : ''}
-            </div>
-            <div class="card-title">${p.title}</div>
-            ${p.description ? `<div class="card-desc">${p.description}</div>` : ''}
+      return `<a class="blog-card" href="/blog/post.html?slug=${p.slug}">
+        ${img}
+        <div class="card-body">
+          <div class="card-meta">
+            ${cat ? `<span class="card-cat">${cat}</span>` : ''}
+            ${date ? `<span class="card-date">${date}</span>` : ''}
           </div>
-          <div class="card-footer">
-            <span class="card-read">Baca Selengkapnya →</span>
-          </div>
-        </a>`;
-    }).join('') +
-  `</div>`;
-
-  container.innerHTML = html;
+          <div class="card-title">${p.title}</div>
+          ${p.description ? `<div class="card-desc">${p.description}</div>` : ''}
+        </div>
+        <div class="card-footer"><span class="card-read">Baca Selengkapnya →</span></div>
+      </a>`;
+    }).join('') + `</div>`;
 }
 
 function renderEmpty() {
@@ -249,7 +195,6 @@ function renderEmpty() {
     </div>`;
 }
 
-// ── FILTER ─────────────────────────────────────────────
 function filterPosts(cat, btn) {
   currentFilter = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -258,7 +203,6 @@ function filterPosts(cat, btn) {
   renderPosts(filtered);
 }
 
-// ── NAV ────────────────────────────────────────────────
 function toggleMenu() {
   const m = document.getElementById('nav-mobile');
   const h = document.getElementById('hamburger');

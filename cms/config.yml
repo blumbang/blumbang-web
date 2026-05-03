@@ -17,7 +17,7 @@ collections:
     folder: "_posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
-    preview_path: "blog/{{slug}}"
+    preview_path: "blog/post?slug={{slug}}"
     fields:
       - label: "Judul"
         name: "title"
@@ -43,9 +43,16 @@ collections:
         widget: "text"
         hint: "Maksimal 160 karakter — muncul di Google"
 
+      - label: "Gambar Cover"
+        name: "cover"
+        widget: "string"
+        required: false
+        hint: "Upload foto ke R2 dulu (media.blumbang.id), lalu paste URL-nya di sini. Contoh: https://media.blumbang.id/foto.jpg"
+
       - label: "Konten"
         name: "body"
         widget: "markdown"
+        hint: "Untuk insert gambar di konten: ![deskripsi](https://media.blumbang.id/foto.jpg)"
 
       - label: "Publish"
         name: "published"

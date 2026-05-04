@@ -1,15 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="meta-title">Artikel · Blumbang.id</title>
+<meta id="meta-desc" name="description" content="">
+<meta id="og-title" property="og:title" content="">
+<meta id="og-desc" property="og:description" content="">
+<meta id="og-img" property="og:image" content="https://blumbang.id/og-image.jpg">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Blumbang.id">
+<link id="canonical" rel="canonical" href="">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-39SRRM5GKK");</script>
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
+  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+.page{padding-top:61px;}
+.article-cover{width:100%;aspect-ratio:3/2;object-fit:cover;object-position:center top;display:block;filter:grayscale(15%);cursor:zoom-in;transition:filter 0.2s;}
+.article-cover:hover{filter:grayscale(0%);}
+.article-wrap{max-width:720px;margin:0 auto;padding:48px 40px 80px;}
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:'Inter',sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;transition:color 0.2s;}
+.lightbox-close:hover{color:#C9A84C;}
+.article-content img{cursor:zoom-in;transition:filter 0.2s;}
+.article-content img:hover{filter:grayscale(0%)!important;}
+.article-back{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:var(--dim);text-decoration:none;margin-bottom:32px;transition:color 0.2s;}
+.article-back:hover{color:var(--gold);}
+.article-meta{display:flex;align-items:center;gap:12px;margin-bottom:20px;}
+.article-cat{font-family:var(--font-ui);font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);padding:3px 10px;border:1px solid var(--gold-dim);background:var(--gold-bg);}
+.article-date{font-family:var(--font-ui);font-size:0.68rem;color:var(--muted);}
+.article-title{font-family:var(--font-logo);font-size:clamp(2rem,5vw,3.5rem);letter-spacing:0.04em;line-height:1.1;margin-bottom:16px;}
+.article-desc{font-family:var(--font-body);font-size:1rem;font-weight:300;color:var(--dim);line-height:1.7;margin-bottom:40px;padding-bottom:40px;border-bottom:1px solid var(--border);}
+.article-content{font-family:var(--font-body);font-size:0.95rem;font-weight:300;line-height:1.9;color:var(--light);}
+.article-content h1,.article-content h2{font-family:var(--font-logo);letter-spacing:0.05em;color:var(--white);margin:40px 0 16px;}
+.article-content h1{font-size:2rem;}
+.article-content h2{font-size:1.6rem;}
+.article-content h3{font-family:var(--font-ui);font-size:0.85rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin:32px 0 12px;}
+.article-content p{margin-bottom:20px;}
+.article-content strong{color:var(--white);font-weight:600;}
+.article-content em{color:var(--dim);font-style:italic;}
+.article-content img{width:100%;margin:32px 0;border:1px solid var(--border);filter:grayscale(10%);}
+.article-content blockquote{border-left:2px solid var(--gold-dim);padding:16px 24px;margin:32px 0;background:var(--charcoal);}
+.article-content blockquote p{color:var(--dim);font-style:italic;margin:0;}
+.article-content ul,.article-content ol{padding-left:24px;margin-bottom:20px;}
+.article-content li{margin-bottom:8px;}
+.article-content a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--gold-dim);}
+.article-content a:hover{border-color:var(--gold);}
+.article-content hr{border:none;border-top:1px solid var(--border);margin:40px 0;}
+.article-content code{font-family:monospace;background:var(--charcoal);padding:2px 8px;font-size:0.85em;color:var(--gold);}
+.article-cta{margin-top:64px;padding:32px;border:1px solid var(--gold-dim);background:var(--gold-bg);text-align:center;}
+.cta-tag{font-family:var(--font-ui);font-size:0.65rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block;}
+.cta-title{font-family:var(--font-logo);font-size:1.8rem;letter-spacing:0.06em;margin-bottom:8px;}
+.cta-sub{font-family:var(--font-body);font-size:0.85rem;font-weight:300;color:var(--dim);margin-bottom:20px;}
+.cta-btn{display:inline-block;font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:12px 28px;text-decoration:none;transition:background 0.2s;}
+.cta-btn:hover{background:var(--white);}
+.loading-wrap{padding:80px 40px;text-align:center;}
+.loading-dot{display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;animation:blink 1.2s infinite;}
+.loading-dot:nth-child(2){animation-delay:0.2s;}
+.loading-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
+.notfound{padding:80px 40px;text-align:center;}
+.notfound-icon{font-family:var(--font-logo);font-size:4rem;color:var(--muted);margin-bottom:16px;}
+.notfound-text{font-size:0.9rem;color:var(--dim);margin-bottom:24px;}
+.notfound-btn{display:inline-block;font-family:var(--font-ui);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold-dim);padding:10px 24px;text-decoration:none;}
+footer{border-top:1px solid var(--border);padding:32px 40px;}
+.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.footer-brand{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:0.2em;color:var(--gold);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-family:var(--font-ui);font-size:0.68rem;font-weight:500;letter-spacing:0.15em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .nav-links,.nav-order{display:none;}
+  .nav-hamburger{display:block;}
+  .article-wrap{padding:32px 20px 60px;}
+  footer{padding:24px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .footer-links{justify-content:center;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <div class="nav-links">
+    <a href="/catalog">Koleksi</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ Order</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Koleksi</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/blog" onclick="toggleMenu()">Blog</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ Order Sekarang</a>
+</div>
+
+<div class="page" id="page-content">
+  <div class="loading-wrap">
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+    <span class="loading-dot"></span>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">BLUMB✦NG</div>
+    <div class="footer-links">
+      <a href="/catalog">Koleksi</a>
+      <a href="/sparks">Perjalanan</a>
+      <a href="/about">Tentang</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Blumbang · Jeto, Klaten</div>
+  </div>
+</footer>
+
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script>
 const catLabel = {cerita:'Cerita',produk:'Produk',bts:'Behind the Scene',perjalanan:'Perjalanan Kaos'};
 
 function getSlug() {
-  // Coba baca dari pathname dulu: /blog/nama-artikel
-  const path = window.location.pathname;
-  const parts = path.split('/').filter(Boolean);
-  if (parts.length >= 2 && parts[0] === 'blog') {
-    return parts[1] || '';
-  }
-  // Fallback: baca dari query string ?slug=nama-artikel
   return new URLSearchParams(window.location.search).get('slug') || '';
 }
 
@@ -37,7 +181,7 @@ async function loadArticle() {
     document.getElementById('og-title').setAttribute('content', post.title);
     document.getElementById('og-desc').setAttribute('content', post.description || '');
     if (post.cover) document.getElementById('og-img').setAttribute('content', post.cover);
-    document.getElementById('canonical').setAttribute('href', `https://blumbang.id/blog/${slug}`);
+    document.getElementById('canonical').setAttribute('href', `https://blumbang.id/blog/post.html?slug=${slug}`);
 
     const date = post.date ? new Date(post.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
     const cat = catLabel[post.category] || post.category || '';
@@ -76,6 +220,7 @@ async function loadArticle() {
 }
 
 function initLightbox() {
+  // Buat lightbox element jika belum ada
   if (document.getElementById('lightbox')) return;
   const lb = document.createElement('div');
   lb.className = 'lightbox';
@@ -84,6 +229,7 @@ function initLightbox() {
   document.body.appendChild(lb);
   lb.addEventListener('click', closeLightbox);
 
+  // Tambah klik ke semua gambar
   document.querySelectorAll('.article-content img, .article-cover').forEach(img => {
     img.addEventListener('click', function() {
       document.getElementById('lb-img').src = this.src;
@@ -120,3 +266,5 @@ function toggleMenu() {
 
 loadArticle();
 </script>
+</body>
+</html>

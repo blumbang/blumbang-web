@@ -104,6 +104,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
   .nav-order{display:none;}
   .nav-hamburger{display:block;}
 }
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;transition:color 0.2s;}
+.lightbox-close:hover{color:var(--gold);}
+.seri-mockup{cursor:zoom-in;}
 </style>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
@@ -282,10 +290,35 @@ function renderGrid(list) {
   grid.innerHTML = html;
 }
 
+// LIGHTBOX
+function initLightbox() {
+  if (!document.getElementById('lightbox')) {
+    var lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.id = 'lightbox';
+    lb.innerHTML = '<div class="lightbox-close">✕ Tutup</div><img id="lb-img" src="" alt="">';
+    document.body.appendChild(lb);
+    lb.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+  }
+  document.querySelectorAll('.seri-mockup').forEach(function(img) {
+    img.onclick = function() {
+      document.getElementById('lb-img').src = this.src;
+      document.getElementById('lightbox').classList.add('on');
+      document.body.style.overflow = 'hidden';
+    };
+  });
+}
+function closeLightbox() {
+  var lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
 // SEARCH
 document.getElementById('search-box').addEventListener('input', function() {
   var q = this.value.toLowerCase().trim();
-  if (!q) { renderGrid(_seriList); return; }
+  if (!q) { renderGrid(_seriList); initLightbox(); return; }
   var filtered = _seriList.filter(function(s) {
     return s.nama.toLowerCase().indexOf(q) >= 0;
   });
@@ -294,6 +327,7 @@ document.getElementById('search-box').addEventListener('input', function() {
     return;
   }
   renderGrid(filtered);
+  initLightbox();
 });
 
 // MAIN
@@ -371,6 +405,7 @@ async function init() {
     document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + _seriList.length + ' Seri';
 
     renderGrid(_seriList);
+    initLightbox();
 
   } catch(e) {
     console.error('Catalog error:', e.message || e);

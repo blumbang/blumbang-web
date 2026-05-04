@@ -60,6 +60,14 @@ tbody tr:hover td{background:rgba(255,255,255,0.02);}
 .not-found{text-align:center;padding:60px 20px;}
 .not-found h2{font-family:var(--font-logo);font-size:1.6rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:8px;}
 .not-found p{font-size:0.78rem;color:var(--muted);}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:var(--font),sans-serif;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;transition:color 0.2s;}
+.lightbox-close:hover{color:#C9A84C;}
+.kelas-mockup{cursor:zoom-in;}
 </style>
 </head>
 <body>
@@ -145,9 +153,32 @@ function renderKelas(data){
       </table>
     </div>
   `;
-  // Show mockup after render
+  // Show mockup after render + lightbox
   const img = document.getElementById('kelas-img');
-  if(img) img.style.display = 'block';
+  if(img) {
+    img.style.display = 'block';
+    img.onclick = function() {
+      document.getElementById('lb-img').src = this.src;
+      document.getElementById('lightbox').classList.add('on');
+      document.body.style.overflow = 'hidden';
+    };
+  }
+
+  // Init lightbox element
+  if (!document.getElementById('lightbox')) {
+    const lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.id = 'lightbox';
+    lb.innerHTML = '<div class="lightbox-close">✕ Tutup</div><img id="lb-img" src="" alt="">';
+    document.body.appendChild(lb);
+    lb.addEventListener('click', function() {
+      lb.classList.remove('on');
+      document.body.style.overflow = '';
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') { lb.classList.remove('on'); document.body.style.overflow = ''; }
+    });
+  }
 
   // Store for filter
   window._siswaAll = data.siswa;

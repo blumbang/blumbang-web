@@ -1,2 +1,4 @@
-/id/*  /index.html  200
-/qc/*  /index.html  200
+/id/*              /index.html      200
+/qc/*              /index.html      200
+/blog/post.html    /blog/post.html  200
+/blog/:slug        /blog/post.html  200

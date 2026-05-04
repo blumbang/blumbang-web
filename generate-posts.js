@@ -1,13 +1,17 @@
 // generate-posts.js
 // Jalankan: node generate-posts.js
 // Script ini membaca semua file .md di folder _posts
-// dan menggenerate blog/posts.json untuk dipakai halaman blog
+// dan menggenerate:
+//   1. blog/posts.json  — untuk halaman blog
+//   2. sitemap.xml      — untuk Google Search Console
 
 const fs = require('fs');
 const path = require('path');
 
 const POSTS_DIR = path.join(__dirname, '_posts');
-const OUTPUT = path.join(__dirname, 'blog', 'posts.json');
+const OUTPUT_JSON = path.join(__dirname, 'blog', 'posts.json');
+const OUTPUT_SITEMAP = path.join(__dirname, 'sitemap.xml');
+const BASE_URL = 'https://blumbang.id';
 
 function parseFrontmatter(content) {
   const result = { body: content, meta: {} };
@@ -24,12 +28,10 @@ function parseFrontmatter(content) {
     if (colonIdx === -1) return;
     const key = line.slice(0, colonIdx).trim();
     let val = line.slice(colonIdx + 1).trim();
-    // Hapus quote jika ada
     if ((val.startsWith('"') && val.endsWith('"')) ||
         (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
-    // Boolean
     if (val === 'true') val = true;
     if (val === 'false') val = false;
     result.meta[key] = val;
@@ -39,10 +41,45 @@ function parseFrontmatter(content) {
 }
 
 function slugFromFilename(filename) {
-  // Format: YYYY-MM-DD-slug.md → slug
   const name = filename.replace('.md', '');
   const match = name.match(/^\d{4}-\d{2}-\d{2}-(.+)$/);
   return match ? match[1] : name;
+}
+
+function generateSitemap(posts) {
+  const today = new Date().toISOString().split('T')[0];
+
+  // Halaman statis
+  const staticPages = [
+    { loc: `${BASE_URL}/`,        lastmod: today, changefreq: 'weekly',  priority: '1.0' },
+    { loc: `${BASE_URL}/catalog`, lastmod: today, changefreq: 'weekly',  priority: '0.9' },
+    { loc: `${BASE_URL}/sparks`,  lastmod: today, changefreq: 'daily',   priority: '0.9' },
+    { loc: `${BASE_URL}/about`,   lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/blog`,    lastmod: today, changefreq: 'weekly',  priority: '0.8' },
+    { loc: `${BASE_URL}/ria`,     lastmod: today, changefreq: 'monthly', priority: '0.5' },
+  ];
+
+  // Halaman artikel blog
+  const blogPages = posts.map(p => ({
+    loc: `${BASE_URL}/blog/post.html?slug=${p.slug}`,
+    lastmod: p.date || today,
+    changefreq: 'monthly',
+    priority: '0.7'
+  }));
+
+  const allPages = [...staticPages, ...blogPages];
+
+  const urls = allPages.map(p => `  <url>
+    <loc>${p.loc}</loc>
+    <lastmod>${p.lastmod}</lastmod>
+    <changefreq>${p.changefreq}</changefreq>
+    <priority>${p.priority}</priority>
+  </url>`).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`;
 }
 
 function generate() {
@@ -54,7 +91,7 @@ function generate() {
   const files = fs.readdirSync(POSTS_DIR)
     .filter(f => f.endsWith('.md'))
     .sort()
-    .reverse(); // terbaru dulu
+    .reverse();
 
   const posts = files.map(filename => {
     const content = fs.readFileSync(path.join(POSTS_DIR, filename), 'utf8');
@@ -79,9 +116,15 @@ function generate() {
     fs.mkdirSync(blogDir, { recursive: true });
   }
 
-  fs.writeFileSync(OUTPUT, JSON.stringify(posts, null, 2));
+  // 1. Generate posts.json
+  fs.writeFileSync(OUTPUT_JSON, JSON.stringify(posts, null, 2));
   console.log(`✅ ${posts.length} artikel ditulis ke blog/posts.json`);
   posts.forEach(p => console.log(`   · ${p.slug} — ${p.title}`));
+
+  // 2. Generate sitemap.xml
+  const sitemap = generateSitemap(posts);
+  fs.writeFileSync(OUTPUT_SITEMAP, sitemap);
+  console.log(`✅ sitemap.xml diupdate (${posts.length + 6} URL)`);
 }
 
 generate();

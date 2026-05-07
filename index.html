@@ -922,7 +922,7 @@ async function initGarment(){
       if(el) el.style.display='none';
     });
     document.getElementById('page-garment').classList.add('active');
-    const id = pagePath.split('/').filter(Boolean).pop().toUpperCase();
+    const id = decodeURIComponent(pagePath.split('/').filter(Boolean).pop()).toUpperCase();
     document.querySelector('.nav-brand').insertAdjacentHTML('afterend','<span style="font-family:var(--fb);font-size:0.7rem;letter-spacing:0.2em;color:var(--emas);margin-left:16px;">'+id+'</span>');
     if(isQC) document.getElementById('qc-banner').style.display='block';
     showGarment(id);

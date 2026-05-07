@@ -1,3 +1,2 @@
-# routes
-/id/*  /index.html  200
-/qc/*  /index.html  200
+/id/:id /index.html 200!
+/qc/:id /index.html 200!

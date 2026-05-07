@@ -227,6 +227,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <button class="tab" onclick="switchTab('qr')">QR Generator</button>
   <button class="tab" onclick="switchTab('stats')">Statistik</button>
   <button class="tab" onclick="switchTab('kelas')">Kelas / Event</button>
+  <button class="tab" onclick="switchTab('seri')">✦ Seri</button>
 </div>
 
 <!-- ===================== APPROVAL PANEL ===================== -->
@@ -597,6 +598,32 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   </div>
 </div>
 
+<!-- ===================== SERI MANAGER ===================== -->
+<div id="panel-seri" class="panel">
+  <div class="sec-title">Seri Manager</div>
+  <div class="sec-sub">Kelola data per seri kaos — copywriting, bahan, pemesan. Data disimpan ke D1 dan otomatis build halaman /karya/.</div>
+  <div class="add-form" style="border-color:var(--gold-dim);background:var(--gold-bg);margin-bottom:24px;" id="seri-form-wrap">
+    <div style="font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ <span id="seri-form-title">Tambah Seri Baru</span></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Nama Seri *</label><input type="text" class="form-input" id="seri-nama" placeholder="TWELVE SOCIETY" oninput="previewSeriSlug()"><span style="font-size:0.65rem;color:var(--muted);margin-top:4px;">URL: <span id="seri-slug-preview" style="color:var(--gold)">blumbang.id/karya/...</span></span></div>
+      <div class="form-group"><label class="form-label">Pemesan</label><input type="text" class="form-input" id="seri-pemesan" placeholder="Komunitas Twelve Society Klaten"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Bahan</label><input type="text" class="form-input" id="seri-bahan" placeholder="Cotton Combed 30s"></div>
+      <div class="form-group"><label class="form-label">Tahun</label><input type="number" class="form-input" id="seri-tahun" placeholder="2024" value="2024"></div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px;"><label class="form-label">URL Mockup</label><input type="text" class="form-input" id="seri-mockup" placeholder="https://drive.google.com/file/d/..."></div>
+    <div class="form-group" style="margin-bottom:16px;"><label class="form-label">Deskripsi / Copywriting (untuk SEO)</label><textarea class="form-input" id="seri-deskripsi" rows="5" placeholder="Tulis cerita di balik seri ini..." style="resize:vertical;line-height:1.7;font-size:0.85rem;"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Status</label><select class="form-select" id="seri-status"><option value="draft">Draft</option><option value="published">Published</option></select></div>
+      <div class="form-group" style="justify-content:flex-end;"><label class="form-label">&nbsp;</label><div style="display:flex;gap:10px;"><button class="btn btn-ghost" onclick="resetSeriForm()">Batal</button><button class="btn btn-gold" onclick="simpanSeri()">✦ Simpan & Build Halaman</button></div></div>
+    </div>
+    <div id="seri-form-msg" style="margin-top:12px;font-size:0.75rem;min-height:18px;"></div>
+  </div>
+  <div class="sec-title" style="font-size:1rem;margin-bottom:8px;">Seri Terdaftar <span id="seri-count" style="color:var(--muted);font-size:0.75rem;font-family:var(--font);font-weight:400;letter-spacing:0;"></span></div>
+  <div class="table-wrap"><table><thead><tr><th>Nama Seri</th><th>Pemesan</th><th>Bahan</th><th>Tahun</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="seri-table-body"><tr><td colspan="6" class="loading">Memuat data...</td></tr></tbody></table></div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -622,6 +649,7 @@ function switchTab(name){
   if(name==='homepage') loadHomepageFoto();
   if(name==='stats') loadStats();
   if(name==='kelas') loadKelasList();
+  if(name==='seri') loadSeriList();
 }
 
 // =================== FOTO TIM ===================
@@ -2685,3 +2713,132 @@ function showToast(msg){
 </script>
 </body>
 </html>
+<script>
+// =================== SERI MANAGER ===================
+const WORKER_URL = 'https://catalog-builder.blmbng-id.workers.dev';
+let editingSeriId = null;
+
+function toSlugSeri(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
+}
+
+function previewSeriSlug() {
+  const nama = document.getElementById('seri-nama').value;
+  const slug = toSlugSeri(nama);
+  document.getElementById('seri-slug-preview').textContent = slug ? 'blumbang.id/karya/' + slug : 'blumbang.id/karya/...';
+}
+
+function resetSeriForm() {
+  editingSeriId = null;
+  document.getElementById('seri-form-title').textContent = 'Tambah Seri Baru';
+  document.getElementById('seri-nama').value = '';
+  document.getElementById('seri-pemesan').value = '';
+  document.getElementById('seri-bahan').value = '';
+  document.getElementById('seri-tahun').value = '2024';
+  document.getElementById('seri-mockup').value = '';
+  document.getElementById('seri-deskripsi').value = '';
+  document.getElementById('seri-status').value = 'draft';
+  document.getElementById('seri-slug-preview').textContent = 'blumbang.id/karya/...';
+  document.getElementById('seri-form-msg').textContent = '';
+}
+
+function editSeri(id, nama, pemesan, bahan, tahun, mockup, deskripsi, status) {
+  editingSeriId = id;
+  document.getElementById('seri-form-title').textContent = 'Edit Seri: ' + nama;
+  document.getElementById('seri-nama').value = nama;
+  document.getElementById('seri-pemesan').value = pemesan || '';
+  document.getElementById('seri-bahan').value = bahan || '';
+  document.getElementById('seri-tahun').value = tahun || '2024';
+  document.getElementById('seri-mockup').value = mockup || '';
+  document.getElementById('seri-deskripsi').value = deskripsi || '';
+  document.getElementById('seri-status').value = status || 'draft';
+  previewSeriSlug();
+  document.getElementById('seri-form-wrap').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function simpanSeri() {
+  const nama = document.getElementById('seri-nama').value.trim();
+  if (!nama) { showToast('Nama seri wajib diisi'); return; }
+  const slug = toSlugSeri(nama);
+  const data = {
+    id: editingSeriId || slug,
+    nama,
+    pemesan: document.getElementById('seri-pemesan').value.trim(),
+    bahan: document.getElementById('seri-bahan').value.trim(),
+    tahun: parseInt(document.getElementById('seri-tahun').value) || null,
+    mockup_url: document.getElementById('seri-mockup').value.trim(),
+    deskripsi: document.getElementById('seri-deskripsi').value.trim(),
+    status: document.getElementById('seri-status').value,
+    created_at: Date.now()
+  };
+  const msg = document.getElementById('seri-form-msg');
+  msg.style.color = 'var(--gold)';
+  msg.textContent = 'Menyimpan ke D1...';
+  try {
+    const res = await fetch(WORKER_URL + '/seri/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const json = await res.json();
+    if (!json.ok) throw new Error(json.error || 'Gagal simpan');
+    msg.textContent = 'Tersimpan! Membangun halaman...';
+    const buildRes = await fetch(WORKER_URL + '/build/' + data.id);
+    const buildJson = await buildRes.json();
+    if (!buildJson.ok) throw new Error(buildJson.error || 'Gagal build');
+    msg.style.color = '#86efac';
+    msg.textContent = '✓ Tersimpan & halaman berhasil dibangun → blumbang.id/karya/' + data.id;
+    showToast('✓ Seri ' + nama + ' berhasil disimpan & dibangun');
+    resetSeriForm();
+    loadSeriList();
+  } catch(e) {
+    msg.style.color = '#fca5a5';
+    msg.textContent = 'Error: ' + e.message;
+    showToast('Gagal: ' + e.message);
+  }
+}
+
+async function loadSeriList() {
+  const tbody = document.getElementById('seri-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" class="loading">Memuat...</td></tr>';
+  try {
+    const res = await fetch(WORKER_URL + '/seri/list');
+    const json = await res.json();
+    if (!json.ok || !json.data.length) {
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">Belum ada seri. Tambah seri baru di atas.</td></tr>';
+      document.getElementById('seri-count').textContent = '';
+      return;
+    }
+    document.getElementById('seri-count').textContent = '(' + json.data.length + ')';
+    tbody.innerHTML = json.data.map(s => `
+      <tr>
+        <td><div style="font-weight:600;color:var(--white);">${s.nama}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">${s.id}</div></td>
+        <td>${s.pemesan || '<span style="color:var(--muted)">—</span>'}</td>
+        <td>${s.bahan || '<span style="color:var(--muted)">—</span>'}</td>
+        <td>${s.tahun || '<span style="color:var(--muted)">—</span>'}</td>
+        <td><span style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border:1px solid ${s.status==='published'?'#40916c':'var(--border)'};color:${s.status==='published'?'#86efac':'var(--muted)'};">${s.status==='published'?'PUBLISHED':'DRAFT'}</span></td>
+        <td><div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm" onclick="editSeri('${s.id}','${s.nama.replace(/'/g,"\\'")}','${(s.pemesan||'').replace(/'/g,"\\'")}','${(s.bahan||'').replace(/'/g,"\\'")}',${s.tahun||'null'},'${(s.mockup_url||'').replace(/'/g,"\\'")}','${(s.deskripsi||'').replace(/'/g,"\\'").replace(/\n/g,' ')}','${s.status}')">Edit</button>
+          <button class="btn btn-gold btn-sm" onclick="buildSeri('${s.id}')">Build</button>
+          <a class="btn btn-ghost btn-sm" href="https://blumbang.id/karya/${s.id}" target="_blank">↗ Lihat</a>
+        </div></td>
+      </tr>
+    `).join('');
+  } catch(e) {
+    tbody.innerHTML = '<tr><td colspan="6" style="color:#fca5a5;padding:16px;">Gagal memuat: ' + e.message + '</td></tr>';
+  }
+}
+
+async function buildSeri(id) {
+  showToast('Membangun halaman ' + id + '...');
+  try {
+    const res = await fetch(WORKER_URL + '/build/' + id);
+    const json = await res.json();
+    if (json.ok) showToast('✓ Halaman ' + id + ' berhasil dibangun');
+    else showToast('Gagal build: ' + (json.error || 'Unknown error'));
+  } catch(e) {
+    showToast('Gagal: ' + e.message);
+  }
+}
+</script>

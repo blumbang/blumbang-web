@@ -189,8 +189,8 @@ async function loadArticle() {
       'headline': post.title,
       'description': post.description || '',
       'image': post.cover || '',
-      'datePublished': post.date,
-      'dateModified': post.date,
+      'datePublished': post.date + 'T00:00:00+07:00',
+      'dateModified': post.date + 'T00:00:00+07:00',
       'author': {
         '@type': 'Organization',
         'name': 'Blumbang',

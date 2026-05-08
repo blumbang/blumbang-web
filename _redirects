@@ -1,3 +1,2 @@
-/blog/:slug /blog/post.html 200
 /id/:id / 200
 /qc/:id / 200

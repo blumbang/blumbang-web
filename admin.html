@@ -927,6 +927,9 @@ async function bulkGenerate(){
     const json = await res.json();
     if(json.status==='ok'){
       showToast(`✓ ${qty} garment berhasil disimpan!`);
+      // Auto-rebuild halaman /karya/
+      const slug = toSlugSeri(name);
+      fetch('https://catalog-builder.blmbng-id.workers.dev/build/' + slug).catch(()=>{});
       ['bulk-prefix','bulk-name','bulk-qty'].forEach(id=>document.getElementById(id).value='');
       document.getElementById('bulk-start').value='1';
       document.getElementById('bulk-preview').textContent='';

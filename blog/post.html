@@ -181,6 +181,38 @@ async function loadArticle() {
     document.getElementById('og-title').setAttribute('content', post.title);
     document.getElementById('og-desc').setAttribute('content', post.description || '');
     if (post.cover) document.getElementById('og-img').setAttribute('content', post.cover);
+
+    // JSON-LD Article schema
+    const jsonld = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      'headline': post.title,
+      'description': post.description || '',
+      'image': post.cover || '',
+      'datePublished': post.date,
+      'dateModified': post.date,
+      'author': {
+        '@type': 'Organization',
+        'name': 'Blumbang',
+        'url': 'https://blumbang.id'
+      },
+      'publisher': {
+        '@type': 'Organization',
+        'name': 'Blumbang',
+        'logo': {
+          '@type': 'ImageObject',
+          'url': 'https://blumbang.id/favicon.ico'
+        }
+      },
+      'mainEntityOfPage': {
+        '@type': 'WebPage',
+        '@id': `https://blumbang.id/blog/${slug}`
+      }
+    };
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(jsonld);
+    document.head.appendChild(s);
     document.getElementById('canonical').setAttribute('href', `https://blumbang.id/blog/${slug}`);
 
     const date = post.date ? new Date(post.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';

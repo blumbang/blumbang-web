@@ -276,9 +276,8 @@ function renderGrid(list) {
     if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' lagi</span>';
 
     // Tombol
-    var tombol = jml === 1
-      ? '<a href="/id/' + g0.id + '" class="seri-tombol">Lihat Perjalanan &#x2192;</a>'
-      : '<button class="seri-tombol" onclick="bukaDrawer(' + realIdx + ')">Lihat ' + jml + ' Kaos &#x2192;</button>';
+    var slug = toSlug(seri.nama);
+    var tombol = '<a href="/karya/' + slug + '" class="seri-tombol">Lihat Koleksi &#x2192;</a>';
 
     html += '<div class="seri-card">' + foto;
     html += '<div class="seri-body">' + hot;
@@ -415,5 +414,6 @@ async function init() {
 
 init();
 </script>
+<script>function toSlug(str){return str.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}</script>
 </body>
 </html>

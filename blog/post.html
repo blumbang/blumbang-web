@@ -154,7 +154,7 @@ footer{border-top:1px solid var(--border);padding:32px 40px;}
 const catLabel = {cerita:'Cerita',produk:'Produk',bts:'Behind the Scene',perjalanan:'Perjalanan Kaos'};
 
 function getSlug() {
-  return new URLSearchParams(window.location.search).get('slug') || '';
+  const parts = window.location.pathname.split('/').filter(Boolean); return parts[parts.length - 1] || '';
 }
 
 async function loadArticle() {
@@ -181,7 +181,7 @@ async function loadArticle() {
     document.getElementById('og-title').setAttribute('content', post.title);
     document.getElementById('og-desc').setAttribute('content', post.description || '');
     if (post.cover) document.getElementById('og-img').setAttribute('content', post.cover);
-    document.getElementById('canonical').setAttribute('href', `https://blumbang.id/blog/post.html?slug=${slug}`);
+    document.getElementById('canonical').setAttribute('href', `https://blumbang.id/blog/${slug}`);
 
     const date = post.date ? new Date(post.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
     const cat = catLabel[post.category] || post.category || '';

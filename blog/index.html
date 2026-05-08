@@ -172,7 +172,7 @@ function renderPosts(posts) {
         : `<div class="card-img-placeholder"><span>✦</span></div>`;
       const date = p.date ? new Date(p.date).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}) : '';
       const cat = catLabel[p.category] || p.category || '';
-      return `<a class="blog-card" href="/blog/post.html?slug=${p.slug}">
+      return `<a class="blog-card" href="/blog/${p.slug}">
         ${img}
         <div class="card-body">
           <div class="card-meta">

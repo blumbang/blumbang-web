@@ -23,21 +23,21 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --hitam:#080808;--charcoal:#141414;--abu2:#1e1e1e;
-  --border:#2a2a2a;--redup:#666;--dim:#888;--terang:#ccc;
+  --border:#2a2a2a;--redup:#888;--dim:#aaa;--terang:#ddd;
   --putih:#F5F0E8;--emas:#C9A84C;--emas-dim:#7a6028;--emas-bg:#140f02;
   --fd:'Bebas Neue',sans-serif;--fb:'Montserrat',sans-serif;--fu:'Inter',sans-serif;
 }
 html{scroll-behavior:smooth;}
-body{background:var(--hitam);color:var(--putih);font-family:var(--fb);-webkit-font-smoothing:antialiased;padding-bottom:64px;}
+body{background:var(--hitam);color:var(--putih);font-family:var(--fb);-webkit-font-smoothing:antialiased;}
 a{text-decoration:none;color:inherit;}
 img{display:block;max-width:100%;}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(8,8,8,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
-.nav-brand{display:flex;flex-direction:column;gap:1px;text-decoration:none;}
+.nav-brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;}
 .nav-brand-nama{font-family:var(--fd);font-size:1.5rem;letter-spacing:.12em;color:var(--putih);line-height:1;}
 .nav-brand-nama span{color:var(--emas);}
-.nav-brand-sub{font-family:var(--fu);font-size:.52rem;font-weight:500;letter-spacing:.07em;color:var(--redup);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:280px;}
+.nav-brand-sub{font-family:var(--fu);font-size:.62rem;font-weight:500;letter-spacing:.06em;color:var(--terang);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;}
 .nav-kanan{display:flex;align-items:center;gap:24px;}
 .nav-kanan a{font-family:var(--fu);font-size:.68rem;font-weight:600;letter-spacing:.15em;color:var(--redup);text-transform:uppercase;transition:color .2s;}
 .nav-kanan a:hover{color:var(--putih);}
@@ -53,20 +53,31 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 
 /* HERO */
 .hero{padding-top:60px;background:var(--hitam);border-bottom:1px solid var(--border);}
-.hero-hitam{padding:56px 32px 40px;}
+.hero-hitam{padding:56px 32px 32px;}
 .hero-tag{font-family:var(--fu);font-size:.65rem;font-weight:600;letter-spacing:.45em;text-transform:uppercase;color:var(--emas);margin-bottom:16px;opacity:0;animation:naik .6s .1s forwards;}
 .hero-h1{font-family:var(--fd);font-size:clamp(3.2rem,12vw,7.5rem);line-height:.92;letter-spacing:.02em;color:var(--putih);opacity:0;animation:naik .6s .2s forwards;}
-.hero-krem{background:var(--putih);padding:28px 32px;opacity:0;animation:naik .6s .32s forwards;}
-.hero-sub{font-family:var(--fb);font-size:clamp(.88rem,2.2vw,.98rem);font-weight:400;line-height:1.85;color:#2a2a2a;text-align:center;}
 
 /* STATS */
-.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-bottom:1px solid var(--border);}
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
 .stat-item{padding:18px 8px;text-align:center;border-right:1px solid var(--border);transition:background .2s;}
 .stat-item:last-child{border-right:none;}
 .stat-item.klik{cursor:pointer;}
 .stat-item.klik:hover{background:var(--emas-bg);}
 .stat-num{font-family:var(--fd);font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:.06em;color:var(--emas);line-height:1;}
 .stat-lbl{font-family:var(--fu);font-size:.52rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);margin-top:5px;}
+
+/* 3 TOMBOL HERO */
+.hero-tombol{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
+.ht-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;border-right:1px solid var(--border);text-decoration:none;transition:background .2s;color:var(--putih);}
+.ht-item:last-child{border-right:none;}
+.ht-item:hover{background:var(--emas-bg);}
+.ht-ikon{font-size:1.2rem;line-height:1;}
+.ht-lbl{font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--terang);text-align:center;}
+.ht-item.primer .ht-lbl{color:var(--emas);}
+
+/* BOX KREM */
+.hero-krem{background:var(--putih);padding:28px 32px;opacity:0;animation:naik .6s .32s forwards;}
+.hero-sub{font-family:var(--fb);font-size:clamp(.88rem,2.2vw,.98rem);font-weight:400;line-height:1.85;color:#2a2a2a;text-align:center;}
 
 /* PETA */
 #s-peta{background:#0a1628;border-bottom:1px solid var(--border);}
@@ -92,7 +103,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .cara-nomor{font-family:var(--fd);font-size:3.5rem;letter-spacing:.05em;color:var(--border);line-height:1;margin-bottom:20px;transition:color .25s;}
 .cara-item:hover .cara-nomor{color:var(--emas-dim);}
 .cara-judul{font-family:var(--fd);font-size:1.6rem;letter-spacing:.08em;color:var(--putih);margin-bottom:12px;}
-.cara-desc{font-size:.82rem;font-weight:400;line-height:1.75;color:var(--dim);}
+.cara-desc{font-size:.82rem;font-weight:400;line-height:1.75;color:var(--terang);}
 .cara-link{display:inline-block;margin-top:20px;font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--emas-dim);border-bottom:1px solid var(--emas-dim);padding-bottom:2px;transition:color .2s,border-color .2s;}
 .cara-link:hover{color:var(--emas);border-color:var(--emas);}
 
@@ -114,6 +125,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .skel{background:linear-gradient(90deg,var(--charcoal) 25%,var(--abu2) 50%,var(--charcoal) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
 @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
+/* STATS BAWAH (di section koleksi) */
+.stats-bawah{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-top:1px solid var(--border);}
+
 /* FOOTER */
 footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40px 32px;}
 .ft{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
@@ -124,24 +138,15 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
 .ft-links a:hover{color:var(--putih);}
 .ft-copy{width:100%;font-family:var(--fu);font-size:.62rem;color:var(--border);letter-spacing:.08em;margin-top:4px;}
 
-/* WA FLOAT — kiri bawah, di atas sticky bar */
-.wa-float{position:fixed;bottom:76px;left:20px;z-index:200;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;}
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:24px;left:20px;z-index:200;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;}
 .wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(0,0,0,.5);}
 .wa-float svg{width:24px;height:24px;fill:#fff;}
-
-/* STICKY BAR */
-.sticky-bar{position:fixed;bottom:0;left:0;right:0;z-index:190;height:64px;background:var(--charcoal);border-top:1px solid var(--border);display:grid;grid-template-columns:repeat(3,1fr);}
-.sb-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border-right:1px solid var(--border);text-decoration:none;transition:background .2s;cursor:pointer;background:none;border-bottom:none;color:var(--putih);font-family:inherit;padding:0;}
-.sb-item:last-child{border-right:none;}
-.sb-item:hover{background:var(--abu2);}
-.sb-ikon{font-size:1.1rem;line-height:1;}
-.sb-lbl{font-family:var(--fu);font-size:.5rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--terang);text-align:center;padding:0 4px;}
-.sb-item.utama .sb-lbl{color:var(--emas);}
 
 /* DRAWER */
 .drawer-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
 .drawer-overlay.aktif{opacity:1;pointer-events:all;}
-.drawer{position:fixed;bottom:64px;left:0;right:0;z-index:151;background:var(--charcoal);border-top:1px solid var(--border);max-height:65vh;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:151;background:var(--charcoal);border-top:1px solid var(--border);max-height:70vh;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
 .drawer.aktif{transform:translateY(0);}
 .drawer-head{padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
 .drawer-judul{font-family:var(--fd);font-size:1.2rem;letter-spacing:.08em;color:var(--emas);}
@@ -166,12 +171,17 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   nav{padding:0 16px;}
   .nav-kanan{display:none;}
   .nav-burger{display:flex;}
-  .hero-hitam{padding:40px 20px 32px;}
+  .nav-brand-sub{max-width:200px;font-size:.55rem;}
+  .hero-hitam{padding:40px 20px 28px;}
   .hero-krem{padding:22px 20px;}
   .stats-bar{grid-template-columns:repeat(3,1fr);}
   .stat-item:nth-child(3){border-right:none;}
   .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
   .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
+  .stats-bawah{grid-template-columns:repeat(3,1fr);}
+  .stats-bawah .stat-item:nth-child(3){border-right:none;}
+  .stats-bawah .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bawah .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
   .cara-header{padding:40px 20px 32px;}
   .cara-grid{grid-template-columns:1fr;}
   .cara-item{border-bottom:1px solid var(--border);}
@@ -184,10 +194,13 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
 }
 @media(max-width:420px){
   .koleksi-grid{grid-template-columns:1fr;}
-  .stats-bar{grid-template-columns:repeat(2,1fr);}
-  .stat-item:nth-child(3){border-right:1px solid var(--border);border-top:1px solid var(--border);}
-  .stat-item:nth-child(4){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
-  .stat-item:nth-child(5){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
+  .stats-bar,.stats-bawah{grid-template-columns:repeat(2,1fr);}
+  .stats-bar .stat-item:nth-child(3),
+  .stats-bawah .stat-item:nth-child(3){border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(4),
+  .stats-bawah .stat-item:nth-child(4){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(5),
+  .stats-bawah .stat-item:nth-child(5){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
 }
 </style>
 </head>
@@ -228,34 +241,52 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
     <div class="hero-tag" data-i18n="hero_tag">Independent T-Shirt Studio · Est. 2022</div>
     <h1 class="hero-h1" data-i18n="hero_h1">INI BUKAN<br>KAOS BIASA</h1>
   </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <a href="/catalog" class="stat-item klik">
+      <div class="stat-num" id="stat-garment">—</div>
+      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
+    </a>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
+      <div class="stat-num" id="stat-berjalan">—</div>
+      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-scan">—</div>
+      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')">
+      <div class="stat-num" id="stat-kota">—</div>
+      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')">
+      <div class="stat-num" id="stat-negara">—</div>
+      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
+  </div>
+
+  <!-- 3 TOMBOL -->
+  <div class="hero-tombol">
+    <a href="/sparks" class="ht-item primer">
+      <span class="ht-ikon">◎</span>
+      <span class="ht-lbl" data-i18n="ht_peta">Lihat Peta</span>
+    </a>
+    <a href="/catalog" class="ht-item">
+      <span class="ht-ikon">✦</span>
+      <span class="ht-lbl" data-i18n="ht_koleksi">Koleksi</span>
+    </a>
+    <a href="https://www.tiktok.com/@blumbang.id" class="ht-item" target="_blank" rel="noopener">
+      <span class="ht-ikon">▶</span>
+      <span class="ht-lbl" data-i18n="ht_tiktok">TikTok</span>
+    </a>
+  </div>
+
+  <!-- BOX KREM -->
   <div class="hero-krem">
     <p class="hero-sub" data-i18n="hero_sub">Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.</p>
   </div>
 </section>
-
-<!-- STATS -->
-<div class="stats-bar">
-  <a href="/catalog" class="stat-item klik">
-    <div class="stat-num" id="stat-garment">—</div>
-    <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
-  </a>
-  <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
-    <div class="stat-num" id="stat-berjalan">—</div>
-    <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num" id="stat-scan">—</div>
-    <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
-  </div>
-  <div class="stat-item klik" onclick="bukaDrawer('kota')">
-    <div class="stat-num" id="stat-kota">—</div>
-    <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
-  </div>
-  <div class="stat-item klik" onclick="bukaDrawer('negara')">
-    <div class="stat-num" id="stat-negara">—</div>
-    <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
-  </div>
-</div>
 
 <!-- SPARK MAP -->
 <section id="s-peta">
@@ -301,15 +332,38 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   <div class="koleksi-header">
     <div>
       <span class="sec-tag rv" data-i18n="kol_tag">Koleksi</span>
-      <h2 class="sec-h2 rv" data-i18n="kol_h2">PILIH KAOSMU.</h2>
+      <h2 class="sec-h2 rv" data-i18n="kol_h2">JEJAK PRODUKSI.</h2>
     </div>
     <a href="/catalog" class="btn-emas-outline rv" data-i18n="kol_btn">Lihat Semua →</a>
   </div>
   <div class="koleksi-grid" id="koleksi-grid">
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:65%;margin-bottom:8px;border-radius:0;"></div><div class="skel" style="height:11px;width:40%;border-radius:0;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:75%;margin-bottom:8px;border-radius:0;"></div><div class="skel" style="height:11px;width:45%;border-radius:0;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:55%;margin-bottom:8px;border-radius:0;"></div><div class="skel" style="height:11px;width:35%;border-radius:0;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:70%;margin-bottom:8px;border-radius:0;"></div><div class="skel" style="height:11px;width:50%;border-radius:0;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:65%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:40%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:75%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:55%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:35%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:50%;"></div></div></div>
+  </div>
+  <!-- STATS BAWAH -->
+  <div class="stats-bawah">
+    <a href="/catalog" class="stat-item klik">
+      <div class="stat-num" id="stat-garment2">—</div>
+      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
+    </a>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
+      <div class="stat-num" id="stat-berjalan2">—</div>
+      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-scan2">—</div>
+      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')">
+      <div class="stat-num" id="stat-kota2">—</div>
+      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')">
+      <div class="stat-num" id="stat-negara2">—</div>
+      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
   </div>
 </section>
 
@@ -338,22 +392,6 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   </svg>
 </a>
 
-<!-- STICKY BAR -->
-<div class="sticky-bar">
-  <a href="https://wa.me/6281234561146" class="sb-item utama" target="_blank" rel="noopener">
-    <span class="sb-ikon">👕</span>
-    <span class="sb-lbl" data-i18n="sb_beli">Beli Kaos</span>
-  </a>
-  <button class="sb-item" onclick="bukaQrScanner()">
-    <span class="sb-ikon">⊞</span>
-    <span class="sb-lbl" data-i18n="sb_scan">Scan QR</span>
-  </button>
-  <a href="/sparks" class="sb-item">
-    <span class="sb-ikon">◎</span>
-    <span class="sb-lbl" data-i18n="sb_peta">Lihat & Tambahkan Perjalanan</span>
-  </a>
-</div>
-
 <!-- DRAWER -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
 <div class="drawer" id="drawer">
@@ -380,8 +418,8 @@ const T={
     ck1_judul:'Beli Kaos',ck1_desc:'Pilih seri koleksi Blumbang. Setiap kaos punya ID unik yang tercatat selamanya.',ck1_link:'Lihat Koleksi →',
     ck2_judul:'Scan QR',ck2_desc:'QR ada di label bagian dalam. Scan saat kamu mengunjungi tempat baru — tidak perlu app khusus.',ck2_link:'Lihat Contoh →',
     ck3_judul:'Lihat Perjalanan',ck3_desc:'Setiap scan mencatat posisimu di peta dunia. Perjalanan dan ceritanya tersimpan selamanya.',ck3_link:'Lihat Peta →',
-    kol_tag:'Koleksi',kol_h2:'PILIH KAOSMU.',kol_btn:'Lihat Semua →',
-    sb_beli:'Beli Kaos',sb_scan:'Scan QR',sb_peta:'Lihat & Tambahkan Perjalanan',
+    kol_tag:'Koleksi',kol_h2:'JEJAK PRODUKSI.',kol_btn:'Lihat Semua →',
+    ht_peta:'Lihat Peta',ht_koleksi:'Koleksi',ht_tiktok:'TikTok',
     nav_koleksi:'Koleksi',nav_perjalanan:'Perjalanan',nav_tentang:'Tentang',
   },
   en:{
@@ -394,8 +432,8 @@ const T={
     ck1_judul:'Buy a Shirt',ck1_desc:"Choose from Blumbang's collections. Each shirt has a unique ID recorded forever.",ck1_link:'View Collection →',
     ck2_judul:'Scan QR',ck2_desc:'QR is on the inner label. Scan when you visit a new place — no special app needed.',ck2_link:'See Example →',
     ck3_judul:'See Your Journey',ck3_desc:'Each scan records your position on the world map. Your journey is saved forever.',ck3_link:'See Map →',
-    kol_tag:'Collection',kol_h2:'CHOOSE YOUR SHIRT.',kol_btn:'View All →',
-    sb_beli:'Buy a Shirt',sb_scan:'Scan QR',sb_peta:'View & Add Journey',
+    kol_tag:'Collection',kol_h2:'OUR WORK.',kol_btn:'View All →',
+    ht_peta:'View Map',ht_koleksi:'Collection',ht_tiktok:'TikTok',
     nav_koleksi:'Collection',nav_perjalanan:'Journey',nav_tentang:'About',
   }
 };
@@ -413,8 +451,7 @@ function setLang(l){
 
 function toggleNav(){
   const m=document.getElementById('nav-mob'),i=document.getElementById('burger-ikon');
-  m.classList.toggle('buka');
-  i.textContent=m.classList.contains('buka')?'✕':'☰';
+  m.classList.toggle('buka');i.textContent=m.classList.contains('buka')?'✕':'☰';
 }
 
 function driveUrl(u){
@@ -449,11 +486,15 @@ async function muatStats(){
       if(id) garmentJalan.add(id);
       if(c){totalScan++;kotaSet.add(c.split(',')[0].trim());if(c.includes(','))negaraSet.add(c.split(',').pop().trim());}
     });
-    animNum('stat-garment',totalGarment);animNum('stat-berjalan',garmentJalan.size);
-    animNum('stat-scan',totalScan);animNum('stat-kota',kotaSet.size);animNum('stat-negara',negaraSet.size);
+    // Isi stats atas dan bawah sekaligus
+    const pairs=[['stat-garment','stat-garment2',totalGarment],['stat-berjalan','stat-berjalan2',garmentJalan.size],['stat-scan','stat-scan2',totalScan],['stat-kota','stat-kota2',kotaSet.size],['stat-negara','stat-negara2',negaraSet.size]];
+    pairs.forEach(([id1,id2,val])=>{animNum(id1,val);animNum(id2,val);});
   }catch(e){
-    ['stat-garment','stat-berjalan','stat-scan','stat-kota','stat-negara']
-      .forEach((id,i)=>{const el=document.getElementById(id);if(el)el.textContent=['350','—','—','—','—'][i];});
+    [['stat-garment','stat-garment2','350'],['stat-berjalan','stat-berjalan2','—'],['stat-scan','stat-scan2','—'],['stat-kota','stat-kota2','—'],['stat-negara','stat-negara2','—']]
+      .forEach(([id1,id2,v])=>{
+        const e1=document.getElementById(id1),e2=document.getElementById(id2);
+        if(e1)e1.textContent=v;if(e2)e2.textContent=v;
+      });
   }
 }
 
@@ -463,8 +504,7 @@ async function muatKoleksi(){
     const res=await fetch(WORKER_URL+'/seri/list');
     const json=await res.json();
     if(!json.ok||!json.data) throw new Error('no data');
-    let pub=json.data.filter(s=>s.status==='published')
-      .sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
+    let pub=json.data.filter(s=>s.status==='published').sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
     const dgMockup=pub.filter(s=>s.mockup_url).slice(0,4);
     const list=dgMockup.length>=4?dgMockup:[...dgMockup,...pub.filter(s=>!s.mockup_url)].slice(0,4);
     if(!list.length){grid.innerHTML='';return;}
@@ -488,7 +528,7 @@ async function muatKoleksi(){
   }
 }
 
-// Peta
+// PETA
 let _petaLoaded=false;
 const CITY_COORDS={
   'klaten':{ll:[110.6,-7.7],label:'Klaten'},'yogyakarta':{ll:[110.364,-7.803],label:'Yogyakarta'},
@@ -506,74 +546,41 @@ const CITY_COORDS={
   'london':{ll:[-0.118,51.508],label:'London'},'new york':{ll:[-74.006,40.713],label:'New York'},
 };
 function getCityCoord(str){
-  if(!str) return null;
-  const lower=str.toLowerCase();
+  if(!str) return null;const lower=str.toLowerCase();
   for(const key of Object.keys(CITY_COORDS)){if(lower.includes(key)) return CITY_COORDS[key];}
   return null;
 }
-
 function renderPeta(rows,world){
   const KLATEN=[110.6,-7.7];
   const wrap=document.getElementById('peta-wrap');
   const w=wrap.offsetWidth||window.innerWidth,h=wrap.offsetHeight||300;
   const cityMap={};
-  rows.forEach(r=>{
-    const c=r.c[2]?.v;if(!c) return;
-    const coord=getCityCoord(c);if(!coord) return;
-    const key=coord.label;
-    if(!cityMap[key]) cityMap[key]={coord,count:0};
-    cityMap[key].count++;
-  });
+  rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const coord=getCityCoord(c);if(!coord) return;const key=coord.label;if(!cityMap[key])cityMap[key]={coord,count:0};cityMap[key].count++;});
   const kotaRow=document.getElementById('kota-row');
-  Object.values(cityMap).slice(0,10).forEach(item=>{
-    const d=document.createElement('div');
-    d.className='kota-tag';
-    d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;
-    kotaRow.appendChild(d);
-  });
+  Object.values(cityMap).slice(0,10).forEach(item=>{const d=document.createElement('div');d.className='kota-tag';d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;kotaRow.appendChild(d);});
   const svg=d3.select('#d3-map').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`);
   const allPts=[KLATEN,...Object.values(cityMap).map(x=>x.coord.ll)];
   const ptGeo={type:'FeatureCollection',features:allPts.map(pt=>({type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}}))};
   const proj=d3.geoMercator().fitExtent([[32,16],[w-32,h-16]],ptGeo);
   const path=d3.geoPath().projection(proj);
-  svg.append('g').selectAll('path')
-    .data(topojson.feature(world,world.objects.countries).features)
-    .join('path').attr('d',path).attr('fill','#0d2137').attr('stroke','#1a3a5c').attr('stroke-width','0.4');
+  svg.append('g').selectAll('path').data(topojson.feature(world,world.objects.countries).features).join('path').attr('d',path).attr('fill','#0d2137').attr('stroke','#1a3a5c').attr('stroke-width','0.4');
   Object.values(cityMap).forEach(item=>{
     const[cx,cy]=proj(item.coord.ll);
-    function blinkRing(){
-      svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3)
-        .attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1')
-        .transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();
-      setTimeout(blinkRing,1800);
-    }
-    blinkRing();
-    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3)
-      .attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width','0.5');
+    function br(){svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1').transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();setTimeout(br,1800);}br();
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width','0.5');
   });
   const[kx,ky]=proj(KLATEN);
-  function blinkKlaten(){
-    svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5)
-      .attr('fill','none').attr('stroke','rgba(201,168,76,0.9)').attr('stroke-width','1.5')
-      .transition().duration(2500).ease(d3.easeLinear).attr('r',22).attr('stroke-opacity',0).remove();
-    setTimeout(blinkKlaten,2500);
-  }
-  blinkKlaten();
-  svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5)
-    .attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+  function bk(){svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','none').attr('stroke','rgba(201,168,76,0.9)').attr('stroke-width','1.5').transition().duration(2500).ease(d3.easeLinear).attr('r',22).attr('stroke-opacity',0).remove();setTimeout(bk,2500);}bk();
+  svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
   document.getElementById('peta-loading').style.display='none';
 }
-
 function loadPeta(){
   if(_petaLoaded) return;_petaLoaded=true;
   const doLoad=()=>{
     Promise.all([
-      _sparks.length?Promise.resolve(_sparks):
-        fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
-          .then(r=>r.text()).then(txt=>{const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);return m?JSON.parse(m[1]).table.rows||[]:[];}),
+      _sparks.length?Promise.resolve(_sparks):fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text()).then(txt=>{const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);return m?JSON.parse(m[1]).table.rows||[]:[]; }),
       fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json())
-    ]).then(([rows,world])=>{if(!_sparks.length)_sparks=rows;renderPeta(rows,world);})
-      .catch(()=>{document.getElementById('peta-loading').textContent='—';});
+    ]).then(([rows,world])=>{if(!_sparks.length)_sparks=rows;renderPeta(rows,world);}).catch(()=>{document.getElementById('peta-loading').textContent='—';});
   };
   if(!window.d3){
     const s1=document.createElement('script');s1.src='https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
@@ -583,18 +590,13 @@ function loadPeta(){
 }
 
 function initReveal(){
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('terlihat');obs.unobserve(e.target);}});
-  },{threshold:.1});
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('terlihat');obs.unobserve(e.target);}});},{threshold:.1});
   document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
 }
-
 function initPetaObserver(){
   const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){loadPeta();obs.disconnect();}},{rootMargin:'300px'});
   const el=document.getElementById('s-peta');if(el) obs.observe(el);
 }
-
-function bukaQrScanner(){window.location.href='/sparks';}
 
 function bukaDrawer(tipe){
   const label={berjalan:'Kaos yang Sudah Berjalan',kota:'Kota yang Sudah Discan',negara:'Negara yang Sudah Discan'};
@@ -614,29 +616,22 @@ async function isiDrawer(tipe){
   const list=document.getElementById('drawer-list');
   let rows=_sparks;
   if(!rows.length){
-    try{
-      const txt=await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text());
-      const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-      rows=m?JSON.parse(m[1]).table.rows||[]:[];_sparks=rows;
-    }catch(e){list.innerHTML='<div class="drawer-kosong">Gagal memuat data</div>';return;}
+    try{const txt=await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text());const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);rows=m?JSON.parse(m[1]).table.rows||[]:[];_sparks=rows;}
+    catch(e){list.innerHTML='<div class="drawer-kosong">Gagal memuat data</div>';return;}
   }
   if(tipe==='berjalan'){
-    const map={};
-    rows.forEach(r=>{const id=r.c[0]?.v,c=r.c[2]?.v;if(!id) return;if(!map[id])map[id]={id,kota:[],count:0};map[id].count++;if(c)map[id].kota.push(c.split(',')[0].trim());});
-    const arr=Object.values(map);
-    if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
+    const map={};rows.forEach(r=>{const id=r.c[0]?.v,c=r.c[2]?.v;if(!id) return;if(!map[id])map[id]={id,kota:[],count:0};map[id].count++;if(c)map[id].kota.push(c.split(',')[0].trim());});
+    const arr=Object.values(map);if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
     list.innerHTML=arr.map(g=>{const k=[...new Set(g.kota)].slice(0,3).join(' → ');return`<a href="/id/${g.id}" class="drawer-item"><div><div class="di-id">${g.id}</div><div class="di-info">${g.count} scan · ${k||'—'}</div></div><div class="di-arrow">›</div></a>`;}).join('');
   }
   if(tipe==='kota'){
     const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const k=c.split(',')[0].trim();cnt[k]=(cnt[k]||0)+1;});cnt['Klaten']=cnt['Klaten']||0;
-    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
     list.innerHTML=sorted.map(([k,n])=>`<div class="drawer-item"><div><div class="di-id">${k}</div><div class="di-info">${n>0?n+' scan':'Origin'}</div></div></div>`).join('');
   }
   if(tipe==='negara'){
     const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const parts=c.split(',');const n=parts.length>1?parts.pop().trim():'Indonesia';cnt[n]=(cnt[n]||0)+1;});
-    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
-    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
     list.innerHTML=sorted.map(([n,c])=>`<div class="drawer-item"><div><div class="di-id">${n}</div><div class="di-info">${c} scan</div></div></div>`).join('');
   }
 }

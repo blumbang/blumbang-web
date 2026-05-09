@@ -29,7 +29,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:cen
 .nav-kanan a:hover{color:var(--emas);}
 .nav-kanan .order{background:var(--emas);color:var(--hitam);padding:9px 20px;font-weight:700;}
 .nav-kanan .order:hover{background:var(--putih);}
-.nav-burger{display:none;background:none;border:none;color:var(--emas);font-size:1.3rem;cursor:pointer;margin-top:4px;}
+.nav-burger{background:none;border:none;color:var(--emas);font-size:1.3rem;cursor:pointer;margin-top:4px;display:none;align-items:center;gap:4px;}
 .nav-mob{display:none;position:fixed;top:60px;left:0;right:0;background:var(--abu);border-bottom:1px solid var(--border);z-index:199;flex-direction:column;padding:16px 24px;}
 .nav-mob.buka{display:flex;}
 .nav-mob a{font-family:var(--fb);font-size:.82rem;font-weight:600;letter-spacing:.12em;color:var(--putih);text-decoration:none;padding:13px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
@@ -473,7 +473,7 @@ gtag("config","G-39SRRM5GKK");
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
   </div>
-  <button class="nav-burger" id="burger" onclick="toggleNav()">☰</button>
+  <button class="nav-burger" id="burger" onclick="toggleNav()">☰ <span style="font-size:0.5rem;letter-spacing:0.2em;vertical-align:middle;font-family:var(--fb);font-weight:700;">MENU</span></button>
 </nav>
 <div class="nav-mob" id="nav-mob">
   <a href="/catalog" onclick="toggleNav()" data-i18n="nav_koleksi">Koleksi</a>

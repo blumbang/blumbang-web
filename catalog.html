@@ -57,7 +57,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .seri-ph-ico{font-size:2.5rem;color:var(--gold-dim);}
 .seri-ph-txt{font-family:var(--font-ui);font-size:0.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;}
 .seri-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:6px;}
-.seri-nama{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.1em;color:var(--white);line-height:1.1;}
+.seri-nama{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.1em;color:var(--white);line-height:1.1;text-decoration:none;display:block;margin-bottom:4px;transition:color .2s;}
+.seri-nama:hover{color:var(--gold);}
+.seri-scan-num{color:var(--gold);font-weight:700;}
 .seri-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .seri-pcs{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;}
 .seri-scan{font-family:var(--font-ui);font-size:.65rem;font-weight:500;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
@@ -335,18 +337,10 @@ function renderGrid(list) {
       ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
       : '';
 
-    // Scan info
+    // Scan info — angka scan warna gold
     var scanInfo = seri.scanTotal > 0
-      ? '<span class="seri-sep">·</span><button class="seri-scan-btn" data-seri-idx="' + realIdx + '">' + seri.scanTotal + ' scan ›</button>'
+      ? '<span class="seri-sep">·</span><button class="seri-scan-btn" data-seri-idx="' + realIdx + '"><span class="seri-scan-num">' + seri.scanTotal + '</span> scan ›</button>'
       : '';
-
-    // Barcodes
-    var bc = '';
-    var show = seri.garments.slice(0, 6);
-    for (var j = 0; j < show.length; j++) {
-      bc += '<span class="seri-bc">' + show[j].id + '</span>';
-    }
-    if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' lagi</span>';
 
     // Tombol
     var slug = toSlug(seri.nama);
@@ -354,9 +348,8 @@ function renderGrid(list) {
 
     html += '<div class="seri-card">' + foto;
     html += '<div class="seri-body">' + hot;
-    html += '<div class="seri-nama">' + seri.nama + '</div>';
+    html += '<a href="/karya/' + slug + '" class="seri-nama">' + seri.nama + '</a>';
     html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
-    html += '<div class="seri-barcodes">' + bc + '</div>';
     html += tombol + '</div></div>';
   }
   grid.innerHTML = html;

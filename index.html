@@ -3,347 +3,642 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>blumbang✦id — Made Slowly. Felt Deeply.</title>
-
-<meta name="description" content="Independent T-Shirt Studio from Klaten. Setiap kaos punya identitas digital dan perjalanan sendiri.">
-
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
+<title>Blumbang · Independent T-Shirt Studio · Klaten</title>
+<meta name="description" content="Blumbang — studio kaos independen dari Klaten. Setiap kaos punya QR unik yang mencatat perjalananmu di peta dunia. Made Slowly. Felt Deeply.">
+<meta name="keywords" content="kaos blumbang, konveksi klaten, sablon klaten, living garment, kaos unik QR">
+<link rel="canonical" href="https://blumbang.id">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blumbang.id">
+<meta property="og:title" content="Blumbang · Independent T-Shirt Studio">
+<meta property="og:description" content="Setiap kaos punya QR unik yang mencatat perjalananmu di peta dunia.">
+<meta property="og:image" content="https://blumbang.id/og-image.jpg">
+<meta property="og:site_name" content="Blumbang.id">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-39SRRM5GKK');</script>
 <style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
---black:#080808;
---charcoal:#141414;
---border:#333;
---gold:#C9A84C;
---gold-dim:#8a6f2e;
---white:#F5F0E8;
---light:#ddd;
---muted:#888;
-
---font-logo:'Bebas Neue',sans-serif;
---font-body:'Montserrat',sans-serif;
---font-ui:'Inter',sans-serif;
+  --hitam:#080808;--charcoal:#141414;--abu2:#1e1e1e;
+  --border:#2a2a2a;--redup:#888;--dim:#aaa;--terang:#ddd;
+  --putih:#F5F0E8;--emas:#C9A84C;--emas-dim:#7a6028;--emas-bg:#140f02;
+  --fd:'Bebas Neue',sans-serif;--fb:'Montserrat',sans-serif;--fu:'Inter',sans-serif;
 }
+html{scroll-behavior:smooth;}
+body{background:var(--hitam);color:var(--putih);font-family:var(--fb);-webkit-font-smoothing:antialiased;}
+a{text-decoration:none;color:inherit;}
+img{display:block;max-width:100%;}
 
-*{margin:0;padding:0;box-sizing:border-box;}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(8,8,8,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px;}
+.nav-brand{display:flex;flex-direction:column;gap:2px;text-decoration:none;}
+.nav-brand-nama{font-family:var(--fd);font-size:1.5rem;letter-spacing:.12em;color:var(--putih);line-height:1;}
+.nav-brand-nama span{color:var(--emas);}
+.nav-brand-sub{font-family:var(--fu);font-size:.62rem;font-weight:500;letter-spacing:.06em;color:var(--terang);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;}
+.nav-kanan{display:flex;align-items:center;gap:24px;}
+.nav-kanan a{font-family:var(--fu);font-size:.68rem;font-weight:600;letter-spacing:.15em;color:var(--redup);text-transform:uppercase;transition:color .2s;}
+.nav-kanan a:hover{color:var(--putih);}
+.lang-toggle{display:flex;align-items:center;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{background:none;border:none;font-family:var(--fu);font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:5px 9px;cursor:pointer;transition:all .2s;text-transform:uppercase;color:var(--redup);}
+.lang-btn.aktif{background:var(--emas);color:var(--hitam);}
+.lang-btn:hover:not(.aktif){color:var(--putih);}
+.nav-burger{display:none;background:none;border:none;color:var(--emas);font-size:1.1rem;cursor:pointer;font-family:var(--fu);font-weight:700;letter-spacing:.1em;align-items:center;gap:6px;}
+.nav-mob{display:none;position:fixed;top:60px;left:0;right:0;z-index:99;background:var(--charcoal);border-bottom:1px solid var(--border);flex-direction:column;padding:16px 24px 24px;}
+.nav-mob.buka{display:flex;}
+.nav-mob a{font-family:var(--fu);font-size:.78rem;font-weight:600;letter-spacing:.15em;color:var(--terang);text-transform:uppercase;padding:13px 0;border-bottom:1px solid var(--border);transition:color .2s;}
+.nav-mob a:last-child{border-bottom:none;color:var(--emas);}
 
-body{
-background:var(--black);
-color:var(--white);
-font-family:var(--font-body);
-line-height:1.6;
+/* HERO */
+.hero{padding-top:60px;background:var(--hitam);border-bottom:1px solid var(--border);}
+.hero-hitam{padding:56px 32px 32px;}
+.hero-tag{font-family:var(--fu);font-size:.65rem;font-weight:600;letter-spacing:.45em;text-transform:uppercase;color:var(--emas);margin-bottom:16px;opacity:0;animation:naik .6s .1s forwards;}
+.hero-h1{font-family:var(--fd);font-size:clamp(3.2rem,12vw,7.5rem);line-height:.92;letter-spacing:.02em;color:var(--putih);opacity:0;animation:naik .6s .2s forwards;}
+
+/* STATS */
+.stats-bar{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.stat-item{padding:18px 8px;text-align:center;border-right:1px solid var(--border);transition:background .2s;}
+.stat-item:last-child{border-right:none;}
+.stat-item.klik{cursor:pointer;}
+.stat-item.klik:hover{background:var(--emas-bg);}
+.stat-num{font-family:var(--fd);font-size:clamp(1.4rem,3.5vw,2rem);letter-spacing:.06em;color:var(--emas);line-height:1;}
+.stat-lbl{font-family:var(--fu);font-size:.52rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);margin-top:5px;}
+
+/* 3 TOMBOL HERO */
+.hero-tombol{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
+.ht-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 8px;border-right:1px solid var(--border);text-decoration:none;transition:background .2s;color:var(--putih);}
+.ht-item:last-child{border-right:none;}
+.ht-item:hover{background:var(--emas-bg);}
+.ht-ikon{font-size:1.2rem;line-height:1;}
+.ht-lbl{font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--terang);text-align:center;}
+.ht-item.primer .ht-lbl{color:var(--emas);}
+
+/* BOX KREM */
+.hero-krem{background:var(--putih);padding:28px 32px;opacity:0;animation:naik .6s .32s forwards;}
+.hero-sub{font-family:var(--fb);font-size:clamp(.88rem,2.2vw,.98rem);font-weight:400;line-height:1.85;color:#2a2a2a;text-align:center;}
+
+/* PETA */
+#s-peta{background:#0a1628;border-bottom:1px solid var(--border);}
+#peta-wrap{width:100%;height:52vw;max-height:420px;min-height:220px;position:relative;overflow:hidden;}
+#peta-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--fu);font-size:.68rem;font-weight:600;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,168,76,.4);}
+#d3-map{display:block;}
+.kota-row{display:flex;overflow-x:auto;scrollbar-width:none;border-top:1px solid rgba(255,255,255,.06);padding:12px 32px;gap:0;}
+.kota-row::-webkit-scrollbar{display:none;}
+.kota-tag{display:flex;align-items:center;gap:6px;font-family:var(--fu);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(245,240,232,.35);white-space:nowrap;padding-right:16px;margin-right:16px;border-right:1px solid rgba(255,255,255,.07);}
+.kota-tag:last-child{border-right:none;}
+.kota-dot{width:5px;height:5px;border-radius:50%;background:var(--emas);flex-shrink:0;}
+.kota-tag.origin{color:rgba(201,168,76,.7);}
+.kota-tag.origin .kota-dot{box-shadow:0 0 6px var(--emas);}
+
+/* CARA KERJA */
+#s-cara{border-bottom:1px solid var(--border);}
+.cara-header{padding:56px 32px 40px;border-bottom:1px solid var(--border);}
+.sec-tag{font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:var(--emas);display:block;margin-bottom:14px;}
+.sec-h2{font-family:var(--fd);font-size:clamp(2.5rem,7vw,5rem);letter-spacing:.04em;line-height:.95;color:var(--putih);}
+.cara-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.cara-item{background:var(--hitam);padding:40px 32px;transition:background .2s;}
+.cara-item:hover{background:var(--charcoal);}
+.cara-nomor{font-family:var(--fd);font-size:3.5rem;letter-spacing:.05em;color:var(--border);line-height:1;margin-bottom:20px;transition:color .25s;}
+.cara-item:hover .cara-nomor{color:var(--emas-dim);}
+.cara-judul{font-family:var(--fd);font-size:1.6rem;letter-spacing:.08em;color:var(--putih);margin-bottom:12px;}
+.cara-desc{font-size:.82rem;font-weight:400;line-height:1.75;color:var(--terang);}
+.cara-link{display:inline-block;margin-top:20px;font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--emas-dim);border-bottom:1px solid var(--emas-dim);padding-bottom:2px;transition:color .2s,border-color .2s;}
+.cara-link:hover{color:var(--emas);border-color:var(--emas);}
+
+/* KOLEKSI */
+#s-koleksi{border-bottom:1px solid var(--border);}
+.koleksi-header{padding:56px 32px 40px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.btn-emas-outline{font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--emas);border:1px solid var(--emas-dim);padding:10px 20px;transition:all .2s;white-space:nowrap;}
+.btn-emas-outline:hover{background:var(--emas);color:var(--hitam);}
+.koleksi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);}
+.k-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;text-decoration:none;color:inherit;}
+.k-card:hover{background:var(--abu2);}
+.k-mockup{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;border-bottom:1px solid var(--border);}
+.k-ph{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:var(--abu2);border-bottom:1px solid var(--border);}
+.k-ph svg{width:44px;height:44px;opacity:.1;}
+.k-body{padding:20px 20px 28px;}
+.k-nama{font-family:var(--fd);font-size:1.1rem;letter-spacing:.08em;line-height:1.1;margin-bottom:6px;color:var(--putih);}
+.k-meta{font-family:var(--fu);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);}
+.k-bahan{display:inline-block;margin-top:10px;font-family:var(--fu);font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--dim);}
+.skel{background:linear-gradient(90deg,var(--charcoal) 25%,var(--abu2) 50%,var(--charcoal) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* STATS BAWAH (di section koleksi) */
+.stats-bawah{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-top:1px solid var(--border);}
+
+/* FOOTER */
+footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40px 32px;}
+.ft{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.ft-brand{font-family:var(--fd);font-size:1.5rem;letter-spacing:.12em;color:var(--putih);}
+.ft-brand span{color:var(--emas);}
+.ft-links{display:flex;gap:18px;flex-wrap:wrap;}
+.ft-links a{font-family:var(--fu);font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);transition:color .2s;}
+.ft-links a:hover{color:var(--putih);}
+.ft-copy{width:100%;font-family:var(--fu);font-size:.62rem;color:var(--border);letter-spacing:.08em;margin-top:4px;}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:24px;left:20px;z-index:200;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(0,0,0,.5);}
+.wa-float svg{width:24px;height:24px;fill:#fff;}
+
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.drawer-overlay.aktif{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:151;background:var(--charcoal);border-top:1px solid var(--border);max-height:70vh;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.drawer.aktif{transform:translateY(0);}
+.drawer-head{padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
+.drawer-judul{font-family:var(--fd);font-size:1.2rem;letter-spacing:.08em;color:var(--emas);}
+.drawer-tutup{background:none;border:1px solid var(--border);font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;cursor:pointer;color:var(--dim);transition:all .2s;}
+.drawer-tutup:hover{background:var(--putih);color:var(--hitam);border-color:var(--putih);}
+.drawer-list{overflow-y:auto;flex:1;}
+.drawer-item{display:flex;align-items:center;justify-content:space-between;padding:13px 24px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background .15s;}
+.drawer-item:hover{background:var(--abu2);}
+.di-id{font-family:var(--fd);font-size:.95rem;letter-spacing:.12em;color:var(--emas);}
+.di-info{font-family:var(--fu);font-size:.65rem;color:var(--redup);margin-top:2px;}
+.di-arrow{font-size:1rem;color:var(--redup);}
+.drawer-kosong{text-align:center;padding:40px;font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--redup);}
+
+/* ANIMASI */
+@keyframes naik{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .55s,transform .55s;}
+.rv.terlihat{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:900px){.koleksi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){
+  nav{padding:0 16px;}
+  .nav-kanan{display:none;}
+  .nav-burger{display:flex;}
+  .nav-brand-sub{max-width:200px;font-size:.55rem;}
+  .hero-hitam{padding:40px 20px 28px;}
+  .hero-krem{padding:22px 20px;}
+  .stats-bar{grid-template-columns:repeat(3,1fr);}
+  .stat-item:nth-child(3){border-right:none;}
+  .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
+  .stats-bawah{grid-template-columns:repeat(3,1fr);}
+  .stats-bawah .stat-item:nth-child(3){border-right:none;}
+  .stats-bawah .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bawah .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
+  .cara-header{padding:40px 20px 32px;}
+  .cara-grid{grid-template-columns:1fr;}
+  .cara-item{border-bottom:1px solid var(--border);}
+  .cara-item:last-child{border-bottom:none;}
+  .koleksi-header{padding:40px 20px 28px;}
+  .koleksi-grid{grid-template-columns:repeat(2,1fr);}
+  .kota-row{padding:10px 20px;}
+  footer{padding:32px 20px;}
+  .ft{flex-direction:column;align-items:flex-start;}
 }
-
-nav{
-position:fixed;
-top:0;
-left:0;
-right:0;
-padding:20px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-background:rgba(8,8,8,0.95);
-z-index:10;
-}
-
-.nav-brand{
-font-family:var(--font-logo);
-font-size:1.6rem;
-letter-spacing:0.15em;
-color:var(--gold);
-text-decoration:none;
-}
-
-.nav-links{
-display:flex;
-gap:30px;
-}
-
-.nav-links a{
-font-family:var(--font-ui);
-font-size:0.75rem;
-letter-spacing:0.15em;
-text-decoration:none;
-color:var(--light);
-text-transform:uppercase;
-}
-
-.hero{
-min-height:100vh;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-padding:120px 20px 80px;
-}
-
-.hero-eyebrow{
-font-family:var(--font-ui);
-font-size:0.75rem;
-letter-spacing:0.5em;
-color:var(--gold);
-margin-bottom:40px;
-text-transform:uppercase;
-}
-
-.hero-title{
-font-family:var(--font-logo);
-font-size:clamp(4rem,12vw,9rem);
-line-height:0.9;
-letter-spacing:0.05em;
-}
-
-.hero-title .outline{
-color:transparent;
--webkit-text-stroke:2px rgba(255,255,255,0.25);
-}
-
-.hero-sub{
-margin-top:40px;
-font-size:1.1rem;
-max-width:560px;
-font-style:italic;
-}
-
-.spark-counter{
-margin-top:60px;
-text-align:center;
-}
-
-.spark-number{
-font-family:var(--font-logo);
-font-size:4rem;
-color:var(--gold);
-}
-
-.spark-label{
-font-family:var(--font-ui);
-letter-spacing:0.35em;
-font-size:0.7rem;
-margin-top:8px;
-}
-
-.spark-sublabel{
-font-size:0.9rem;
-color:var(--muted);
-font-style:italic;
-}
-
-.spark-map{
-margin-top:60px;
-max-width:600px;
-border:1px solid var(--border);
-padding:30px;
-background:var(--charcoal);
-}
-
-.spark-map-title{
-font-family:var(--font-ui);
-letter-spacing:0.35em;
-font-size:0.75rem;
-color:var(--gold);
-margin-bottom:20px;
-}
-
-.spark-cities{
-display:flex;
-flex-wrap:wrap;
-gap:10px;
-justify-content:center;
-}
-
-.spark-city{
-font-family:var(--font-ui);
-font-size:0.75rem;
-border:1px solid var(--border);
-padding:6px 14px;
-}
-
-.hero-cta{
-margin-top:60px;
-display:flex;
-gap:16px;
-flex-wrap:wrap;
-justify-content:center;
-}
-
-.btn-primary{
-padding:16px 36px;
-border:1px solid var(--gold);
-color:var(--gold);
-text-decoration:none;
-font-family:var(--font-ui);
-letter-spacing:0.25em;
-font-size:0.75rem;
-}
-
-.section{
-padding:120px 20px;
-max-width:1100px;
-margin:auto;
-}
-
-.section-title{
-font-family:var(--font-logo);
-font-size:clamp(2rem,5vw,4rem);
-margin-bottom:20px;
-}
-
-.section-body{
-font-style:italic;
-max-width:600px;
-}
-
-footer{
-padding:40px;
-border-top:1px solid var(--border);
-text-align:center;
-font-family:var(--font-ui);
-font-size:0.7rem;
-letter-spacing:0.2em;
-color:var(--muted);
+@media(max-width:420px){
+  .koleksi-grid{grid-template-columns:1fr;}
+  .stats-bar,.stats-bawah{grid-template-columns:repeat(2,1fr);}
+  .stats-bar .stat-item:nth-child(3),
+  .stats-bawah .stat-item:nth-child(3){border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(4),
+  .stats-bawah .stat-item:nth-child(4){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(5),
+  .stats-bawah .stat-item:nth-child(5){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
 }
 </style>
 </head>
-
 <body>
 
+<!-- NAV -->
 <nav>
-<a href="/" class="nav-brand">BLUMB✦NG id</a>
-
-<div class="nav-links">
-<a href="#identity">Garment Identity</a>
-<a href="#process">Cara Kerja</a>
-<a href="https://wa.me/6281234561146">Order</a>
-</div>
+  <a href="/" class="nav-brand">
+    <div class="nav-brand-nama">BLUMB<span>✦</span>NG</div>
+    <div class="nav-brand-sub">Independent T-Shirt Studio & Screen Printing — Jeto, Klaten, Indonesia since 2022</div>
+  </a>
+  <div class="nav-kanan">
+    <a href="/catalog" data-i18n="nav_koleksi">Koleksi</a>
+    <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/blog">Blog</a>
+    <a href="/about" data-i18n="nav_tentang">Tentang</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-burger" id="burger" onclick="toggleNav()">
+    <span id="burger-ikon">☰</span>
+    <span style="font-size:.5rem;letter-spacing:.2em;">MENU</span>
+  </button>
 </nav>
+<div class="nav-mob" id="nav-mob">
+  <a href="/catalog" onclick="toggleNav()" data-i18n="nav_koleksi">Koleksi</a>
+  <a href="/sparks" onclick="toggleNav()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/blog" onclick="toggleNav()">Blog</a>
+  <a href="/about" onclick="toggleNav()" data-i18n="nav_tentang">Tentang</a>
+  <a href="https://wa.me/6281234561146" onclick="toggleNav()">✦ Order Sekarang</a>
+</div>
 
+<!-- HERO -->
 <section class="hero">
+  <div class="hero-hitam">
+    <div class="hero-tag" data-i18n="hero_tag">Independent T-Shirt Studio · Est. 2022</div>
+    <h1 class="hero-h1" data-i18n="hero_h1">INI BUKAN<br>KAOS BIASA</h1>
+  </div>
 
-<div class="hero-eyebrow">
-Blumbang · Jeto, Klaten, Indonesia · since 2022
-</div>
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <a href="/catalog" class="stat-item klik">
+      <div class="stat-num" id="stat-garment">—</div>
+      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
+    </a>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
+      <div class="stat-num" id="stat-berjalan">—</div>
+      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-scan">—</div>
+      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')">
+      <div class="stat-num" id="stat-kota">—</div>
+      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')">
+      <div class="stat-num" id="stat-negara">—</div>
+      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
+  </div>
 
-<h1 class="hero-title">
-MADE<br>
-SLOWLY.<br>
-<span class="outline">FELT DEEPLY.</span>
-</h1>
+  <!-- 3 TOMBOL -->
+  <div class="hero-tombol">
+    <a href="/sparks" class="ht-item primer">
+      <span class="ht-ikon">◎</span>
+      <span class="ht-lbl" data-i18n="ht_peta">Lihat Peta</span>
+    </a>
+    <a href="/catalog" class="ht-item">
+      <span class="ht-ikon">✦</span>
+      <span class="ht-lbl" data-i18n="ht_koleksi">Koleksi</span>
+    </a>
+    <a href="https://www.tiktok.com/@blumbang.id" class="ht-item" target="_blank" rel="noopener">
+      <span class="ht-ikon">▶</span>
+      <span class="ht-lbl" data-i18n="ht_tiktok">TikTok</span>
+    </a>
+  </div>
 
-<p class="hero-sub">
-Independent T-Shirt Studio & Screen Printing  
-from Jeto Klaten Indonesia  
-
-<br><br>
-
-EVERY SHIRT HAS A STORY.  
-WATCH IT TRAVEL.  
-
-<br><br>
-
-Scan QR di kaos  
-dan lihat perjalanan ceritanya di dunia.
-</p>
-
-<div class="spark-counter">
-
-<div class="spark-number" id="spark-count">0</div>
-
-<div class="spark-label">
-LIVING GARMENTS
-</div>
-
-<div class="spark-sublabel">
-Kaos yang telah memiliki cerita ✦
-</div>
-
-</div>
-
-<div class="spark-map">
-
-<div class="spark-map-title">
-✦ SPARK MAP
-</div>
-
-<div class="spark-cities" id="spark-cities">
-<div class="spark-city">Klaten</div>
-</div>
-
-</div>
-
-<div class="hero-cta">
-
-<a href="https://wa.me/6281234561146" class="btn-primary">
-✦ AKTIFKAN KAOSMU
-</a>
-
-<a href="#identity" class="btn-primary">
-LIHAT IDENTITAS KAOS →
-</a>
-
-</div>
-
+  <!-- BOX KREM -->
+  <div class="hero-krem">
+    <p class="hero-sub" data-i18n="hero_sub">Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.</p>
+  </div>
 </section>
 
-<section class="section" id="identity">
-
-<h2 class="section-title">
-PERJALANAN KAOS DIMULAI
-</h2>
-
-<p class="section-body">
-Setiap kaos memiliki nomor seri tersendiri.  
-Scan QR code pada kaos dan halaman digitalnya akan terbuka —  
-tempat cerita, perjalanan, dan kenangan tersimpan.
-</p>
-
+<!-- SPARK MAP -->
+<section id="s-peta">
+  <div id="peta-wrap">
+    <div id="peta-loading" data-i18n="peta_loading">Memuat peta perjalanan...</div>
+    <svg id="d3-map"></svg>
+  </div>
+  <div class="kota-row" id="kota-row">
+    <div class="kota-tag origin"><span class="kota-dot"></span>Klaten · Origin</div>
+  </div>
 </section>
 
-<section class="section" id="process">
-
-<h2 class="section-title">
-TIGA LANGKAH MENUJU KAOS BERIDENTITAS
-</h2>
-
-<p class="section-body">
-Chat via WhatsApp → Produksi di Klaten →  
-Perjalanan kaos dimulai.
-</p>
-
+<!-- CARA KERJA -->
+<section id="s-cara">
+  <div class="cara-header">
+    <span class="sec-tag rv" data-i18n="ck_tag">Cara Kerja</span>
+    <h2 class="sec-h2 rv" data-i18n="ck_h2">CARA KERJANYA SEDERHANA</h2>
+  </div>
+  <div class="cara-grid">
+    <div class="cara-item rv">
+      <div class="cara-nomor">01</div>
+      <div class="cara-judul" data-i18n="ck1_judul">Beli Kaos</div>
+      <p class="cara-desc" data-i18n="ck1_desc">Pilih seri koleksi Blumbang. Setiap kaos punya ID unik yang tercatat selamanya.</p>
+      <a href="/catalog" class="cara-link" data-i18n="ck1_link">Lihat Koleksi →</a>
+    </div>
+    <div class="cara-item rv">
+      <div class="cara-nomor">02</div>
+      <div class="cara-judul" data-i18n="ck2_judul">Scan QR</div>
+      <p class="cara-desc" data-i18n="ck2_desc">QR ada di label bagian dalam. Scan saat kamu mengunjungi tempat baru — tidak perlu app khusus.</p>
+      <a href="/id/BLB-001" class="cara-link" data-i18n="ck2_link">Lihat Contoh →</a>
+    </div>
+    <div class="cara-item rv">
+      <div class="cara-nomor">03</div>
+      <div class="cara-judul" data-i18n="ck3_judul">Lihat Perjalanan</div>
+      <p class="cara-desc" data-i18n="ck3_desc">Setiap scan mencatat posisimu di peta dunia. Perjalanan dan ceritanya tersimpan selamanya.</p>
+      <a href="/sparks" class="cara-link" data-i18n="ck3_link">Lihat Peta →</a>
+    </div>
+  </div>
 </section>
 
+<!-- KOLEKSI -->
+<section id="s-koleksi">
+  <div class="koleksi-header">
+    <div>
+      <span class="sec-tag rv" data-i18n="kol_tag">Koleksi</span>
+      <h2 class="sec-h2 rv" data-i18n="kol_h2">JEJAK PRODUKSI.</h2>
+    </div>
+    <a href="/catalog" class="btn-emas-outline rv" data-i18n="kol_btn">Lihat Semua →</a>
+  </div>
+  <div class="koleksi-grid" id="koleksi-grid">
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:65%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:40%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:75%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:55%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:35%;"></div></div></div>
+    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:50%;"></div></div></div>
+  </div>
+  <!-- STATS BAWAH -->
+  <div class="stats-bawah">
+    <a href="/catalog" class="stat-item klik">
+      <div class="stat-num" id="stat-garment2">—</div>
+      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
+    </a>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
+      <div class="stat-num" id="stat-berjalan2">—</div>
+      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-scan2">—</div>
+      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')">
+      <div class="stat-num" id="stat-kota2">—</div>
+      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')">
+      <div class="stat-num" id="stat-negara2">—</div>
+      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
 <footer>
-BLUMB✦NG id · Klaten Indonesia
+  <div class="ft">
+    <div class="ft-brand">BLUMB<span>✦</span>NG</div>
+    <div class="ft-links">
+      <a href="/catalog" data-i18n="nav_koleksi">Koleksi</a>
+      <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+      <a href="/blog">Blog</a>
+      <a href="/about" data-i18n="nav_tentang">Tentang</a>
+      <a href="/ria">Ria AI</a>
+      <a href="https://www.tiktok.com/@blumbang.id" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="ft-copy">© 2026 Blumbang · Jeto RT 32 RW 10, Gaden, Trucuk, Klaten, Jawa Tengah</div>
+  </div>
 </footer>
 
+<!-- WA FLOAT -->
+<a href="https://wa.me/6281234561146" class="wa-float" target="_blank" rel="noopener" title="Chat WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.523 5.854L.057 23.882a.5.5 0 00.611.611l6.048-1.461A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.93 0-3.73-.5-5.3-1.377l-.38-.217-3.94.952.97-3.836-.23-.386A9.963 9.963 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
+</a>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-judul" id="drawer-judul">—</div>
+    <button class="drawer-tutup" onclick="tutupDrawer()">✕ Tutup</button>
+  </div>
+  <div class="drawer-list" id="drawer-list"></div>
+</div>
+
 <script>
-const SHEET_ID="1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw";
-const url=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`;
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+const WORKER_URL='https://catalog-builder.blmbng-id.workers.dev';
+let _sparks=[];
 
-fetch(url)
-.then(r=>r.text())
-.then(t=>{
-const json=JSON.parse(t.slice(47,-2));
-const rows=json.table.rows||[];
-document.getElementById("spark-count").textContent=rows.length;
+const T={
+  id:{
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'INI BUKAN<br>KAOS BIASA',
+    hero_sub:'Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.',
+    stat_kaos:'Kaos Terdaftar',stat_berjalan:'Sudah Berjalan',stat_scan:'Perjalanan Tercatat',stat_kota:'Kota',stat_negara:'Negara',
+    peta_loading:'Memuat peta perjalanan...',
+    ck_tag:'Cara Kerja',ck_h2:'CARA KERJANYA SEDERHANA',
+    ck1_judul:'Beli Kaos',ck1_desc:'Pilih seri koleksi Blumbang. Setiap kaos punya ID unik yang tercatat selamanya.',ck1_link:'Lihat Koleksi →',
+    ck2_judul:'Scan QR',ck2_desc:'QR ada di label bagian dalam. Scan saat kamu mengunjungi tempat baru — tidak perlu app khusus.',ck2_link:'Lihat Contoh →',
+    ck3_judul:'Lihat Perjalanan',ck3_desc:'Setiap scan mencatat posisimu di peta dunia. Perjalanan dan ceritanya tersimpan selamanya.',ck3_link:'Lihat Peta →',
+    kol_tag:'Koleksi',kol_h2:'JEJAK PRODUKSI.',kol_btn:'Lihat Semua →',
+    ht_peta:'Lihat Peta',ht_koleksi:'Koleksi',ht_tiktok:'TikTok',
+    nav_koleksi:'Koleksi',nav_perjalanan:'Perjalanan',nav_tentang:'Tentang',
+  },
+  en:{
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'THIS IS NOT<br>AN ORDINARY SHIRT',
+    hero_sub:'Every Blumbang shirt has a unique QR code you can scan when visiting new places. Every journey is recorded forever.',
+    stat_kaos:'Shirts Registered',stat_berjalan:'Already Traveling',stat_scan:'Journeys Recorded',stat_kota:'Cities',stat_negara:'Countries',
+    peta_loading:'Loading journey map...',
+    ck_tag:'How It Works',ck_h2:"IT'S SIMPLE.",
+    ck1_judul:'Buy a Shirt',ck1_desc:"Choose from Blumbang's collections. Each shirt has a unique ID recorded forever.",ck1_link:'View Collection →',
+    ck2_judul:'Scan QR',ck2_desc:'QR is on the inner label. Scan when you visit a new place — no special app needed.',ck2_link:'See Example →',
+    ck3_judul:'See Your Journey',ck3_desc:'Each scan records your position on the world map. Your journey is saved forever.',ck3_link:'See Map →',
+    kol_tag:'Collection',kol_h2:'OUR WORK.',kol_btn:'View All →',
+    ht_peta:'View Map',ht_koleksi:'Collection',ht_tiktok:'TikTok',
+    nav_koleksi:'Collection',nav_perjalanan:'Journey',nav_tentang:'About',
+  }
+};
+let lang=localStorage.getItem('blumbang_lang')||'id';
 
-const cities=new Set();
-rows.forEach(r=>{
-const c=r.c[2]?.v;
-if(c) cities.add(c.split(",")[0]);
-});
+function setLang(l){
+  lang=l;localStorage.setItem('blumbang_lang',l);
+  document.getElementById('btn-id').classList.toggle('aktif',l==='id');
+  document.getElementById('btn-en').classList.toggle('aktif',l==='en');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(T[l][k]!==undefined) el.innerHTML=T[l][k];
+  });
+}
 
-const wrap=document.getElementById("spark-cities");
-cities.forEach(city=>{
-const el=document.createElement("div");
-el.className="spark-city";
-el.textContent=city;
-wrap.appendChild(el);
-});
+function toggleNav(){
+  const m=document.getElementById('nav-mob'),i=document.getElementById('burger-ikon');
+  m.classList.toggle('buka');i.textContent=m.classList.contains('buka')?'✕':'☰';
+}
+
+function driveUrl(u){
+  if(!u) return '';
+  if(u.includes('media.blumbang.id')) return u;
+  const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800':u;
+}
+
+function animNum(id,target){
+  const el=document.getElementById(id);if(!el) return;
+  let cur=0;const step=Math.max(1,Math.ceil(target/30));
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+async function muatStats(){
+  try{
+    const[txtG,txtS]=await Promise.all([
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS').then(r=>r.text()),
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text())
+    ]);
+    const pG=txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const pS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisG=pG?JSON.parse(pG[1]).table.rows||[]:[];
+    const barisS=pS?JSON.parse(pS[1]).table.rows||[]:[];
+    _sparks=barisS;
+    const totalGarment=barisG.filter(r=>r.c[0]?.v).length||350;
+    const kotaSet=new Set(['Klaten']),negaraSet=new Set(['Indonesia']),garmentJalan=new Set();
+    let totalScan=0;
+    barisS.forEach(r=>{
+      const id=r.c[0]?.v,c=r.c[2]?.v;
+      if(id) garmentJalan.add(id);
+      if(c){totalScan++;kotaSet.add(c.split(',')[0].trim());if(c.includes(','))negaraSet.add(c.split(',').pop().trim());}
+    });
+    // Isi stats atas dan bawah sekaligus
+    const pairs=[['stat-garment','stat-garment2',totalGarment],['stat-berjalan','stat-berjalan2',garmentJalan.size],['stat-scan','stat-scan2',totalScan],['stat-kota','stat-kota2',kotaSet.size],['stat-negara','stat-negara2',negaraSet.size]];
+    pairs.forEach(([id1,id2,val])=>{animNum(id1,val);animNum(id2,val);});
+  }catch(e){
+    [['stat-garment','stat-garment2','350'],['stat-berjalan','stat-berjalan2','—'],['stat-scan','stat-scan2','—'],['stat-kota','stat-kota2','—'],['stat-negara','stat-negara2','—']]
+      .forEach(([id1,id2,v])=>{
+        const e1=document.getElementById(id1),e2=document.getElementById(id2);
+        if(e1)e1.textContent=v;if(e2)e2.textContent=v;
+      });
+  }
+}
+
+async function muatKoleksi(){
+  const grid=document.getElementById('koleksi-grid');
+  try{
+    const res=await fetch(WORKER_URL+'/seri/list');
+    const json=await res.json();
+    if(!json.ok||!json.data) throw new Error('no data');
+    let pub=json.data.filter(s=>s.status==='published').sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
+    const dgMockup=pub.filter(s=>s.mockup_url).slice(0,4);
+    const list=dgMockup.length>=4?dgMockup:[...dgMockup,...pub.filter(s=>!s.mockup_url)].slice(0,4);
+    if(!list.length){grid.innerHTML='';return;}
+    const ikon=`<svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" stroke="currentColor" stroke-width="1.5"/></svg>`;
+    grid.innerHTML=list.map(s=>{
+      const slug=s.id||(s.nama||'').toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
+      const img=s.mockup_url?driveUrl(s.mockup_url):null;
+      const meta=[s.jumlah?s.jumlah+' pcs':null,s.tahun].filter(Boolean).join(' · ');
+      return `<a href="/karya/${slug}" class="k-card rv">
+        ${img?`<img class="k-mockup" src="${img}" alt="${s.nama||''}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="k-ph" style="display:none">${ikon}</div>`:`<div class="k-ph">${ikon}</div>`}
+        <div class="k-body">
+          <div class="k-nama">${s.nama||'—'}</div>
+          <div class="k-meta">${meta}</div>
+          ${s.bahan?`<div class="k-bahan">${s.bahan}</div>`:''}
+        </div>
+      </a>`;
+    }).join('');
+    setTimeout(()=>document.querySelectorAll('#koleksi-grid .rv').forEach(el=>el.classList.add('terlihat')),60);
+  }catch(e){
+    grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--redup);">Gagal memuat koleksi</div>';
+  }
+}
+
+// PETA
+let _petaLoaded=false;
+const CITY_COORDS={
+  'klaten':{ll:[110.6,-7.7],label:'Klaten'},'yogyakarta':{ll:[110.364,-7.803],label:'Yogyakarta'},
+  'jogja':{ll:[110.364,-7.803],label:'Yogyakarta'},'jakarta':{ll:[106.845,-6.208],label:'Jakarta'},
+  'bandung':{ll:[107.609,-6.917],label:'Bandung'},'surabaya':{ll:[112.752,-7.258],label:'Surabaya'},
+  'semarang':{ll:[110.423,-6.966],label:'Semarang'},'solo':{ll:[110.827,-7.574],label:'Solo'},
+  'surakarta':{ll:[110.827,-7.574],label:'Solo'},'bali':{ll:[115.092,-8.34],label:'Bali'},
+  'denpasar':{ll:[115.212,-8.67],label:'Denpasar'},'medan':{ll:[98.679,3.595],label:'Medan'},
+  'makassar':{ll:[119.432,-5.147],label:'Makassar'},'malang':{ll:[112.632,-7.983],label:'Malang'},
+  'pontianak':{ll:[109.333,-0.02],label:'Pontianak'},'manado':{ll:[124.842,1.487],label:'Manado'},
+  'singapore':{ll:[103.82,1.352],label:'Singapore'},'singapura':{ll:[103.82,1.352],label:'Singapore'},
+  'kuala lumpur':{ll:[101.686,3.139],label:'Kuala Lumpur'},'tokyo':{ll:[139.69,35.69],label:'Tokyo'},
+  'osaka':{ll:[135.502,34.694],label:'Osaka'},'seoul':{ll:[126.978,37.566],label:'Seoul'},
+  'bangkok':{ll:[100.523,13.736],label:'Bangkok'},'sydney':{ll:[151.21,-33.87],label:'Sydney'},
+  'london':{ll:[-0.118,51.508],label:'London'},'new york':{ll:[-74.006,40.713],label:'New York'},
+};
+function getCityCoord(str){
+  if(!str) return null;const lower=str.toLowerCase();
+  for(const key of Object.keys(CITY_COORDS)){if(lower.includes(key)) return CITY_COORDS[key];}
+  return null;
+}
+function renderPeta(rows,world){
+  const KLATEN=[110.6,-7.7];
+  const wrap=document.getElementById('peta-wrap');
+  const w=wrap.offsetWidth||window.innerWidth,h=wrap.offsetHeight||300;
+  const cityMap={};
+  rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const coord=getCityCoord(c);if(!coord) return;const key=coord.label;if(!cityMap[key])cityMap[key]={coord,count:0};cityMap[key].count++;});
+  const kotaRow=document.getElementById('kota-row');
+  Object.values(cityMap).slice(0,10).forEach(item=>{const d=document.createElement('div');d.className='kota-tag';d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;kotaRow.appendChild(d);});
+  const svg=d3.select('#d3-map').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`);
+  const allPts=[KLATEN,...Object.values(cityMap).map(x=>x.coord.ll)];
+  const ptGeo={type:'FeatureCollection',features:allPts.map(pt=>({type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}}))};
+  const proj=d3.geoMercator().fitExtent([[32,16],[w-32,h-16]],ptGeo);
+  const path=d3.geoPath().projection(proj);
+  svg.append('g').selectAll('path').data(topojson.feature(world,world.objects.countries).features).join('path').attr('d',path).attr('fill','#0d2137').attr('stroke','#1a3a5c').attr('stroke-width','0.4');
+  Object.values(cityMap).forEach(item=>{
+    const[cx,cy]=proj(item.coord.ll);
+    function br(){svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1').transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();setTimeout(br,1800);}br();
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width','0.5');
+  });
+  const[kx,ky]=proj(KLATEN);
+  function bk(){svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','none').attr('stroke','rgba(201,168,76,0.9)').attr('stroke-width','1.5').transition().duration(2500).ease(d3.easeLinear).attr('r',22).attr('stroke-opacity',0).remove();setTimeout(bk,2500);}bk();
+  svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+  document.getElementById('peta-loading').style.display='none';
+}
+function loadPeta(){
+  if(_petaLoaded) return;_petaLoaded=true;
+  const doLoad=()=>{
+    Promise.all([
+      _sparks.length?Promise.resolve(_sparks):fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text()).then(txt=>{const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);return m?JSON.parse(m[1]).table.rows||[]:[]; }),
+      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json())
+    ]).then(([rows,world])=>{if(!_sparks.length)_sparks=rows;renderPeta(rows,world);}).catch(()=>{document.getElementById('peta-loading').textContent='—';});
+  };
+  if(!window.d3){
+    const s1=document.createElement('script');s1.src='https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    s1.onload=()=>{const s2=document.createElement('script');s2.src='https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js';s2.onload=doLoad;document.head.appendChild(s2);};
+    document.head.appendChild(s1);
+  } else doLoad();
+}
+
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('terlihat');obs.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+function initPetaObserver(){
+  const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){loadPeta();obs.disconnect();}},{rootMargin:'300px'});
+  const el=document.getElementById('s-peta');if(el) obs.observe(el);
+}
+
+function bukaDrawer(tipe){
+  const label={berjalan:'Kaos yang Sudah Berjalan',kota:'Kota yang Sudah Discan',negara:'Negara yang Sudah Discan'};
+  document.getElementById('drawer-judul').textContent=label[tipe]||tipe;
+  document.getElementById('drawer-list').innerHTML='<div class="drawer-kosong">Memuat...</div>';
+  document.getElementById('drawer-overlay').classList.add('aktif');
+  document.getElementById('drawer').classList.add('aktif');
+  document.body.style.overflow='hidden';
+  isiDrawer(tipe);
+}
+function tutupDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('aktif');
+  document.getElementById('drawer').classList.remove('aktif');
+  document.body.style.overflow='';
+}
+async function isiDrawer(tipe){
+  const list=document.getElementById('drawer-list');
+  let rows=_sparks;
+  if(!rows.length){
+    try{const txt=await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text());const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);rows=m?JSON.parse(m[1]).table.rows||[]:[];_sparks=rows;}
+    catch(e){list.innerHTML='<div class="drawer-kosong">Gagal memuat data</div>';return;}
+  }
+  if(tipe==='berjalan'){
+    const map={};rows.forEach(r=>{const id=r.c[0]?.v,c=r.c[2]?.v;if(!id) return;if(!map[id])map[id]={id,kota:[],count:0};map[id].count++;if(c)map[id].kota.push(c.split(',')[0].trim());});
+    const arr=Object.values(map);if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
+    list.innerHTML=arr.map(g=>{const k=[...new Set(g.kota)].slice(0,3).join(' → ');return`<a href="/id/${g.id}" class="drawer-item"><div><div class="di-id">${g.id}</div><div class="di-info">${g.count} scan · ${k||'—'}</div></div><div class="di-arrow">›</div></a>`;}).join('');
+  }
+  if(tipe==='kota'){
+    const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const k=c.split(',')[0].trim();cnt[k]=(cnt[k]||0)+1;});cnt['Klaten']=cnt['Klaten']||0;
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
+    list.innerHTML=sorted.map(([k,n])=>`<div class="drawer-item"><div><div class="di-id">${k}</div><div class="di-info">${n>0?n+' scan':'Origin'}</div></div></div>`).join('');
+  }
+  if(tipe==='negara'){
+    const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const parts=c.split(',');const n=parts.length>1?parts.pop().trim():'Indonesia';cnt[n]=(cnt[n]||0)+1;});
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
+    list.innerHTML=sorted.map(([n,c])=>`<div class="drawer-item"><div><div class="di-id">${n}</div><div class="di-info">${c} scan</div></div></div>`).join('');
+  }
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setLang(lang);muatStats();muatKoleksi();initReveal();initPetaObserver();
 });
 </script>
-
 </body>
 </html>

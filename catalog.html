@@ -322,9 +322,8 @@ function renderGrid(list) {
       : '';
 
     // Scan info
-    var garmentIds = seri.garments.map(function(g) { return g.id; });
     var scanInfo = seri.scanTotal > 0
-      ? '<span class="seri-sep">·</span><button class="seri-scan-btn" onclick="bukaScanDrawer(\'' + seri.nama.replace(/\\/g,'\\\\').replace(/'/g,"\\'") + '\',' + JSON.stringify(garmentIds) + ');event.stopPropagation();">' + seri.scanTotal + ' scan ›</button>'
+      ? '<span class="seri-sep">·</span><button class="seri-scan-btn" data-seri-idx="' + realIdx + '">' + seri.scanTotal + ' scan ›</button>'
       : '';
 
     // Barcodes
@@ -347,6 +346,18 @@ function renderGrid(list) {
     html += tombol + '</div></div>';
   }
   grid.innerHTML = html;
+
+  // Event listener tombol scan — pakai data-seri-idx, aman untuk semua nama seri
+  grid.querySelectorAll('.seri-scan-btn').forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var idx = parseInt(this.getAttribute('data-seri-idx'));
+      var seri = _seriList[idx];
+      if (!seri) return;
+      var ids = seri.garments.map(function(g) { return g.id; });
+      bukaScanDrawer(seri.nama, ids);
+    });
+  });
 }
 
 // LIGHTBOX

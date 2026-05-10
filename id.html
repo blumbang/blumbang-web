@@ -278,8 +278,9 @@ async function init() {
       scans.push({ lokasi: lokasi, ts: ts });
     }
 
-    // Render halaman
+    // Catat scan kalau dari QR
     var fromQr = window.location.search.indexOf('src=qr') >= 0;
+    if (fromQr) recordScan(id);
     var srcBadge = fromQr ? '<span class="garment-id-src">QR Scan</span>' : '';
 
     var mockupHtml = mockup
@@ -348,6 +349,26 @@ function bukaLightbox(src) {
   document.getElementById('lb-img').src = src;
   document.getElementById('lightbox').classList.add('on');
   document.body.style.overflow = 'hidden';
+}
+
+var APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
+
+async function recordScan(garmentId) {
+  try {
+    var geoRes = await fetch('https://ipapi.co/json/');
+    var geo = await geoRes.json();
+    var kota = geo.city || '';
+    var negara = geo.country_name || '';
+    if (!kota) return; // Tidak catat kalau kota tidak dapat
+    var city = negara ? kota + ', ' + negara : kota;
+    await fetch(APPS_SCRIPT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city })
+    });
+  } catch(e) {
+    // Diam saja kalau gagal — jangan ganggu tampilan
+  }
 }
 
 init();

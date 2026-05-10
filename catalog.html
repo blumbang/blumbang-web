@@ -50,7 +50,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* GRID */
 .seri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
-.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;}
+.seri-card{background:var(--charcoal);text-decoration:none;display:flex;flex-direction:column;transition:background .2s;}
 .seri-card:hover{background:var(--grey);}
 .seri-mockup{width:100%;height:220px;object-fit:cover;display:block;}
 .seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--grey);}
@@ -279,12 +279,11 @@ function renderGrid(list) {
     var slug = toSlug(seri.nama);
     var tombol = '<a href="/karya/' + slug + '" class="seri-tombol">Lihat Koleksi &#x2192;</a>';
 
-    html += '<div class="seri-card">' + foto;
+    html += '<a href="/karya/' + slug + '" class="seri-card">' + foto;
     html += '<div class="seri-body">' + hot;
     html += '<div class="seri-nama">' + seri.nama + '</div>';
     html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
-    html += '<div class="seri-barcodes">' + bc + '</div>';
-    html += tombol + '</div></div>';
+    html += tombol + '</div></a>';
   }
   grid.innerHTML = html;
 }

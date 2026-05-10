@@ -233,9 +233,9 @@ function bukaScanDrawer(seriNama, garmentIds) {
   var idSet = {};
   for (var i = 0; i < garmentIds.length; i++) idSet[garmentIds[i]] = true;
 
-  // Kumpulkan data per garment dari _spkRows
+  // Kumpulkan data per garment dari _spkRows (i=1 skip header)
   var garmentData = {};
-  for (var i = 0; i < _spkRows.length; i++) {
+  for (var i = 1; i < _spkRows.length; i++) {
     var r = _spkRows[i];
     var gid = r.c[0] && r.c[0].v;
     if (!gid || !idSet[gid]) continue;

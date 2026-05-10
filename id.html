@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garment · Blumbang.id</title>
+<meta name="description" content="Lacak perjalanan kaos Blumbang dengan QR unik.">
+<link rel="canonical" href="https://blumbang.id/id/">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
+  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+
+/* LOADING / ERROR */
+.state-wrap{display:flex;align-items:center;justify-content:center;min-height:80vh;padding:40px;}
+.state-box{text-align:center;}
+.state-box .ico{font-size:2.5rem;color:var(--gold-dim);margin-bottom:16px;}
+.state-box h2{font-family:var(--font-logo);font-size:1.8rem;letter-spacing:.1em;color:var(--muted);margin-bottom:8px;}
+.state-box p{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);letter-spacing:.05em;}
+.state-box a{color:var(--gold);text-decoration:none;}
+
+/* GARMENT PAGE */
+.garment-wrap{max-width:720px;margin:0 auto;padding:100px 24px 80px;}
+
+/* ID BADGE */
+.garment-id-badge{display:inline-flex;align-items:center;gap:10px;margin-bottom:28px;}
+.garment-id-text{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:.25em;color:var(--gold);}
+.garment-id-src{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;border:1px solid var(--border);padding:2px 8px;}
+
+/* MOCKUP */
+.garment-mockup-wrap{width:100%;aspect-ratio:4/3;background:var(--charcoal);border:1px solid var(--border);overflow:hidden;margin-bottom:28px;cursor:zoom-in;}
+.garment-mockup-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.garment-mockup-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+.garment-mockup-ph span{font-family:var(--font-ui);font-size:.65rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;}
+
+/* NAMA */
+.garment-nama{font-family:var(--font-logo);font-size:clamp(2rem,8vw,3.5rem);letter-spacing:.06em;line-height:1.0;margin-bottom:20px;}
+
+/* INFO GRID */
+.garment-info{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-bottom:36px;}
+.info-item{padding:18px 20px;border-right:1px solid var(--border);}
+.info-item:last-child{border-right:none;}
+.info-label{font-family:var(--font-ui);font-size:.58rem;font-weight:600;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
+.info-val{font-family:var(--font-ui);font-size:.9rem;font-weight:600;color:var(--white);}
+
+/* PERJALANAN */
+.perjalanan-head{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+.perjalanan-ico{color:var(--gold);font-size:.9rem;}
+.perjalanan-title{font-family:var(--font-ui);font-size:.65rem;font-weight:700;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;}
+.perjalanan-count{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+
+/* TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:20px;position:relative;}
+.tl-item:not(:last-child) .tl-line{position:absolute;left:7px;top:18px;bottom:-1px;width:1px;background:var(--border);}
+.tl-dot-wrap{flex-shrink:0;width:16px;display:flex;flex-direction:column;align-items:center;padding-top:4px;}
+.tl-dot{width:9px;height:9px;border-radius:50%;background:var(--border);border:1px solid var(--muted);flex-shrink:0;}
+.tl-dot.origin{background:var(--gold);border-color:var(--gold);}
+.tl-dot.scan{background:var(--charcoal);border-color:var(--gold-dim);}
+.tl-body{padding:0 0 28px 0;flex:1;}
+.tl-kota{font-family:var(--font-ui);font-size:.9rem;font-weight:600;color:var(--white);margin-bottom:3px;}
+.tl-kota.origin{color:var(--gold);}
+.tl-meta{font-family:var(--font-ui);font-size:.65rem;color:var(--dim);letter-spacing:.05em;}
+.tl-badge{display:inline-block;font-family:var(--font-ui);font-size:.55rem;font-weight:700;letter-spacing:.15em;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:1px 7px;text-transform:uppercase;margin-left:6px;vertical-align:middle;}
+.tl-empty{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);padding:20px 0;font-style:italic;}
+
+/* SCAN CTA */
+.scan-cta{margin-top:40px;border:1px solid var(--border);padding:28px;text-align:center;background:var(--charcoal);}
+.scan-cta-title{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.1em;color:var(--white);margin-bottom:8px;}
+.scan-cta-sub{font-family:var(--font-ui);font-size:.75rem;color:var(--dim);margin-bottom:20px;line-height:1.6;}
+.scan-cta-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.72rem;font-weight:700;letter-spacing:.2em;color:var(--black);background:var(--gold);padding:12px 28px;text-decoration:none;text-transform:uppercase;transition:background .2s;}
+.scan-cta-btn:hover{background:var(--white);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-items:center;justify-content:space-between;}
+.footer-brand{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.15em;color:var(--gold-dim);}
+.footer-link{font-family:var(--font-ui);font-size:.68rem;color:var(--muted);text-decoration:none;letter-spacing:.1em;}
+.footer-link:hover{color:var(--gold);}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;}
+.lightbox-close:hover{color:var(--gold);}
+
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .nav-links,.nav-order{display:none;}
+  .nav-hamburger{display:block;}
+  .garment-wrap{padding:80px 18px 60px;}
+  .garment-info{grid-template-columns:repeat(3,1fr);}
+  .info-item{padding:14px 12px;}
+  footer{padding:24px 18px;}
+}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag("js",new Date());
+gtag("config","G-39SRRM5GKK");
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <div class="nav-links">
+    <a href="/catalog">Karya</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
+
+<div id="page-content">
+  <div class="state-wrap">
+    <div class="state-box">
+      <div class="ico">✦</div>
+      <h2>Memuat...</h2>
+      <p>Mengambil data garment</p>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-close">✕ Tutup</div>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<script>
+var SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+
+function toggleMenu() {
+  var m = document.getElementById('nav-mobile');
+  var h = document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent = m.classList.contains('open') ? '✕' : '☰';
+}
+
+function driveUrl(url) {
+  if (!url) return '';
+  var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800' : url;
+}
+
+function getGarmentId() {
+  // Ambil ID dari path: /id/NAMA-ID atau /id/NAMA-ID?src=qr
+  var path = window.location.pathname;
+  var match = path.match(/^\/id\/(.+)$/);
+  if (!match) return null;
+  return decodeURIComponent(match[1]);
+}
+
+function formatTimestamp(ts) {
+  if (!ts) return '';
+  try {
+    var parts = ts.toString().split(' ');
+    var dp = parts[0].split('/');
+    if (dp.length === 3) {
+      var d = new Date(dp[2] + '-' + dp[1] + '-' + dp[0]);
+      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+  } catch(e) {}
+  return ts.toString();
+}
+
+function showError(pesan) {
+  document.getElementById('page-content').innerHTML =
+    '<div class="state-wrap"><div class="state-box">' +
+    '<div class="ico">✦</div>' +
+    '<h2>Tidak Ditemukan</h2>' +
+    '<p>' + pesan + '</p>' +
+    '<p style="margin-top:16px"><a href="/catalog">← Lihat semua koleksi</a></p>' +
+    '</div></div>';
+}
+
+function initLightbox() {
+  var lb = document.getElementById('lightbox');
+  lb.addEventListener('click', function() {
+    lb.classList.remove('on');
+    document.body.style.overflow = '';
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { lb.classList.remove('on'); document.body.style.overflow = ''; }
+  });
+}
+
+async function init() {
+  var garmentId = getGarmentId();
+  if (!garmentId) { showError('ID garment tidak valid.'); return; }
+
+  // Update canonical
+  document.querySelector('link[rel="canonical"]').href = 'https://blumbang.id/id/' + encodeURIComponent(garmentId);
+
+  try {
+    // Fetch GARMENTS dan SPARKS paralel
+    var results = await Promise.all([
+      fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=GARMENTS'),
+      fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=SPARKS')
+    ]);
+
+    var garTxt = await results[0].text();
+    var spkTxt = await results[1].text();
+
+    var garMatch = garTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    var spkMatch = spkTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+
+    var garRows = garMatch ? JSON.parse(garMatch[1]).table.rows || [] : [];
+    var spkRows = spkMatch ? JSON.parse(spkMatch[1]).table.rows || [] : [];
+
+    // Cari garment — case insensitive, trim
+    var garment = null;
+    for (var i = 0; i < garRows.length; i++) {
+      var rowId = garRows[i].c[0] && garRows[i].c[0].v;
+      if (rowId && rowId.toString().trim().toLowerCase() === garmentId.trim().toLowerCase()) {
+        garment = garRows[i];
+        break;
+      }
+    }
+
+    if (!garment) {
+      showError('Garment <strong>' + garmentId + '</strong> tidak ditemukan dalam sistem.');
+      return;
+    }
+
+    var id      = garment.c[0].v;
+    var nama    = ((garment.c[1] && garment.c[1].v) || id).replace(/\n/g, ' ');
+    var origin  = (garment.c[2] && garment.c[2].v) || 'Klaten';
+    var year    = (garment.c[3] && garment.c[3].v) || '2026';
+    var edition = (garment.c[4] && garment.c[4].v) || '—';
+    var mockup  = driveUrl((garment.c[5] && garment.c[5].v) || '');
+
+    // Update title
+    document.title = id + ' · ' + nama + ' · Blumbang.id';
+
+    // Ambil scan untuk garment ini (skip baris header)
+    var scans = [];
+    for (var i = 1; i < spkRows.length; i++) {
+      var r = spkRows[i];
+      var sid = r.c[0] && r.c[0].v;
+      if (!sid || sid.toString().trim().toLowerCase() !== id.trim().toLowerCase()) continue;
+      var lokasi = (r.c[2] && r.c[2].v) || '';
+      var ts     = (r.c[6] && r.c[6].v) || '';
+      scans.push({ lokasi: lokasi, ts: ts });
+    }
+
+    // Render halaman
+    var fromQr = window.location.search.indexOf('src=qr') >= 0;
+    var srcBadge = fromQr ? '<span class="garment-id-src">QR Scan</span>' : '';
+
+    var mockupHtml = mockup
+      ? '<img src="' + mockup + '" alt="' + nama + '" onclick="bukaLightbox(this.src)">'
+      : '<div class="garment-mockup-ph"><span>&#x2726;</span><span>Mockup Coming Soon</span></div>';
+
+    // Timeline
+    var timelineHtml = '';
+    // Origin selalu di atas
+    timelineHtml += '<div class="tl-item">';
+    timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot origin"></div><div class="tl-line"></div></div>';
+    timelineHtml += '<div class="tl-body"><div class="tl-kota origin">' + origin + '<span class="tl-badge">Origin</span></div>';
+    timelineHtml += '<div class="tl-meta">Lahir di sini · ' + year + '</div></div></div>';
+
+    if (scans.length === 0) {
+      timelineHtml += '<div class="tl-empty">Kaos ini belum pernah di-scan di luar kota asal. Jadilah yang pertama!</div>';
+    } else {
+      for (var i = 0; i < scans.length; i++) {
+        var s = scans[i];
+        var kota = s.lokasi ? s.lokasi.split(',')[0].trim() : '—';
+        var negara = s.lokasi && s.lokasi.indexOf(',') >= 0 ? s.lokasi.split(',').pop().trim() : '';
+        var tanggal = formatTimestamp(s.ts);
+        var isLast = i === scans.length - 1;
+        timelineHtml += '<div class="tl-item">';
+        timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot scan"></div>' + (isLast ? '' : '<div class="tl-line"></div>') + '</div>';
+        timelineHtml += '<div class="tl-body">';
+        timelineHtml += '<div class="tl-kota">' + kota + (negara ? ' <span style="color:var(--dim);font-size:.75em">· ' + negara + '</span>' : '') + '</div>';
+        timelineHtml += '<div class="tl-meta">' + tanggal + '</div>';
+        timelineHtml += '</div></div>';
+      }
+    }
+
+    var html = '<div class="garment-wrap">';
+    html += '<div class="garment-id-badge"><span class="garment-id-text">' + id + '</span>' + srcBadge + '</div>';
+    html += '<div class="garment-mockup-wrap">' + mockupHtml + '</div>';
+    html += '<div class="garment-nama">' + nama + '</div>';
+    html += '<div class="garment-info">';
+    html += '<div class="info-item"><div class="info-label">Dibuat di</div><div class="info-val">' + origin + '</div></div>';
+    html += '<div class="info-item"><div class="info-label">Tahun</div><div class="info-val">' + year + '</div></div>';
+    html += '<div class="info-item"><div class="info-label">Edisi</div><div class="info-val">' + edition + '</div></div>';
+    html += '</div>';
+    html += '<div class="perjalanan-head">';
+    html += '<span class="perjalanan-ico">✦</span>';
+    html += '<span class="perjalanan-title">Perjalanan Kaos Ini</span>';
+    html += '<span class="perjalanan-count">' + scans.length + ' scan</span>';
+    html += '</div>';
+    html += '<div class="timeline">' + timelineHtml + '</div>';
+    html += '<div class="scan-cta">';
+    html += '<div class="scan-cta-title">Sedang Pakai Kaos Ini?</div>';
+    html += '<div class="scan-cta-sub">Scan QR di label bagian dalam saat kamu mengunjungi tempat baru.<br>Perjalananmu akan tercatat selamanya di sini.</div>';
+    html += '<a href="https://wa.me/6281234561146" class="scan-cta-btn">✦ &nbsp; Tanya via WhatsApp</a>';
+    html += '</div>';
+    html += '</div>';
+    html += '<footer><a href="/" class="footer-brand">BLUMB✦NG</a><a href="/catalog" class="footer-link">← Lihat Semua Koleksi</a></footer>';
+
+    document.getElementById('page-content').innerHTML = html;
+    initLightbox();
+
+  } catch(e) {
+    console.error('Garment error:', e);
+    showError('Gagal memuat data. Coba refresh halaman.');
+  }
+}
+
+function bukaLightbox(src) {
+  document.getElementById('lb-img').src = src;
+  document.getElementById('lightbox').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+init();
+</script>
+</body>
+</html>

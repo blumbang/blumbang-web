@@ -195,11 +195,13 @@ function getGarmentId() {
 function formatTimestamp(ts) {
   if (!ts) return '';
   try {
-    var parts = ts.toString().split(' ');
-    var dp = parts[0].split('/');
+    var str = ts.toString().trim();
+    // Format: "10/3/2026, 12.11.46" atau "10/3/2026, 12:11:46"
+    var parts = str.split(',');
+    var dp = parts[0].trim().split('/');
     if (dp.length === 3) {
-      var d = new Date(dp[2] + '-' + dp[1] + '-' + dp[0]);
-      return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+      var d = new Date(parseInt(dp[2]), parseInt(dp[1]) - 1, parseInt(dp[0]));
+      if (!isNaN(d)) return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
     }
   } catch(e) {}
   return ts.toString();
@@ -318,31 +320,32 @@ async function init() {
       ? '<img src="' + mockup + '" alt="' + nama + '" onclick="bukaLightbox(this.src)">'
       : '<div class="garment-mockup-ph"><span>&#x2726;</span><span>Mockup Coming Soon</span></div>';
 
-    // Timeline
+    // Timeline — scan terbaru di atas, Origin di bawah
     var timelineHtml = '';
-    // Origin selalu di atas
-    timelineHtml += '<div class="tl-item">';
-    timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot origin"></div><div class="tl-line"></div></div>';
-    timelineHtml += '<div class="tl-body"><div class="tl-kota origin">' + origin + '<span class="tl-badge">Origin</span></div>';
-    timelineHtml += '<div class="tl-meta">Lahir di sini · ' + year + '</div></div></div>';
 
     if (scans.length === 0) {
       timelineHtml += '<div class="tl-empty">Kaos ini belum pernah di-scan di luar kota asal. Jadilah yang pertama!</div>';
     } else {
-      for (var i = 0; i < scans.length; i++) {
-        var s = scans[i];
+      var scansReversed = scans.slice().reverse();
+      for (var i = 0; i < scansReversed.length; i++) {
+        var s = scansReversed[i];
         var kota = s.lokasi ? s.lokasi.split(',')[0].trim() : '—';
         var negara = s.lokasi && s.lokasi.indexOf(',') >= 0 ? s.lokasi.split(',').pop().trim() : '';
         var tanggal = formatTimestamp(s.ts);
-        var isLast = i === scans.length - 1;
         timelineHtml += '<div class="tl-item">';
-        timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot scan"></div>' + (isLast ? '' : '<div class="tl-line"></div>') + '</div>';
+        timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot scan"></div><div class="tl-line"></div></div>';
         timelineHtml += '<div class="tl-body">';
         timelineHtml += '<div class="tl-kota">' + kota + (negara ? ' <span style="color:var(--dim);font-size:.75em">· ' + negara + '</span>' : '') + '</div>';
         timelineHtml += '<div class="tl-meta">' + tanggal + '</div>';
         timelineHtml += '</div></div>';
       }
     }
+
+    // Origin selalu paling bawah
+    timelineHtml += '<div class="tl-item">';
+    timelineHtml += '<div class="tl-dot-wrap"><div class="tl-dot origin"></div></div>';
+    timelineHtml += '<div class="tl-body"><div class="tl-kota origin">' + origin + '<span class="tl-badge">Origin</span></div>';
+    timelineHtml += '<div class="tl-meta">Lahir di sini · ' + year + '</div></div></div>';
 
     var html = '<div class="garment-wrap">';
     html += '<div class="garment-id-badge"><span class="garment-id-text">' + id + '</span>' + srcBadge + '</div>';

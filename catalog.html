@@ -64,6 +64,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .seri-scan-btn{font-family:var(--font-ui);font-size:.65rem;font-weight:500;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;background:none;border:none;padding:0;cursor:pointer;transition:color .2s;}
 .seri-scan-btn:hover{color:var(--gold);}
 .drw-kota{color:var(--gold);font-weight:600;}
+.drw-kota-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px;}
+.drw-kota-tag{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.08em;color:var(--gold);background:var(--gold-bg);border:1px solid rgba(201,168,76,.25);padding:2px 8px;}
 .drw-empty{padding:32px 24px;font-family:var(--font-ui);font-size:.8rem;color:var(--muted);text-align:center;letter-spacing:.05em;}
 .seri-sep{color:var(--border);}
 .seri-barcodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
@@ -239,10 +241,15 @@ function bukaScanDrawer(seriNama, garmentIds) {
     var r = _spkRows[i];
     var gid = r.c[0] && r.c[0].v;
     if (!gid || !idSet[gid]) continue;
-    if (!garmentData[gid]) garmentData[gid] = { total: 0, kotaTerakhir: '—' };
+    if (!garmentData[gid]) garmentData[gid] = { total: 0, kota: [] };
     garmentData[gid].total++;
-    var kota = r.c[2] && r.c[2].v;
-    if (kota) garmentData[gid].kotaTerakhir = kota.split(',')[0].trim();
+    var lokasi = r.c[2] && r.c[2].v;
+    if (lokasi) {
+      var kotaSaja = lokasi.split(',')[0].trim();
+      if (garmentData[gid].kota.indexOf(kotaSaja) === -1) {
+        garmentData[gid].kota.push(kotaSaja);
+      }
+    }
   }
 
   // Filter hanya yang punya scan, sort terbanyak
@@ -250,7 +257,7 @@ function bukaScanDrawer(seriNama, garmentIds) {
   for (var i = 0; i < garmentIds.length; i++) {
     var gid = garmentIds[i];
     if (garmentData[gid] && garmentData[gid].total > 0) {
-      list.push({ id: gid, total: garmentData[gid].total, kotaTerakhir: garmentData[gid].kotaTerakhir });
+      list.push({ id: gid, total: garmentData[gid].total, kota: garmentData[gid].kota });
     }
   }
   list.sort(function(a, b) { return b.total - a.total; });
@@ -267,9 +274,16 @@ function bukaScanDrawer(seriNama, garmentIds) {
     for (var i = 0; i < list.length; i++) {
       var item = list[i];
       html += '<a href="/id/' + item.id + '" class="drw-item">';
-      html += '<div>';
+      html += '<div style="flex:1">';
       html += '<div class="drw-item-id">' + item.id + '</div>';
-      html += '<div class="drw-item-info">' + item.total + ' scan · Terakhir: <span class="drw-kota">' + item.kotaTerakhir + '</span></div>';
+      html += '<div class="drw-item-info">' + item.total + ' scan</div>';
+      if (item.kota.length > 0) {
+        html += '<div class="drw-kota-list">';
+        for (var k = 0; k < item.kota.length; k++) {
+          html += '<span class="drw-kota-tag">' + item.kota[k] + '</span>';
+        }
+        html += '</div>';
+      }
       html += '</div>';
       html += '<div class="drw-item-arr">&#x203A;</div>';
       html += '</a>';

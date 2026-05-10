@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Katalog · Blumbang.id</title>
-<meta name="description" content="Semua garment Blumbang.id — Kaos Yang Punya Cerita">
+<meta name="description" content="Semua garment Blumbang.id — kaos yang punya cerita.">
 <link rel="canonical" href="https://blumbang.id/catalog">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -50,7 +50,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* GRID */
 .seri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
-.seri-card{background:var(--charcoal);text-decoration:none;display:flex;flex-direction:column;transition:background .2s;}
+.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;}
 .seri-card:hover{background:var(--grey);}
 .seri-mockup{width:100%;height:220px;object-fit:cover;display:block;}
 .seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--grey);}
@@ -143,8 +143,8 @@ gtag("config","G-39SRRM5GKK");
 
 <div class="hero">
   <span class="hero-tag">✦ Living Garments</span>
-  <h1 class="hero-title">AMANAH DARI PELANGGAN</h1>
-  <p class="hero-sub">Setiap scan meninggalkan jejak di peta dunia. Kaos yang lahir di Klaten dapat mencatat perjalanannya hingga Tokyo, London, atau kota mana pun..</p>
+  <h1 class="hero-title">KAOS YANG<br>PUNYA CERITA</h1>
+  <p class="hero-sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
   <div class="hero-count" id="hero-count">Memuat...</div>
 </div>
 
@@ -279,11 +279,12 @@ function renderGrid(list) {
     var slug = toSlug(seri.nama);
     var tombol = '<a href="/karya/' + slug + '" class="seri-tombol">Lihat Koleksi &#x2192;</a>';
 
-    html += '<a href="/karya/' + slug + '" class="seri-card">' + foto;
+    html += '<div class="seri-card">' + foto;
     html += '<div class="seri-body">' + hot;
     html += '<div class="seri-nama">' + seri.nama + '</div>';
     html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
-    html += tombol + '</div></a>';
+    html += '<div class="seri-barcodes">' + bc + '</div>';
+    html += tombol + '</div></div>';
   }
   grid.innerHTML = html;
 }

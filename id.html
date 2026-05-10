@@ -88,6 +88,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .tl-badge{display:inline-block;font-family:var(--font-ui);font-size:.55rem;font-weight:700;letter-spacing:.15em;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:1px 7px;text-transform:uppercase;margin-left:6px;vertical-align:middle;}
 .tl-empty{font-family:var(--font-ui);font-size:.78rem;color:var(--muted);padding:20px 0;font-style:italic;}
 
+/* SPARK MOMENT */
+.spark-moment{margin:32px 0;padding:28px;border:1px solid rgba(201,168,76,.3);background:var(--gold-bg);text-align:center;}
+.spark-ico{font-size:1.8rem;color:var(--gold);margin-bottom:8px;animation:pulse 2s infinite;}
+.spark-label{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:.3em;color:var(--gold);margin-bottom:6px;}
+.spark-text{font-family:var(--font-ui);font-size:.82rem;color:var(--light);letter-spacing:.05em;line-height:1.6;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+
 /* SCAN CTA */
 .scan-cta{margin-top:40px;border:1px solid var(--border);padding:28px;text-align:center;background:var(--charcoal);}
 .scan-cta-title{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.1em;color:var(--white);margin-bottom:8px;}
@@ -264,6 +271,19 @@ async function init() {
     var edition = (garment.c[4] && garment.c[4].v) || '—';
     var mockup  = driveUrl((garment.c[5] && garment.c[5].v) || '');
 
+    // Fallback mockup: cari dari garment lain dalam seri yang sama
+    if (!mockup) {
+      var prefix = id.replace(/-\d+$/, '').toLowerCase();
+      for (var i = 0; i < garRows.length; i++) {
+        var gid = garRows[i].c[0] && garRows[i].c[0].v;
+        var gmockup = garRows[i].c[5] && garRows[i].c[5].v;
+        if (gid && gmockup && gid.toString().replace(/-\d+$/, '').toLowerCase() === prefix) {
+          mockup = driveUrl(gmockup);
+          break;
+        }
+      }
+    }
+
     // Update title
     document.title = id + ' · ' + nama + ' · Blumbang.id';
 
@@ -282,6 +302,17 @@ async function init() {
     var fromQr = window.location.search.indexOf('src=qr') >= 0;
     if (fromQr) recordScan(id);
     var srcBadge = fromQr ? '<span class="garment-id-src">QR Scan</span>' : '';
+
+    // Spark moment — hanya saat src=qr
+    var sparkNo = scans.length + 1;
+    var sparkHtml = '';
+    if (fromQr) {
+      sparkHtml += '<div class="spark-moment">';
+      sparkHtml += '<div class="spark-ico">✦</div>';
+      sparkHtml += '<div class="spark-label">Spark #' + sparkNo + '</div>';
+      sparkHtml += '<div class="spark-text">Kamu adalah perjalanan ke-' + sparkNo + ' kaos ini</div>';
+      sparkHtml += '</div>';
+    }
 
     var mockupHtml = mockup
       ? '<img src="' + mockup + '" alt="' + nama + '" onclick="bukaLightbox(this.src)">'
@@ -328,6 +359,7 @@ async function init() {
     html += '<span class="perjalanan-count">' + scans.length + ' scan</span>';
     html += '</div>';
     html += '<div class="timeline">' + timelineHtml + '</div>';
+    html += sparkHtml;
     html += '<div class="scan-cta">';
     html += '<div class="scan-cta-title">Sedang Pakai Kaos Ini?</div>';
     html += '<div class="scan-cta-sub">Scan QR di label bagian dalam saat kamu mengunjungi tempat baru.<br>Perjalananmu akan tercatat selamanya di sini.</div>';

@@ -1,2 +1,2 @@
-/id/:id /id.html 200
-/qc/:id /id.html 200
+/id/* /id.html 200
+/qc/* /id.html 200

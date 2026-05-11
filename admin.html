@@ -2814,6 +2814,11 @@ async function loadSeriList() {
       return;
     }
     document.getElementById('seri-count').textContent = '(' + json.data.length + ')';
+
+    // Simpan data seri ke map global untuk diakses tombol Edit
+    window._seriMap = {};
+    json.data.forEach(s => { window._seriMap[s.id] = s; });
+
     tbody.innerHTML = json.data.map(s => `
       <tr>
         <td><div style="font-weight:600;color:var(--white);">${s.nama}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">${s.id}</div></td>
@@ -2822,12 +2827,45 @@ async function loadSeriList() {
         <td>${s.tahun || '<span style="color:var(--muted)">—</span>'}</td>
         <td><span style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border:1px solid ${s.status==='published'?'#40916c':'var(--border)'};color:${s.status==='published'?'#86efac':'var(--muted)'};">${s.status==='published'?'PUBLISHED':'DRAFT'}</span></td>
         <td><div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost btn-sm" onclick="editSeri('${s.id}','${s.nama.replace(/'/g,"\\'")}','${(s.pemesan||'').replace(/'/g,"\\'")}','${(s.bahan||'').replace(/'/g,"\\'")}',${s.tahun||'null'},'${(s.mockup_url||'').replace(/'/g,"\\'")}','${(s.deskripsi||'').replace(/'/g,"\\'").replace(/\n/g,' ')}','${s.status}')">Edit</button>
+          <button class="btn btn-ghost btn-sm" data-edit-id="${s.id}">Edit</button>
           <button class="btn btn-gold btn-sm" onclick="buildSeri('${s.id}')">Build</button>
           <a class="btn btn-ghost btn-sm" href="https://blumbang.id/karya/${s.id}" target="_blank">↗ Lihat</a>
+          <button class="btn btn-sm" style="border:1px solid #7f1d1d;color:#fca5a5;background:none;cursor:pointer;" data-delete-id="${s.id}" data-delete-nama="${s.nama.replace(/"/g,'&quot;')}">Hapus</button>
         </div></td>
       </tr>
     `).join('');
+
+    // Event listener Edit — pakai data dari _seriMap, aman untuk semua karakter
+    tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const s = window._seriMap[this.getAttribute('data-edit-id')];
+        if (!s) return;
+        editSeri(s.id, s.nama, s.pemesan||'', s.bahan||'', s.tahun||'', s.mockup_url||'', s.deskripsi||'', s.status||'draft');
+      });
+    });
+
+    // Event listener Hapus
+    tbody.querySelectorAll('[data-delete-id]').forEach(btn => {
+      btn.addEventListener('click', async function() {
+        const id = this.getAttribute('data-delete-id');
+        const nama = this.getAttribute('data-delete-nama');
+        if (!confirm('Hapus seri "' + nama + '"?\n\nData di D1 akan dihapus. Halaman /karya/' + id + ' di R2 tidak otomatis terhapus.')) return;
+        try {
+          const res = await fetch(WORKER_URL + '/seri/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+          const json = await res.json();
+          if (!json.ok) throw new Error(json.error || 'Gagal hapus');
+          showToast('✓ Seri ' + nama + ' dihapus');
+          loadSeriList();
+        } catch(e) {
+          showToast('Gagal hapus: ' + e.message);
+        }
+      });
+    });
+
   } catch(e) {
     tbody.innerHTML = '<tr><td colspan="6" style="color:#fca5a5;padding:16px;">Gagal memuat: ' + e.message + '</td></tr>';
   }

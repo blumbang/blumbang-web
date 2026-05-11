@@ -3,7 +3,7 @@
 // Script ini membaca semua file .md di folder _posts
 // dan menggenerate:
 //   1. blog/posts.json  — untuk halaman blog
-//   2. sitemap.xml      — untuk Google Search Console
+//   2. sitemap.xml      — untuk Google Search Console (include /karya/)
 
 const fs = require('fs');
 const path = require('path');
@@ -47,7 +47,17 @@ function slugFromFilename(filename) {
   return raw.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 
-function generateSitemap(posts) {
+async function fetchSeriSlugs() {
+  // Slug seri yang sudah published di D1
+  // Update array ini setiap kali ada seri baru ditambah via admin panel
+  return [
+    'gemoy',
+    'lpk-ooita',
+    'twelve-society'
+  ];
+}
+
+function generateSitemap(posts, seriSlugs) {
   const today = new Date().toISOString().split('T')[0];
 
   // Halaman statis
@@ -60,6 +70,14 @@ function generateSitemap(posts) {
     { loc: `${BASE_URL}/ria`,     lastmod: today, changefreq: 'monthly', priority: '0.5' },
   ];
 
+  // Halaman seri /karya/
+  const seriPages = seriSlugs.map(slug => ({
+    loc: `${BASE_URL}/karya/${slug}`,
+    lastmod: today,
+    changefreq: 'weekly',
+    priority: '0.85'
+  }));
+
   // Halaman artikel blog
   const blogPages = posts.map(p => ({
     loc: `${BASE_URL}/blog/post.html?slug=${p.slug}`,
@@ -68,7 +86,7 @@ function generateSitemap(posts) {
     priority: '0.7'
   }));
 
-  const allPages = [...staticPages, ...blogPages];
+  const allPages = [...staticPages, ...seriPages, ...blogPages];
 
   const urls = allPages.map(p => `  <url>
     <loc>${p.loc}</loc>
@@ -83,7 +101,7 @@ ${urls}
 </urlset>`;
 }
 
-function generate() {
+async function generate() {
   if (!fs.existsSync(POSTS_DIR)) {
     fs.mkdirSync(POSTS_DIR, { recursive: true });
     console.log('📁 Folder _posts dibuat');
@@ -122,10 +140,14 @@ function generate() {
   console.log(`✅ ${posts.length} artikel ditulis ke blog/posts.json`);
   posts.forEach(p => console.log(`   · ${p.slug} — ${p.title}`));
 
-  // 2. Generate sitemap.xml
-  const sitemap = generateSitemap(posts);
+  // 2. Fetch slug seri dari Worker
+  const seriSlugs = await fetchSeriSlugs();
+  console.log(`✅ ${seriSlugs.length} seri ditemukan untuk sitemap`);
+
+  // 3. Generate sitemap.xml
+  const sitemap = generateSitemap(posts, seriSlugs);
   fs.writeFileSync(OUTPUT_SITEMAP, sitemap);
-  console.log(`✅ sitemap.xml diupdate (${posts.length + 6} URL)`);
+  console.log(`✅ sitemap.xml diupdate (6 statis + ${seriSlugs.length} seri + ${posts.length} blog = ${6 + seriSlugs.length + posts.length} URL)`);
 }
 
 generate();

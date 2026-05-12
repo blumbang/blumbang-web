@@ -312,10 +312,13 @@ async function init() {
     var sparkNo = scans.length + 1;
     var sparkHtml = '';
     if (fromQr) {
-      sparkHtml += '<div class="spark-moment">';
+      var sparkTeks = scans.length === 0
+        ? 'Kamu yang pertama. Perjalanan dimulai dari sini.'
+        : sparkNo + ' perjalanan. Kamu yang terbaru.';
+      sparkHtml += '<div class="spark-moment" id="spark-box">';
       sparkHtml += '<div class="spark-ico">✦</div>';
-      sparkHtml += '<div class="spark-label">Spark #' + sparkNo + '</div>';
-      sparkHtml += '<div class="spark-text">' + sparkNo + ' perjalanan. Kamu yang terbaru.</div>';
+      sparkHtml += '<div class="spark-label" id="spark-label">Spark #' + sparkNo + '</div>';
+      sparkHtml += '<div class="spark-text" id="spark-text">' + sparkTeks + '</div>';
       sparkHtml += '</div>';
     }
 
@@ -397,15 +400,62 @@ async function recordScan(garmentId) {
     var geo = await geoRes.json();
     var kota = geo.city || '';
     var negara = geo.country_name || '';
-    if (!kota) return; // Tidak catat kalau kota tidak dapat
+    if (!kota) return;
     var city = negara ? kota + ', ' + negara : kota;
     await fetch(APPS_SCRIPT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city })
     });
-  } catch(e) {
-    // Diam saja kalau gagal — jangan ganggu tampilan
+    // Update timeline langsung tanpa refresh
+    updateTimelineAfterScan(kota, negara);
+  } catch(e) {}
+}
+
+function updateTimelineAfterScan(kota, negara) {
+  var timeline = document.querySelector('.timeline');
+  if (!timeline) return;
+
+  // Tambah titik baru di atas (sebelum elemen pertama)
+  var today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+  var negaraHtml = negara ? ' <span style="color:var(--dim);font-size:.75em">· ' + negara + '</span>' : '';
+  var newItem = document.createElement('div');
+  newItem.className = 'tl-item tl-new';
+  newItem.style.opacity = '0';
+  newItem.style.transform = 'translateY(-10px)';
+  newItem.style.transition = 'all 0.5s ease';
+  newItem.innerHTML =
+    '<div class="tl-dot-wrap"><div class="tl-dot scan"></div><div class="tl-line"></div></div>' +
+    '<div class="tl-body">' +
+    '<div class="tl-kota">' + kota + negaraHtml + '</div>' +
+    '<div class="tl-meta">' + today + ' · Baru saja</div>' +
+    '</div>';
+  timeline.insertBefore(newItem, timeline.firstChild);
+
+  // Animasi masuk
+  setTimeout(function() {
+    newItem.style.opacity = '1';
+    newItem.style.transform = 'translateY(0)';
+  }, 100);
+
+  // Update jumlah scan di header
+  var countEl = document.querySelector('.perjalanan-count');
+  if (countEl) {
+    var current = parseInt(countEl.textContent) || 0;
+    countEl.textContent = (current + 1) + ' scan';
+  }
+
+  // Update spark
+  var sparkBox = document.getElementById('spark-box');
+  var sparkLabel = document.getElementById('spark-label');
+  var sparkText = document.getElementById('spark-text');
+  if (sparkBox) {
+    var total = (parseInt(document.querySelectorAll('.tl-item:not(.tl-item:last-child)').length));
+    if (sparkLabel) sparkLabel.textContent = 'Spark #' + total;
+    if (sparkText) sparkText.textContent = total + ' perjalanan. Kamu yang terbaru.';
+    sparkBox.style.opacity = '0';
+    sparkBox.style.transition = 'opacity 0.5s ease';
+    setTimeout(function() { sparkBox.style.opacity = '1'; }, 200);
   }
 }
 

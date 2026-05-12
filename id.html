@@ -118,6 +118,126 @@ footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-i
 .lightbox-close{position:absolute;top:20px;right:24px;font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;}
 .lightbox-close:hover{color:var(--gold);}
 
+/* CHECK-IN MODAL */
+.checkin-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(4,4,4,0.97);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.4s ease;
+}
+.checkin-overlay.on{opacity:1;pointer-events:all;}
+.checkin-modal{
+  max-width:480px;width:calc(100% - 48px);
+  text-align:center;
+  transform:translateY(24px) scale(0.97);
+  transition:transform 0.45s cubic-bezier(.16,1,.3,1),opacity 0.45s ease;
+  opacity:0;
+}
+.checkin-overlay.on .checkin-modal{transform:translateY(0) scale(1);opacity:1;}
+
+/* Garis dekoratif atas */
+.checkin-topline{
+  width:40px;height:1px;background:var(--gold-dim);
+  margin:0 auto 32px;
+  position:relative;
+}
+.checkin-topline::before,.checkin-topline::after{
+  content:'';position:absolute;top:50%;
+  width:4px;height:4px;border-radius:50%;background:var(--gold);
+  transform:translateY(-50%);
+}
+.checkin-topline::before{left:-8px;}
+.checkin-topline::after{right:-8px;}
+
+/* Animasi ✦ berputar */
+@keyframes sparkspin{0%{transform:rotate(0deg) scale(1);}50%{transform:rotate(180deg) scale(1.2);}100%{transform:rotate(360deg) scale(1);}}
+.checkin-spark{
+  font-size:2.8rem;color:var(--gold);
+  display:block;margin-bottom:20px;
+  animation:sparkspin 2s ease-in-out infinite;
+  line-height:1;
+}
+
+.checkin-eyebrow{
+  font-family:var(--font-ui);font-size:.6rem;font-weight:700;
+  letter-spacing:.4em;color:var(--gold-dim);
+  text-transform:uppercase;margin-bottom:14px;
+}
+.checkin-headline{
+  font-family:var(--font-logo);font-size:clamp(2rem,10vw,3rem);
+  letter-spacing:.08em;line-height:1;color:var(--white);
+  margin-bottom:16px;
+}
+.checkin-headline em{color:var(--gold);font-style:normal;}
+.checkin-sub{
+  font-family:var(--font-ui);font-size:.78rem;color:var(--muted);
+  line-height:1.7;margin-bottom:32px;letter-spacing:.03em;
+}
+.checkin-location-preview{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--charcoal);border:1px solid var(--border);
+  padding:10px 18px;margin-bottom:28px;
+  font-family:var(--font-ui);font-size:.72rem;color:var(--dim);
+  letter-spacing:.08em;
+  min-width:200px;justify-content:center;
+}
+.checkin-location-preview .loc-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--muted);flex-shrink:0;
+  animation:blink 1.2s ease-in-out infinite;
+}
+.checkin-location-preview .loc-dot.found{background:var(--gold);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.checkin-location-preview .loc-text{color:var(--light);}
+
+/* Tombol utama */
+.checkin-btn-primary{
+  display:block;width:100%;
+  font-family:var(--font-ui);font-size:.72rem;font-weight:700;
+  letter-spacing:.25em;text-transform:uppercase;
+  color:var(--black);background:var(--gold);
+  border:none;padding:16px 24px;cursor:pointer;
+  transition:all 0.2s;margin-bottom:12px;
+  position:relative;overflow:hidden;
+}
+.checkin-btn-primary::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0);
+  transition:background 0.2s;
+}
+.checkin-btn-primary:hover::after{background:rgba(255,255,255,0.12);}
+.checkin-btn-primary:active{transform:scale(0.98);}
+.checkin-btn-primary:disabled{background:var(--border);color:var(--muted);cursor:not-allowed;}
+
+.checkin-btn-skip{
+  background:none;border:none;
+  font-family:var(--font-ui);font-size:.6rem;
+  letter-spacing:.2em;color:var(--muted);
+  text-transform:uppercase;cursor:pointer;
+  padding:8px;transition:color 0.2s;
+}
+.checkin-btn-skip:hover{color:var(--dim);}
+
+/* State: recording */
+.checkin-recording .checkin-spark{animation:none;opacity:0.3;}
+.checkin-recording .checkin-headline{opacity:0.5;}
+
+/* State: sukses */
+@keyframes successPulse{
+  0%{transform:scale(1);} 40%{transform:scale(1.3);} 70%{transform:scale(0.95);} 100%{transform:scale(1);}
+}
+.checkin-success .checkin-spark{animation:successPulse 0.6s ease forwards;color:var(--gold);}
+.checkin-success-msg{
+  font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.2em;
+  color:var(--gold);margin-bottom:8px;
+}
+.checkin-success-sub{
+  font-family:var(--font-ui);font-size:.72rem;color:var(--light);
+  line-height:1.6;
+}
+
 @media(max-width:768px){
   nav{padding:14px 18px;}
   .nav-links,.nav-order{display:none;}
@@ -169,6 +289,25 @@ gtag("config","G-39SRRM5GKK");
 <div class="lightbox" id="lightbox">
   <div class="lightbox-close">✕ Tutup</div>
   <img id="lb-img" src="" alt="">
+</div>
+
+<!-- CHECK-IN MODAL -->
+<div class="checkin-overlay" id="checkin-overlay">
+  <div class="checkin-modal" id="checkin-modal">
+    <div class="checkin-topline"></div>
+    <span class="checkin-spark" id="checkin-spark">✦</span>
+    <div class="checkin-eyebrow" id="checkin-eyebrow">Living Garment · Sistem Perjalanan</div>
+    <div class="checkin-headline" id="checkin-headline">KAMU<br>DI MANA<br><em>SEKARANG?</em></div>
+    <div class="checkin-sub" id="checkin-sub">Tandai kehadiranmu.<br>Perjalanan kaos ini akan tercatat selamanya.</div>
+    <div class="checkin-location-preview" id="checkin-loc-preview">
+      <div class="loc-dot" id="loc-dot"></div>
+      <span class="loc-text" id="loc-text">Mendeteksi lokasi...</span>
+    </div>
+    <button class="checkin-btn-primary" id="checkin-btn" disabled onclick="doCheckin()">
+      ✦ &nbsp; TANDAI KEHADIRANKU
+    </button>
+    <button class="checkin-btn-skip" onclick="skipCheckin()">Lewati &rsaquo;</button>
+  </div>
 </div>
 
 <script>
@@ -305,17 +444,21 @@ async function init() {
 
     // Catat scan kalau dari QR
     var fromQr = window.location.search.indexOf('src=qr') >= 0;
-    if (fromQr) recordScan(id);
     var srcBadge = fromQr ? '<span class="garment-id-src">QR Scan</span>' : '';
 
-    // Spark moment — hanya saat src=qr
+    // Simpan data garment untuk dipakai modal
+    window._checkinGarmentId = id;
+    window._checkinScansCount = scans.length;
+
+    // Spark moment — ditampilkan setelah check-in berhasil (bukan langsung)
     var sparkNo = scans.length + 1;
     var sparkHtml = '';
     if (fromQr) {
+      // Spark hidden awalnya, akan di-reveal oleh doCheckin()
       var sparkTeks = scans.length === 0
         ? 'Kamu yang pertama. Perjalanan dimulai dari sini.'
         : sparkNo + ' perjalanan. Kamu yang terbaru.';
-      sparkHtml += '<div class="spark-moment" id="spark-box">';
+      sparkHtml += '<div class="spark-moment" id="spark-box" style="opacity:0;transform:translateY(8px);transition:all 0.6s ease;">';
       sparkHtml += '<div class="spark-ico">✦</div>';
       sparkHtml += '<div class="spark-label" id="spark-label">Spark #' + sparkNo + '</div>';
       sparkHtml += '<div class="spark-text" id="spark-text">' + sparkTeks + '</div>';
@@ -380,6 +523,11 @@ async function init() {
     document.getElementById('page-content').innerHTML = html;
     initLightbox();
 
+    // Trigger check-in modal kalau dari QR
+    if (fromQr) {
+      setTimeout(function() { bukaCheckinModal(); }, 800);
+    }
+
   } catch(e) {
     console.error('Garment error:', e);
     showError('Gagal memuat data. Coba refresh halaman.');
@@ -394,22 +542,134 @@ function bukaLightbox(src) {
 
 var APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
 
-async function recordScan(garmentId) {
+// State modal
+var _detectedCity = '';
+var _detectedCountry = '';
+
+function bukaCheckinModal() {
+  var overlay = document.getElementById('checkin-overlay');
+  overlay.classList.add('on');
+  document.body.style.overflow = 'hidden';
+  // Mulai deteksi lokasi
+  deteksiLokasi();
+}
+
+function tutupCheckinModal() {
+  var overlay = document.getElementById('checkin-overlay');
+  overlay.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+function skipCheckin() {
+  tutupCheckinModal();
+  // Tetap reveal spark (tanpa record)
+  revealSparkBox(false);
+}
+
+async function deteksiLokasi() {
   try {
-    var geoRes = await fetch('https://ipapi.co/json/');
-    var geo = await geoRes.json();
-    var kota = geo.city || '';
-    var negara = geo.country_name || '';
-    if (!kota) return;
-    var city = negara ? kota + ', ' + negara : kota;
-    await fetch(APPS_SCRIPT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city })
-    });
-    // Update timeline langsung tanpa refresh
-    updateTimelineAfterScan(kota, negara);
-  } catch(e) {}
+    var res = await fetch('https://ipapi.co/json/');
+    var geo = await res.json();
+    _detectedCity = geo.city || '';
+    _detectedCountry = geo.country_name || '';
+
+    var locText = document.getElementById('loc-text');
+    var locDot = document.getElementById('loc-dot');
+    var btn = document.getElementById('checkin-btn');
+
+    if (_detectedCity) {
+      var display = _detectedCountry ? _detectedCity + ', ' + _detectedCountry : _detectedCity;
+      locText.textContent = display;
+      locDot.classList.add('found');
+      btn.disabled = false;
+    } else {
+      locText.textContent = 'Lokasi tidak terdeteksi';
+      // Tetap bisa lanjut, record tanpa kota
+      btn.disabled = false;
+      btn.textContent = '✦   LANJUT TANPA LOKASI';
+    }
+  } catch(e) {
+    var locText = document.getElementById('loc-text');
+    var btn = document.getElementById('checkin-btn');
+    locText.textContent = 'Gagal mendeteksi lokasi';
+    btn.disabled = false;
+    btn.textContent = '✦   LANJUT TANPA LOKASI';
+  }
+}
+
+async function doCheckin() {
+  var btn = document.getElementById('checkin-btn');
+  btn.disabled = true;
+  btn.textContent = 'Mencatat...';
+
+  var garmentId = window._checkinGarmentId;
+
+  try {
+    if (_detectedCity) {
+      var city = _detectedCountry ? _detectedCity + ', ' + _detectedCountry : _detectedCity;
+      await fetch(APPS_SCRIPT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain' },
+        body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city })
+      });
+    }
+    // Tampilkan sukses di modal
+    tampilSuksesModal(_detectedCity, _detectedCountry);
+  } catch(e) {
+    // Gagal record tapi tetap tutup
+    tutupCheckinModal();
+    revealSparkBox(false);
+  }
+}
+
+function tampilSuksesModal(kota, negara) {
+  var modal = document.getElementById('checkin-modal');
+  var eyebrow = document.getElementById('checkin-eyebrow');
+  var headline = document.getElementById('checkin-headline');
+  var sub = document.getElementById('checkin-sub');
+  var locPreview = document.getElementById('checkin-loc-preview');
+  var btn = document.getElementById('checkin-btn');
+  var skipBtn = btn.nextElementSibling;
+
+  // Fade out konten lama
+  modal.style.transition = 'opacity 0.25s ease';
+  modal.style.opacity = '0';
+
+  setTimeout(function() {
+    var lokDisplay = kota ? (negara ? kota + ', ' + negara : kota) : '—';
+    eyebrow.textContent = 'Tercatat';
+    headline.innerHTML = 'JEJAK<br>KAMU<br><em>TERSIMPAN</em>';
+    sub.innerHTML = '<strong style="color:var(--white)">' + lokDisplay + '</strong><br>sudah menjadi bagian dari perjalanan kaos ini.';
+    locPreview.style.display = 'none';
+    btn.style.display = 'none';
+    skipBtn.style.display = 'none';
+
+    modal.style.opacity = '1';
+
+    // Auto tutup 2.2 detik lalu reveal spark
+    setTimeout(function() {
+      tutupCheckinModal();
+      updateTimelineAfterScan(kota, negara);
+      revealSparkBox(true);
+    }, 2200);
+  }, 250);
+}
+
+function revealSparkBox(didRecord) {
+  var sparkBox = document.getElementById('spark-box');
+  if (!sparkBox) return;
+  // Scroll ke spark
+  setTimeout(function() {
+    sparkBox.style.opacity = '1';
+    sparkBox.style.transform = 'translateY(0)';
+    if (didRecord) {
+      sparkBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+}
+
+async function recordScan(garmentId) {
+  // Legacy — tidak dipakai lagi, digantikan modal
 }
 
 function updateTimelineAfterScan(kota, negara) {
@@ -445,17 +705,13 @@ function updateTimelineAfterScan(kota, negara) {
     countEl.textContent = (current + 1) + ' scan';
   }
 
-  // Update spark
-  var sparkBox = document.getElementById('spark-box');
+  // Update spark label
   var sparkLabel = document.getElementById('spark-label');
   var sparkText = document.getElementById('spark-text');
-  if (sparkBox) {
-    var total = (parseInt(document.querySelectorAll('.tl-item:not(.tl-item:last-child)').length));
-    if (sparkLabel) sparkLabel.textContent = 'Spark #' + total;
+  if (sparkLabel) {
+    var total = (window._checkinScansCount || 0) + 1;
+    sparkLabel.textContent = 'Spark #' + total;
     if (sparkText) sparkText.textContent = total + ' perjalanan. Kamu yang terbaru.';
-    sparkBox.style.opacity = '0';
-    sparkBox.style.transition = 'opacity 0.5s ease';
-    setTimeout(function() { sparkBox.style.opacity = '1'; }, 200);
   }
 }
 

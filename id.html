@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/favicon-32.png">
 <title>Garment · Blumbang.id</title>
 <meta name="description" content="Lacak perjalanan kaos Blumbang dengan QR unik.">
 <link rel="canonical" href="https://blumbang.id/id/">
@@ -90,10 +93,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* SPARK MOMENT */
 .spark-moment{margin:32px 0;padding:28px;border:1px solid rgba(201,168,76,.3);background:var(--gold-bg);text-align:center;}
-.spark-ico{font-size:1.8rem;color:var(--gold);margin-bottom:8px;animation:pulse 2s infinite;}
+.spark-ico{font-size:1.8rem;color:var(--gold);margin-bottom:8px;animation:pulse 1s ease-in-out 3;}
 .spark-label{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:.3em;color:var(--gold);margin-bottom:6px;}
 .spark-text{font-family:var(--font-ui);font-size:.82rem;color:var(--light);letter-spacing:.05em;line-height:1.6;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}} .spark-ico{animation:pulse 1s ease-in-out 3;}
 
 /* SCAN CTA */
 .scan-cta{margin-top:40px;border:1px solid var(--border);padding:28px;text-align:center;background:var(--charcoal);}
@@ -312,7 +315,7 @@ async function init() {
       sparkHtml += '<div class="spark-moment">';
       sparkHtml += '<div class="spark-ico">✦</div>';
       sparkHtml += '<div class="spark-label">Spark #' + sparkNo + '</div>';
-      sparkHtml += '<div class="spark-text">Kamu adalah perjalanan ke-' + sparkNo + ' kaos ini</div>';
+      sparkHtml += '<div class="spark-text">' + sparkNo + ' perjalanan. Kamu yang terbaru.</div>';
       sparkHtml += '</div>';
     }
 
@@ -356,13 +359,13 @@ async function init() {
     html += '<div class="info-item"><div class="info-label">Tahun</div><div class="info-val">' + year + '</div></div>';
     html += '<div class="info-item"><div class="info-label">Edisi</div><div class="info-val">' + edition + '</div></div>';
     html += '</div>';
+    html += sparkHtml;
     html += '<div class="perjalanan-head">';
     html += '<span class="perjalanan-ico">✦</span>';
     html += '<span class="perjalanan-title">Perjalanan Kaos Ini</span>';
     html += '<span class="perjalanan-count">' + scans.length + ' scan</span>';
     html += '</div>';
     html += '<div class="timeline">' + timelineHtml + '</div>';
-    html += sparkHtml;
     html += '<div class="scan-cta">';
     html += '<div class="scan-cta-title">Sedang Pakai Kaos Ini?</div>';
     html += '<div class="scan-cta-sub">Scan QR di label bagian dalam saat kamu mengunjungi tempat baru.<br>Perjalananmu akan tercatat selamanya di sini.</div>';

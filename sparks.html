@@ -564,7 +564,8 @@ const CITY_COORDS={
 function getCityCoord(cityStr){
   if(!cityStr) return null;
   const lower=cityStr.toLowerCase();
-  for(const key of Object.keys(CITY_COORDS)){
+  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
+  for(const key of keys){
     if(lower.includes(key)) return CITY_COORDS[key];
   }
   return null;

@@ -193,7 +193,7 @@ gtag("config","G-39SRRM5GKK");
 <nav>
   <a href="/" class="nav-brand">BLUMB✦NG</a>
   <div class="nav-links">
-    <a href="/catalog">Karya</a>
+    <a href="/karya">Karya</a>
     <a href="/sparks">Perjalanan</a>
     <a href="/about">Tentang</a>
   </div>
@@ -201,7 +201,7 @@ gtag("config","G-39SRRM5GKK");
   <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
 </nav>
 <div class="nav-mobile" id="nav-mobile">
-  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/karya" onclick="toggleMenu()">Karya</a>
   <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
   <a href="/about" onclick="toggleMenu()">Tentang</a>
   <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
@@ -277,7 +277,7 @@ function showError(pesan) {
     '<div class="ico">✦</div>' +
     '<h2>Tidak Ditemukan</h2>' +
     '<p>' + pesan + '</p>' +
-    '<p style="margin-top:16px"><a href="/catalog">← Lihat semua koleksi</a></p>' +
+    '<p style="margin-top:16px"><a href="/karya">← Lihat semua koleksi</a></p>' +
     '</div></div>';
 }
 
@@ -440,7 +440,7 @@ async function init() {
     html += '<a href="https://wa.me/6281234561146" class="scan-cta-btn">✦ &nbsp; Tanya via WhatsApp</a>';
     html += '</div>';
     html += '</div>';
-    html += '<footer><a href="/" class="footer-brand">BLUMB✦NG</a><a href="/catalog" class="footer-link">← Lihat Semua Koleksi</a></footer>';
+    html += '<footer><a href="/" class="footer-brand">BLUMB✦NG</a><a href="/karya" class="footer-link">← Lihat Semua Koleksi</a></footer>';
 
     document.getElementById('page-content').innerHTML = html;
     initLightbox();

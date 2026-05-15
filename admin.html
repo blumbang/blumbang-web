@@ -228,6 +228,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
   <button class="tab" onclick="switchTab('stats')">Statistik</button>
   <button class="tab" onclick="switchTab('kelas')">Kelas / Event</button>
   <button class="tab" onclick="switchTab('seri')">✦ Seri</button>
+  <button class="tab" onclick="switchTab('media')">✦ Media</button>
 </div>
 
 <!-- ===================== APPROVAL PANEL ===================== -->
@@ -627,6 +628,36 @@ tr:hover td{background:rgba(255,255,255,0.02);}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<!-- ===================== MEDIA PANEL ===================== -->
+<div id="panel-media" class="panel" style="display:none;">
+  <div class="sec-title">Media Manager</div>
+  <div class="sec-sub">Upload foto langsung ke R2 — dapat URL <strong style="color:var(--gold)">media.blumbang.id/nama-file</strong> siap pakai di semua halaman.</div>
+
+  <!-- Upload Zone -->
+  <div id="media-dropzone" style="border:2px dashed var(--border);padding:40px;text-align:center;margin-bottom:24px;cursor:pointer;transition:border-color 0.2s;" onclick="document.getElementById('media-file-input').click()" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='var(--border)'" ondrop="handleMediaDrop(event)">
+    <div style="font-size:2rem;color:var(--muted);margin-bottom:12px;">✦</div>
+    <div style="font-size:0.8rem;color:var(--light);margin-bottom:6px;">Klik atau drag foto ke sini</div>
+    <div style="font-size:0.68rem;color:var(--muted);">JPG, PNG, WEBP, GIF — maks 5MB</div>
+    <input type="file" id="media-file-input" accept="image/*" style="display:none" onchange="uploadMedia(this.files[0])">
+  </div>
+
+  <!-- Upload Progress -->
+  <div id="media-upload-status" style="display:none;margin-bottom:24px;padding:16px;background:var(--charcoal);border:1px solid var(--border);">
+    <div style="font-size:0.72rem;color:var(--light);margin-bottom:8px;" id="media-upload-msg">Mengupload...</div>
+    <div id="media-result-url" style="display:none;">
+      <div style="font-size:0.65rem;color:var(--muted);margin-bottom:6px;letter-spacing:0.1em;text-transform:uppercase;">URL — klik untuk copy</div>
+      <div id="media-url-display" onclick="copyMediaUrl(this)" style="font-size:0.8rem;color:var(--gold);background:var(--black);padding:10px 14px;cursor:pointer;word-break:break-all;border:1px solid var(--border);"></div>
+      <div style="font-size:0.65rem;color:var(--green-light);margin-top:6px;" id="media-copy-msg"></div>
+    </div>
+  </div>
+
+  <!-- Daftar File -->
+  <div style="font-family:var(--font-logo);font-size:1rem;letter-spacing:0.1em;color:var(--white);margin-bottom:12px;">FILE TERSIMPAN <span id="media-count" style="color:var(--muted);font-size:0.75rem;font-family:var(--font);font-weight:400;letter-spacing:0;"></span></div>
+  <div id="media-list" style="display:flex;flex-direction:column;gap:8px;">
+    <div style="font-size:0.72rem;color:var(--muted);">Memuat...</div>
+  </div>
+</div>
+
 <script>
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbx3aQma_SB1gMiSUuPPr6Ol6BwKlN1QtIV5EUJa1UM6Fli0H88Jg0aIxxTnlR1bRNY/exec';
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
@@ -650,6 +681,7 @@ function switchTab(name){
   if(name==='stats') loadStats();
   if(name==='kelas') loadKelasList();
   if(name==='seri') loadSeriList();
+  if(name==='media') loadMediaList();
 }
 
 // =================== FOTO TIM ===================
@@ -2880,6 +2912,89 @@ async function buildSeri(id) {
     else showToast('Gagal build: ' + (json.error || 'Unknown error'));
   } catch(e) {
     showToast('Gagal: ' + e.message);
+  }
+}
+
+// =================== MEDIA MANAGER ===================
+const WORKER_URL_MEDIA = 'https://catalog-builder.blmbng-id.workers.dev';
+
+function handleMediaDrop(e) {
+  e.preventDefault();
+  document.getElementById('media-dropzone').style.borderColor = 'var(--border)';
+  const file = e.dataTransfer.files[0];
+  if (file) uploadMedia(file);
+}
+
+async function uploadMedia(file) {
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File terlalu besar, maks 5MB'); return; }
+
+  const status = document.getElementById('media-upload-status');
+  const msg = document.getElementById('media-upload-msg');
+  const resultUrl = document.getElementById('media-result-url');
+  const urlDisplay = document.getElementById('media-url-display');
+
+  status.style.display = 'block';
+  resultUrl.style.display = 'none';
+  msg.textContent = 'Mengupload ' + file.name + '...';
+  msg.style.color = 'var(--light)';
+
+  try {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(WORKER_URL_MEDIA + '/media/upload', { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.ok) {
+      msg.textContent = '✓ Upload berhasil!';
+      msg.style.color = 'var(--green-light)';
+      urlDisplay.textContent = data.url;
+      resultUrl.style.display = 'block';
+      loadMediaList();
+    } else {
+      msg.textContent = 'Gagal: ' + (data.error || 'Unknown error');
+      msg.style.color = '#fca5a5';
+    }
+  } catch(e) {
+    msg.textContent = 'Gagal: ' + e.message;
+    msg.style.color = '#fca5a5';
+  }
+}
+
+function copyMediaUrl(el) {
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    document.getElementById('media-copy-msg').textContent = '✓ URL berhasil dicopy!';
+    setTimeout(() => { document.getElementById('media-copy-msg').textContent = ''; }, 2000);
+  });
+}
+
+async function loadMediaList() {
+  const list = document.getElementById('media-list');
+  const count = document.getElementById('media-count');
+  try {
+    const res = await fetch(WORKER_URL_MEDIA + '/media/list');
+    const data = await res.json();
+    if (!data.ok || !data.files.length) {
+      list.innerHTML = '<div style="font-size:0.72rem;color:var(--muted);">Belum ada file.</div>';
+      return;
+    }
+    // Filter test.txt
+    const files = data.files.filter(f => !f.key.endsWith('.txt'));
+    count.textContent = '(' + files.length + ' file)';
+    list.innerHTML = files.map(f => {
+      const name = f.key.length > 50 ? '...' + f.key.slice(-47) : f.key;
+      const kb = Math.round(f.size / 1024);
+      return `<div style="display:grid;grid-template-columns:60px 1fr auto;gap:12px;align-items:center;background:var(--charcoal);border:1px solid var(--border);padding:12px;">
+        <img src="${f.url}" style="width:60px;height:60px;object-fit:cover;background:var(--grey);" onerror="this.style.display='none'">
+        <div>
+          <div style="font-size:0.72rem;color:var(--light);word-break:break-all;margin-bottom:4px;">${name}</div>
+          <div style="font-size:0.65rem;color:var(--muted);">${kb} KB</div>
+          <div onclick="navigator.clipboard.writeText('${f.url}');showToast('URL dicopy!')" style="font-size:0.65rem;color:var(--gold);cursor:pointer;margin-top:4px;">Copy URL →</div>
+        </div>
+        <div style="font-size:0.65rem;color:var(--muted);white-space:nowrap;">${new Date(f.uploaded).toLocaleDateString('id-ID')}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div style="font-size:0.72rem;color:#fca5a5;">Gagal memuat: ' + e.message + '</div>';
   }
 }
 </script>

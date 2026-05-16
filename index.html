@@ -297,10 +297,12 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   <div class="kota-row" id="kota-row">
     <div class="kota-tag origin"><span class="kota-dot"></span>Klaten · Origin</div>
   </div>
-  <div id="terbaru-wrap" style="text-align:center;padding:12px 24px 0;min-height:24px;">
-    <span id="terbaru-teks" style="font-family:var(--fu);font-size:.72rem;letter-spacing:.12em;color:var(--emas);"></span>
-  </div>
 </section>
+
+<!-- SCAN TERBARU -->
+<a id="terbaru-wrap" href="#" style="display:block;background:var(--hitam);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 24px;text-align:center;text-decoration:none;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='var(--charcoal)'" onmouseout="this.style.background='var(--hitam)'">
+  <span id="terbaru-teks" style="font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--emas);"></span>
+</a>
 
 <!-- KOLEKSI -->
 <section id="s-koleksi">
@@ -549,6 +551,8 @@ function renderPeta(rows,world){
   // Typewriter terbaru
   if(latestCity && latestId){
     const el=document.getElementById('terbaru-teks');
+    const wrap=document.getElementById('terbaru-wrap');
+    if(wrap) wrap.href='/id/'+encodeURIComponent(latestId);
     setTimeout(()=>typewriter(el,'✦ Scan terbaru: '+latestId+' · '+latestCity),800);
   }
 

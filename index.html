@@ -72,7 +72,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .ht-item:last-child{border-right:none;}
 .ht-item:hover{background:var(--emas-bg);}
 .ht-ikon{font-size:1.2rem;line-height:1;}
-.ht-lbl{font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--terang);text-align:center;}
+.ht-lbl{font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--emas);text-align:center;}
 .ht-item.primer .ht-lbl{color:var(--emas);}
 
 /* BOX KREM */
@@ -290,40 +290,15 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
 
 <!-- SPARK MAP -->
 <section id="s-peta">
-  <div id="peta-wrap">
+  <a href="/sparks" id="peta-wrap" style="display:block;cursor:pointer;text-decoration:none;">
     <div id="peta-loading" data-i18n="peta_loading">Memuat peta perjalanan...</div>
     <svg id="d3-map"></svg>
-  </div>
+  </a>
   <div class="kota-row" id="kota-row">
     <div class="kota-tag origin"><span class="kota-dot"></span>Klaten · Origin</div>
   </div>
-</section>
-
-<!-- CARA KERJA -->
-<section id="s-cara">
-  <div class="cara-header">
-    <span class="sec-tag rv" data-i18n="ck_tag">Cara Kerja</span>
-    <h2 class="sec-h2 rv" data-i18n="ck_h2">CARA KERJANYA SEDERHANA</h2>
-  </div>
-  <div class="cara-grid">
-    <div class="cara-item rv">
-      <div class="cara-nomor">01</div>
-      <div class="cara-judul" data-i18n="ck1_judul">Beli Kaos</div>
-      <p class="cara-desc" data-i18n="ck1_desc">Pilih seri koleksi Blumbang. Setiap kaos punya ID unik yang tercatat selamanya.</p>
-      <a href="/karya" class="cara-link" data-i18n="ck1_link">Lihat Koleksi →</a>
-    </div>
-    <div class="cara-item rv">
-      <div class="cara-nomor">02</div>
-      <div class="cara-judul" data-i18n="ck2_judul">Scan QR</div>
-      <p class="cara-desc" data-i18n="ck2_desc">QR ada di label bagian dalam. Scan saat kamu mengunjungi tempat baru — tidak perlu app khusus.</p>
-      <a href="/id/BLB-001" class="cara-link" data-i18n="ck2_link">Lihat Contoh →</a>
-    </div>
-    <div class="cara-item rv">
-      <div class="cara-nomor">03</div>
-      <div class="cara-judul" data-i18n="ck3_judul">Lihat Perjalanan</div>
-      <p class="cara-desc" data-i18n="ck3_desc">Setiap scan mencatat posisimu di peta dunia. Perjalanan dan ceritanya tersimpan selamanya.</p>
-      <a href="/sparks" class="cara-link" data-i18n="ck3_link">Lihat Peta →</a>
-    </div>
+  <div id="terbaru-wrap" style="text-align:center;padding:12px 24px 0;min-height:24px;">
+    <span id="terbaru-teks" style="font-family:var(--fu);font-size:.72rem;letter-spacing:.12em;color:var(--emas);"></span>
   </div>
 </section>
 
@@ -341,29 +316,6 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
     <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:75%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>
     <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:55%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:35%;"></div></div></div>
     <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:50%;"></div></div></div>
-  </div>
-  <!-- STATS BAWAH -->
-  <div class="stats-bawah">
-    <a href="/karya" class="stat-item klik">
-      <div class="stat-num" id="stat-garment2">—</div>
-      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
-    </a>
-    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
-      <div class="stat-num" id="stat-berjalan2">—</div>
-      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
-    </div>
-    <div class="stat-item">
-      <div class="stat-num" id="stat-scan2">—</div>
-      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tercatat</div>
-    </div>
-    <div class="stat-item klik" onclick="bukaDrawer('kota')">
-      <div class="stat-num" id="stat-kota2">—</div>
-      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
-    </div>
-    <div class="stat-item klik" onclick="bukaDrawer('negara')">
-      <div class="stat-num" id="stat-negara2">—</div>
-      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
-    </div>
   </div>
 </section>
 
@@ -539,39 +491,100 @@ const CITY_COORDS={
   'denpasar':{ll:[115.212,-8.67],label:'Denpasar'},'medan':{ll:[98.679,3.595],label:'Medan'},
   'makassar':{ll:[119.432,-5.147],label:'Makassar'},'malang':{ll:[112.632,-7.983],label:'Malang'},
   'pontianak':{ll:[109.333,-0.02],label:'Pontianak'},'manado':{ll:[124.842,1.487],label:'Manado'},
+  'banjarmasin':{ll:[114.592,-3.317],label:'Banjarmasin'},'banjarbaru':{ll:[114.831,-3.442],label:'Banjarbaru'},
+  'samarinda':{ll:[117.136,-0.502],label:'Samarinda'},'balikpapan':{ll:[116.854,-1.268],label:'Balikpapan'},
   'singapore':{ll:[103.82,1.352],label:'Singapore'},'singapura':{ll:[103.82,1.352],label:'Singapore'},
   'kuala lumpur':{ll:[101.686,3.139],label:'Kuala Lumpur'},'tokyo':{ll:[139.69,35.69],label:'Tokyo'},
   'osaka':{ll:[135.502,34.694],label:'Osaka'},'seoul':{ll:[126.978,37.566],label:'Seoul'},
   'bangkok':{ll:[100.523,13.736],label:'Bangkok'},'sydney':{ll:[151.21,-33.87],label:'Sydney'},
   'london':{ll:[-0.118,51.508],label:'London'},'new york':{ll:[-74.006,40.713],label:'New York'},
+  'seychelles':{ll:[55.492,-4.679],label:'Seychelles'},'ile au cerf':{ll:[55.533,-4.683],label:'Ile Au Cerf'},
+  'boyolali':{ll:[110.599,-7.534],label:'Boyolali'},'klaten':{ll:[110.6,-7.7],label:'Klaten'},
+  'sukoharjo':{ll:[110.833,-7.683],label:'Sukoharjo'},'wonogiri':{ll:[110.922,-7.813],label:'Wonogiri'},
+  'sleman':{ll:[110.354,-7.717],label:'Sleman'},'wonosobo':{ll:[109.9,-7.362],label:'Wonosobo'},
+  'banyumas':{ll:[109.228,-7.513],label:'Banyumas'},'kediri':{ll:[112.018,-7.816],label:'Kediri'},
 };
 function getCityCoord(str){
-  if(!str) return null;const lower=str.toLowerCase();
-  for(const key of Object.keys(CITY_COORDS)){if(lower.includes(key)) return CITY_COORDS[key];}
+  if(!str) return null;
+  const lower=str.toLowerCase();
+  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
+  for(const key of keys){if(lower.includes(key)) return CITY_COORDS[key];}
   return null;
 }
+
+function typewriter(el, text, speed=40){
+  el.textContent='';
+  let i=0;
+  const tick=()=>{if(i<text.length){el.textContent+=text[i++];setTimeout(tick,speed);}};
+  tick();
+}
+
 function renderPeta(rows,world){
   const KLATEN=[110.6,-7.7];
   const wrap=document.getElementById('peta-wrap');
-  const w=wrap.offsetWidth||window.innerWidth,h=wrap.offsetHeight||300;
+  const w=wrap.offsetWidth||window.innerWidth,h=Math.min(w*0.55,320);
+  wrap.style.height=h+'px';
+
+  // Kumpulkan data kota + scan terbaru
   const cityMap={};
-  rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const coord=getCityCoord(c);if(!coord) return;const key=coord.label;if(!cityMap[key])cityMap[key]={coord,count:0};cityMap[key].count++;});
+  let latestCity='',latestTime=null;
+  rows.forEach(r=>{
+    const c=r.c[2]?.v;
+    const t=r.c[6]?.v||r.c[5]?.v||null;
+    if(!c) return;
+    const coord=getCityCoord(c);if(!coord) return;
+    const key=coord.label;
+    if(!cityMap[key])cityMap[key]={coord,count:0};
+    cityMap[key].count++;
+    if(t && (!latestTime||t>latestTime)){latestTime=t;latestCity=coord.label;}
+  });
+
+  // Kota tags
   const kotaRow=document.getElementById('kota-row');
-  Object.values(cityMap).slice(0,10).forEach(item=>{const d=document.createElement('div');d.className='kota-tag';d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;kotaRow.appendChild(d);});
+  Object.values(cityMap).slice(0,8).forEach(item=>{
+    const d=document.createElement('div');
+    d.className='kota-tag';
+    d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;
+    kotaRow.appendChild(d);
+  });
+
+  // Typewriter terbaru
+  if(latestCity){
+    const el=document.getElementById('terbaru-teks');
+    setTimeout(()=>typewriter(el,'✦ Terbaru dari '+latestCity),800);
+  }
+
+  // Render SVG
   const svg=d3.select('#d3-map').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`);
   const allPts=[KLATEN,...Object.values(cityMap).map(x=>x.coord.ll)];
   const ptGeo={type:'FeatureCollection',features:allPts.map(pt=>({type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}}))};
   const proj=d3.geoMercator().fitExtent([[32,16],[w-32,h-16]],ptGeo);
   const path=d3.geoPath().projection(proj);
+
+  // Peta dunia
   svg.append('g').selectAll('path').data(topojson.feature(world,world.objects.countries).features).join('path').attr('d',path).attr('fill','#0d2137').attr('stroke','#1a3a5c').attr('stroke-width','0.4');
+
+  // Garis dari Klaten ke setiap kota
+  const[kx,ky]=proj(KLATEN);
   Object.values(cityMap).forEach(item=>{
     const[cx,cy]=proj(item.coord.ll);
-    function br(){svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1').transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();setTimeout(br,1800);}br();
+    svg.append('line')
+      .attr('x1',kx).attr('y1',ky).attr('x2',cx).attr('y2',cy)
+      .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.8')
+      .attr('stroke-dasharray','3,3');
+  });
+
+  // Titik kota dengan pulse
+  Object.values(cityMap).forEach(item=>{
+    const[cx,cy]=proj(item.coord.ll);
+    function br(){svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1').transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();setTimeout(br,1800+Math.random()*1000);}br();
     svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width','0.5');
   });
-  const[kx,ky]=proj(KLATEN);
+
+  // Klaten origin pulse lebih besar
   function bk(){svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','none').attr('stroke','rgba(201,168,76,0.9)').attr('stroke-width','1.5').transition().duration(2500).ease(d3.easeLinear).attr('r',22).attr('stroke-opacity',0).remove();setTimeout(bk,2500);}bk();
   svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+
   document.getElementById('peta-loading').style.display='none';
 }
 function loadPeta(){

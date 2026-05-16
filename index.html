@@ -525,19 +525,32 @@ function renderPeta(rows,world){
   const w=wrap.offsetWidth||window.innerWidth,h=Math.min(w*0.55,320);
   wrap.style.height=h+'px';
 
-  // Kumpulkan data kota + scan terbaru
+  // Kumpulkan data kota
   const cityMap={};
-  let latestCity='',latestTime=null;
   rows.forEach(r=>{
     const c=r.c[2]?.v;
-    const t=r.c[6]?.v||r.c[5]?.v||null;
     if(!c) return;
     const coord=getCityCoord(c);if(!coord) return;
     const key=coord.label;
     if(!cityMap[key])cityMap[key]={coord,count:0};
     cityMap[key].count++;
-    if(t && (!latestTime||t>latestTime)){latestTime=t;latestCity=coord.label;}
   });
+
+  // Scan terbaru - ambil dari baris terakhir yang punya kota
+  let latestCity='', latestId='';
+  for(let i=rows.length-1;i>=0;i--){
+    const c=rows[i].c[2]?.v;
+    const id=rows[i].c[0]?.v;
+    if(!c||!id) continue;
+    const coord=getCityCoord(c);
+    if(coord){latestCity=coord.label;latestId=id;break;}
+  }
+
+  // Typewriter terbaru
+  if(latestCity && latestId){
+    const el=document.getElementById('terbaru-teks');
+    setTimeout(()=>typewriter(el,'✦ Scan terbaru: '+latestId+' · '+latestCity),800);
+  }
 
   // Kota tags
   const kotaRow=document.getElementById('kota-row');
@@ -547,12 +560,6 @@ function renderPeta(rows,world){
     d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;
     kotaRow.appendChild(d);
   });
-
-  // Typewriter terbaru
-  if(latestCity){
-    const el=document.getElementById('terbaru-teks');
-    setTimeout(()=>typewriter(el,'✦ Terbaru dari '+latestCity),800);
-  }
 
   // Render SVG
   const svg=d3.select('#d3-map').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`);

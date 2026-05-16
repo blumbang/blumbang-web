@@ -222,6 +222,13 @@ const CITY_COORDS={
   'bangkalan':{lonlat:[112.73,-7.044],label:'Bangkalan'},
   'bangkok':{lonlat:[100.501,13.756],label:'Bangkok'},
   'banjar':{lonlat:[108.54,-7.368],label:'Banjar'},
+  'bali':{lonlat:[115.092,-8.34],label:'Bali'},
+  'bulakamba':{lonlat:[108.988,-6.867],label:'Bulakamba'},
+  'kijang':{lonlat:[104.633,0.917],label:'Kijang'},
+  'selogiri':{lonlat:[110.895,-7.783],label:'Selogiri'},
+  'trucuk':{lonlat:[110.617,-7.713],label:'Trucuk'},
+  'victoria':{lonlat:[55.455,-4.62],label:'Victoria'},
+  'kota banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
   'banjarbaru':{lonlat:[114.831,-3.442],label:'Banjarbaru'},
   'banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
   'banjarnegara':{lonlat:[109.693,-7.388],label:'Banjarnegara'},
@@ -571,21 +578,82 @@ function getCityCoord(cityStr){
   return null;
 }
 
-function buildMap(rows, preloadedWorld){
+// Cache geocoding di sessionStorage
+var _geoCache = null;
+function getGeoCache(){
+  if(_geoCache) return _geoCache;
+  try{ _geoCache = JSON.parse(sessionStorage.getItem('blumbang_geo')||'{}'); }
+  catch(e){ _geoCache = {}; }
+  return _geoCache;
+}
+function setGeoCache(key, val){
+  var cache = getGeoCache();
+  cache[key] = val;
+  try{ sessionStorage.setItem('blumbang_geo', JSON.stringify(cache)); }catch(e){}
+}
+
+async function geocodeCity(cityStr){
+  if(!cityStr) return null;
+  // Cek dictionary dulu
+  var fromDict = getCityCoord(cityStr);
+  if(fromDict) return fromDict;
+  // Cek cache
+  var cache = getGeoCache();
+  var cacheKey = cityStr.toLowerCase().trim();
+  if(cache[cacheKey] !== undefined) return cache[cacheKey];
+  // Fetch Nominatim
+  try{
+    // Ambil bagian sebelum koma untuk query yang lebih bersih
+    var query = cityStr.split(',')[0].trim();
+    var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&accept-language=en';
+    var res = await fetch(url, {headers:{'User-Agent':'blumbang.id/1.0'}});
+    var data = await res.json();
+    if(data && data[0]){
+      var lon = parseFloat(data[0].lon);
+      var lat = parseFloat(data[0].lat);
+      var label = data[0].display_name.split(',')[0].trim();
+      var coord = {lonlat:[lon,lat], label:label};
+      setGeoCache(cacheKey, coord);
+      return coord;
+    }
+  }catch(e){}
+  setGeoCache(cacheKey, null);
+  return null;
+}
+
+async function buildMap(rows, preloadedWorld){
   const citiesRow = document.getElementById('cities-row');
   const tooltip = document.getElementById('map-tooltip');
   const mapSection = document.getElementById('map-section');
 
-  // Kumpulkan kota yang punya spark
-  const cityMap = {};
+  // Kumpulkan kota unik dari Sheet
+  const uniqueCities = {};
   rows.forEach(function(r){
     const c = r.c[2] && r.c[2].v;
     if(!c) return;
-    const coord = getCityCoord(c);
-    if(!coord) return;
-    if(!cityMap[coord.label]) cityMap[coord.label] = {coord, count:0};
-    cityMap[coord.label].count++;
+    const key = c.toLowerCase().trim();
+    if(!uniqueCities[key]) uniqueCities[key] = c;
   });
+
+  // Geocode semua kota paralel (rate limit: max 1 req/detik untuk Nominatim)
+  const cityMap = {};
+  const cityKeys = Object.keys(uniqueCities);
+  for(var i=0; i<cityKeys.length; i++){
+    var cityStr = uniqueCities[cityKeys[i]];
+    var coord = await geocodeCity(cityStr);
+    if(!coord) continue;
+    var label = coord.label;
+    if(!cityMap[label]) cityMap[label] = {coord, count:0};
+    // Hitung total scan per kota
+    rows.forEach(function(r){
+      const c = r.c[2] && r.c[2].v;
+      if(c && c.toLowerCase().trim() === cityKeys[i]) cityMap[label].count++;
+    });
+    // Rate limit Nominatim — hanya delay jika ini hasil geocoding baru (bukan cache/dict)
+    if(!getCityCoord(cityStr) && !getGeoCache()[cityKeys[i]]){
+      await new Promise(function(res){setTimeout(res, 1100);});
+    }
+  }
 
   // Dimensi peta: lebar penuh, tinggi 60vh
   const w = window.innerWidth || document.documentElement.clientWidth;
@@ -757,7 +825,7 @@ requestAnimationFrame(function(){
       document.getElementById('latest-section').style.display = 'flex';
     }
 
-    buildMap(rows, worldData);
+    buildMap(rows, worldData).catch(function(e){console.error('buildMap error:',e);});
   }).catch(function(){
     document.getElementById('map-loading').style.display = 'none';
   });

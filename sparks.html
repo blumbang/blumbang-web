@@ -500,7 +500,6 @@ const CITY_COORDS={
   'sendai':{lonlat:[140.882,38.268],label:'Sendai'},
   'seoul':{lonlat:[126.978,37.566],label:'Seoul'},
   'serang':{lonlat:[106.152,-6.11],label:'Serang'},
-  'seychelles':{lonlat:[55.492,-4.619],label:'Seychelles'},
   'shanghai':{lonlat:[121.474,31.23],label:'Shanghai'},
   'sharjah':{lonlat:[55.382,25.357],label:'Sharjah'},
   'shenzhen':{lonlat:[114.058,22.543],label:'Shenzhen'},
@@ -552,7 +551,6 @@ const CITY_COORDS={
   'tulungagung':{lonlat:[111.903,-8.065],label:'Tulungagung'},
   'ulaanbaatar':{lonlat:[106.921,47.887],label:'Ulaanbaatar'},
   'vancouver':{lonlat:[-123.121,49.283],label:'Vancouver'},
-  'victoria':{lonlat:[55.492,-4.619],label:'Victoria'},
   'vienna':{lonlat:[16.373,48.209],label:'Vienna'},
   'vientiane':{lonlat:[102.6,17.967],label:'Vientiane'},
   'warsaw':{lonlat:[21.012,52.23],label:'Warsaw'},
@@ -597,6 +595,12 @@ async function geocodeCity(cityStr){
   // Cek dictionary dulu
   var fromDict = getCityCoord(cityStr);
   if(fromDict) return fromDict;
+  // Strip "Kota " di awal dan cek lagi
+  var stripped = cityStr.replace(/^kota\s+/i, '').trim();
+  if(stripped !== cityStr){
+    var fromDictStripped = getCityCoord(stripped);
+    if(fromDictStripped) return fromDictStripped;
+  }
   // Cek cache
   var cache = getGeoCache();
   var cacheKey = cityStr.toLowerCase().trim();

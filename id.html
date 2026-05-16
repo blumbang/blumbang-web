@@ -62,6 +62,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* NAMA */
 .garment-nama{font-family:var(--font-logo);font-size:clamp(2rem,8vw,3.5rem);letter-spacing:.06em;line-height:1.0;margin-bottom:20px;}
+.garment-nama-link{display:block;text-decoration:none;color:var(--white);transition:color 0.2s;}
+.garment-nama-link:hover{color:var(--gold);}
 
 /* INFO GRID */
 .garment-info{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-bottom:36px;}
@@ -421,7 +423,8 @@ async function init() {
     var html = '<div class="garment-wrap">';
     html += '<div class="garment-id-badge"><span class="garment-id-text">' + id + '</span>' + srcBadge + '</div>';
     html += '<div class="garment-mockup-wrap">' + mockupHtml + '</div>';
-    html += '<div class="garment-nama">' + nama + '</div>';
+    var seriSlug = toSlug(nama);
+    html += '<a href="/karya/' + seriSlug + '" class="garment-nama garment-nama-link">' + nama + ' →</a>';
     html += '<div class="garment-info">';
     html += '<div class="info-item"><div class="info-label">Dibuat di</div><div class="info-val">' + origin + '</div></div>';
     html += '<div class="info-item"><div class="info-label">Tahun</div><div class="info-val">' + year + '</div></div>';
@@ -476,6 +479,10 @@ function bukaCheckinModal() {
     document.body.style.overflow = '';
     revealSparkBox();
   }, 3000);
+}
+
+function toSlug(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
 }
 
 async function recordScan(garmentId) {

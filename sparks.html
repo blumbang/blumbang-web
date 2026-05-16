@@ -69,6 +69,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .drawer-item-kota{flex:1;}
 .drawer-item-count{font-size:.65rem;color:var(--muted);letter-spacing:.1em;}
 .drawer-kosong{text-align:center;padding:40px;font-family:var(--font-ui);font-size:.72rem;letter-spacing:.15em;color:var(--dim);}
+.di-id{font-family:var(--font-logo);font-size:.95rem;letter-spacing:.12em;color:var(--gold);}
+.di-info{font-family:var(--font-ui);font-size:.65rem;color:var(--muted);margin-top:2px;}
+.di-arrow{font-size:1rem;color:var(--muted);}
+.drawer-item a,.drawer-item[href]{text-decoration:none;color:inherit;}
 
 /* MAP */
 .map-section{background:#0a1628;position:relative;}
@@ -159,7 +163,7 @@ gtag("config","G-39SRRM5GKK");
   <!-- STATS -->
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Kaos Terdaftar</div></div>
-    <div class="stat-item"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
     <div class="stat-item klik" onclick="bukaDrawer('kota')"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
     <div class="stat-item klik" onclick="bukaDrawer('negara')"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
   </div>
@@ -595,6 +599,7 @@ function getCityCoord(cityStr){
 
 // DRAWER
 var _drawerData = {kota:{}, negara:{}};
+var _spkRows = [];
 
 function bukaDrawer(tipe){
   var overlay = document.getElementById('drawer-overlay');
@@ -602,26 +607,57 @@ function bukaDrawer(tipe){
   var judul = document.getElementById('drawer-judul');
   var list = document.getElementById('drawer-list');
 
-  judul.textContent = tipe === 'kota' ? 'KOTA' : 'NEGARA';
+  var judulMap = {berjalan:'PERJALANAN', kota:'KOTA', negara:'NEGARA'};
+  judul.textContent = judulMap[tipe] || tipe.toUpperCase();
   overlay.classList.add('aktif');
   drawer.classList.add('aktif');
   document.body.style.overflow = 'hidden';
 
-  var data = _drawerData[tipe];
-  var entries = Object.entries(data).sort(function(a,b){return b[1]-a[1];});
+  // History API — push state supaya tombol back tutup drawer
+  window.history.pushState({drawer: true}, '');
 
-  if(!entries.length){
-    list.innerHTML = '<div class="drawer-kosong">Belum ada data</div>';
-    return;
+  var rows = _spkRows;
+
+  if(tipe === 'berjalan'){
+    if(!rows.length){list.innerHTML='<div class="drawer-kosong">Memuat...</div>';return;}
+    var map={};
+    rows.forEach(function(r){
+      var id=r.c[0]&&r.c[0].v, c=r.c[2]&&r.c[2].v;
+      if(!id) return;
+      if(!map[id]) map[id]={id,kota:[],count:0};
+      map[id].count++;
+      if(c) map[id].kota.push(c.split(',')[0].trim());
+    });
+    var arr=Object.values(map).sort(function(a,b){return b.count-a.count;}).slice(0,50);
+    if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
+    list.innerHTML=arr.map(function(g){
+      var k=[...new Set(g.kota)].slice(0,3).join(' → ');
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="drawer-item" style="text-decoration:none;color:inherit;">'+
+        '<div><div class="di-id">'+g.id+'</div><div class="di-info">'+g.count+' scan · '+(k||'—')+'</div></div>'+
+        '<div class="di-arrow">›</div></a>';
+    }).join('');
   }
 
-  list.innerHTML = entries.map(function(e){
-    return '<div class="drawer-item">' +
-      '<div class="drawer-item-dot"></div>' +
-      '<div class="drawer-item-kota">' + e[0] + '</div>' +
-      '<div class="drawer-item-count">' + e[1] + ' scan</div>' +
-    '</div>';
-  }).join('');
+  if(tipe === 'kota'){
+    var cnt={};
+    rows.forEach(function(r){var c=r.c[2]&&r.c[2].v;if(!c) return;var k=c.split(',')[0].trim();cnt[k]=(cnt[k]||0)+1;});
+    cnt['Klaten']=cnt['Klaten']||0;
+    var sorted=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];});
+    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
+    list.innerHTML=sorted.map(function(e){
+      return '<div class="drawer-item"><div><div class="di-id">'+e[0]+'</div><div class="di-info">'+(e[1]>0?e[1]+' scan':'Origin')+'</div></div></div>';
+    }).join('');
+  }
+
+  if(tipe === 'negara'){
+    var cnt={};
+    rows.forEach(function(r){var c=r.c[2]&&r.c[2].v;if(!c) return;var parts=c.split(',');var n=parts.length>1?parts[parts.length-1].trim():'Indonesia';cnt[n]=(cnt[n]||0)+1;});
+    var sorted=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];});
+    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
+    list.innerHTML=sorted.map(function(e){
+      return '<div class="drawer-item"><div><div class="di-id">'+e[0]+'</div><div class="di-info">'+e[1]+' scan</div></div></div>';
+    }).join('');
+  }
 }
 
 function tutupDrawer(){
@@ -629,6 +665,13 @@ function tutupDrawer(){
   document.getElementById('drawer').classList.remove('aktif');
   document.body.style.overflow = '';
 }
+
+// Intercept tombol back — tutup drawer, tidak keluar halaman
+window.addEventListener('popstate', function(e){
+  if(document.getElementById('drawer').classList.contains('aktif')){
+    tutupDrawer();
+  }
+});
 
 var _geoCache = null;
 function getGeoCache(){
@@ -864,6 +907,7 @@ requestAnimationFrame(function(){
     var m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     if(!m){ document.getElementById('map-loading').style.display='none'; return; }
     var rows = JSON.parse(m[1]).table.rows||[];
+    _spkRows = rows; // simpan untuk drawer
 
     var mG = txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
     var rowsG = mG ? JSON.parse(mG[1]).table.rows||[] : [];

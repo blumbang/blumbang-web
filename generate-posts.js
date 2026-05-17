@@ -22,19 +22,40 @@ function parseFrontmatter(content) {
   if (end === -1) return result;
   const frontmatter = content.slice(3, end).trim();
   result.body = content.slice(end + 3).trim();
-  frontmatter.split('\n').forEach(line => {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) return;
-    const key = line.slice(0, colonIdx).trim();
-    let val = line.slice(colonIdx + 1).trim();
+
+  const lines = frontmatter.split('\n');
+  let currentKey = null;
+  let currentVal = null;
+
+  const commitCurrent = () => {
+    if (currentKey === null) return;
+    let val = currentVal.trim();
     if ((val.startsWith('"') && val.endsWith('"')) ||
         (val.startsWith("'") && val.endsWith("'"))) {
       val = val.slice(1, -1);
     }
     if (val === 'true') val = true;
     if (val === 'false') val = false;
-    result.meta[key] = val;
+    result.meta[currentKey] = val;
+    currentKey = null;
+    currentVal = null;
+  };
+
+  lines.forEach(line => {
+    // Baris lanjutan multiline (diawali spasi/tab)
+    if (currentKey && (line.startsWith(' ') || line.startsWith('\t'))) {
+      currentVal += ' ' + line.trim();
+      return;
+    }
+    // Baris baru — commit yang sebelumnya
+    commitCurrent();
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) return;
+    currentKey = line.slice(0, colonIdx).trim();
+    currentVal = line.slice(colonIdx + 1).trim();
   });
+  commitCurrent();
+
   return result;
 }
 

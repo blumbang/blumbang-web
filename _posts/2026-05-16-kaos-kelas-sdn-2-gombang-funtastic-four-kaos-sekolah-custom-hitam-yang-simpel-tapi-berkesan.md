@@ -5,7 +5,7 @@ date: 2026-05-17
 category: produk
 description: Produksi kaos kelas custom untuk SDN 2 Gombang dengan desain
   “Funtastic Four”. Menggunakan soft cotton combed 30s warna hitam yang nyaman
-  dipakai untuk aktivitas sekolah dan kenang-kenangan kelas.
+  dipakai
 cover: https://media.blumbang.id/1779001270116-kaos-kelas-sdn-2-gombang-funtastic-four-blumbang-id.jpg.webp
 published: true
 ---

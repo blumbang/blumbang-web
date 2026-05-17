@@ -222,4 +222,25 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+
+    <url>
+        <loc>https://blumbang.id/sablon-klaten</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-solo</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-jogja</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-banjarbaru</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
 </urlset>

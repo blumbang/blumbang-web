@@ -223,8 +223,9 @@ Karena detail desain lebih tajam, warna lebih solid, dan hasil visual terasa leb
 
 Bisa custom desain sendiri?
 
-Bisa. Desain bisa disesuaikan kebutuhan sekolah, kelas, komunitas, atau event tertentu
+Bisa. Desain bisa disesuaikan kebutuhan sekolah, kelas, komunitas, atau event tertentu.
 
-\- Homepage: <https://blumbang.id>
+- Homepage: [blumbang.id](https://blumbang.id)
+- Portfolio/Karya: [blumbang.id/karya](https://blumbang.id/karya)
+- Order: [WhatsApp](https://wa.me/6281234561146)
 
-\- Portfolio/Karya: <https://blumbang.id/karya>

@@ -225,12 +225,6 @@ Bisa custom desain sendiri?
 
 Bisa. Desain bisa disesuaikan kebutuhan sekolah, kelas, komunitas, atau event tertentu.
 
-* **Homepage:**
-
-   https://blumbang.id
-* **Portfolio/Karya:**
-
-   
-
-  https://blumbang.id/karya
-*   <https://wa.me/6281234561146>
+* **Homepage:** <https://blumbang.id>
+* **Portfolio/Karya:** <https://blumbang.id/karya>
+* <https://wa.me/6281234561146>

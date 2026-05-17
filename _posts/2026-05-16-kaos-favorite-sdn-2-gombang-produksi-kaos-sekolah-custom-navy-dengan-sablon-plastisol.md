@@ -227,27 +227,10 @@ Bisa. Desain bisa disesuaikan kebutuhan sekolah, kelas, komunitas, atau event te
 
 * **Homepage:**
 
-   
-
-  <https://blumbang.id>
-
-
+   https://blumbang.id
 * **Portfolio/Karya:**
 
    
 
-  <https://blumbang.id/karya>
-
-
-* **Artikel sablon:**
-
-   
-
-  <https://blumbang.id/blog/jujur-soal-sablon-kami-dtf-plastisol-dan-kenapa-rubber-itu-mahal>
-
-
-* **Order WhatsApp:**
-
-   
-
-  <https://wa.me/6281234561146>
+  https://blumbang.id/karya
+*   <https://wa.me/6281234561146>

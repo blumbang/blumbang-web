@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalog · Blumbang.id</title>
+<meta name="description" content="Semua garment Blumbang.id — kaos yang punya cerita.">
+<link rel="canonical" href="https://blumbang.id/catalog">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--abu2:#252525;
+  --border:#2a2a2a;--muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;--gold-bg:#140f02;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+
+/* HERO */
+.hero{padding:120px 40px 60px;text-align:center;}
+.hero-tag{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;display:block;text-transform:uppercase;}
+.hero-title{font-family:var(--font-logo);font-size:clamp(3rem,8vw,6rem);letter-spacing:0.05em;line-height:1.0;margin-bottom:20px;}
+.hero-sub{font-family:var(--font-body);font-size:1rem;font-weight:300;font-style:italic;color:var(--light);margin-bottom:8px;}
+.hero-count{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
+
+/* SEARCH */
+.search-wrap{padding:0 40px 32px;display:flex;justify-content:center;}
+.search-box{width:100%;max-width:480px;background:var(--charcoal);border:1px solid var(--border);color:var(--white);font-family:var(--font-body);font-size:0.95rem;padding:13px 18px;outline:none;transition:border-color .2s;}
+.search-box:focus{border-color:var(--gold);}
+.search-box::placeholder{color:var(--muted);font-style:italic;}
+
+/* GRID */
+.seri-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);margin:0 40px 80px;}
+.seri-card{background:var(--charcoal);display:flex;flex-direction:column;transition:background .2s;}
+.seri-card:hover{background:var(--grey);}
+.seri-mockup{width:100%;height:220px;object-fit:cover;display:block;}
+.seri-ph{width:100%;height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--grey);}
+.seri-ph-ico{font-size:2.5rem;color:var(--gold-dim);}
+.seri-ph-txt{font-family:var(--font-ui);font-size:0.62rem;letter-spacing:.15em;color:var(--muted);text-transform:uppercase;}
+.seri-body{padding:22px 24px;flex:1;display:flex;flex-direction:column;gap:6px;}
+.seri-nama{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.1em;color:var(--white);line-height:1.1;}
+.seri-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.seri-pcs{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--gold);text-transform:uppercase;}
+.seri-scan{font-family:var(--font-ui);font-size:.65rem;font-weight:500;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;}
+.seri-sep{color:var(--border);}
+.seri-barcodes{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.seri-bc{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.1em;color:var(--muted);background:var(--black);border:1px solid var(--border);padding:3px 8px;text-transform:uppercase;}
+.seri-tombol{margin-top:14px;display:inline-flex;align-items:center;gap:8px;font-family:var(--font-ui);font-size:.68rem;font-weight:700;letter-spacing:.15em;color:var(--gold-dim);text-transform:uppercase;text-decoration:none;border:1px solid var(--border);padding:9px 16px;background:var(--black);transition:all .2s;cursor:pointer;}
+.seri-tombol:hover{border-color:var(--gold);color:var(--gold);}
+
+/* HOT BADGE */
+.hot-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-ui);font-size:.58rem;font-weight:700;letter-spacing:.15em;color:var(--gold);border:1px solid rgba(201,168,76,.3);padding:2px 8px;text-transform:uppercase;background:rgba(201,168,76,.07);}
+.hot-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;}
+@keyframes denyut{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.5);}}
+
+/* DRAWER */
+.drw-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;}
+.drw-overlay.on{opacity:1;pointer-events:all;}
+.drw{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--charcoal);border-top:1px solid var(--border);border-radius:16px 16px 0 0;max-height:78vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.drw.on{transform:translateY(0);}
+.drw-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+.drw-head{padding:18px 24px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.drw-judul{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:.08em;color:var(--gold);}
+.drw-sub{font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--dim);text-transform:uppercase;margin-top:3px;}
+.drw-tutup{background:none;border:1px solid var(--border);color:var(--dim);font-size:.8rem;padding:5px 12px;cursor:pointer;font-family:var(--font-ui);}
+.drw-tutup:hover{border-color:var(--gold);color:var(--gold);}
+.drw-list{display:flex;flex-direction:column;}
+.drw-item{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);text-decoration:none;transition:background .2s;}
+.drw-item:hover{background:var(--grey);}
+.drw-item:last-child{border-bottom:none;}
+.drw-item-id{font-family:var(--font-logo);font-size:1.1rem;letter-spacing:.15em;color:var(--gold);}
+.drw-item-info{font-family:var(--font-ui);font-size:.65rem;font-weight:500;color:var(--dim);margin-top:2px;}
+.drw-item-arr{font-size:1rem;color:var(--dim);}
+
+/* STATES */
+.loading{padding:80px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
+.search-empty{padding:60px 40px;text-align:center;font-family:var(--font-ui);font-size:0.72rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;grid-column:1/-1;}
+
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .hero{padding:90px 20px 40px;}
+  .search-wrap{padding:0 20px 24px;}
+  .seri-grid{margin:0 0 60px;}
+  .nav-links{display:none;}
+  .nav-order{display:none;}
+  .nav-hamburger{display:block;}
+}
+
+/* LIGHTBOX */
+.lightbox{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;cursor:zoom-out;}
+.lightbox.on{opacity:1;pointer-events:all;}
+.lightbox img{max-width:92vw;max-height:92vh;object-fit:contain;border:1px solid rgba(201,168,76,0.2);}
+.lightbox-close{position:absolute;top:20px;right:24px;font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:rgba(245,240,232,0.5);cursor:pointer;transition:color 0.2s;}
+.lightbox-close:hover{color:var(--gold);}
+.seri-mockup{cursor:zoom-in;}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag("js",new Date());
+gtag("config","G-39SRRM5GKK");
+</script>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <div class="nav-links">
+    <a href="/catalog" class="active">Karya</a>
+    <a href="/sparks">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/catalog" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
+
+<div class="hero">
+  <span class="hero-tag">✦ Living Garments</span>
+  <h1 class="hero-title">KAOS YANG<br>PUNYA CERITA</h1>
+  <p class="hero-sub">Setiap kaos memiliki identitas unik dan perjalanan yang bisa dilacak.</p>
+  <div class="hero-count" id="hero-count">Memuat...</div>
+</div>
+
+<div class="search-wrap">
+  <input class="search-box" id="search-box" type="text" placeholder="Cari nama seri...">
+</div>
+
+<div class="seri-grid" id="seri-grid">
+  <div class="loading">Memuat koleksi...</div>
+</div>
+
+<div class="drw-overlay" id="drw-overlay"></div>
+<div class="drw" id="drw-seri">
+  <div class="drw-handle"></div>
+  <div class="drw-head">
+    <div>
+      <div class="drw-judul" id="drw-judul">—</div>
+      <div class="drw-sub" id="drw-sub">—</div>
+    </div>
+    <button class="drw-tutup" id="drw-tutup">✕ Tutup</button>
+  </div>
+  <div class="drw-list" id="drw-list"></div>
+</div>
+
+<script>
+var SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+var _seriList = [];
+var _scanCount = {};
+
+function toggleMenu() {
+  var m = document.getElementById('nav-mobile');
+  var h = document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent = m.classList.contains('open') ? '✕' : '☰';
+}
+
+function driveUrl(url) {
+  if (!url) return '';
+  var m = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m ? 'https://drive.google.com/thumbnail?id=' + m[1] + '&sz=w800' : url;
+}
+
+// DRAWER
+function bukaDrawer(idx) {
+  var seri = _seriList[idx];
+  if (!seri) return;
+  document.getElementById('drw-judul').textContent = seri.nama;
+  document.getElementById('drw-sub').textContent = seri.garments.length + ' Kaos dalam seri ini';
+
+  // Sort garments berdasarkan scan terbanyak
+  var sorted = seri.garments.slice().sort(function(a, b) {
+    var aTotal = (_scanCount[a.id] && _scanCount[a.id].total) || 0;
+    var bTotal = (_scanCount[b.id] && _scanCount[b.id].total) || 0;
+    return bTotal - aTotal;
+  });
+
+  var html = '';
+  for (var i = 0; i < sorted.length; i++) {
+    var g = sorted[i];
+    var scanTotal = (_scanCount[g.id] && _scanCount[g.id].total) || 0;
+    var scanInfo = scanTotal > 0 ? scanTotal + ' scan' : 'Belum discan';
+    html += '<a href="/id/' + g.id + '" class="drw-item">';
+    html += '<div><div class="drw-item-id">' + g.id + '</div>';
+    html += '<div class="drw-item-info">' + g.year + ' · ' + scanInfo + '</div></div>';
+    html += '<div class="drw-item-arr">&#x203A;</div></a>';
+  }
+  document.getElementById('drw-list').innerHTML = html;
+  document.getElementById('drw-overlay').classList.add('on');
+  document.getElementById('drw-seri').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function tutupDrawer() {
+  document.getElementById('drw-overlay').classList.remove('on');
+  document.getElementById('drw-seri').classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('drw-overlay').addEventListener('click', tutupDrawer);
+document.getElementById('drw-tutup').addEventListener('click', tutupDrawer);
+
+// Swipe down to close
+var touchY = 0;
+document.addEventListener('touchstart', function(e) { touchY = e.touches[0].clientY; });
+document.addEventListener('touchend', function(e) {
+  if (e.changedTouches[0].clientY - touchY > 80) {
+    if (document.querySelector('.drw.on')) tutupDrawer();
+  }
+});
+
+// RENDER
+function renderGrid(list) {
+  var grid = document.getElementById('seri-grid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="search-empty">Tidak ada hasil ditemukan.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < list.length; i++) {
+    var seri = list[i];
+    var realIdx = _seriList.indexOf(seri);
+    var jml = seri.garments.length;
+    var g0 = seri.garments[0];
+
+    // Foto
+    var foto = '';
+    if (seri.mockup) {
+      foto = '<img class="seri-mockup" src="' + seri.mockup + '" alt="" loading="lazy">';
+    } else {
+      foto = '<div class="seri-ph"><span class="seri-ph-ico">&#x2726;</span><span class="seri-ph-txt">Mockup Coming Soon</span></div>';
+    }
+
+    // Hot badge
+    var hot = seri.scanRecent > 0
+      ? '<div class="hot-badge"><span class="hot-dot"></span>Aktif ' + seri.scanRecent + ' scan</div>'
+      : '';
+
+    // Scan info
+    var scanInfo = seri.scanTotal > 0
+      ? '<span class="seri-sep">·</span><span class="seri-scan">' + seri.scanTotal + ' scan</span>'
+      : '';
+
+    // Barcodes
+    var bc = '';
+    var show = seri.garments.slice(0, 6);
+    for (var j = 0; j < show.length; j++) {
+      bc += '<span class="seri-bc">' + show[j].id + '</span>';
+    }
+    if (jml > 6) bc += '<span class="seri-bc">+' + (jml - 6) + ' lagi</span>';
+
+    // Tombol
+    var slug = toSlug(seri.nama);
+    var tombol = '<a href="/karya/' + slug + '" class="seri-tombol">Lihat Koleksi &#x2192;</a>';
+
+    html += '<div class="seri-card">' + foto;
+    html += '<div class="seri-body">' + hot;
+    html += '<div class="seri-nama">' + seri.nama + '</div>';
+    html += '<div class="seri-meta"><span class="seri-pcs">' + jml + ' Kaos</span>' + scanInfo + '</div>';
+    html += '<div class="seri-barcodes">' + bc + '</div>';
+    html += tombol + '</div></div>';
+  }
+  grid.innerHTML = html;
+}
+
+// LIGHTBOX
+function initLightbox() {
+  if (!document.getElementById('lightbox')) {
+    var lb = document.createElement('div');
+    lb.className = 'lightbox';
+    lb.id = 'lightbox';
+    lb.innerHTML = '<div class="lightbox-close">✕ Tutup</div><img id="lb-img" src="" alt="">';
+    document.body.appendChild(lb);
+    lb.addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+  }
+  document.querySelectorAll('.seri-mockup').forEach(function(img) {
+    img.onclick = function() {
+      document.getElementById('lb-img').src = this.src;
+      document.getElementById('lightbox').classList.add('on');
+      document.body.style.overflow = 'hidden';
+    };
+  });
+}
+function closeLightbox() {
+  var lb = document.getElementById('lightbox');
+  if (lb) lb.classList.remove('on');
+  document.body.style.overflow = '';
+}
+
+// SEARCH
+document.getElementById('search-box').addEventListener('input', function() {
+  var q = this.value.toLowerCase().trim();
+  if (!q) { renderGrid(_seriList); initLightbox(); return; }
+  var filtered = _seriList.filter(function(s) {
+    return s.nama.toLowerCase().indexOf(q) >= 0;
+  });
+  if (!filtered.length) {
+    document.getElementById('seri-grid').innerHTML = '<div class="search-empty">Tidak ada seri "' + this.value + '"</div>';
+    return;
+  }
+  renderGrid(filtered);
+  initLightbox();
+});
+
+// MAIN
+async function init() {
+  try {
+    var garRes = await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=GARMENTS');
+    var garTxt = await garRes.text();
+    var garMatch = garTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    var garRows = garMatch ? JSON.parse(garMatch[1]).table.rows || [] : [];
+
+    var spkRows = [];
+    try {
+      var spkRes = await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=SPARKS');
+      var spkTxt = await spkRes.text();
+      var spkMatch = spkTxt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      spkRows = spkMatch ? JSON.parse(spkMatch[1]).table.rows || [] : [];
+    } catch(e) {
+      console.warn('SPARKS tidak bisa dimuat');
+    }
+
+    // Hitung scan per garment (30 hari terakhir)
+    var now = Date.now();
+    var batas = 30 * 24 * 60 * 60 * 1000;
+    var scanCount = {};
+    for (var i = 0; i < spkRows.length; i++) {
+      var r = spkRows[i];
+      var gid = r.c[0] && r.c[0].v;
+      if (!gid) continue;
+      if (!scanCount[gid]) scanCount[gid] = { total: 0, recent: 0 };
+      scanCount[gid].total++;
+      var ts = r.c[6] && r.c[6].v;
+      if (ts) {
+        try {
+          var parts = ts.toString().split(' ');
+          var dp = parts[0].split('/');
+          var d = new Date(dp[2] + '-' + dp[1] + '-' + dp[0]);
+          if (now - d.getTime() < batas) scanCount[gid].recent++;
+        } catch(e) {}
+      }
+    }
+
+    _scanCount = scanCount; // Simpan untuk drawer
+    // Kelompokkan per seri
+    var seriMap = {};
+    for (var i = 0; i < garRows.length; i++) {
+      var row = garRows[i];
+      var id = row.c[0] && row.c[0].v;
+      if (!id) continue;
+      var name = ((row.c[1] && row.c[1].v) || id).replace(/\n/g, ' ');
+      var origin = (row.c[2] && row.c[2].v) || 'Klaten';
+      var year = (row.c[3] && row.c[3].v) || '2026';
+      var edition = (row.c[4] && row.c[4].v) || '';
+      var mockup = driveUrl((row.c[5] && row.c[5].v) || '');
+      var key = name.trim().toLowerCase() || '__umum__';
+
+      if (!seriMap[key]) {
+        seriMap[key] = { nama: name.trim() || 'Tanpa Nama', garments: [], mockup: '', scanRecent: 0, scanTotal: 0 };
+      }
+      seriMap[key].garments.push({ id: id, name: name, origin: origin, year: year, edition: edition, mockup: mockup });
+      if (mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
+      if (scanCount[id]) {
+        seriMap[key].scanRecent += scanCount[id].recent;
+        seriMap[key].scanTotal += scanCount[id].total;
+      }
+    }
+
+    // Sort: scan recent terbanyak di atas
+    var keys = Object.keys(seriMap);
+    _seriList = keys.map(function(k) { return seriMap[k]; }).sort(function(a, b) {
+      if (b.scanRecent !== a.scanRecent) return b.scanRecent - a.scanRecent;
+      return b.scanTotal - a.scanTotal;
+    });
+
+    var totalGarment = garRows.filter(function(r) { return r.c[0] && r.c[0].v; }).length;
+    document.getElementById('hero-count').textContent = totalGarment + ' Garment · ' + _seriList.length + ' Seri';
+
+    renderGrid(_seriList);
+    initLightbox();
+
+  } catch(e) {
+    console.error('Catalog error:', e.message || e);
+    document.getElementById('seri-grid').innerHTML = '<div class="loading">Gagal memuat data. Coba refresh halaman.</div>';
+  }
+}
+
+init();
+</script>
+<script>function toSlug(str){return str.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');}</script>
+</body>
+</html>

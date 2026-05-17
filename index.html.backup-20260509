@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blumbang ID — Independent T-Shirt Studio</title>
+<meta name="description" content="Blumbang.id — Independent T-Shirt Studio & Screen Printing dari Klaten, Jawa Tengah. Setiap kaos memiliki ID unik dan menyimpan perjalanannya sendiri.">
+<link rel="canonical" href="https://blumbang.id/">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --hitam:#080808;--abu:#141414;--abu2:#1a1a1a;
+  --border:#252525;--redup:#666;--terang:#cccccc;--putih:#F5F0E8;
+  --emas:#C9A84C;--emas-dim:#6a5020;--emas-bg:#0e0900;
+  --hijau:#3a6644;--hijau-h:#4a7c54;
+  --fd:'Bebas Neue',sans-serif;--fb:'Montserrat',sans-serif;--fu:'Inter',sans-serif;
+}
+body{background:var(--hitam);color:var(--putih);font-family:var(--fb);overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:15px 40px;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--fd);font-size:1.5rem;letter-spacing:.15em;color:var(--emas);text-decoration:none;display:flex;flex-direction:column;line-height:1;}
+.nav-brand small{font-family:var(--fb);font-size:.6rem;font-weight:600;letter-spacing:.08em;color:var(--putih);margin-top:3px;}
+.nav-kanan{display:flex;align-items:center;gap:28px;}
+.nav-kanan a{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.15em;color:var(--putih);text-decoration:none;text-transform:uppercase;transition:color .2s;}
+.nav-kanan a:hover{color:var(--emas);}
+.nav-kanan .order{background:var(--emas);color:var(--hitam);padding:9px 20px;font-weight:700;}
+.nav-kanan .order:hover{background:var(--putih);}
+.nav-burger{background:none;border:none;color:var(--emas);font-size:1.3rem;cursor:pointer;margin-top:4px;display:none;align-items:center;gap:4px;}
+.nav-mob{display:none;position:fixed;top:60px;left:0;right:0;background:var(--abu);border-bottom:1px solid var(--border);z-index:199;flex-direction:column;padding:16px 24px;}
+.nav-mob.buka{display:flex;}
+.nav-mob a{font-family:var(--fb);font-size:.82rem;font-weight:600;letter-spacing:.12em;color:var(--putih);text-decoration:none;padding:13px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mob a:last-child{border-bottom:none;color:var(--emas);}
+
+/* ═══ S1. HERO ═══ */
+.hero{position:relative;min-height:60vh;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;z-index:0;}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.55;}
+.hero-bg .ph{width:100%;height:100%;background:linear-gradient(120deg,#050505,#0d0d0d 40%,#111 70%,#090909 100%);display:flex;align-items:center;justify-content:flex-end;padding-right:8%;}
+.kaos-svg-ph{width:min(400px,45vw);opacity:.25;filter:drop-shadow(0 40px 80px #000);}
+.hero-overlay{position:absolute;inset:0;z-index:1;
+  background:linear-gradient(to right,rgba(8,8,8,.97) 0%,rgba(8,8,8,.9) 38%,rgba(8,8,8,.45) 65%,rgba(8,8,8,.08) 100%),
+  linear-gradient(to top,rgba(8,8,8,.85) 0%,transparent 45%);}
+.hero-isi{position:relative;z-index:2;padding:80px 48px 68px;max-width:580px;}
+.hero-tag{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.5em;color:var(--emas);text-transform:uppercase;margin-bottom:18px;opacity:0;animation:naik .7s .1s forwards;}
+.hero-h1{font-family:var(--fd);font-size:clamp(3.5rem,6.5vw,7.5rem);line-height:.9;letter-spacing:.04em;margin-bottom:18px;opacity:0;animation:naik .7s .25s forwards;}
+.hero-sub{font-size:1rem;font-weight:600;line-height:1.85;color:var(--putih);margin-bottom:28px;opacity:0;animation:naik .7s .4s forwards;}
+
+/* Angka live */
+.hero-stats{display:flex;gap:0;margin-bottom:32px;opacity:0;animation:naik .7s .52s forwards;}
+.hs-item{padding:12px 20px;border:1px solid var(--border);background:rgba(8,8,8,.6);text-align:center;}
+.hs-item+.hs-item{border-left:none;}
+.hs-num{font-family:var(--fd);font-size:1.6rem;letter-spacing:.08em;color:var(--emas);line-height:1;}
+.hs-lbl{font-family:var(--fb);font-size:.62rem;font-weight:600;letter-spacing:.15em;color:var(--putih);text-transform:uppercase;margin-top:4px;}
+
+.hero-tombol{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:naik .7s .65s forwards;}
+.btn-outline-w{padding:13px 26px;border:1px solid var(--putih);color:var(--putih);font-family:var(--fb);font-size:.7rem;font-weight:600;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-block;}
+.btn-outline-w:hover{background:var(--putih);color:var(--hitam);}
+.btn-hijau{padding:13px 26px;background:var(--hijau);border:1px solid var(--hijau);color:var(--putih);font-family:var(--fb);font-size:.7rem;font-weight:600;letter-spacing:.18em;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-flex;align-items:center;gap:8px;}
+.btn-hijau:hover{background:var(--hijau-h);}
+
+/* ═══ S_BEDA. APA YANG MEMBUATNYA BERBEDA ═══ */
+#s-beda{background:#F5F0E8;padding:36px 48px;text-align:center;}
+.sbeda-dalam{max-width:560px;margin:0 auto;}
+.sbeda-h2{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,3.2rem);letter-spacing:.05em;color:var(--hitam);margin-bottom:16px;}
+.sbeda-sub{font-size:1.05rem;font-weight:400;line-height:1.85;color:#444;}
+@media(max-width:860px){
+  #s-beda{padding:28px 28px;}
+  .sbeda-sub{font-size:.97rem;}
+}
+
+
+#s2{display:grid;grid-template-columns:55% 1fr;min-height:560px;}
+.s2-foto{position:relative;overflow:hidden;background:#090909;}
+.s2-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+.s2-foto img.aktif{display:block;}
+.s2-ph{width:100%;height:100%;min-height:560px;background:linear-gradient(145deg,#0c0c0c,#171717);display:flex;align-items:center;justify-content:center;}
+.kerah-sim{display:flex;flex-direction:column;align-items:center;}
+.kerah-kain{width:260px;height:260px;background:linear-gradient(145deg,#141414,#0c0c0c);border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;position:relative;}
+.kerah-kain::before{content:'BLUMBANG';position:absolute;top:16px;left:50%;transform:translateX(-50%);font-family:var(--fd);font-size:.8rem;letter-spacing:.4em;color:rgba(255,255,255,.15);white-space:nowrap;}
+.kerah-kain::after{content:'ID: BLB-001';position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-family:var(--fb);font-size:.48rem;letter-spacing:.2em;color:rgba(201,168,76,.35);white-space:nowrap;}
+.qr-kotak{background:rgba(245,240,232,.92);padding:10px;display:flex;flex-direction:column;align-items:center;gap:5px;}
+.qr-pola{display:grid;grid-template-columns:repeat(9,8px);grid-template-rows:repeat(9,8px);gap:1px;}
+.qh{background:#111;}.qw{background:transparent;}
+.qr-txt{font-family:var(--fb);font-size:.48rem;letter-spacing:.12em;color:#222;font-weight:700;}
+.s2-teks{padding:72px 52px;display:flex;flex-direction:column;justify-content:center;background:var(--abu);}
+.s2-teks h2{font-family:var(--fb);font-size:clamp(1.6rem,2.5vw,2.5rem);font-weight:300;font-style:italic;line-height:1.3;color:var(--putih);margin-bottom:20px;}
+.s2-teks h2 strong{font-weight:600;font-style:normal;display:block;}
+.s2-teks p{font-size:.95rem;font-weight:300;line-height:1.9;color:var(--redup);}
+.s2-teks .scan-hint{margin-top:20px;font-size:.85rem;font-weight:400;color:var(--terang);font-style:italic;}
+
+/* ═══ S3. CARA KERJA ═══ */
+#s3{background:var(--hitam);padding:80px 48px;text-align:center;}
+.stag{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.45em;color:var(--emas);text-transform:uppercase;display:block;margin-bottom:14px;}
+#s3 h2,#s4 h2,#s5 h2,#s6 h2,#s7 h2{font-family:var(--fd);font-size:clamp(2rem,4vw,4rem);letter-spacing:.05em;margin-bottom:0;}
+#s3 h2{margin-bottom:56px;}
+.langkah-wrap{display:flex;align-items:flex-start;justify-content:center;max-width:860px;margin:0 auto;}
+.langkah{flex:1;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 18px;text-align:center;}
+.l-ikon{width:62px;height:62px;border:1px solid var(--border);background:var(--abu);display:flex;align-items:center;justify-content:center;}
+.l-ikon svg{width:25px;height:25px;stroke:var(--emas);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+.l-judul{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.22em;color:var(--putih);text-transform:uppercase;}
+.l-desc{font-size:.82rem;font-weight:300;color:var(--redup);line-height:1.65;}
+.l-panah{font-size:1.4rem;color:var(--border);padding-top:22px;flex-shrink:0;}
+.scan-demo-link{display:inline-block;margin-top:8px;font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.15em;color:var(--emas);text-decoration:none;border-bottom:1px solid var(--emas-dim);transition:color .2s;}
+.scan-demo-link:hover{color:var(--putih);}
+
+/* ═══ S4. CONTOH NYATA ═══ */
+#s4{background:var(--abu);padding:80px 48px;}
+#s4 h2{margin-bottom:8px;}
+.s4-psiko{font-size:.88rem;font-weight:300;font-style:italic;color:var(--redup);margin-bottom:40px;}
+.demo-card{border:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.demo-kiri{background:var(--hitam);padding:48px;display:flex;flex-direction:column;gap:20px;justify-content:center;border-right:1px solid var(--border);}
+.demo-id{font-family:var(--fd);font-size:1rem;letter-spacing:.3em;color:var(--emas);}
+.demo-rute{font-family:var(--fd);font-size:clamp(1.8rem,3.5vw,3rem);letter-spacing:.04em;line-height:1.1;color:var(--putih);}
+.demo-desc{font-size:.87rem;font-weight:300;font-style:italic;line-height:1.8;color:var(--redup);}
+.btn-emas{padding:12px 24px;border:1px solid var(--emas-dim);color:var(--emas);font-family:var(--fb);font-size:.67rem;font-weight:600;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:all .2s;display:inline-block;width:fit-content;}
+.btn-emas:hover{background:var(--emas-bg);border-color:var(--emas);}
+.demo-kanan{padding:48px;background:var(--hitam);display:flex;flex-direction:column;justify-content:center;}
+.p-label{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.35em;color:var(--emas);text-transform:uppercase;margin-bottom:18px;}
+.p-list{display:flex;flex-direction:column;}
+.p-item{display:flex;align-items:flex-start;gap:13px;padding:12px 0;border-bottom:1px solid var(--border);}
+.p-item:last-child{border-bottom:none;}
+.p-dot{width:9px;height:9px;border-radius:50%;background:var(--emas-dim);margin-top:4px;flex-shrink:0;}
+.p-dot.hidup{background:var(--emas);box-shadow:0 0 10px rgba(201,168,76,.6);animation:denyut 2s ease-in-out infinite;}
+.p-kota{font-size:.92rem;font-weight:600;color:var(--putih);margin-bottom:2px;}
+.p-waktu{font-family:var(--fb);font-size:.7rem;font-weight:600;color:var(--putih);}
+.p-badge{display:inline-block;font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--emas);border:1px solid var(--emas-dim);padding:2px 7px;margin-top:4px;text-transform:uppercase;}
+
+/* ═══ S5. SPARK MAP ═══ */
+#s5{position:relative;overflow:hidden;min-height:520px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.s5-bg{position:absolute;inset:0;z-index:0;}
+.s5-bg img{width:100%;height:100%;object-fit:cover;opacity:.22;filter:grayscale(30%);}
+.s5-bg .ph5{width:100%;height:100%;background:linear-gradient(135deg,#030303,#0b0b0b);}
+.s5-overlay{position:absolute;inset:0;z-index:1;background:rgba(8,8,8,.7);}
+.s5-grid{position:absolute;inset:0;z-index:1;background-image:linear-gradient(rgba(201,168,76,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.025) 1px,transparent 1px);background-size:50px 50px;}
+.s5-isi{position:relative;z-index:2;padding:80px 48px;width:100%;}
+.s5-isi h2{margin-bottom:16px;}
+.s5-sub{font-size:.93rem;font-weight:300;font-style:italic;color:var(--redup);line-height:1.8;max-width:440px;margin:0 auto 48px;}
+/* Rute besar menggantikan phone mockup kecil */
+.rute-besar{font-family:var(--fd);font-size:clamp(1.4rem,3.5vw,3rem);letter-spacing:.08em;color:var(--putih);margin-bottom:12px;line-height:1.2;}
+.rute-besar span{color:var(--emas);}
+.rute-tagline{font-size:.88rem;font-weight:300;font-style:italic;color:var(--redup);}
+/* Spark dots */
+.spark{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--emas);animation:sparkling 2s ease-in-out infinite;z-index:2;}
+@keyframes sparkling{0%,100%{transform:scale(1);opacity:.4;}50%{transform:scale(2.5);opacity:1;box-shadow:0 0 12px rgba(201,168,76,.9);}}
+
+/* ═══ S6. KENAPA BLUMBANG ═══ */
+#s6{background:var(--abu);padding:80px 48px;text-align:center;}
+#s6 h2{margin-bottom:44px;}
+.checklist{list-style:none;max-width:580px;margin:0 auto;border:1px solid var(--border);overflow:hidden;}
+.checklist li{display:flex;align-items:center;gap:16px;padding:20px 28px;border-bottom:1px solid var(--border);background:var(--hitam);transition:background .2s;text-align:left;}
+.checklist li:last-child{border-bottom:none;}
+.checklist li:hover{background:#0e0e0e;}
+.centang{color:#4a7c54;font-size:1.05rem;flex-shrink:0;}
+.cl-teks{font-size:.92rem;font-weight:400;color:var(--terang);line-height:1.5;}
+.cl-teks strong{color:var(--putih);font-weight:600;}
+
+/* ═══ S7. PORTOFOLIO ═══ */
+#s7{background:var(--hitam);padding:80px 48px;text-align:center;}
+.s7-sub{font-size:.93rem;font-weight:300;font-style:italic;color:var(--redup);margin:14px 0 44px;}
+.k-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:30px;}
+.k-card{background:var(--abu);padding:0;display:flex;flex-direction:column;align-items:center;text-decoration:none;transition:background .2s;position:relative;overflow:hidden;}
+.k-card-foto{width:100%;height:180px;object-fit:cover;display:block;}
+.k-card-body{padding:20px 18px 22px;width:100%;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.k-card-ph{width:100%;height:180px;display:flex;align-items:center;justify-content:center;background:var(--abu2);}
+.k-card:hover{background:var(--abu2);}
+.k-card:hover svg{transform:translateY(-5px);}
+.k-id{position:absolute;top:11px;right:11px;font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.2em;color:var(--emas);}
+.k-card-ph svg{width:78px;transition:transform .3s;}
+.k-card:hover .k-card-ph svg{transform:translateY(-5px);}
+.k-nama{font-family:var(--fb);font-size:.68rem;font-weight:600;letter-spacing:.2em;color:var(--putih);text-transform:uppercase;}
+.k-label{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.15em;color:var(--emas);border:1px solid var(--border);padding:2px 8px;text-transform:uppercase;}
+
+/* ═══ S8. CTA UTAMA ═══ */
+#s8{background:var(--hitam);text-align:center;padding:120px 48px;position:relative;overflow:hidden;}
+#s8::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at center,rgba(201,168,76,.055),transparent 60%);pointer-events:none;}
+#s8 h2{font-family:var(--fd);font-size:clamp(2.5rem,6vw,6.5rem);letter-spacing:.04em;line-height:.95;margin-bottom:20px;position:relative;}
+.s8-psiko{font-size:1rem;font-weight:300;font-style:italic;color:var(--redup);margin-bottom:40px;position:relative;}
+.s8-psiko strong{color:var(--putih);font-style:normal;}
+.btn-putih{padding:15px 48px;background:var(--putih);color:var(--hitam);font-family:var(--fb);font-size:.72rem;font-weight:700;letter-spacing:.25em;text-decoration:none;text-transform:uppercase;transition:all .2s;border:1px solid var(--putih);display:inline-block;position:relative;}
+.btn-putih:hover{background:transparent;color:var(--putih);}
+
+/* ═══ S9. FILOSOFI ═══ */
+#s9{background:var(--abu);padding:96px 48px;}
+.s9-dalam{max-width:800px;}
+.s9-tag{font-family:var(--fb);font-size:.72rem;font-weight:600;letter-spacing:.45em;color:var(--emas);text-transform:uppercase;margin-bottom:18px;display:flex;align-items:center;gap:12px;}
+.s9-tag::before{content:'';width:22px;height:1px;background:var(--emas);}
+.s9-h{font-family:var(--fd);font-size:clamp(1.8rem,3vw,3.2rem);letter-spacing:.05em;margin-bottom:28px;}
+.s9-kutipan{font-size:clamp(.97rem,1.7vw,1.3rem);font-weight:300;font-style:italic;line-height:1.95;color:var(--terang);}
+.s9-kutipan strong{color:var(--putih);font-style:normal;font-weight:600;}
+.s9-attr{margin-top:32px;display:flex;align-items:center;gap:13px;}
+.s9-attr::before{content:'';width:26px;height:1px;background:var(--emas);}
+.s9-attr span{font-family:var(--fb);font-size:.7rem;font-weight:600;letter-spacing:.3em;color:var(--emas);text-transform:uppercase;}
+
+/* FOOTER */
+footer{padding:26px 40px;border-top:1px solid var(--border);}
+.ft{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+.ft-brand{font-family:var(--fd);font-size:1.2rem;letter-spacing:.15em;color:var(--emas);}
+.ft-links{display:flex;gap:22px;flex-wrap:wrap;}
+.ft-links a{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.12em;color:var(--putih);text-decoration:none;text-transform:uppercase;transition:color .2s;}
+.ft-links a:hover{color:var(--emas);}
+.ft-copy{font-family:var(--fb);font-size:.65rem;font-weight:600;letter-spacing:.08em;color:var(--putih);}
+
+/* UTILS */
+.garis{width:100%;height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);}
+@keyframes naik{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes denyut{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(.5);}}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .65s ease,transform .65s ease;}
+.rv.on{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:860px){
+  nav{padding:13px 20px;}
+  .nav-kanan a:not(.order){display:none;}
+  .nav-burger{display:block;}
+  .hero-isi{padding:100px 24px 40px;max-width:100%;}
+  
+  /* Stats: grid 3 kolom atas, 2 kolom bawah */
+  .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:0;
+    background:var(--border);
+    border:1px solid var(--border);
+    flex-wrap:unset;
+    margin-bottom:24px;
+  }
+  .hero-stats a.hs-item,
+  .hero-stats .hs-item{border:none;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .hero-stats .hs-item:nth-child(3){border-right:none;}
+  .hero-stats .hs-item:nth-child(4){border-right:1px solid var(--border);border-bottom:none;}
+  .hero-stats .hs-item:nth-child(5){border-right:none;border-bottom:none;grid-column:span 1;}
+  /* Baris 2: kota dan negara ambil setengah-setengah */
+  .hero-stats .hs-item:nth-child(4){grid-column:1/span 2;}
+  .hero-stats .hs-item:nth-child(5){grid-column:3/span 1;}
+  .hs-num{font-size:1.3rem;}
+  .hs-lbl{font-size:.52rem;letter-spacing:.08em;}
+
+  /* Cara kerja: horizontal scroll */
+  #s3{padding:56px 0 56px 24px;}
+  #s3 h2,.s3 .stag{padding-right:24px;}
+  .langkah-wrap{
+    flex-direction:row;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    gap:0;
+    max-width:100%;
+    scrollbar-width:none;
+    justify-content:flex-start;
+    padding-right:24px;
+    margin-top:40px;
+  }
+  .langkah-wrap::-webkit-scrollbar{display:none;}
+  .langkah{
+    min-width:180px;
+    flex:0 0 180px;
+    scroll-snap-align:start;
+    padding:0 16px;
+    border-right:1px solid var(--border);
+  }
+  .langkah:last-child{border-right:none;}
+  .l-panah{display:none;}
+
+  #s2{grid-template-columns:1fr;}
+  .s2-foto{min-height:320px;}
+  .s2-foto img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;}
+  .s2-foto .s2-ph{min-height:320px;}
+  .s2-teks{padding:36px 24px;}
+  .demo-card{grid-template-columns:1fr;}
+  .demo-kiri{border-right:none;border-bottom:1px solid var(--border);padding:32px 24px;}
+  .demo-kanan{padding:32px 24px;}
+  .k-grid{grid-template-columns:repeat(2,1fr);}
+  .k-grid .k-card:last-child{display:none;}
+  #s3 h2{padding-right:24px;}
+  #s4,#s6,#s7,#s8,#s9{padding:64px 24px;}
+  .s5-isi{padding:64px 24px;}
+  footer{padding:18px 24px;}
+  .ft{flex-direction:column;text-align:center;}
+  .ft-links{justify-content:center;}
+}
+.gw{max-width:640px;margin:0 auto;padding:0 24px;}
+#page-garment{display:none;padding:100px 0 80px;}
+#page-garment.active{display:block;}
+.spark-moment{background:#0e0900;border:1px solid #7a6028;padding:20px 24px;margin-bottom:32px;text-align:center;}
+.sm-num{font-family:var(--fd);font-size:2.5rem;color:var(--emas);letter-spacing:0.1em;line-height:1;}
+.sm-text{font-size:0.9rem;font-style:italic;font-weight:300;color:var(--putih);margin-top:4px;}
+.sm-badge{display:inline-block;font-size:0.62rem;font-weight:700;letter-spacing:0.2em;color:var(--emas);border:1px solid #7a6028;padding:3px 10px;margin-top:10px;text-transform:uppercase;}
+.first-spark-banner{background:linear-gradient(135deg,#0e0900,rgba(201,168,76,0.1));border:1px solid var(--emas);padding:16px 20px;margin-bottom:16px;text-align:center;display:none;}
+.fsb-text{font-size:0.72rem;font-weight:600;letter-spacing:0.2em;color:var(--emas);text-transform:uppercase;}
+.g-hdr{text-align:center;margin-bottom:48px;}
+.g-lbl{font-size:0.72rem;font-weight:600;letter-spacing:0.35em;color:var(--emas);margin-bottom:12px;text-transform:uppercase;display:block;}
+.g-id-big{font-family:var(--fd);font-size:clamp(2.5rem,8vw,4rem);letter-spacing:0.12em;color:var(--emas);margin-bottom:8px;line-height:1;}
+.g-nm{font-size:clamp(1.2rem,4vw,1.8rem);font-weight:300;font-style:italic;color:var(--putih);line-height:1.4;}
+.g-div-line{display:flex;align-items:center;gap:16px;margin:28px 0;}
+.g-div-line::before,.g-div-line::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);}
+.g-mock{position:relative;border:1px solid var(--border);background:var(--abu);overflow:hidden;margin-bottom:40px;}
+.g-mock img{width:100%;display:block;object-fit:cover;}
+.g-ph{width:100%;aspect-ratio:3/2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:linear-gradient(135deg,#0e0e0e,#181818);}
+.g-ph p{font-size:0.72rem;font-weight:500;letter-spacing:0.25em;color:var(--redup);text-transform:uppercase;}
+.g-mtag{position:absolute;bottom:12px;right:12px;font-family:var(--fd);font-size:0.85rem;letter-spacing:0.2em;color:#7a6028;background:rgba(8,8,8,0.9);padding:4px 12px;border:1px solid var(--border);}
+.g-ori{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:40px;}
+.g-oi{background:var(--abu);padding:18px;text-align:center;}
+.g-oi .lbl{font-size:0.65rem;font-weight:600;letter-spacing:0.2em;color:var(--redup);margin-bottom:8px;text-transform:uppercase;display:block;}
+.g-oi .val{font-size:1rem;font-weight:600;color:var(--putih);}
+.g-stl{font-size:0.72rem;font-weight:600;letter-spacing:0.3em;color:var(--emas);margin-bottom:18px;text-transform:uppercase;display:block;}
+.g-jrn{margin-bottom:40px;}
+.jlist{display:flex;flex-direction:column;}
+.ji{display:flex;align-items:flex-start;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);}
+.ji:last-child{border-bottom:none;}
+.jdot{width:10px;height:10px;border-radius:50%;background:#7a6028;margin-top:5px;flex-shrink:0;}
+.jdot.latest{background:var(--emas);box-shadow:0 0 10px rgba(201,168,76,0.7);animation:denyut 2s ease-in-out infinite;}
+.jline{position:absolute;left:4px;top:22px;width:1px;height:calc(100% + 16px);background:linear-gradient(to bottom,var(--border),transparent);}
+.jcity{font-size:0.95rem;font-weight:600;color:var(--putih);margin-bottom:2px;}
+.jtime{font-size:0.72rem;color:var(--redup);}
+.jbadge{display:inline-block;font-size:0.62rem;font-weight:600;letter-spacing:0.12em;color:var(--emas);border:1px solid #7a6028;padding:2px 8px;margin-top:5px;text-transform:uppercase;}
+.g-sto{margin-bottom:40px;}
+.sc{border:1px solid var(--border);background:var(--abu);padding:24px;margin-bottom:10px;position:relative;}
+.sow{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+.savph{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--abu2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:var(--fd);font-size:1rem;color:#7a6028;}
+.snm{font-size:1rem;font-weight:600;color:var(--putih);line-height:1;}
+.sct{font-size:0.7rem;letter-spacing:0.1em;color:var(--emas);margin-top:3px;}
+.stxt{font-size:0.97rem;font-weight:300;font-style:italic;line-height:1.85;color:var(--putih);}
+.semp{text-align:center;padding:28px;font-size:0.78rem;font-weight:500;letter-spacing:0.2em;color:var(--redup);}
+.g-fs{border:1px solid var(--border);background:var(--abu);padding:28px;margin-bottom:40px;}
+.g-ft{font-size:1.5rem;font-weight:600;color:var(--putih);margin-bottom:6px;}
+.g-fsb{font-size:0.72rem;font-weight:400;letter-spacing:0.08em;color:var(--redup);margin-bottom:24px;line-height:1.8;}
+.fg{margin-bottom:18px;}
+.fl{display:block;font-size:0.7rem;font-weight:600;letter-spacing:0.15em;color:var(--terang);margin-bottom:8px;text-transform:uppercase;}
+.fi,.fta{width:100%;background:var(--hitam);border:1px solid var(--border);color:var(--putih);font-family:var(--fb);font-size:1rem;padding:13px 15px;outline:none;transition:border-color 0.2s;border-radius:0;-webkit-appearance:none;}
+.fi:focus,.fta:focus{border-color:var(--emas);}
+.fi::placeholder,.fta::placeholder{color:var(--redup);font-style:italic;}
+.fta{resize:vertical;min-height:100px;}
+.fup{width:100%;border:1px dashed var(--border);background:var(--hitam);padding:24px;text-align:center;cursor:pointer;transition:border-color 0.2s;position:relative;}
+.fup:hover{border-color:var(--emas);}
+.fup input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.uico{font-size:1.6rem;color:var(--redup);margin-bottom:8px;}
+.utxt{font-size:0.7rem;font-weight:500;letter-spacing:0.15em;color:var(--redup);text-transform:uppercase;}
+.uprev{width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid #7a6028;margin:0 auto 10px;display:none;}
+.fbtn{width:100%;padding:16px;background:#0e0900;border:1px solid var(--emas);color:var(--emas);font-family:var(--fb);font-size:0.78rem;font-weight:700;letter-spacing:0.3em;cursor:pointer;transition:all 0.2s;text-transform:uppercase;}
+.fbtn:hover{background:var(--emas);color:var(--hitam);}
+.fbtn:disabled{opacity:0.4;cursor:not-allowed;}
+.ferr{margin-top:10px;font-size:0.72rem;font-weight:500;color:#e74c3c;letter-spacing:0.05em;display:none;}
+.fok{display:none;text-align:center;padding:36px;}
+.fok h3{font-size:1.5rem;font-style:italic;font-weight:300;margin-bottom:8px;}
+.fok p{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;color:var(--redup);}
+.g-ftr{text-align:center;padding:28px 0 0;border-top:1px solid var(--border);}
+.g-ftr a{font-size:0.72rem;font-weight:500;letter-spacing:0.2em;color:var(--terang);text-decoration:none;transition:color 0.2s;}
+.g-ftr a:hover{color:var(--emas);}
+.qc-banner{background:#1a0a00;border:1px solid #8a4a00;padding:10px 20px;text-align:center;font-size:0.7rem;font-weight:600;letter-spacing:0.2em;color:#c87a00;text-transform:uppercase;display:none;}
+
+
+/* ── DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;opacity:0;pointer-events:none;transition:opacity .3s;}
+.drawer-overlay.aktif{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:301;background:var(--abu);border-top:1px solid var(--border);border-radius:16px 16px 0 0;padding:0 0 40px;max-height:75vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);}
+.drawer.aktif{transform:translateY(0);}
+.drawer-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 0;}
+.drawer-judul{font-family:var(--fd);font-size:1.4rem;letter-spacing:.08em;color:var(--emas);padding:16px 24px 12px;border-bottom:1px solid var(--border);}
+.drawer-list{display:flex;flex-direction:column;}
+.drawer-item{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);text-decoration:none;transition:background .2s;}
+.drawer-item:hover{background:var(--abu2);}
+.drawer-item:last-child{border-bottom:none;}
+.di-kiri{display:flex;flex-direction:column;gap:3px;}
+.di-id{font-family:var(--fd);font-size:1rem;letter-spacing:.15em;color:var(--emas);}
+.di-info{font-size:.75rem;font-weight:600;color:var(--redup);}
+.di-arrow{font-size:1rem;color:var(--redup);}
+.drawer-empty{text-align:center;padding:32px;font-size:.85rem;font-weight:600;color:var(--redup);letter-spacing:.1em;}
+
+/* ── STATS CLICKABLE ── */
+.hs-item{padding:12px 20px;border:1px solid var(--border);background:rgba(8,8,8,.6);text-align:center;cursor:pointer;transition:background .2s;}
+.hs-item:hover{background:rgba(201,168,76,.08);}
+.hs-item.clickable{cursor:pointer;}
+a.hs-item{text-decoration:none;}
+
+/* ── CARA KERJA MOBILE HORIZONTAL ── */
+@media(max-width:860px){
+  .langkah-wrap{
+    flex-direction:row;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    gap:0;
+    padding-bottom:16px;
+    justify-content:flex-start;
+    max-width:100%;
+    scrollbar-width:none;
+  }
+  .langkah-wrap::-webkit-scrollbar{display:none;}
+  .langkah{
+    min-width:200px;
+    flex:0 0 200px;
+    scroll-snap-align:start;
+    padding:0 16px;
+    border-right:1px solid var(--border);
+  }
+  .langkah:last-child{border-right:none;}
+  .l-panah{display:none;}
+  
+  /* Stats: 3 baris atas, 2 baris bawah */
+  .hero-stats{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    flex-wrap:unset;
+  }
+  .hs-item{border:none;border-right:none;}
+  .hs-item+.hs-item{border-left:none;}
+  .hs-item:nth-child(4),.hs-item:nth-child(5){
+    grid-column:span 1;
+  }
+  /* Baris kedua: kota dan negara jadi 2 kolom */
+  .hero-stats .hs-item:nth-child(4){grid-column:1/span 2 !important;}
+  /* Nope - bagi rata saja 3-2 */
+}
+
+
+/* FLOATING WA */
+.wa-float{
+  position:fixed;
+  bottom:24px;
+  left:24px;
+  z-index:200;
+  width:52px;
+  height:52px;
+  background:#25D366;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 16px rgba(0,0,0,0.4);
+  transition:transform .2s, box-shadow .2s;
+  text-decoration:none;
+}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 20px rgba(0,0,0,0.5);}
+.wa-float svg{width:28px;height:28px;fill:#fff;}
+
+/* LANGUAGE TOGGLE */
+.lang-toggle{display:flex;align-items:center;gap:0;border:1px solid var(--border);overflow:hidden;}
+.lang-btn{background:none;border:none;color:var(--redup);font-family:var(--fb);font-size:.62rem;font-weight:700;letter-spacing:.12em;padding:6px 10px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.lang-btn.aktif{background:var(--emas);color:var(--hitam);}
+.lang-btn:hover:not(.aktif){color:var(--putih);}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag("js",new Date());
+gtag("config","G-39SRRM5GKK");
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG
+    <small>Independent T-Shirt Studio & Screen Printing — Jeto, Klaten, Indonesia since 2022</small>
+  </a>
+  <div class="nav-kanan">
+    <a href="/catalog" data-i18n="nav_koleksi">Koleksi</a>
+    <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/about" data-i18n="nav_tentang">Tentang</a>
+    <a href="/blog" data-i18n="nav_blog">Blog</a>
+    <a href="https://www.tiktok.com/@blumbang.id" target="_blank">TikTok</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-burger" id="burger" onclick="toggleNav()">☰ <span style="font-size:0.5rem;letter-spacing:0.2em;vertical-align:middle;font-family:var(--fb);font-weight:700;">MENU</span></button>
+</nav>
+<div class="nav-mob" id="nav-mob">
+  <a href="/catalog" onclick="toggleNav()" data-i18n="nav_koleksi">Koleksi</a>
+  <a href="/sparks" onclick="toggleNav()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/about" onclick="toggleNav()" data-i18n="nav_tentang">Tentang</a>
+  <a href="/blog" onclick="toggleNav()">Blog</a>
+  <a href="https://vm.tiktok.com/ZS9R6sQtjS2MX-ihACV/" target="_blank" onclick="toggleNav()">TikTok</a>
+  <a href="https://wa.me/6281234561146" onclick="toggleNav()" data-i18n="nav_order">✦ Order Sekarang</a>
+</div>
+
+<!-- ════ S1. HERO ════ -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="ph" id="hero-ph">
+      <!-- Kaos SVG fallback -->
+      <svg class="kaos-svg-ph" viewBox="0 0 380 340" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#1c1c1c"/><stop offset="100%" style="stop-color:#0c0c0c"/></linearGradient></defs>
+        <path d="M76 26L18 76L68 97L68 322L312 322L312 97L362 76L304 26L252 48C245 8 134 8 128 48Z" fill="url(#g1)" stroke="#222" stroke-width="1"/>
+        <path d="M128 48C134 8 245 8 252 48" fill="none" stroke="rgba(201,168,76,.18)" stroke-width="1.5"/>
+        <text x="190" y="108" text-anchor="middle" font-family="'Bebas Neue'" font-size="10" letter-spacing="6" fill="rgba(201,168,76,.22)">BLUMBANG</text>
+        <rect x="154" y="120" width="72" height="72" fill="rgba(245,240,232,.82)"/>
+        <rect x="158" y="124" width="20" height="20" fill="none" stroke="#111" stroke-width="1.5"/><rect x="161" y="127" width="14" height="14" fill="#111"/>
+        <rect x="182" y="124" width="20" height="20" fill="none" stroke="#111" stroke-width="1.5"/><rect x="185" y="127" width="14" height="14" fill="#111"/>
+        <rect x="158" y="150" width="20" height="20" fill="none" stroke="#111" stroke-width="1.5"/><rect x="161" y="153" width="14" height="14" fill="#111"/>
+        <rect x="180" y="144" width="8" height="4" fill="#111"/><rect x="182" y="150" width="10" height="4" fill="#111"/><rect x="182" y="156" width="4" height="10" fill="#111"/>
+        <text x="190" y="206" text-anchor="middle" font-family="'Inter'" font-size="7.5" letter-spacing="2" fill="rgba(201,168,76,.38)">ID: BLB-001</text>
+      </svg>
+    </div>
+    <img id="hero-img" src="" alt="Blumbang Kaos" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:.55;"
+      onload="this.style.display='block';document.getElementById('hero-ph').style.display='none';"
+      onerror="this.style.display='none';">
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-isi">
+    <div class="hero-tag" data-i18n="hero_tag">Independent T-Shirt Studio · Est. 2022</div>
+    <h1 class="hero-h1" data-i18n="hero_h1">INI BUKAN<br>KAOS BIASA</h1>
+    <p class="hero-sub" data-i18n="hero_sub">Setiap kaos punya cerita. Ceritamu dimulai di sini.</p>
+
+    <div class="hero-tombol">
+      <a href="/catalog" class="btn-outline-w" data-i18n="hero_btn_koleksi">Lihat Koleksi</a>
+      <a href="https://blumbang.id/sparks" class="btn-hijau" data-i18n="hero_btn_sparks">Lihat Contoh Kaos yang Sudah Jalan</a>
+    </div>
+  </div>
+
+</section>
+<!-- ════ S_BEDA. APA YANG MEMBUATNYA BERBEDA ════ -->
+<section id="s-beda">
+  <div class="sbeda-dalam">
+    <h2 class="sbeda-h2" data-i18n="sbeda_h2">APA YANG MEMBUATNYA BERBEDA?</h2>
+    <p class="sbeda-sub" data-i18n="sbeda_sub">Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.</p>
+  </div>
+</section>
+
+<div class="garis"></div>
+
+<!-- ════ S2. PRODUK INTRO ════ -->
+<section id="s2">
+  <div class="s2-foto">
+    <div class="s2-ph" id="s2-ph">
+      <div class="kerah-sim">
+        <div class="kerah-kain">
+          <div class="qr-kotak">
+            <div class="qr-pola" id="qr-pola"></div>
+            <div class="qr-txt">ID: BLB-001</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <img id="s2-img" src="" alt="Label QR Blumbang"
+      style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"
+      onload="this.style.display='block';document.getElementById('s2-ph').style.display='none';"
+      onerror="this.style.display='none';">
+  </div>
+  <div class="s2-teks rv">
+    <h2><strong data-i18n="s2_h2_strong">Scan QR di label kaosmu —</strong><span data-i18n="s2_h2_rest">dan lihat semua kota yang pernah ia singgahi.</span></h2>
+    <p data-i18n="s2_p1">Setiap kaos Blumbang punya ID unik. Setiap scan mencatat posisimu di peta dunia.<br><br>Perjalanan dan ceritanya tersimpan selamanya.</p>
+    <p class="scan-hint" data-i18n="s2_hint">QR ada di label bagian dalam. Tidak perlu app khusus.</p>
+  </div>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S4. CONTOH NYATA ════ -->
+<section id="s4">
+  <span class="stag rv" data-i18n="s4_tag">Contoh Nyata</span>
+  <h2 class="rv" data-i18n="s4_h2">SATU KAOS. BANYAK CERITA.</h2>
+  <p class="s4-psiko rv" data-i18n="s4_sub">Kaos ini sudah melewati 4 kota dalam 3 bulan.</p>
+  <div class="demo-card rv">
+    <div class="demo-kiri">
+      <div class="demo-id">ID: BLB-001</div>
+      <div class="demo-rute">Jakarta<br>→ Bali<br>→ Tokyo</div>
+      <p class="demo-desc" data-i18n="demo_desc">Setiap perjalanan tersimpan.<br>Setiap scan menambah cerita baru.</p>
+      <a href="/id/BLB-001" class="btn-emas" data-i18n="demo_btn">Lihat Perjalanan Kaos Ini →</a>
+    </div>
+    <div class="demo-kanan">
+      <div class="p-label" data-i18n="demo_label">✦ Perjalanan Kaos Ini</div>
+      <div class="p-list">
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Klaten, Jawa Tengah</div><div class="p-waktu" data-i18n="demo_origin_time">Lahir di sini · 2024</div><div class="p-badge" data-i18n="badge_origin">Origin</div></div></div>
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Jakarta</div><div class="p-waktu" data-i18n="waktu_3bln">3 bulan lalu</div></div></div>
+        <div class="p-item"><div class="p-dot"></div><div><div class="p-kota">Bali</div><div class="p-waktu" data-i18n="waktu_2bln">2 bulan lalu</div></div></div>
+        <div class="p-item"><div class="p-dot hidup"></div><div><div class="p-kota">Tokyo, Japan</div><div class="p-waktu" data-i18n="waktu_baru">Baru saja</div><div class="p-badge" data-i18n="badge_terbaru">Terbaru</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats dipindah ke sini -->
+  <div class="hero-stats" style="max-width:700px;margin:40px auto 0;">
+    <a href="/catalog" class="hs-item" title="Lihat semua koleksi">
+      <div class="hs-num" id="stat-garment">—</div>
+      <div class="hs-lbl" data-i18n="stat_kaos">KAOS TERDAFTAR</div>
+    </a>
+    <div class="hs-item clickable" onclick="bukaDrawer('berjalan')" title="Lihat kaos yang sudah berjalan">
+      <div class="hs-num" id="stat-berjalan">—</div>
+      <div class="hs-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="hs-item" title="Total scan QR">
+      <div class="hs-num" id="stat-scan">—</div>
+      <div class="hs-lbl" data-i18n="stat_perjalanan">PERJALANAN TERCATAT</div>
+    </div>
+    <div class="hs-item clickable" onclick="bukaDrawer('kota')" title="Lihat kota yang sudah discan">
+      <div class="hs-num" id="stat-kota">—</div>
+      <div class="hs-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="hs-item clickable" onclick="bukaDrawer('negara')" title="Lihat negara yang sudah discan">
+      <div class="hs-num" id="stat-negara">—</div>
+      <div class="hs-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
+  </div>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S3. CARA KERJA ════ -->
+<section id="s3">
+  <span class="stag rv" data-i18n="s3_tag">Cara Kerja</span>
+  <h2 class="rv" data-i18n="s3_h2">CARA KERJANYA SEDERHANA.</h2>
+  <div class="langkah-wrap" style="margin-top:56px;">
+    <div class="langkah rv">
+      <div class="l-ikon"><svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 001.06.8L6 10v11a1 1 0 001 1h10a1 1 0 001-1V10l2.08.06a1 1 0 001.06-.8l.58-3.57a2 2 0 00-1.34-2.23z"/></svg></div>
+      <div class="l-judul" data-i18n="step1_judul">Beli Kaos</div>
+      <p class="l-desc" data-i18n="step1_desc">Miliki kaos dengan ID unik.</p>
+    </div>
+    <div class="l-panah rv">›</div>
+    <div class="langkah rv">
+      <div class="l-ikon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"/></svg></div>
+      <div class="l-judul" data-i18n="step2_judul">Scan QR</div>
+      <p class="l-desc" data-i18n="step2_desc">Scan kode pada label kaos.</p>
+      <a href="scan-demo.html" class="scan-demo-link" data-i18n="step2_demo">Coba Scan Demo →</a>
+    </div>
+    <div class="l-panah rv">›</div>
+    <div class="langkah rv">
+      <div class="l-ikon"><svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+      <div class="l-judul" data-i18n="step3_judul">Lihat & Tambahkan Perjalanan</div>
+      <p class="l-desc" data-i18n="step3_desc">Jejakkan perjalananmu dan lihat riwayatnya.</p>
+    </div>
+  </div>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S5. SPARK MAP ════ -->
+<section id="s5">
+  <div class="s5-bg">
+    <div class="ph5" id="s5-ph"></div>
+    <img id="s5-img" src="" alt=""
+      style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.22;filter:grayscale(30%);"
+      onload="this.style.display='block';" onerror="this.style.display='none';">
+  </div>
+  <div class="s5-overlay"></div>
+  <div class="s5-grid"></div>
+  <!-- Spark dots -->
+  <div class="spark" style="left:7%;top:38%;animation-delay:0s;"></div>
+  <div class="spark" style="left:19%;top:58%;animation-delay:.6s;"></div>
+  <div class="spark" style="left:33%;top:28%;animation-delay:1s;"></div>
+  <div class="spark" style="left:48%;top:68%;animation-delay:.3s;"></div>
+  <div class="spark" style="left:62%;top:35%;animation-delay:.8s;width:7px;height:7px;"></div>
+  <div class="spark" style="left:76%;top:55%;animation-delay:.4s;"></div>
+  <div class="spark" style="left:88%;top:30%;animation-delay:1.2s;"></div>
+  <div class="spark" style="left:14%;top:72%;animation-delay:.9s;"></div>
+  <div class="spark" style="left:55%;top:20%;animation-delay:.5s;"></div>
+
+  <div class="s5-isi">
+    <span class="stag rv" data-i18n="s5_tag">Contoh Perjalanan</span>
+    <h2 class="rv" data-i18n="s5_h2">SETIAP SCAN<br>MENINGGALKAN JEJAK.</h2>
+    <p class="s5-sub rv" data-i18n="s5_sub">Dari satu kota ke kota lain, dari satu negara ke negara lain.<br>Setiap perjalanan menciptakan jejak di dunia nyata.</p>
+    <div class="rute-besar rv">
+      <span style="color:var(--redup);">JAKARTA</span>
+      <span> → </span>
+      <span style="color:var(--redup);">YOGYAKARTA</span>
+      <span> → </span>
+      <span style="color:var(--redup);">BALI</span>
+      <span> → </span>
+      <span>TOKYO</span>
+    </div>
+    <p class="rute-tagline rv" data-i18n="s5_tagline">Dan perjalanannya belum selesai.</p>
+  </div>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S6. KENAPA BLUMBANG ════ -->
+<section id="s6">
+  <span class="stag rv" data-i18n="s6_tag">Kenapa Blumbang?</span>
+  <h2 class="rv" data-i18n="s6_h2">KENAPA BLUMBANG?</h2>
+  <ul class="checklist rv" style="margin-top:44px;">
+    <li><span class="centang">✔</span><span class="cl-teks" data-i18n="s6_li1">Setiap kaos unik — <strong>tidak bisa diduplikasi</strong></span></li>
+    <li><span class="centang">✔</span><span class="cl-teks" data-i18n="s6_li2">Memiliki <strong>identitas origin Blumbang ID</strong></span></li>
+    <li><span class="centang">✔</span><span class="cl-teks" data-i18n="s6_li3">Menyimpan <strong>perjalanan pemiliknya</strong></span></li>
+    <li><span class="centang">✔</span><span class="cl-teks" data-i18n="s6_li4">Bisa <strong>diwariskan ceritanya</strong></span></li>
+  </ul>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S9. FILOSOFI ════ -->
+<section id="s9">
+  <div class="s9-dalam">
+    <div class="s9-tag rv" data-i18n="s9_tag">Filosofi</div>
+    <h2 class="s9-h rv" data-i18n="s9_h2">LEBIH DARI SEKADAR PAKAIAN.</h2>
+    <div class="s9-kutipan rv" data-i18n="s9_kutipan">
+      Pakaian bukan hanya apa yang kita kenakan.<br><br>
+      Ia <strong>menemani langkah</strong>, menyerap waktu, dan menjadi saksi perjalanan hidup.<br><br>
+      Blumbang lahir dari gagasan sederhana:<br>
+      bahwa setiap pakaian memiliki <strong>cerita, perjalanan, dan cahayanya sendiri.</strong>
+    </div>
+    <div class="s9-attr rv"><span>Blumbang ID · Jeto, Klaten · Est. 2022</span></div>
+  </div>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S7. PORTOFOLIO ════ -->
+<section id="s7">
+  <span class="stag rv" data-i18n="s7_tag">Portofolio</span>
+  <h2 class="rv" data-i18n="s7_h2">PILIH KAOSMU.</h2>
+  <p class="s7-sub rv" data-i18n="s7_sub">Setiap desain memiliki identitasnya sendiri.<br>Pilih satu, dan mulai perjalananmu.</p>
+  <div class="k-grid rv" id="koleksi-grid">
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
+    </a>
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
+    </a>
+    <a href="/catalog" class="k-card"><span class="k-id">—</span>
+      <svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg>
+      <div class="k-nama">Memuat...</div>
+    </a>
+  </div>
+  <a href="/catalog" class="btn-putih rv" data-i18n="s7_btn">Lihat Semua Koleksi</a>
+
+</section>
+<div class="garis"></div>
+
+<!-- ════ S8. CTA UTAMA ════ -->
+<section id="s8">
+  <span class="stag rv" data-i18n="s8_tag">Mulai Sekarang</span>
+  <h2 class="rv" data-i18n="s8_h2">MULAI PERJALANANMU<br>HARI INI.</h2>
+  <p class="s8-psiko rv" data-i18n="s8_sub">Sudah <strong id="stat-cta">140</strong> orang memulai perjalanan mereka.<br>Kapan giliranmu?</p>
+  <a href="/catalog" class="btn-putih rv" data-i18n="s8_btn">Dapatkan Kaosmu</a>
+
+</section>
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">BLUMB✦NG</div>
+    <div class="ft-links">
+      <a href="/catalog" data-i18n="nav_koleksi">Koleksi</a>
+      <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+      <a href="/about" data-i18n="nav_tentang">Tentang</a>
+      <a href="https://vm.tiktok.com/ZS9R6sQtjS2MX-ihACV/" target="_blank">TikTok</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="ft-copy">© 2026 Blumbang · Jeto, Klaten, Jawa Tengah</div>
+  </div>
+</footer>
+
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+let rawSparks = []; // Cache data SPARKS untuk drawer
+let rawGarments = []; // Cache data GARMENTS untuk section koleksi
+
+function urlDrive(u){
+  if(!u) return '';
+  const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w1200':u;
+}
+
+// Load foto dari tab HOMEPAGE
+async function muatFoto(){
+  try{
+    const txt=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=HOMEPAGE')).text();
+    const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m) return;
+    const baris=JSON.parse(m[1]).table.rows||[];
+    const d={};
+    baris.forEach(b=>{const k=b.c[0]?.v,v=b.c[1]?.v;if(k&&v)d[k.trim()]=v.trim();});
+    if(d.foto_hero) document.getElementById('hero-img').src=urlDrive(d.foto_hero);
+    if(d.foto_kerah) document.getElementById('s2-img').src=urlDrive(d.foto_kerah);
+    if(d.foto_peta) document.getElementById('s5-img').src=urlDrive(d.foto_peta);
+  }catch(e){}
+}
+
+// Load angka live dari Sheets
+async function muatStats(){
+  try{
+    // Garment dari sheet GARMENTS
+    const txtG=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS')).text();
+    const mG=txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisG=mG?JSON.parse(mG[1]).table.rows||[]:[];
+    const totalGarment=barisG.filter(r=>r.c[0]?.v).length||140;
+
+    // Kota, negara, berjalan & scan dari sheet SPARKS
+    const txtS=await(await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
+    const mS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisS=mS?JSON.parse(mS[1]).table.rows||[]:[];
+    rawSparks = barisS; // Simpan untuk drawer
+    rawGarments = barisG; // Simpan untuk section koleksi
+    renderKoleksi();
+    const kotaSet=new Set(['Klaten']);
+    const negaraSet=new Set(['Indonesia']);
+    const garmentBerjalan=new Set();
+    let totalScan=0;
+    barisS.forEach(r=>{
+      const id=r.c[0]?.v;
+      const c=r.c[2]?.v;
+      if(id) garmentBerjalan.add(id);
+      if(c){
+        totalScan++;
+        kotaSet.add(c.split(',')[0].trim());
+        if(c.includes(',')) negaraSet.add(c.split(',').pop().trim());
+      }
+    });
+
+    animNum('stat-garment', totalGarment);
+    animNum('stat-berjalan', garmentBerjalan.size);
+    animNum('stat-scan', totalScan);
+    animNum('stat-kota', kotaSet.size);
+    animNum('stat-negara', negaraSet.size);
+    const ctaEl=document.getElementById('stat-cta');
+    if(ctaEl) ctaEl.textContent=totalGarment;
+  }catch(e){
+    document.getElementById('stat-garment').textContent='140';
+    document.getElementById('stat-berjalan').textContent='6';
+    document.getElementById('stat-scan').textContent='—';
+    document.getElementById('stat-kota').textContent='12';
+    document.getElementById('stat-negara').textContent='3';
+  }
+}
+
+function animNum(id, target){
+  const el=document.getElementById(id);
+  if(!el) return;
+  let cur=0;const step=Math.ceil(target/30);
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+// QR pola
+(function(){
+  const el=document.getElementById('qr-pola');
+  if(!el) return;
+  [1,1,1,1,1,1,1,0,1,
+   1,0,0,0,0,0,1,0,0,
+   1,0,1,1,1,0,1,0,1,
+   1,0,1,1,1,0,1,0,0,
+   1,0,1,1,1,0,1,0,1,
+   1,0,0,0,0,0,1,0,0,
+   1,1,1,1,1,1,1,0,1,
+   0,0,0,0,0,0,0,0,0,
+   1,0,1,0,1,1,0,0,1].forEach(v=>{
+    const c=document.createElement('div');
+    c.className=v?'qh':'qw';
+    el.appendChild(c);
+  });
+})();
+
+// Nav mobile
+function toggleNav(){
+  const m=document.getElementById('nav-mob');
+  const b=document.getElementById('burger');
+  m.classList.toggle('buka');
+  b.textContent=m.classList.contains('buka')?'✕':'☰';
+}
+
+// Scroll reveal
+const obs=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');obs.unobserve(e.target);}});
+},{threshold:.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+
+// ── GARMENT HANDLER ──────────────────────────
+const pagePath = window.location.pathname;
+const isQC = pagePath.includes('/qc/');
+const isGarment = pagePath.includes('/id/') || isQC;
+
+let GARMENTS = {};
+
+function driveUrlGarment(url){ if(!url) return ''; var id=(url.split('/d/')[1]||'').split('/')[0].split('?')[0]; return id?'https://drive.google.com/thumbnail?id='+id+'&sz=w800':url; }
+
+async function fetchGarments(){
+  try{
+    const txt = await (await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS')).text();
+    const m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m) return;
+    const rows = JSON.parse(m[1]).table.rows || [];
+    rows.forEach(row => {
+      const id = row.c[0] && row.c[0].v;
+      if(!id) return;
+      GARMENTS[id] = {
+        name: ((row.c[1]&&row.c[1].v)||id).replace(/\n/g,'<br>'),
+        origin: (row.c[2]&&row.c[2].v)||'Klaten',
+        year: (row.c[3]&&row.c[3].v)||'2026',
+        edition: (row.c[4]&&row.c[4].v)||'',
+        mockup: driveUrlGarment((row.c[5]&&row.c[5].v)||'')
+      };
+    });
+
+    // Foto fallback: kalau garment tidak punya foto,
+    // cari foto dari garment lain dengan nama seri yang sama
+    const fotoPerSeri = {};
+    Object.keys(GARMENTS).forEach(id => {
+      const g = GARMENTS[id];
+      const key = g.name.toLowerCase();
+      if(g.mockup && !fotoPerSeri[key]) fotoPerSeri[key] = g.mockup;
+    });
+    Object.keys(GARMENTS).forEach(id => {
+      const g = GARMENTS[id];
+      if(!g.mockup){
+        const key = g.name.toLowerCase();
+        if(fotoPerSeri[key]) g.mockup = fotoPerSeri[key];
+      }
+    });
+
+  }catch(e){}
+}
+
+async function initGarment(){
+  await fetchGarments();
+  if(isGarment){
+    // Sembunyikan homepage, tampilkan garment page
+    document.querySelectorAll('.hero, #s2, #s3, #s4, #s5, #s6, #s7, #s8, #s9, .garis, footer').forEach(el=>{
+      if(el) el.style.display='none';
+    });
+    document.getElementById('page-garment').classList.add('active');
+    const id = decodeURIComponent(pagePath.split('/').filter(Boolean).pop()).toUpperCase();
+    document.querySelector('.nav-brand').insertAdjacentHTML('afterend','<span style="font-family:var(--fb);font-size:0.7rem;letter-spacing:0.2em;color:var(--emas);margin-left:16px;">'+id+'</span>');
+    if(isQC) document.getElementById('qc-banner').style.display='block';
+    showGarment(id);
+    if(!isQC) recordScan(id);
+  }
+}
+
+function showGarment(id){
+  document.getElementById('g-id').textContent = id;
+  document.getElementById('g-mtag').textContent = id;
+  const d = GARMENTS[id];
+  if(d){
+    document.getElementById('g-nm').innerHTML = d.name;
+    document.getElementById('g-ori-val').textContent = d.origin;
+    document.getElementById('g-yr').textContent = d.year;
+    document.getElementById('g-ed').textContent = d.edition || '—';
+    if(d.mockup){
+      document.getElementById('g-ph').style.display='none';
+      const img = document.getElementById('g-img');
+      img.src = d.mockup; img.style.display='block';
+      img.onerror = function(){ img.style.display='none'; document.getElementById('g-ph').style.display='flex'; };
+    }
+  } else {
+    document.getElementById('g-nm').innerHTML = id;
+    document.getElementById('g-ori-val').textContent = 'Blumbang · Klaten';
+    document.getElementById('g-yr').textContent = '—';
+    document.getElementById('g-ed').textContent = '—';
+  }
+  loadStories(id);
+}
+
+function loadStories(id){
+  const wrap = document.getElementById('sto-wrap');
+  fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS')
+    .then(r=>r.text()).then(txt=>{
+      const m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      const rows = JSON.parse(m[1]).table.rows || [];
+      const gRows = rows.filter(r=>r.c[0]&&r.c[0].v===id);
+      const cnt = gRows.length + 1;
+      document.getElementById('sm-num').textContent = '#'+cnt;
+      document.getElementById('sm-text').textContent = 'Kamu adalah perjalanan ke-'+cnt+' kaos ini';
+      document.getElementById('sm-badge').textContent = '✦ Spark ke-'+cnt;
+      document.getElementById('spark-moment').style.display = 'block';
+      setTimeout(()=>checkFirstSpark(gRows), 2000);
+      const approved = gRows.filter(r=>r.c[5]&&r.c[5].v==='APPROVED'&&r.c[3]&&r.c[3].v);
+      wrap.innerHTML = approved.length
+        ? approved.map(r=>storyCard({name:(r.c[1]&&r.c[1].v)||'Anonim',city:(r.c[2]&&r.c[2].v)||'',story:(r.c[3]&&r.c[3].v)||'',photo:(r.c[4]&&r.c[4].v)||''})).join('')
+        : '<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';
+      addJourney(gRows);
+    }).catch(()=>{wrap.innerHTML='<div class="semp">Jadilah yang pertama berbagi cerita ✦</div>';});
+}
+
+function checkFirstSpark(existingRows){
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+    const myCity = g.city ? g.city.toLowerCase() : '';
+    if(!myCity) return;
+    const cities = existingRows.map(r=>(r.c[2]&&r.c[2].v||'').toLowerCase());
+    if(!cities.some(c=>c.includes(myCity))) document.getElementById('first-spark-banner').style.display='block';
+  }).catch(()=>{});
+}
+
+function storyCard(s){
+  const av = s.photo
+    ? '<img src="'+s.photo+'" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #7a6028">'
+    : '<div class="savph">'+(s.name||'A').charAt(0).toUpperCase()+'</div>';
+  return '<div class="sc"><div class="sow">'+av+'<div><div class="snm">'+s.name+'</div>'+(s.city?'<div class="sct">✦ '+s.city+'</div>':'')+'</div></div><div class="stxt">"'+s.story+'"</div></div>';
+}
+
+function addJourney(sparks){
+  const list = document.getElementById('jlist');
+  const withCity = sparks.filter(r=>r.c[2]&&r.c[2].v);
+  if(!withCity.length) return;
+  const show = withCity.slice(-5); // 5 terbaru, urut lama ke baru
+  const lastIdx = show.length - 1;
+  show.forEach((r,i)=>{
+    const city = r.c[2].v;
+    const time = (r.c[6]&&r.c[6].v) || 'Baru saja';
+    const isLatest = i === lastIdx;
+    const el = document.createElement('div');
+    el.className = 'ji';
+    el.innerHTML = '<div style="position:relative"><div class="jdot '+(isLatest?'latest':'')+'"></div><div class="jline"></div></div><div><div class="jcity">'+city+'</div><div class="jtime">'+time+'</div>'+(isLatest?'<div class="jbadge">Terbaru</div>':'')+'</div>';
+    list.appendChild(el);
+  });
+}
+
+function recordScan(id){
+  const params = new URLSearchParams(window.location.search);
+  if(params.get('src') !== 'qr') return;
+  fetch('https://ipapi.co/json/').then(r=>r.json()).then(g=>{
+    fetch(SCRIPT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'scan', garment_id:id, city:g.city+', '+g.country_name, timestamp:new Date().toISOString()})
+    }).catch(()=>{});
+  }).catch(()=>{});
+}
+
+function prevPhoto(input){
+  if(!input.files||!input.files[0]) return;
+  const r = new FileReader();
+  r.onload = e => {
+    const p = document.getElementById('u-prev');
+    p.src = e.target.result; p.style.display='block';
+    document.getElementById('u-ico').style.display='none';
+    document.getElementById('u-txt').textContent='Foto dipilih ✓';
+  };
+  r.readAsDataURL(input.files[0]);
+}
+
+async function submitStory(){
+  const name = document.getElementById('f-name').value.trim();
+  const city = document.getElementById('f-city').value.trim();
+  const story = document.getElementById('f-story').value.trim();
+  const photo = document.getElementById('f-photo').files[0];
+  const err = document.getElementById('f-err');
+  const btn = document.getElementById('f-btn');
+  err.style.display='none';
+  if(!name){err.textContent='Nama tidak boleh kosong';err.style.display='block';return;}
+  if(!city){err.textContent='Kota tidak boleh kosong';err.style.display='block';return;}
+  btn.disabled=true; btn.textContent='Mengirim...';
+  let pb='';
+  if(photo){pb=await new Promise(res=>{const r=new FileReader();r.onload=e=>res(e.target.result);r.readAsDataURL(photo);});}
+  const id = document.getElementById('g-id').textContent;
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'story',garment_id:id,name,city,story,photo:pb,timestamp:new Date().toISOString()})});
+  }catch(e){}
+  document.getElementById('form-body').style.display='none';
+  document.getElementById('form-ok').style.display='block';
+}
+
+
+// ── RENDER SECTION KOLEKSI (S7) ──────────────
+function renderKoleksi(){
+  const grid = document.getElementById('koleksi-grid');
+  if(!grid || !rawGarments.length) return;
+
+  // Kelompokkan per seri sama seperti catalog
+  const seriMap = {};
+  rawGarments.forEach(function(row){
+    const id = row.c[0]?.v;
+    if(!id) return;
+    const name = ((row.c[1]?.v)||id).replace(/\n/g,' ');
+    const origin = (row.c[2]?.v)||'Klaten';
+    const year = (row.c[3]?.v)||'2026';
+    const edition = (row.c[4]?.v)||'';
+    const mockup = driveUrlGarment((row.c[5]?.v)||'');
+    const key = edition.trim()||'__umum__';
+    if(!seriMap[key]) seriMap[key] = {nama:edition.trim()||'Koleksi Umum', id, mockup:'', scanRecent:0, year};
+    if(mockup && !seriMap[key].mockup) seriMap[key].mockup = mockup;
+  });
+
+  // Hitung scan recent per seri
+  rawSparks.forEach(function(r){
+    const gid = r.c[0]?.v;
+    if(!gid) return;
+    // Cari seri yang punya garment ini
+    rawGarments.forEach(function(row){
+      if(row.c[0]?.v !== gid) return;
+      const edition = (row.c[4]?.v)||'';
+      const key = edition.trim()||'__umum__';
+      if(seriMap[key]) seriMap[key].scanRecent++;
+    });
+  });
+
+  // Sort: scan recent terbanyak di atas
+  const seriList = Object.values(seriMap).sort(function(a,b){
+    return b.scanRecent - a.scanRecent;
+  });
+
+  // Ambil 3 teratas
+  const top3 = seriList.slice(0,3);
+
+  // Render
+  grid.innerHTML = top3.map(function(seri){
+    const fotoHtml = seri.mockup
+      ? '<img class="k-card-foto" src="'+seri.mockup+'" alt="'+seri.nama+'" loading="lazy" onerror="this.onerror=null;this.remove()">'
+        +'<div class="k-card-ph" style="display:none"><svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg></div>'
+      : '<div class="k-card-ph"><svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" fill="#1a1a1a" stroke="#2a2a2a" stroke-width="1"/></svg></div>';
+
+    return '<a href="/catalog" class="k-card">'
+      + fotoHtml
+      + '<div class="k-card-body">'
+      + '<span class="k-id">'+seri.nama+'</span>'
+      + '<div class="k-nama">'+(seri.year||'2026')+'</div>'
+      + '<div class="k-label">Lihat Koleksi →</div>'
+      + '</div></a>';
+  }).join('');
+}
+
+// Init
+if(isGarment){
+  initGarment();
+} else {
+  muatFoto();
+  muatStats();
+}
+
+// ── DRAWER SYSTEM ──────────────────────────
+let drawerData = { berjalan: null, kota: null, negara: null };
+
+function bukaDrawer(tipe) {
+  tutupSemua();
+  document.getElementById('drawer-overlay').classList.add('aktif');
+  document.getElementById('drawer-' + tipe).classList.add('aktif');
+  document.body.style.overflow = 'hidden';
+  if (!drawerData[tipe]) isiDrawer(tipe);
+}
+
+function tutupDrawer() {
+  tutupSemua();
+  document.body.style.overflow = '';
+}
+
+function tutupSemua() {
+  document.getElementById('drawer-overlay').classList.remove('aktif');
+  ['berjalan','kota','negara'].forEach(t => {
+    document.getElementById('drawer-' + t).classList.remove('aktif');
+  });
+}
+
+async function isiDrawer(tipe) {
+  try {
+    // Pakai data yang sudah di-cache saat load homepage
+    let rows = rawSparks;
+    // Kalau belum ada (misal drawer dibuka sebelum stats selesai), fetch dulu
+    if (!rows.length) {
+      const txt = await (await fetch('https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json&sheet=SPARKS')).text();
+      const m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+      if (!m) return;
+      rows = JSON.parse(m[1]).table.rows || [];
+      rawSparks = rows;
+    }
+
+    if (tipe === 'berjalan') {
+      // Kumpulkan garment unik yang punya spark
+      const garmentMap = {};
+      rows.forEach(r => {
+        const id = r.c[0] && r.c[0].v;
+        const city = r.c[2] && r.c[2].v;
+        if (!id) return;
+        if (!garmentMap[id]) garmentMap[id] = { id, kota: [], count: 0 };
+        garmentMap[id].count++;
+        if (city) garmentMap[id].kota.push(city.split(',')[0].trim());
+      });
+      const list = Object.values(garmentMap);
+      drawerData.berjalan = list;
+      const el = document.getElementById('drawer-berjalan-list');
+      if (!list.length) { el.innerHTML = '<div class="drawer-empty">Belum ada kaos yang berjalan</div>'; return; }
+      el.innerHTML = list.map(g => {
+        const kotaStr = [...new Set(g.kota)].slice(0, 3).join(' → ');
+        return '<a href="/id/' + g.id + '" class="drawer-item"><div class="di-kiri"><div class="di-id">' + g.id + '</div><div class="di-info">' + g.count + ' scan · ' + (kotaStr || 'Belum ada kota') + '</div></div><div class="di-arrow">›</div></a>';
+      }).join('');
+    }
+
+    if (tipe === 'kota') {
+      const kotaCount = {};
+      rows.forEach(r => {
+        const c = r.c[2] && r.c[2].v;
+        if (!c) return;
+        const kota = c.split(',')[0].trim();
+        kotaCount[kota] = (kotaCount[kota] || 0) + 1;
+      });
+      // Tambah Klaten sebagai origin
+      kotaCount['Klaten'] = kotaCount['Klaten'] || 0;
+      const sorted = Object.entries(kotaCount).sort((a,b) => b[1]-a[1]);
+      drawerData.kota = sorted;
+      const el = document.getElementById('drawer-kota-list');
+      if (!sorted.length) { el.innerHTML = '<div class="drawer-empty">Belum ada data kota</div>'; return; }
+      el.innerHTML = sorted.map(([kota, count]) =>
+        '<div class="drawer-item"><div class="di-kiri"><div class="di-id">' + kota + '</div><div class="di-info">' + (count || 'Origin') + (count > 0 ? ' scan' : '') + '</div></div></div>'
+      ).join('');
+    }
+
+    if (tipe === 'negara') {
+      const negaraCount = {};
+      rows.forEach(r => {
+        const c = r.c[2] && r.c[2].v;
+        if (!c) return;
+        const parts = c.split(',');
+        const negara = parts.length > 1 ? parts[parts.length-1].trim() : 'Indonesia';
+        negaraCount[negara] = (negaraCount[negara] || 0) + 1;
+      });
+      negaraCount['Indonesia'] = negaraCount['Indonesia'] || 0;
+      const sorted = Object.entries(negaraCount).sort((a,b) => b[1]-a[1]);
+      drawerData.negara = sorted;
+      const el = document.getElementById('drawer-negara-list');
+      if (!sorted.length) { el.innerHTML = '<div class="drawer-empty">Belum ada data negara</div>'; return; }
+      el.innerHTML = sorted.map(([negara, count]) =>
+        '<div class="drawer-item"><div class="di-kiri"><div class="di-id">' + negara + '</div><div class="di-info">' + (count || 'Origin') + (count > 0 ? ' scan' : '') + '</div></div></div>'
+      ).join('');
+    }
+  } catch(e) {
+    console.warn('Drawer gagal load:', e);
+  }
+}
+
+// Swipe down to close drawer
+let touchStartY = 0;
+document.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; });
+document.addEventListener('touchend', e => {
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (dy > 80) {
+    const activeDrawer = document.querySelector('.drawer.aktif');
+    if (activeDrawer) tutupDrawer();
+  }
+});
+
+// ── i18n SYSTEM ──────────────────────────────────────────
+const i18n = {
+  id: {
+    nav_koleksi:'Koleksi', nav_perjalanan:'Perjalanan', nav_tentang:'Tentang',
+    nav_order:'✦ Order Sekarang',
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'INI BUKAN<br>KAOS BIASA',
+    hero_sub:'Setiap kaos punya cerita. Ceritamu dimulai di sini.',
+    hero_btn_koleksi:'Lihat Koleksi',
+    hero_btn_sparks:'Lihat Contoh Kaos yang Sudah Jalan',
+    sbeda_h2:'APA YANG MEMBUATNYA BERBEDA?',
+    sbeda_sub:'Setiap kaos Blumbang dilengkapi QR unik yang dapat di-scan saat mengunjungi tempat baru. Setiap perjalanannya akan tercatat selamanya.',
+    s2_h2_strong:'Scan QR di label kaosmu —',
+    s2_h2_rest:'dan lihat semua kota yang pernah ia singgahi.',
+    s2_p1:'Setiap kaos Blumbang punya ID unik. Setiap scan mencatat posisimu di peta dunia.<br><br>Perjalanan dan ceritanya tersimpan selamanya.',
+    s2_hint:'QR ada di label bagian dalam. Tidak perlu app khusus.',
+    s4_tag:'Contoh Nyata', s4_h2:'SATU KAOS. BANYAK CERITA.',
+    s4_sub:'Kaos ini sudah melewati 4 kota dalam 3 bulan.',
+    demo_desc:'Setiap perjalanan tersimpan.<br>Setiap scan menambah cerita baru.',
+    demo_btn:'Lihat Perjalanan Kaos Ini →',
+    demo_label:'✦ Perjalanan Kaos Ini',
+    demo_origin_time:'Lahir di sini · 2024',
+    badge_origin:'Origin', badge_terbaru:'Terbaru',
+    waktu_3bln:'3 bulan lalu', waktu_2bln:'2 bulan lalu', waktu_baru:'Baru saja',
+    stat_kaos:'KAOS TERDAFTAR', stat_berjalan:'Sudah Berjalan',
+    stat_perjalanan:'PERJALANAN TERCATAT', stat_kota:'Kota', stat_negara:'Negara',
+    s3_tag:'Cara Kerja', s3_h2:'CARA KERJANYA SEDERHANA.',
+    step1_judul:'Beli Kaos', step1_desc:'Miliki kaos dengan ID unik.',
+    step2_judul:'Scan QR', step2_desc:'Scan kode pada label kaos.',
+    step2_demo:'Coba Scan Demo →',
+    step3_judul:'Lihat & Tambahkan Perjalanan',
+    step3_desc:'Jejakkan perjalananmu dan lihat riwayatnya.',
+    s5_tag:'Contoh Perjalanan',
+    s5_h2:'SETIAP SCAN<br>MENINGGALKAN JEJAK.',
+    s5_sub:'Dari satu kota ke kota lain, dari satu negara ke negara lain.<br>Setiap perjalanan menciptakan jejak di dunia nyata.',
+    s5_tagline:'Dan perjalanannya belum selesai.',
+    s6_tag:'Kenapa Blumbang?', s6_h2:'KENAPA BLUMBANG?',
+    s6_li1:'Setiap kaos unik — <strong>tidak bisa diduplikasi</strong>',
+    s6_li2:'Memiliki <strong>identitas origin Blumbang ID</strong>',
+    s6_li3:'Menyimpan <strong>perjalanan pemiliknya</strong>',
+    s6_li4:'Bisa <strong>diwariskan ceritanya</strong>',
+    s9_tag:'Filosofi', s9_h2:'LEBIH DARI SEKADAR PAKAIAN.',
+    s9_kutipan:'Pakaian bukan hanya apa yang kita kenakan.<br><br>Ia <strong>menemani langkah</strong>, menyerap waktu, dan menjadi saksi perjalanan hidup.<br><br>Blumbang lahir dari gagasan sederhana:<br>bahwa setiap pakaian memiliki <strong>cerita, perjalanan, dan cahayanya sendiri.</strong>',
+    s7_tag:'Portofolio', s7_h2:'PILIH KAOSMU.',
+    s7_sub:'Setiap desain memiliki identitasnya sendiri.<br>Pilih satu, dan mulai perjalananmu.',
+    s7_btn:'Lihat Semua Koleksi',
+    s8_tag:'Mulai Sekarang', s8_h2:'MULAI PERJALANANMU<br>HARI INI.',
+    s8_sub:'Sudah <strong id="stat-cta">—</strong> orang memulai perjalanan mereka.<br>Kapan giliranmu?',
+    s8_btn:'Dapatkan Kaosmu',
+  },
+  en: {
+    nav_koleksi:'Collection', nav_perjalanan:'Journey', nav_tentang:'About',
+    nav_order:'✦ Order Now',
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'THIS IS NO<br>ORDINARY TEE',
+    hero_sub:'Every tee has a story. Yours starts here.',
+    hero_btn_koleksi:'Browse Collection',
+    hero_btn_sparks:'See a Tee in the Wild',
+    sbeda_h2:'WHAT MAKES IT DIFFERENT?',
+    sbeda_sub:'Every Blumbang tee comes with a unique QR that you scan wherever you go. Every journey is recorded — permanently.',
+    s2_h2_strong:'Scan the QR on your label —',
+    s2_h2_rest:'and see every city it has ever visited.',
+    s2_p1:'Every Blumbang tee has a unique ID. Every scan marks your position on the world map.<br><br>Its journey and stories are saved forever.',
+    s2_hint:'QR is inside the label. No app needed.',
+    s4_tag:'Real Example', s4_h2:'ONE TEE. MANY STORIES.',
+    s4_sub:'This tee has passed through 4 cities in 3 months.',
+    demo_desc:'Every journey is saved.<br>Every scan adds a new story.',
+    demo_btn:'See This Tee\'s Journey →',
+    demo_label:'✦ This Tee\'s Journey',
+    demo_origin_time:'Born here · 2024',
+    badge_origin:'Origin', badge_terbaru:'Latest',
+    waktu_3bln:'3 months ago', waktu_2bln:'2 months ago', waktu_baru:'Just now',
+    stat_kaos:'TEES REGISTERED', stat_berjalan:'On the Move',
+    stat_perjalanan:'JOURNEYS RECORDED', stat_kota:'Cities', stat_negara:'Countries',
+    s3_tag:'How It Works', s3_h2:'IT\'S SIMPLE.',
+    step1_judul:'Get a Tee', step1_desc:'Own a tee with a unique ID.',
+    step2_judul:'Scan QR', step2_desc:'Scan the code on the label.',
+    step2_demo:'Try Scan Demo →',
+    step3_judul:'Track & Share Your Journey',
+    step3_desc:'Leave your mark and see the full history.',
+    s5_tag:'Sample Journey',
+    s5_h2:'EVERY SCAN<br>LEAVES A MARK.',
+    s5_sub:'From one city to the next, from one country to another.<br>Every journey creates a real trace in the world.',
+    s5_tagline:'And the journey isn\'t over yet.',
+    s6_tag:'Why Blumbang?', s6_h2:'WHY BLUMBANG?',
+    s6_li1:'Every tee is unique — <strong>impossible to duplicate</strong>',
+    s6_li2:'Carries an <strong>official Blumbang ID origin</strong>',
+    s6_li3:'Holds the <strong>owner\'s journey</strong>',
+    s6_li4:'Its story can be <strong>passed on</strong>',
+    s9_tag:'Philosophy', s9_h2:'MORE THAN JUST CLOTHING.',
+    s9_kutipan:'Clothing is not just what we wear.<br><br>It <strong>walks with us</strong>, absorbs time, and witnesses the journey of a life.<br><br>Blumbang was born from a simple idea:<br>that every garment carries <strong>its own story, journey, and light.</strong>',
+    s7_tag:'Portfolio', s7_h2:'CHOOSE YOUR TEE.',
+    s7_sub:'Every design has its own identity.<br>Pick one, and start your journey.',
+    s7_btn:'View All Collections',
+    s8_tag:'Start Now', s8_h2:'BEGIN YOUR JOURNEY<br>TODAY.',
+    s8_sub:'<strong id="stat-cta">—</strong> people have already started their journey.<br>When\'s your turn?',
+    s8_btn:'Get Your Tee',
+  }
+};
+
+let currentLang = localStorage.getItem('blb_lang') || 'id';
+
+function applyLang(lang){
+  const dict = i18n[lang];
+  if(!dict) return;
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(dict[key] !== undefined) el.innerHTML = dict[key];
+  });
+  // Update toggle buttons
+  document.getElementById('btn-id').classList.toggle('aktif', lang==='id');
+  document.getElementById('btn-en').classList.toggle('aktif', lang==='en');
+  // Update html lang attr
+  document.documentElement.lang = lang;
+  // Re-apply stat-cta number after innerHTML replace
+  const ctaEl = document.getElementById('stat-cta');
+  if(ctaEl && ctaEl.textContent === '—'){
+    const garmentEl = document.getElementById('stat-garment');
+    if(garmentEl && garmentEl.textContent !== '—') ctaEl.textContent = garmentEl.textContent;
+  }
+  currentLang = lang;
+}
+
+function setLang(lang){
+  localStorage.setItem('blb_lang', lang);
+  applyLang(lang);
+}
+
+// Auto-detect: GeoIP first, fallback to browser lang
+(async function detectLang(){
+  const saved = localStorage.getItem('blb_lang');
+  if(saved){ applyLang(saved); return; }
+  try{
+    const g = await (await fetch('https://ipapi.co/json/')).json();
+    const country = g.country_code || '';
+    const lang = (country === 'ID') ? 'id' : 'en';
+    applyLang(lang);
+  } catch(e){
+    const bl = navigator.language || 'id';
+    applyLang(bl.startsWith('id') ? 'id' : 'en');
+  }
+})();
+
+</script>
+
+<!-- GARMENT PAGE - handles /id/ and /qc/ routes -->
+<div id="page-garment">
+  <div class="qc-banner" id="qc-banner">QC Mode — Scan ini tidak dihitung sebagai perjalanan</div>
+  <div class="gw">
+    <div class="spark-moment" id="spark-moment" style="display:none">
+      <div class="sm-num" id="sm-num">—</div>
+      <div class="sm-text" id="sm-text">perjalanan kaos ini</div>
+      <div class="sm-badge" id="sm-badge">✦ Kamu Spark Ke-</div>
+    </div>
+    <div class="first-spark-banner" id="first-spark-banner">
+      <div class="fsb-text">Kamu menyalakan Spark pertama di kotamu!</div>
+    </div>
+    <div class="g-hdr">
+      <span class="g-lbl">Garment Identity</span>
+      <div class="g-id-big" id="g-id">—</div>
+      <div class="g-nm" id="g-nm">—</div>
+    </div>
+    <div class="g-div-line"><span>✦</span></div>
+    <div class="g-mock">
+      <div class="g-ph" id="g-ph"><p>Memuat...</p></div>
+      <img id="g-img" src="" alt="Mockup" style="display:none">
+      <div class="g-mtag" id="g-mtag">—</div>
+    </div>
+    <div class="g-ori">
+      <div class="g-oi"><span class="lbl">Dibuat Di</span><div class="val" id="g-ori-val">Klaten</div></div>
+      <div class="g-oi"><span class="lbl">Tahun</span><div class="val" id="g-yr">2026</div></div>
+      <div class="g-oi"><span class="lbl">Edisi</span><div class="val" id="g-ed">—</div></div>
+    </div>
+    <div class="g-jrn">
+      <span class="g-stl">✦ Perjalanan Kaos Ini</span>
+      <div class="jlist" id="jlist">
+        <div class="ji">
+          <div style="position:relative"><div class="jdot"></div><div class="jline"></div></div>
+          <div><div class="jcity">Klaten, Jawa Tengah</div><div class="jtime">Lahir di sini · 2026</div><div class="jbadge">Origin</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="g-sto">
+      <span class="g-stl">✦ Cerita Dari Pemilik</span>
+      <div id="sto-wrap"><div class="semp">Memuat cerita...</div></div>
+    </div>
+    <div class="g-fs">
+      <div id="form-body">
+        <div class="g-ft">Tambah Ceritamu</div>
+        <div class="g-fsb">Namamu tercatat selamanya.</div>
+        <div class="fg"><label class="fl">Nama Kamu *</label><input type="text" class="fi" id="f-name" placeholder="Nama atau panggilan..."></div>
+        <div class="fg"><label class="fl">Kota Kamu Sekarang *</label><input type="text" class="fi" id="f-city" placeholder="Yogyakarta, Singapore, Tokyo..."></div>
+        <div class="fg"><label class="fl">Ceritamu (opsional)</label><textarea class="fta" id="f-story" placeholder="Cerita singkat tentang kaos ini bersamamu..."></textarea></div>
+        <div class="fg">
+          <label class="fl">Foto Kamu (opsional)</label>
+          <div class="fup"><img class="uprev" id="u-prev" src="" alt=""><div class="uico" id="u-ico">📷</div><div class="utxt" id="u-txt">Tap untuk pilih foto</div><input type="file" accept="image/*" id="f-photo" onchange="prevPhoto(this)"></div>
+        </div>
+        <button class="fbtn" id="f-btn" onclick="submitStory()">✦ &nbsp; Kirim Ceritaku</button>
+        <div class="ferr" id="f-err"></div>
+      </div>
+      <div class="fok" id="form-ok"><h3>Ceritamu sudah diterima!</h3><p>Sedang diulas · Akan segera tayang</p></div>
+    </div>
+    <div class="g-ftr"><a href="/">blumb✦ng·id</a> &nbsp;·&nbsp; <a href="/">Made Slowly. Felt Deeply.</a></div>
+  </div>
+</div>
+
+<!-- ════ DRAWER OVERLAY ════ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
+
+<!-- DRAWER: Kaos yang Sudah Berjalan -->
+<div class="drawer" id="drawer-berjalan">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Sudah Berjalan</div>
+  <div class="drawer-list" id="drawer-berjalan-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
+<!-- DRAWER: Kota -->
+<div class="drawer" id="drawer-kota">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Kota yang Sudah Discan</div>
+  <div class="drawer-list" id="drawer-kota-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
+<!-- DRAWER: Negara -->
+<div class="drawer" id="drawer-negara">
+  <div class="drawer-handle"></div>
+  <div class="drawer-judul">Negara yang Sudah Discan</div>
+  <div class="drawer-list" id="drawer-negara-list">
+    <div class="drawer-empty">Memuat...</div>
+  </div>
+</div>
+
+
+<!-- FLOATING WA -->
+<a href="https://wa.me/6281234561146" class="wa-float" target="_blank" rel="noopener" aria-label="Chat WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+</body>
+</html>

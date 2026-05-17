@@ -1,109 +1,17 @@
-// generate-posts.js
-// Jalankan: node generate-posts.js
-// Script ini membaca semua file .md di folder _posts
-// dan menggenerate:
-//   1. blog/posts.json  — untuk halaman blog index
-//   2. blog/[slug].html — static HTML per artikel (SEO-ready)
-//   3. sitemap.xml      — untuk Google Search Console
-
-const fs = require('fs');
-const path = require('path');
-
-const POSTS_DIR = path.join(__dirname, '_posts');
-const OUTPUT_JSON = path.join(__dirname, 'blog', 'posts.json');
-const OUTPUT_SITEMAP = path.join(__dirname, 'sitemap.xml');
-const BLOG_DIR = path.join(__dirname, 'blog');
-const BASE_URL = 'https://blumbang.id';
-
-function parseFrontmatter(content) {
-  const result = { body: content, meta: {} };
-  if (!content.startsWith('---')) return result;
-  const end = content.indexOf('---', 3);
-  if (end === -1) return result;
-  const frontmatter = content.slice(3, end).trim();
-  result.body = content.slice(end + 3).trim();
-  frontmatter.split('\n').forEach(line => {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) return;
-    const key = line.slice(0, colonIdx).trim();
-    let val = line.slice(colonIdx + 1).trim();
-    if ((val.startsWith('"') && val.endsWith('"')) ||
-        (val.startsWith("'") && val.endsWith("'"))) {
-      val = val.slice(1, -1);
-    }
-    if (val === 'true') val = true;
-    if (val === 'false') val = false;
-    result.meta[key] = val;
-  });
-  return result;
-}
-
-function slugFromFilename(filename) {
-  const name = filename.replace('.md', '');
-  const match = name.match(/^\d{4}-\d{2}-\d{2}-(.+)$/);
-  const raw = match ? match[1] : name;
-  return raw.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
-}
-
-// Markdown to HTML — simpel tapi cukup untuk SEO
-function markdownToHtml(md) {
-  let html = md
-    // Heading
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // Bold & italic
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    // Blockquote
-    .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
-    // Image
-    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
-    // Link
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-    // Horizontal rule
-    .replace(/^---$/gm, '<hr>')
-    // Paragraf — bungkus baris yang bukan tag HTML
-    .split('\n\n')
-    .map(block => {
-      block = block.trim();
-      if (!block) return '';
-      if (block.startsWith('<h') || block.startsWith('<blockquote') || 
-          block.startsWith('<img') || block.startsWith('<hr')) return block;
-      return '<p>' + block.replace(/\n/g, ' ') + '</p>';
-    })
-    .join('\n');
-  return html;
-}
-
-function formatDate(dateStr) {
-  if (!dateStr) return '';
-  try {
-    return new Date(dateStr).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-  } catch(e) { return dateStr; }
-}
-
-function generateArticleHtml(post, bodyHtml) {
-  const canonical = `${BASE_URL}/blog/${post.slug}`;
-  const metaDesc = post.description ? post.description.replace(/\n/g, ' ').slice(0, 160) : '';
-  const coverHtml = post.cover ? `<img class="article-cover" src="${post.cover}" alt="${post.title}" onclick="bukaLightbox(this.src)">` : '';
-  const catHtml = post.category ? `<span class="article-cat">${post.category}</span>` : '';
-  const dateHtml = post.date ? `<span class="article-date">${formatDate(post.date)}</span>` : '';
-
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${post.title} — Blumbang</title>
-<meta name="description" content="${metaDesc}">
-<meta property="og:title" content="${post.title} — Blumbang">
-<meta property="og:description" content="${metaDesc}">
+<title>Jujur Soal Sablon Kami — DTF, Plastisol, dan Kenapa Rubber Itu Mahal — Blumbang</title>
+<meta name="description" content="Kami bisa bikin semua jenis sablon di workshop Blumbang, Gaden,">
+<meta property="og:title" content="Jujur Soal Sablon Kami — DTF, Plastisol, dan Kenapa Rubber Itu Mahal — Blumbang">
+<meta property="og:description" content="Kami bisa bikin semua jenis sablon di workshop Blumbang, Gaden,">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Blumbang.id">
-<meta property="og:url" content="${canonical}">
-${post.cover ? `<meta property="og:image" content="${post.cover}">` : '<meta property="og:image" content="https://blumbang.id/og-image.jpg">'}
-<link rel="canonical" href="${canonical}">
+<meta property="og:url" content="https://blumbang.id/blog/jujur-soal-sablon-kami-dtf-plastisol-dan-kenapa-rubber-itu-mahal">
+<meta property="og:image" content="https://media.blumbang.id/WhatsApp%20Image%202026-03-28%20at%2000.11.52%20(3).webp">
+<link rel="canonical" href="https://blumbang.id/blog/jujur-soal-sablon-kami-dtf-plastisol-dan-kenapa-rubber-itu-mahal">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-39SRRM5GKK");</script>
@@ -111,12 +19,12 @@ ${post.cover ? `<meta property="og:image" content="${post.cover}">` : '<meta pro
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "${post.title.replace(/"/g, '\\"')}",
-  "description": "${metaDesc.replace(/"/g, '\\"')}",
-  "datePublished": "${post.date}",
+  "headline": "Jujur Soal Sablon Kami — DTF, Plastisol, dan Kenapa Rubber Itu Mahal",
+  "description": "Kami bisa bikin semua jenis sablon di workshop Blumbang, Gaden,",
+  "datePublished": "2026-05-03",
   "author": {"@type": "Organization", "name": "Blumbang ID"},
   "publisher": {"@type": "Organization", "name": "Blumbang ID", "url": "https://blumbang.id"},
-  "url": "${canonical}"
+  "url": "https://blumbang.id/blog/jujur-soal-sablon-kami-dtf-plastisol-dan-kenapa-rubber-itu-mahal"
 }
 </script>
 <style>
@@ -191,14 +99,63 @@ footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-i
   <a href="https://wa.me/6281234561146">✦ ORDER SEKARANG</a>
 </div>
 
-${coverHtml}
+<img class="article-cover" src="https://media.blumbang.id/WhatsApp%20Image%202026-03-28%20at%2000.11.52%20(3).webp" alt="Jujur Soal Sablon Kami — DTF, Plastisol, dan Kenapa Rubber Itu Mahal" onclick="bukaLightbox(this.src)">
 
 <div class="article-wrap">
   <a href="/blog" class="article-back">← Kembali ke Blog</a>
-  <div class="article-meta">${catHtml}${dateHtml}</div>
-  <h1 class="article-title">${post.title}</h1>
-  ${metaDesc ? `<div class="article-desc">${metaDesc}</div>` : ''}
-  <div class="article-content">${bodyHtml}</div>
+  <div class="article-meta"><span class="article-cat">cerita</span><span class="article-date">3 Mei 2026</span></div>
+  <h1 class="article-title">Jujur Soal Sablon Kami — DTF, Plastisol, dan Kenapa Rubber Itu Mahal</h1>
+  <div class="article-desc">Kami bisa bikin semua jenis sablon di workshop Blumbang, Gaden,</div>
+  <div class="article-content"><p>Kami tidak rekomendasikan semua metode untuk semua kebutuhan. Ini pengalaman nyata dari Gaden, Trucuk, Klaten — terutama dari Bang Arie, kang sablon kami yang sudah bertahun-tahun pegang screen, mixing tinta, dan kadang ngomel kalau desainnya ribet.</p>
+
+<p>DTF — Menang di Warna, Kalah di Ketahanan</p>
+
+<p>DTF unggul soal full color. Desain gradasi, foto, warna ribuan. Untuk sablon satuan, DTF memang jawabannya.</p>
+
+<p>Tapi jangan harap sablon DTF bisa tahan 100 kali cuci. Itu kenyataannya. Bukan mau menakut-nakuti, tapi biar Anda tahu sejak awal.</p>
+
+<p>Cocok untuk: kaos event, merchandise, desain kompleks, sablon satuan.</p>
+
+<p>Plastisol — Mantap Tapi Ada Syaratnya</p>
+
+<p>Kami pakai Plastisol dengan tinta kualitas baik. Hasilnya solid, warna tajam, tahan lama. Bahkan lebih tahan dari DTF.</p>
+
+<p>Tapi ingat, Plastisol tidak bisa kena setrika langsung. Kalau mau setrika, kaos harus dibalik. Selain itu, feel-nya tidak seperti rubber yang meresap sampai ke serat kain. Kelebihannya, sablon terasa timbul. Ada teksturnya.</p>
+
+<p>Rubber — Paripurna, Tapi Harganya Tidak Bohong</p>
+
+<p>Kalau mau kualitas paripurna, rubber jawabannya. Tahan setrika. Tahan cuci ratusan kali. Feel-nya premium, masuk ke serat kain.</p>
+
+<p>Tapi ini barang mahal. Jangan pesan rubber kalau pesanan Anda tidak lusinan dan desainnya punya lebih dari 5 warna.</p>
+
+<p>Soal desain, usahakan jangan raster. Ngerti raster? Yang seperti foto, gradasi, penuh warna. Memang Plastisol dan rubber bisa cetak desain raster. Blumbang ID sering dapat pesanan seperti itu.</p>
+
+<p>Tapi jangan minta desain raster kalau pesanan Anda tidak sampai 70 pcs dengan desain yang sama.</p>
+
+<p>Kenapa? Karena Bang Arie bisa gila kalau harus cuci dan bikin film screen 6 warna hanya untuk 3 kaos. Tidak efisien. Tidak masuk akal secara ekonomi.</p>
+
+<p>Cocok untuk: pesanan massal, desain solid, komunitas, seragam.</p>
+
+<p>Pengen Gaya Tapi Dana Menipis?</p>
+
+<p>Sini ke Blumbang. Konsultasi dulu. Kami cari jalan tengah antara kantong Anda dan kualitas yang kami jaga.</p>
+
+<p>Lokasi workshop:</p>
+<p>Blumbang ID</p>
+<p>Gaden, Trucuk, Klaten</p>
+<p>Jawa Tengah</p>
+
+<p>Cari "Blumbang ID Klaten" di Google Maps. Dekat kantor desa Gaden, dari pasar Jeto ke timur sekitar 500 meter.</p>
+<p>➡️ https://www.google.com/maps/search/?api=1&query=Blumbang+ID+Gaden+Trucuk+Klaten</p>
+
+<p>Kalau lokasi jauh, kami bisa kirim foto sample atau video. Tapi lebih enak datang langsung. Lihat sample, pegang hasil sablon, cobain feel rubber. Gratis. Tidak usah malu.</p>
+
+<p>Nyablon sepuasnya. Harga seikhlasnya. Tapi ya jangan keterlaluan. Kami juga makan dari sablon. 😄</p>
+
+<p>Punya desain tapi bingung pilih sablon mana?</p>
+<p>Langsung chat ke Bang Arie via WhatsApp:</p>
+<p>➡️ https://wa.me/6281234561146</p>
+<p>Atau tekan nomor ini: 081234561146</p></div>
 
   <div class="article-cta">
     <div class="article-cta-title">TERTARIK BIKIN KAOS?</div>
@@ -222,100 +179,4 @@ function bukaLightbox(src){var lb=document.getElementById('lightbox');document.g
 function tutupLightbox(){document.getElementById('lightbox').classList.remove('on');}
 </script>
 </body>
-</html>`;
-}
-
-async function fetchSeriSlugs() {
-  try {
-    const res = await fetch('https://catalog-builder.blmbng-id.workers.dev/seri/list');
-    const data = await res.json();
-    if (data.ok && data.data) {
-      return data.data.filter(s => s.status === 'published').map(s => s.id);
-    }
-  } catch(e) {
-    console.log('⚠️  Gagal fetch seri dari Worker, pakai fallback');
-  }
-  return [];
-}
-
-function generateSitemap(posts, seriSlugs) {
-  const today = new Date().toISOString().split('T')[0];
-  const staticPages = [
-    { loc: `${BASE_URL}/`,       lastmod: today, changefreq: 'weekly',  priority: '1.0' },
-    { loc: `${BASE_URL}/karya`,  lastmod: today, changefreq: 'weekly',  priority: '0.9' },
-    { loc: `${BASE_URL}/sparks`, lastmod: today, changefreq: 'daily',   priority: '0.9' },
-    { loc: `${BASE_URL}/about`,  lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/blog`,   lastmod: today, changefreq: 'weekly',  priority: '0.8' },
-    { loc: `${BASE_URL}/ria`,    lastmod: today, changefreq: 'monthly', priority: '0.5' },
-  ];
-  const seriPages = seriSlugs.map(slug => ({
-    loc: `${BASE_URL}/karya/${slug}`, lastmod: today, changefreq: 'weekly', priority: '0.85'
-  }));
-  const blogPages = posts.map(p => ({
-    loc: `${BASE_URL}/blog/${p.slug}`,
-    lastmod: p.date || today, changefreq: 'monthly', priority: '0.7'
-  }));
-  const allPages = [...staticPages, ...seriPages, ...blogPages];
-  const urls = allPages.map(p => `  <url>
-    <loc>${p.loc}</loc>
-    <lastmod>${p.lastmod}</lastmod>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
-  </url>`).join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls}
-</urlset>`;
-}
-
-async function generate() {
-  if (!fs.existsSync(POSTS_DIR)) {
-    fs.mkdirSync(POSTS_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(BLOG_DIR)) {
-    fs.mkdirSync(BLOG_DIR, { recursive: true });
-  }
-
-  const files = fs.readdirSync(POSTS_DIR)
-    .filter(f => f.endsWith('.md'))
-    .sort().reverse();
-
-  const posts = files.map(filename => {
-    const content = fs.readFileSync(path.join(POSTS_DIR, filename), 'utf8');
-    const { meta, body } = parseFrontmatter(content);
-    const slug = meta.slug || slugFromFilename(filename);
-    return {
-      slug, filename, body,
-      title: meta.title || 'Tanpa Judul',
-      date: meta.date || '',
-      category: meta.category || '',
-      description: meta.description || '',
-      cover: meta.cover || '',
-      published: meta.published !== false
-    };
-  }).filter(p => p.published !== false);
-
-  // 1. Generate posts.json
-  const postsJson = posts.map(({body, ...rest}) => rest);
-  fs.writeFileSync(OUTPUT_JSON, JSON.stringify(postsJson, null, 2));
-  console.log(`✅ ${posts.length} artikel ditulis ke blog/posts.json`);
-
-  // 2. Generate static HTML per artikel
-  posts.forEach(post => {
-    const bodyHtml = markdownToHtml(post.body);
-    const html = generateArticleHtml(post, bodyHtml);
-    const outPath = path.join(BLOG_DIR, post.slug + '.html');
-    fs.writeFileSync(outPath, html);
-    console.log(`   ✦ blog/${post.slug}.html`);
-  });
-  console.log(`✅ ${posts.length} static HTML artikel di-generate`);
-
-  // 3. Fetch seri slugs dan generate sitemap
-  const seriSlugs = await fetchSeriSlugs();
-  console.log(`✅ ${seriSlugs.length} seri ditemukan untuk sitemap`);
-  const sitemap = generateSitemap(postsJson, seriSlugs);
-  fs.writeFileSync(OUTPUT_SITEMAP, sitemap);
-  console.log(`✅ sitemap.xml diupdate (6 statis + ${seriSlugs.length} seri + ${posts.length} blog = ${6 + seriSlugs.length + posts.length} URL)`);
-}
-
-generate();
+</html>

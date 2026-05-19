@@ -330,6 +330,13 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   .internal-sec{padding:28px 20px;}
   .proses-list{grid-template-columns:1fr;}
 }
+
+.harga-bar{display:grid;grid-template-columns:repeat(4,1fr);background:#141414;border-top:1px solid #2a2a2a;border-bottom:1px solid #2a2a2a;}
+.harga-item{padding:20px 8px;text-align:center;border-right:1px solid #2a2a2a;}
+.harga-item:last-child{border-right:none;}
+.harga-num{font-family:"Bebas Neue",sans-serif;font-size:clamp(1.4rem,3vw,2rem);letter-spacing:.06em;color:#C9A84C;line-height:1;}
+.harga-lbl{font-family:"Inter",sans-serif;font-size:.52rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#888;margin-top:5px;}
+@media(max-width:768px){.harga-bar{grid-template-columns:repeat(2,1fr);}.harga-item:nth-child(2){border-right:none;}.harga-item:nth-child(3){border-top:1px solid #2a2a2a;}.harga-item:nth-child(4){border-right:none;border-top:1px solid #2a2a2a;}}
 </style>
 <script type="application/ld+json">
 {

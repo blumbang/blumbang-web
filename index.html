@@ -736,6 +736,8 @@ function initPetaObserver(){
   const el=document.getElementById('s-peta');if(el) obs.observe(el);
 }
 
+
+// HISTORY API — drawer
 function bukaDrawer(tipe){
   const label={berjalan:'Kaos yang Sudah Berjalan',kota:'Kota yang Sudah Discan',negara:'Negara yang Sudah Discan'};
   document.getElementById('drawer-judul').textContent=label[tipe]||tipe;
@@ -743,13 +745,24 @@ function bukaDrawer(tipe){
   document.getElementById('drawer-overlay').classList.add('aktif');
   document.getElementById('drawer').classList.add('aktif');
   document.body.style.overflow='hidden';
+  history.pushState({drawer:tipe},'','#'+tipe);
   isiDrawer(tipe);
 }
 function tutupDrawer(){
   document.getElementById('drawer-overlay').classList.remove('aktif');
   document.getElementById('drawer').classList.remove('aktif');
   document.body.style.overflow='';
+  if(location.hash)history.pushState({},'',location.pathname);
 }
+window.addEventListener('popstate',function(e){
+  const overlay=document.getElementById('drawer-overlay');
+  if(overlay&&overlay.classList.contains('aktif')){
+    document.getElementById('drawer-overlay').classList.remove('aktif');
+    document.getElementById('drawer').classList.remove('aktif');
+    document.body.style.overflow='';
+  }
+});
+
 async function isiDrawer(tipe){
   const list=document.getElementById('drawer-list');
   let rows=_sparks;

@@ -158,7 +158,7 @@ const GA = `
 
 // ── Generate index.html ───────────────────────────────────────────────────────
 
-function generateIndex(stats, kotaList, scanTerbaru) {
+function generateIndex(stats, kotaList, scanTerbaru, hof) {
   const kotaTags = kotaList.map(k =>
     `<a href="/sparks/kota/${k.slug}" class="city-tag"><span class="dot"></span>${k.label}</a>`
   ).join('\n    ');
@@ -166,6 +166,31 @@ function generateIndex(stats, kotaList, scanTerbaru) {
   const latestHtml = scanTerbaru
     ? `<div class="latest-section"><div class="latest-dot"></div><div class="latest-text">Terbaru dari <span class="latest-city">${scanTerbaru}</span></div></div>`
     : '';
+
+  const renderHofItems = (items, valSuffix) => items.map((item, i) =>
+    `<div class="hof-item">
+      <div class="hof-rank${i===0?' gold':''}">#${i+1}</div>
+      <a href="/id/${item.garment_id}" class="hof-name">${item.displayName}</a>
+      <div class="hof-val">${item.value}${valSuffix}</div>
+    </div>`
+  ).join('\n');
+
+  const hofHtml = (hof.terjauh.length || hof.terbanyak.length) ? `
+  <div class="hof-section">
+    <div class="hof-title">HALL OF FAME</div>
+    <div class="hof-sub">Kaos dengan perjalanan paling luar biasa</div>
+    <div class="hof-grid">
+      <div>
+        <div class="hof-cat-title">✦ Paling Jauh dari Klaten</div>
+        ${renderHofItems(hof.terjauh, ' km')}
+      </div>
+      <div>
+        <div class="hof-cat-title">✦ Paling Banyak Kota</div>
+        ${renderHofItems(hof.terbanyak, ' kota')}
+      </div>
+    </div>
+    <div class="hof-updated">Diperbarui setiap pagi</div>
+  </div>` : '';
 
   const kotaJsonLd = kotaList.map((k, i) => ({
     '@type': 'ListItem',
@@ -231,11 +256,25 @@ ${BASE_CSS}
 .latest-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;flex-shrink:0;}
 .latest-text{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.08em;color:var(--light);}
 .latest-city{color:var(--gold);font-weight:600;}
+.hof-section{padding:40px 24px;border-top:1px solid var(--border);background:var(--charcoal);}
+.hof-title{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);margin-bottom:4px;}
+.hof-sub{font-family:var(--font-ui);font-size:0.6rem;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-bottom:32px;}
+.hof-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.hof-cat-title{font-family:var(--font-ui);font-size:0.6rem;font-weight:700;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.hof-item{display:flex;align-items:baseline;gap:12px;padding:10px 0;border-bottom:1px solid rgba(42,42,42,0.5);}
+.hof-rank{font-family:var(--font-logo);font-size:1.2rem;color:var(--gold-dim);letter-spacing:0.1em;min-width:24px;}
+.hof-rank.gold{color:var(--gold);}
+.hof-name{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;color:var(--light);flex:1;text-decoration:none;}
+.hof-name:hover{color:var(--gold);}
+.hof-val{font-family:var(--font-logo);font-size:0.9rem;color:var(--gold);letter-spacing:0.08em;}
+.hof-updated{font-family:var(--font-ui);font-size:0.58rem;letter-spacing:0.15em;color:var(--muted);text-align:right;margin-top:20px;}
 @media(max-width:768px){
   .sparks-header{padding:32px 20px 20px;}
   .stats-bar{grid-template-columns:repeat(2,1fr);}
   .cities-section{padding:16px 20px;}
   .latest-section{padding:16px 20px;}
+  .hof-section{padding:28px 20px;}
+  .hof-grid{grid-template-columns:1fr;gap:24px;}
 }
 </style>
 </head>
@@ -263,6 +302,7 @@ ${NAV}
     ${kotaTags}
   </div>
   ${latestHtml}
+  ${hofHtml}
 </div>
 ${FOOTER}
 ${BASE_JS}
@@ -549,9 +589,60 @@ async function main() {
   if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
   if (!fs.existsSync(kotaDir)) fs.mkdirSync(kotaDir, { recursive: true });
 
+  // Hitung Hall of Fame
+  // 1. Paling banyak kota unik per garment
+  const garmentKotaUnik = {};
+  spkRows.forEach(r => {
+    const garmentId = val(r.c[0]);
+    const city = val(r.c[2]);
+    if (!garmentId || !city) return;
+    const kota = city.split(',')[0].trim();
+    if (!garmentKotaUnik[garmentId]) garmentKotaUnik[garmentId] = new Set();
+    garmentKotaUnik[garmentId].add(kota.toLowerCase());
+  });
+
+  // 2. Rekor terjauh per garment — dari Sheets dulu, fallback CITY_COORDS
+  const CITY_COORDS_DATA = JSON.parse(generateCityCoords());
+  const garmentJarak = {};
+  spkRows.forEach(r => {
+    const garmentId = val(r.c[0]);
+    const city = val(r.c[2]);
+    if (!garmentId || !city) return;
+
+    let dist = parseFloat(val(r.c[10])) || 0; // kolom distance_km
+
+    if (!dist) {
+      // fallback: hitung dari CITY_COORDS
+      const key = city.split(',')[0].trim().toLowerCase();
+      const coord = CITY_COORDS_DATA[key];
+      if (coord) dist = haversine(KLATEN.lat, KLATEN.lng, coord.lonlat[1], coord.lonlat[0]);
+    }
+
+    if (dist > (garmentJarak[garmentId] || 0)) garmentJarak[garmentId] = dist;
+  });
+
+  const makeDisplayName = (id) => {
+    const name = garmentNames[id] || id;
+    const num = id.match(/-(\d+)$/);
+    return name !== id ? name + (num ? ' · #' + num[1] : '') : id;
+  };
+
+  const hofTerbanyak = Object.entries(garmentKotaUnik)
+    .map(([id, set]) => ({ garment_id: id, displayName: makeDisplayName(id), value: set.size }))
+    .sort((a,b) => b.value - a.value)
+    .slice(0, 5);
+
+  const hofTerjauh = Object.entries(garmentJarak)
+    .filter(([, d]) => d > 0)
+    .map(([id, dist]) => ({ garment_id: id, displayName: makeDisplayName(id), value: dist }))
+    .sort((a,b) => b.value - a.value)
+    .slice(0, 5);
+
+  const hof = { terjauh: hofTerjauh, terbanyak: hofTerbanyak };
+
   // Generate index
   console.log('Generating sparks/index.html...');
-  fs.writeFileSync(path.join(outDir, 'index.html'), generateIndex(stats, kotaList, scanTerbaru));
+  fs.writeFileSync(path.join(outDir, 'index.html'), generateIndex(stats, kotaList, scanTerbaru, hof));
 
   // Generate halaman kota
   let kotaCount = 0;

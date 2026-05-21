@@ -349,7 +349,10 @@ function generateKotaPage(kotaLabel, scans, slug) {
   const scanItems = scans.map(s => {
     const bulan = bulanTahun(s.ts);
     const isPertama = s.isPertama;
-    const displayName = s.name && s.name !== s.garment_id ? s.name : s.garment_id;
+    const baseName = s.name && s.name !== s.garment_id ? s.name : s.garment_id;
+    const numMatch = s.garment_id.match(/-(\d+)$/);
+    const num = numMatch ? ' · #' + numMatch[1] : '';
+    const displayName = baseName + num;
     return `<div class="scan-item${isPertama ? ' pertama' : ''}">
       <div class="scan-id"><a href="https://blumbang.id/id/${s.garment_id}">${displayName}</a></div>
       <div class="scan-meta">${bulan}${isPertama ? ' <span class="badge-pertama">✦ Pertama di sini</span>' : ''}</div>
@@ -357,7 +360,9 @@ function generateKotaPage(kotaLabel, scans, slug) {
   }).join('\n');
 
   const pertama = scans.find(s => s.isPertama);
-  const pertamaName = pertama ? (pertama.name && pertama.name !== pertama.garment_id ? pertama.name : pertama.garment_id) : '';
+  const pertamaBase = pertama ? (pertama.name && pertama.name !== pertama.garment_id ? pertama.name : pertama.garment_id) : '';
+  const pertamaNum = pertama ? (pertama.garment_id.match(/-(\d+)$/) ? ' · #' + pertama.garment_id.match(/-(\d+)$/)[1] : '') : '';
+  const pertamaName = pertamaBase + pertamaNum;
   const pertamaText = pertama
     ? `Pertama dibawa ke sini oleh <strong>${pertamaName}</strong> · ${bulanTahun(pertama.ts)}`
     : '';

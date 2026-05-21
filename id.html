@@ -62,8 +62,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 
 /* NAMA */
 .garment-nama{font-family:var(--font-logo);font-size:clamp(2rem,8vw,3.5rem);letter-spacing:.06em;line-height:1.0;margin-bottom:20px;}
-.garment-nama-link{display:block;text-decoration:none;color:var(--white);transition:color 0.2s;}
-.garment-nama-link:hover{color:var(--gold);}
 
 /* INFO GRID */
 .garment-info{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-bottom:36px;}
@@ -423,8 +421,7 @@ async function init() {
     var html = '<div class="garment-wrap">';
     html += '<div class="garment-id-badge"><span class="garment-id-text">' + id + '</span>' + srcBadge + '</div>';
     html += '<div class="garment-mockup-wrap">' + mockupHtml + '</div>';
-    var seriSlug = toSlug(nama);
-    html += '<a href="/karya/' + seriSlug + '" class="garment-nama garment-nama-link">' + nama + ' →</a>';
+    html += '<div class="garment-nama">' + nama + '</div>';
     html += '<div class="garment-info">';
     html += '<div class="info-item"><div class="info-label">Dibuat di</div><div class="info-val">' + origin + '</div></div>';
     html += '<div class="info-item"><div class="info-label">Tahun</div><div class="info-val">' + year + '</div></div>';
@@ -465,7 +462,7 @@ function bukaLightbox(src) {
   document.body.style.overflow = 'hidden';
 }
 
-var APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbwH8IMYsNggynhL3W4Hht15W69vpQaPjlxBAV4Iw6FP__IyjAd3AfvClrAogw6pBz_w/exec';
+var APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbx3aQma_SB1gMiSUuPPr6Ol6BwKlN1QtIV5EUJa1UM6Fli0H88Jg0aIxxTnlR1bRNY/exec';
 
 function bukaCheckinModal() {
   var overlay = document.getElementById('checkin-overlay');
@@ -481,10 +478,6 @@ function bukaCheckinModal() {
   }, 3000);
 }
 
-function toSlug(str) {
-  return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
-}
-
 async function recordScan(garmentId) {
   try {
     var res = await fetch('https://ipapi.co/json/');
@@ -496,7 +489,7 @@ async function recordScan(garmentId) {
     await fetch(APPS_SCRIPT, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city })
+      body: JSON.stringify({ action: 'scan', garment_id: garmentId, city: city, lat: geo.latitude || '', lng: geo.longitude || '' })
     });
     updateTimelineAfterScan(kota, negara);
   } catch(e) {}

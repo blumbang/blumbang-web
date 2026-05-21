@@ -1,0 +1,29 @@
+name: Build Sparks Pages
+
+on:
+  schedule:
+    - cron: '0 23 * * *'  # jam 06.00 WIB = 23.00 UTC
+  workflow_dispatch:        # bisa trigger manual dari GitHub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run build-sparks
+        run: node build-sparks.js
+
+      - name: Commit hasil build
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sparks/
+          git diff --staged --quiet || git commit -m "chore: rebuild sparks pages [skip ci]"
+          git push

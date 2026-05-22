@@ -397,6 +397,24 @@ async function init() {
     }
 
     // ── GAMIFIKASI ────────────────────────────────────────────────
+    var KOTA_COORDS = {
+      'klaten':[-7.749,110.670],'yogyakarta':[-7.797,110.364],'jogja':[-7.803,110.364],
+      'jakarta':[-6.208,106.845],'surakarta':[-7.566,110.826],'solo':[-7.566,110.826],
+      'bandung':[-6.917,107.608],'semarang':[-6.967,110.424],'surabaya':[-7.246,112.752],
+      'bali':[-8.34,115.092],'denpasar':[-8.65,115.217],'tokyo':[35.689,139.691],
+      'victoria':[-4.62,55.455],'ile au cerf':[-4.64,55.508],'pontianak':[-0.02,109.342],
+      'samarinda':[-0.502,117.136],'banjarmasin':[-3.317,114.592],'kota banjarmasin':[-3.317,114.592],
+      'banjarbaru':[-3.442,114.831],'kediri':[-7.816,112.008],'sleman':[-7.717,110.355],
+      'boyolali':[-7.532,110.599],'wonosobo':[-7.361,109.905],'banyumas':[-7.513,109.215],
+      'sukoharjo':[-7.682,110.839],'bulakamba':[-6.867,108.988],'selogiri':[-7.783,110.895],
+      'kijang':[0.917,104.633],'trucuk':[-7.713,110.617],'berbak':[-1.4,103.5]
+    };
+    function hvs(la1,lo1,la2,lo2){
+      var R=6371,dL=( la2-la1)*Math.PI/180,dG=(lo2-lo1)*Math.PI/180;
+      var a=Math.sin(dL/2)*Math.sin(dL/2)+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dG/2)*Math.sin(dG/2);
+      return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+    }
+
     // Hitung kota unik garment ini
     var kotaUnikSet = new Set();
     var rekorTerjauh = 0;
@@ -406,8 +424,13 @@ async function init() {
       if (!sid || sid.toString().trim().toLowerCase() !== id.trim().toLowerCase()) continue;
       var lokasi = (r.c[2] && r.c[2].v) || '';
       if (lokasi) kotaUnikSet.add(lokasi.split(',')[0].trim().toLowerCase());
-      // Rekor terjauh — dari kolom distance_km (index 10) kalau ada
+      // Rekor terjauh — dari kolom distance_km (index 10) kalau ada, fallback KOTA_COORDS
       var dist = r.c[10] && r.c[10].v ? parseFloat(r.c[10].v) : 0;
+      if (!dist && lokasi) {
+        var key = lokasi.split(',')[0].trim().toLowerCase();
+        var coord = KOTA_COORDS[key];
+        if (coord) dist = hvs(-7.749, 110.670, coord[0], coord[1]);
+      }
       if (dist > rekorTerjauh) rekorTerjauh = dist;
     }
 

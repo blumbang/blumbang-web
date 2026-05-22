@@ -98,6 +98,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:cen
 .spark-text{font-family:var(--font-ui);font-size:.82rem;color:var(--light);letter-spacing:.05em;line-height:1.6;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}} .spark-ico{animation:pulse 1s ease-in-out 3;}
 
+/* STATS PERJALANAN */
+.perjalanan-stats{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);margin-bottom:36px;background:var(--charcoal);}
+.pstat-item{padding:18px 20px;border-right:1px solid var(--border);text-align:center;}
+.pstat-item:last-child{border-right:none;}
+.pstat-label{font-family:var(--font-ui);font-size:.55rem;font-weight:600;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;margin-bottom:8px;}
+.pstat-val{font-family:var(--font-logo);font-size:1.8rem;letter-spacing:.06em;color:var(--gold);line-height:1;}
+.pstat-sub{font-family:var(--font-ui);font-size:.58rem;color:var(--muted);letter-spacing:.08em;margin-top:4px;}
+.pstat-rekor{font-family:var(--font-ui);font-size:.6rem;font-weight:600;letter-spacing:.1em;color:var(--gold-dim);margin-top:6px;}
+
 /* SCAN CTA */
 .scan-cta{margin-top:40px;border:1px solid var(--border);padding:28px;text-align:center;background:var(--charcoal);}
 .scan-cta-title{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.1em;color:var(--white);margin-bottom:8px;}
@@ -387,6 +396,68 @@ async function init() {
       sparkHtml += '</div>';
     }
 
+    // ── GAMIFIKASI ────────────────────────────────────────────────
+    // Hitung kota unik garment ini
+    var kotaUnikSet = new Set();
+    var rekorTerjauh = 0;
+    for (var i = 1; i < spkRows.length; i++) {
+      var r = spkRows[i];
+      var sid = r.c[0] && r.c[0].v;
+      if (!sid || sid.toString().trim().toLowerCase() !== id.trim().toLowerCase()) continue;
+      var lokasi = (r.c[2] && r.c[2].v) || '';
+      if (lokasi) kotaUnikSet.add(lokasi.split(',')[0].trim().toLowerCase());
+      // Rekor terjauh — dari kolom distance_km (index 10) kalau ada
+      var dist = r.c[10] && r.c[10].v ? parseFloat(r.c[10].v) : 0;
+      if (dist > rekorTerjauh) rekorTerjauh = dist;
+    }
+
+    // Hitung peringkat kota unik dibanding semua garment
+    var allGarmentKota = {};
+    for (var i = 1; i < spkRows.length; i++) {
+      var r = spkRows[i];
+      var sid = r.c[0] && r.c[0].v;
+      if (!sid) continue;
+      var gid = sid.toString().trim();
+      var lokasi = (r.c[2] && r.c[2].v) || '';
+      if (!lokasi) continue;
+      if (!allGarmentKota[gid]) allGarmentKota[gid] = new Set();
+      allGarmentKota[gid].add(lokasi.split(',')[0].trim().toLowerCase());
+    }
+    var myKotaCount = kotaUnikSet.size;
+    var peringkat = 1;
+    Object.values(allGarmentKota).forEach(function(s) {
+      if (s.size > myKotaCount) peringkat++;
+    });
+    var totalGarment = garRows.length;
+
+    // HTML stats
+    var statsHtml = '';
+    if (scans.length > 0) {
+      statsHtml = '<div class="perjalanan-stats">';
+      statsHtml += '<div class="pstat-item">';
+      statsHtml += '<div class="pstat-label">Kota Unik</div>';
+      statsHtml += '<div class="pstat-val">' + myKotaCount + '</div>';
+      statsHtml += '<div class="pstat-sub">kota berbeda</div>';
+      statsHtml += '</div>';
+      statsHtml += '<div class="pstat-item">';
+      statsHtml += '<div class="pstat-label">Rekor Terjauh</div>';
+      if (rekorTerjauh > 0) {
+        statsHtml += '<div class="pstat-val">' + rekorTerjauh.toLocaleString('id-ID') + '</div>';
+        statsHtml += '<div class="pstat-sub">km dari Klaten</div>';
+      } else {
+        statsHtml += '<div class="pstat-val" style="font-size:1rem;color:var(--dim)">—</div>';
+        statsHtml += '<div class="pstat-sub">belum terukur</div>';
+      }
+      statsHtml += '</div>';
+      statsHtml += '<div class="pstat-item">';
+      statsHtml += '<div class="pstat-label">Peringkat</div>';
+      statsHtml += '<div class="pstat-val">#' + peringkat + '</div>';
+      statsHtml += '<div class="pstat-sub">dari ' + totalGarment + ' kaos</div>';
+      statsHtml += '</div>';
+      statsHtml += '</div>';
+    }
+    // ── END GAMIFIKASI ────────────────────────────────────────────
+
     var mockupHtml = mockup
       ? '<img src="' + mockup + '" alt="' + nama + '" onclick="bukaLightbox(this.src)">'
       : '<div class="garment-mockup-ph"><span>&#x2726;</span><span>Mockup Coming Soon</span></div>';
@@ -427,6 +498,7 @@ async function init() {
     html += '<div class="info-item"><div class="info-label">Tahun</div><div class="info-val">' + year + '</div></div>';
     html += '<div class="info-item"><div class="info-label">Edisi</div><div class="info-val">' + edition + '</div></div>';
     html += '</div>';
+    html += statsHtml;
     html += sparkHtml;
     html += '<div class="perjalanan-head">';
     html += '<span class="perjalanan-ico">✦</span>';

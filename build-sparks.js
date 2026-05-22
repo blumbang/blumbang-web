@@ -241,7 +241,7 @@ ${BASE_CSS}
 .stat-item{background:var(--charcoal);padding:20px 16px;text-align:center;}
 .stat-num{font-family:var(--font-logo);font-size:clamp(1.8rem,4vw,2.8rem);color:var(--gold);letter-spacing:0.08em;line-height:1;}
 .stat-lbl{font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
-.map-section{background:#0a1628;position:relative;}
+.map-section{background:#0a1628;position:relative;min-height:56vw;}
 .map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0a1628;z-index:10;}
 .map-loading-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;animation:denyut 2s ease-in-out infinite;}
 #d3-world-map{display:block;width:100%;}

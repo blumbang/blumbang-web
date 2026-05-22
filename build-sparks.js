@@ -313,71 +313,157 @@ ${BASE_JS}
 const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 const CITY_COORDS=${generateCityCoords()};
 
-function showTip(evt, text) {
-  const t = document.getElementById('map-tooltip');
-  t.textContent = text; t.classList.add('on');
-  t.style.left = evt.clientX + 'px'; t.style.top = evt.clientY + 'px';
+var _geoCache=null;
+function getGeoCache(){if(_geoCache)return _geoCache;try{_geoCache=JSON.parse(sessionStorage.getItem('blumbang_geo')||'{}')}catch(e){_geoCache={}}return _geoCache;}
+function setGeoCache(key,val){var cache=getGeoCache();cache[key]=val;try{sessionStorage.setItem('blumbang_geo',JSON.stringify(cache));}catch(e){}}
+
+function getCityCoord(cityStr){
+  if(!cityStr)return null;
+  const lower=cityStr.toLowerCase();
+  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
+  for(const key of keys){if(lower.includes(key))return CITY_COORDS[key];}
+  return null;
 }
-function hideTip() { document.getElementById('map-tooltip').classList.remove('on'); }
 
-requestAnimationFrame(function(){
-  Promise.all([
-    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text()),
-    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json())
-  ]).then(function([txt, worldData]){
-    const m = txt.match(/google\\.visualization\\.Query\\.setResponse\\(([\\s\\S]*)\\)/);
-    if(!m) return;
-    const rows = JSON.parse(m[1]).table.rows||[];
-    buildMap(rows, worldData);
-  }).catch(()=>{ document.getElementById('map-loading').style.display='none'; });
-});
+async function geocodeCity(cityStr){
+  if(!cityStr)return null;
+  var fromDict=getCityCoord(cityStr);
+  if(fromDict)return fromDict;
+  var stripped=cityStr.replace(/^kota\\s+/i,'').trim();
+  if(stripped!==cityStr){var fromDictStripped=getCityCoord(stripped);if(fromDictStripped)return fromDictStripped;}
+  var cache=getGeoCache();
+  var cacheKey=cityStr.toLowerCase().trim();
+  if(cache[cacheKey]!==undefined)return cache[cacheKey];
+  try{
+    var query=cityStr.split(',')[0].trim();
+    var url='https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(query)+'&format=json&limit=1&accept-language=en';
+    var res=await fetch(url,{headers:{'User-Agent':'blumbang.id/1.0'}});
+    var data=await res.json();
+    if(data&&data[0]){
+      var lon=parseFloat(data[0].lon),lat=parseFloat(data[0].lat);
+      var label=data[0].display_name.split(',')[0].trim();
+      var coord={lonlat:[lon,lat],label:label};
+      setGeoCache(cacheKey,coord);return coord;
+    }
+  }catch(e){}
+  setGeoCache(cacheKey,null);return null;
+}
 
-function buildMap(rows, worldData) {
-  const section = document.getElementById('map-section');
-  const w = section.clientWidth || window.innerWidth;
-  const h = Math.round(w * 0.52);
-  const svg = d3.select('#d3-world-map').attr('viewBox','0 0 '+w+' '+h).attr('width',w).attr('height',h);
-  const projection = d3.geoNaturalEarth1().scale(w/6.5).translate([w/2, h/2]);
-  const path = d3.geoPath().projection(projection);
-  const countries = topojson.feature(worldData, worldData.objects.countries);
-  svg.append('rect').attr('width',w).attr('height',h).attr('fill','#0a1628');
-  svg.append('g').selectAll('path').data(countries.features).join('path')
-    .attr('d',path).attr('fill','#0d2040').attr('stroke','#162a4a').attr('stroke-width','0.4');
+function showTip(evt,text){
+  var cx,cy;
+  if(evt.touches&&evt.touches[0]){cx=evt.touches[0].clientX;cy=evt.touches[0].clientY;}
+  else{cx=evt.clientX;cy=evt.clientY;}
+  var t=document.getElementById('map-tooltip');
+  t.textContent=text;t.style.left=cx+'px';t.style.top=cy+'px';t.classList.add('on');
+}
+function hideTip(){document.getElementById('map-tooltip').classList.remove('on');}
 
-  const cityMap = {};
+async function buildMap(rows,worldData){
+  const mapSection=document.getElementById('map-section');
+  const tooltip=document.getElementById('map-tooltip');
+
+  const uniqueCities={};
   rows.forEach(function(r){
-    const c = r.c[2]&&r.c[2].v ? r.c[2].v.toString().trim() : '';
-    if(!c) return;
-    const key = c.split(',')[0].trim().toLowerCase();
-    const coord = CITY_COORDS[key];
-    if(!coord) return;
-    cityMap[coord.label] = cityMap[coord.label] || { coord, count: 0 };
-    cityMap[coord.label].count++;
+    const c=r.c[2]&&r.c[2].v;if(!c)return;
+    const lower=c.toLowerCase().trim();
+    if(lower==='klaten'||lower==='klaten, indonesia')return;
+    if(!uniqueCities[lower])uniqueCities[lower]=c;
   });
 
-  const kPx = projection([110.61,-7.706]);
+  const cityMap={};
+  const cityKeys=Object.keys(uniqueCities);
+  for(var i=0;i<cityKeys.length;i++){
+    var cityStr=uniqueCities[cityKeys[i]];
+    var coord=await geocodeCity(cityStr);
+    if(!coord)continue;
+    var label=coord.label;
+    if(!cityMap[label])cityMap[label]={coord,count:0};
+    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c&&c.toLowerCase().trim()===cityKeys[i])cityMap[label].count++;});
+    if(!getCityCoord(cityStr)&&!getGeoCache()[cityKeys[i]]){
+      await new Promise(function(res){setTimeout(res,1100);});
+    }
+  }
 
+  const w=window.innerWidth||document.documentElement.clientWidth;
+  const h=Math.round(w*0.56);
+  const svg=d3.select('#d3-world-map').attr('width',w).attr('height',h).attr('viewBox','0 0 '+w+' '+h);
+  mapSection.style.height=h+'px';
+
+  const KLATEN_COORD=[110.6,-7.7];
+  const allPoints=[KLATEN_COORD];
+  Object.values(cityMap).forEach(function(item){allPoints.push(item.coord.lonlat);});
+
+  const pointsGeo={type:'FeatureCollection',features:allPoints.map(function(pt){return{type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}};})};
+  const pad=allPoints.length<=2?60:allPoints.length<=5?40:20;
+
+  const projection=d3.geoNaturalEarth1().rotate([-118,0,0]).fitExtent([[pad,pad],[w-pad,h-pad]],pointsGeo);
+  const pathGen=d3.geoPath().projection(projection);
+
+  const countries=topojson.feature(worldData,worldData.objects.countries);
+
+  svg.append('path').datum(d3.geoGraticule()()).attr('d',pathGen)
+    .attr('fill','none').attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width','0.5');
+
+  svg.selectAll('path.country').data(countries.features).enter().append('path')
+    .attr('class','country').attr('d',pathGen)
+    .attr('fill',function(d){return d.id===360?'rgba(201,168,76,0.5)':'rgba(40,80,140,0.35)';})
+    .attr('stroke','rgba(255,255,255,0.18)').attr('stroke-width','0.3');
+
+  svg.append('path').datum(topojson.mesh(worldData,worldData.objects.countries,function(a,b){return a!==b;}))
+    .attr('d',pathGen).attr('fill','none').attr('stroke','rgba(255,255,255,0.1)').attr('stroke-width','0.2');
+
+  const kPx=projection(KLATEN_COORD);
+  if(!kPx){document.getElementById('map-loading').style.display='none';return;}
+
+  // Garis putus-putus Klaten ke kota
   Object.values(cityMap).forEach(function(item){
-    const px = projection(item.coord.lonlat);
-    if(!px) return;
-    svg.append('circle').attr('cx',px[0]).attr('cy',px[1]).attr('r',2)
-      .attr('fill','none').attr('stroke','rgba(201,168,76,0.6)').attr('stroke-width','0.8')
-      .transition().duration(1600).ease(d3.easeLinear).attr('r',11).attr('stroke-opacity',0);
-    svg.append('circle').attr('cx',px[0]).attr('cy',px[1]).attr('r',2.5)
+    const px=projection(item.coord.lonlat);if(!px)return;
+    svg.append('line').attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
+      .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
+  });
+
+  // Titik kota + pulse
+  Object.values(cityMap).forEach(function(item){
+    const px=projection(item.coord.lonlat);if(!px)return;
+    if(px[0]<-w||px[0]>w*2||px[1]<-h||px[1]>h*2)return;
+    const cx=px[0],cy=px[1];
+    const ring=svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',2)
+      .attr('fill','none').attr('stroke','rgba(201,168,76,0.6)').attr('stroke-width','0.8');
+    function blink(){ring.attr('r',2).attr('stroke-opacity',0.8).transition().duration(1600).ease(d3.easeLinear).attr('r',11).attr('stroke-opacity',0).on('end',blink);}
+    blink();
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',2.5)
       .attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width','0.5')
       .style('cursor','pointer')
-      .on('mouseover', evt => showTip(evt, item.coord.label + ' · ' + item.count + ' scan'))
-      .on('mouseout', hideTip);
+      .on('touchstart mouseover',function(evt){evt.preventDefault();showTip(evt,item.coord.label+' · '+item.count+' scan');})
+      .on('touchend mouseout',hideTip);
   });
 
+  // Klaten origin + pulse
+  const kRing=svg.append('circle').attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
+    .attr('fill','none').attr('stroke','rgba(201,168,76,0.8)').attr('stroke-width','1');
+  function blinkKlaten(){kRing.attr('r',3).attr('stroke-opacity',0.8).transition().duration(2200).ease(d3.easeLinear).attr('r',18).attr('stroke-opacity',0).on('end',blinkKlaten);}
+  blinkKlaten();
   svg.append('circle').attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',4)
     .attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1')
     .style('cursor','pointer')
-    .on('mouseover', evt => showTip(evt,'Klaten · Origin'))
-    .on('mouseout', hideTip);
+    .on('touchstart mouseover',function(evt){evt.preventDefault();showTip(evt,'Klaten · Origin');})
+    .on('touchend mouseout',hideTip);
 
   document.getElementById('map-loading').style.display='none';
 }
+
+requestAnimationFrame(function(){
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
+  ]).then(function(results){
+    var txt=results[0],worldData=results[1];
+    var m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m){document.getElementById('map-loading').style.display='none';return;}
+    var rows=JSON.parse(m[1]).table.rows||[];
+    buildMap(rows,worldData).catch(function(){document.getElementById('map-loading').style.display='none';});
+  }).catch(function(){document.getElementById('map-loading').style.display='none';});
+});
 </script>
 </body>
 </html>`;

@@ -450,7 +450,7 @@ function buildMap(rows, worldData){
 
 requestAnimationFrame(function(){
   Promise.all([
-    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:jsongviz/tq?tqx=out:json&sheet=SPARKSheaders=0&sheet=SPARKS').then(function(r){return r.text();}),
     fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
   ]).then(function(results){
     var txt=results[0],worldData=results[1];
@@ -604,11 +604,12 @@ async function main() {
   console.log('Fetching data dari Google Sheets...');
 
   const [spkTxt, garTxt] = await Promise.all([
-    fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=SPARKS`),
+    fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:jsongviz/tq?tqx=out:json&sheet=SPARKSheaders=0&sheet=SPARKS`),
     fetch(`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=GARMENTS`)
   ]);
 
-  const spkRows = parseSheet(spkTxt).filter(r => r.c[0] && val(r.c[0]));
+  const spkRaw = JSON.parse(spkTxt);
+  const spkRows = (spkRaw.data || []).filter(r => r[0] && r[0].toString().trim()).map(r => ({c: r.map(v => ({v}))}));
   const garRows = parseSheet(garTxt).filter(r => r.c[0] && val(r.c[0]));
 
   console.log(`Data: ${spkRows.length} scan, ${garRows.length} garment`);

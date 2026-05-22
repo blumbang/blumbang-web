@@ -358,31 +358,28 @@ function showTip(evt,text){
 }
 function hideTip(){document.getElementById('map-tooltip').classList.remove('on');}
 
-async function buildMap(rows,worldData){
+function buildMap(rows, worldData){
   const mapSection=document.getElementById('map-section');
-  const tooltip=document.getElementById('map-tooltip');
 
   const uniqueCities={};
   rows.forEach(function(r){
     const c=r.c[2]&&r.c[2].v;if(!c)return;
     const lower=c.toLowerCase().trim();
     if(lower==='klaten'||lower==='klaten, indonesia')return;
-    if(!uniqueCities[lower])uniqueCities[lower]=c;
+    const key=c.split(',')[0].trim().toLowerCase();
+    if(!uniqueCities[key])uniqueCities[key]={label:c.split(',')[0].trim(),count:0};
+    uniqueCities[key].count++;
   });
 
+  // Resolve koordinat dari CITY_COORDS — sync, tidak perlu Nominatim
   const cityMap={};
-  const cityKeys=Object.keys(uniqueCities);
-  for(var i=0;i<cityKeys.length;i++){
-    var cityStr=uniqueCities[cityKeys[i]];
-    var coord=await geocodeCity(cityStr);
-    if(!coord)continue;
-    var label=coord.label;
-    if(!cityMap[label])cityMap[label]={coord,count:0};
-    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c&&c.toLowerCase().trim()===cityKeys[i])cityMap[label].count++;});
-    if(!getCityCoord(cityStr)&&!getGeoCache()[cityKeys[i]]){
-      await new Promise(function(res){setTimeout(res,1100);});
-    }
-  }
+  Object.entries(uniqueCities).forEach(function(entry){
+    const key=entry[0], data=entry[1];
+    const coord=getCityCoord(key);
+    if(!coord)return;
+    if(!cityMap[coord.label])cityMap[coord.label]={coord,count:0};
+    cityMap[coord.label].count+=data.count;
+  });
 
   const w=window.innerWidth||document.documentElement.clientWidth;
   const h=Math.round(w*0.56);
@@ -392,9 +389,11 @@ async function buildMap(rows,worldData){
   const KLATEN_COORD=[110.6,-7.7];
   const allPoints=[KLATEN_COORD];
   Object.values(cityMap).forEach(function(item){allPoints.push(item.coord.lonlat);});
+  // Tambah titik global supaya fitExtent tidak crash kalau hanya 1 titik
+  if(allPoints.length<2)allPoints.push([139.69,35.69],[55.45,-4.62]);
 
   const pointsGeo={type:'FeatureCollection',features:allPoints.map(function(pt){return{type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}};})};
-  const pad=allPoints.length<=2?60:allPoints.length<=5?40:20;
+  const pad=20;
 
   const projection=d3.geoNaturalEarth1().rotate([-118,0,0]).fitExtent([[pad,pad],[w-pad,h-pad]],pointsGeo);
   const pathGen=d3.geoPath().projection(projection);
@@ -415,14 +414,12 @@ async function buildMap(rows,worldData){
   const kPx=projection(KLATEN_COORD);
   if(!kPx){document.getElementById('map-loading').style.display='none';return;}
 
-  // Garis putus-putus Klaten ke kota
   Object.values(cityMap).forEach(function(item){
     const px=projection(item.coord.lonlat);if(!px)return;
     svg.append('line').attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
       .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
   });
 
-  // Titik kota + pulse
   Object.values(cityMap).forEach(function(item){
     const px=projection(item.coord.lonlat);if(!px)return;
     if(px[0]<-w||px[0]>w*2||px[1]<-h||px[1]>h*2)return;
@@ -438,7 +435,6 @@ async function buildMap(rows,worldData){
       .on('touchend mouseout',hideTip);
   });
 
-  // Klaten origin + pulse
   const kRing=svg.append('circle').attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
     .attr('fill','none').attr('stroke','rgba(201,168,76,0.8)').attr('stroke-width','1');
   function blinkKlaten(){kRing.attr('r',3).attr('stroke-opacity',0.8).transition().duration(2200).ease(d3.easeLinear).attr('r',18).attr('stroke-opacity',0).on('end',blinkKlaten);}

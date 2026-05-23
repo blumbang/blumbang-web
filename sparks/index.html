@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Semua Kota · Peta Perjalanan Blumbang</title>
+<meta name="description" content="Semua kota yang pernah dikunjungi kaos Blumbang. 27 kota di seluruh dunia.">
+<link rel="canonical" href="https://blumbang.id/sparks/kota">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;--muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;--gold:#C9A84C;--gold-dim:#7a6028;--font-logo:'Bebas Neue',sans-serif;--font-body:'Montserrat',sans-serif;--font-ui:'Inter',sans-serif;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;}
+a{text-decoration:none;color:inherit;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.98);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:64px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+footer{border-top:1px solid var(--border);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;margin-top:60px;}
+.footer-brand{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:0.15em;color:var(--gold-dim);}
+.footer-link{font-family:var(--font-ui);font-size:0.68rem;color:var(--muted);letter-spacing:0.1em;}
+.footer-link:hover{color:var(--gold);}
+@media(max-width:768px){nav{padding:14px 18px;}.nav-links,.nav-order{display:none;}.nav-hamburger{display:block;}footer{padding:20px 18px;flex-direction:column;gap:12px;}}
+</style>
+<style>
+.hero{padding:100px 40px 48px;border-bottom:1px solid var(--border);}
+.hero-inner{max-width:1100px;margin:0 auto;}
+.hero-eyebrow{font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.hero-title{font-family:var(--font-logo);font-size:clamp(2.5rem,7vw,5rem);letter-spacing:.06em;line-height:.95;color:var(--white);}
+.grid{max-width:1100px;margin:0 auto;padding:40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1px;background:var(--border);}
+.kota-card{display:block;background:var(--black);padding:24px;transition:background .2s;}
+.kota-card:hover{background:var(--charcoal);}
+.kota-nama{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.08em;color:var(--white);margin-bottom:8px;}
+.kota-info{font-family:var(--font-ui);font-size:.7rem;color:var(--gold);margin-bottom:4px;}
+.kota-first{font-family:var(--font-ui);font-size:.65rem;color:var(--muted);}
+@media(max-width:768px){.hero{padding:80px 20px 32px;}.grid{padding:0;grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <div class="nav-links">
+    <a href="/karya">Karya</a>
+    <a href="/sparks" class="active">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="document.getElementById('nav-mob').classList.toggle('open');this.textContent=document.getElementById('nav-mob').classList.contains('open')?'✕':'☰'" id="nav-ham">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mob">
+  <a href="/karya">Karya</a>
+  <a href="/sparks">Perjalanan</a>
+  <a href="/about">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order">✦ ORDER SEKARANG</a>
+</div>
+<div class="hero">
+  <div class="hero-inner">
+    <a href="/sparks" style="font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);display:inline-block;margin-bottom:20px;">← Peta Perjalanan</a>
+    <div class="hero-eyebrow">✦ 27 Kota · Blumbang ID</div>
+    <div class="hero-title">SEMUA KOTA</div>
+  </div>
+</div>
+<div class="grid"><a href="/sparks/kota/surakarta" class="kota-card">
+    <div class="kota-nama">Surakarta</div>
+    <div class="kota-info">118 scan · 114 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/banjarmasin" class="kota-card">
+    <div class="kota-nama">Banjarmasin</div>
+    <div class="kota-info">27 scan · 22 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/jakarta" class="kota-card">
+    <div class="kota-nama">Jakarta</div>
+    <div class="kota-info">11 scan · 11 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/pontianak" class="kota-card">
+    <div class="kota-nama">Pontianak</div>
+    <div class="kota-info">10 scan · 6 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/denpasar" class="kota-card">
+    <div class="kota-nama">Denpasar</div>
+    <div class="kota-info">8 scan · 6 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/bandung" class="kota-card">
+    <div class="kota-nama">Bandung</div>
+    <div class="kota-info">5 scan · 4 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/yogyakarta" class="kota-card">
+    <div class="kota-nama">Yogyakarta</div>
+    <div class="kota-info">4 scan · 4 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/victoria" class="kota-card">
+    <div class="kota-nama">Victoria</div>
+    <div class="kota-info">4 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/wonosobo" class="kota-card">
+    <div class="kota-nama">Wonosobo</div>
+    <div class="kota-info">4 scan · 2 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/trucuk" class="kota-card">
+    <div class="kota-nama">Trucuk</div>
+    <div class="kota-info">2 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/banjarbaru" class="kota-card">
+    <div class="kota-nama">Banjarbaru</div>
+    <div class="kota-info">2 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/kota" class="kota-card">
+    <div class="kota-nama">Kota</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/kediri" class="kota-card">
+    <div class="kota-nama">Kediri</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/ile-au-cerf" class="kota-card">
+    <div class="kota-nama">Ile au Cerf</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/bali" class="kota-card">
+    <div class="kota-nama">Bali</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/tokyo" class="kota-card">
+    <div class="kota-nama">Tokyo</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/bulakamba" class="kota-card">
+    <div class="kota-nama">Bulakamba</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/boyolali" class="kota-card">
+    <div class="kota-nama">Boyolali</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: </div>
+  </a><a href="/sparks/kota/samarinda" class="kota-card">
+    <div class="kota-nama">Samarinda</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: </div>
+  </a><a href="/sparks/kota/sukoharjo" class="kota-card">
+    <div class="kota-nama">Sukoharjo</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: </div>
+  </a><a href="/sparks/kota/banyumas" class="kota-card">
+    <div class="kota-nama">Banyumas</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: </div>
+  </a><a href="/sparks/kota/sleman" class="kota-card">
+    <div class="kota-nama">Sleman</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/selogiri" class="kota-card">
+    <div class="kota-nama">Selogiri</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/semarang" class="kota-card">
+    <div class="kota-nama">Semarang</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/kijang" class="kota-card">
+    <div class="kota-nama">Kijang</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/kota-banjarmasin" class="kota-card">
+    <div class="kota-nama">Kota Banjarmasin</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a><a href="/sparks/kota/berbak" class="kota-card">
+    <div class="kota-nama">Berbak</div>
+    <div class="kota-info">1 scan · 1 kaos</div>
+    <div class="kota-first">Pertama: Invalid Date</div>
+  </a></div>
+<footer>
+  <a href="/" class="footer-brand">BLUMB✦NG</a>
+  <a href="https://wa.me/6281234561146" class="footer-link">Order via WhatsApp →</a>
+</footer>
+</body>
+</html>

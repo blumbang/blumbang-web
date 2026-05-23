@@ -283,7 +283,21 @@ function generateSitemap(posts, seriSlugs) {
     loc: `${BASE_URL}/blog/${p.slug}`,
     lastmod: p.date || today, changefreq: 'monthly', priority: '0.7'
   }));
-  const allPages = [...staticPages, ...seriPages, ...blogPages];
+
+  // Halaman sparks kota
+  const kotaDir = path.join(__dirname, 'sparks', 'kota');
+  const kotaPages = [];
+  if (fs.existsSync(kotaDir)) {
+    fs.readdirSync(kotaDir).filter(f => f.endsWith('.html')).forEach(f => {
+      const slug = f.replace('.html', '');
+      kotaPages.push({ loc: BASE_URL + '/sparks/kota/' + slug, lastmod: today, changefreq: 'daily', priority: '0.7' });
+    });
+  }
+  if (fs.existsSync(path.join(__dirname, 'sparks', 'hof.html'))) {
+    kotaPages.push({ loc: BASE_URL + '/sparks/hof', lastmod: today, changefreq: 'daily', priority: '0.7' });
+  }
+
+  const allPages = [...staticPages, ...seriPages, ...blogPages, ...kotaPages];
   const urls = allPages.map(p => `  <url>
     <loc>${p.loc}</loc>
     <lastmod>${p.lastmod}</lastmod>

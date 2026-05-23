@@ -29,6 +29,9 @@ jobs:
       - name: Run build-sparks
         run: node build-sparks.js
 
+      - name: Update sitemap
+        run: node generate-posts.js
+
       - name: Commit dan push
         run: |
           git config user.name "github-actions[bot]"

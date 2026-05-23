@@ -997,7 +997,7 @@ requestAnimationFrame(function(){
     buildMap(rows, worldData).catch(function(e){console.error('buildMap error:',e);});
 
     // Fetch Hall of Fame
-    fetch('/sparks/hof.html').then(function(r){return r.text();}).then(function(html){
+    fetch('/sparks/hof').then(function(r){return r.text();}).then(function(html){
       var m = html.match(/<script id="hof-data" type="application\/json">([\s\S]*?)<\/script>/);
       if(!m) return;
       var hof = JSON.parse(m[1]);

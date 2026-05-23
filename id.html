@@ -429,7 +429,7 @@ async function init() {
       if (!dist && lokasi) {
         var key = lokasi.split(',')[0].trim().toLowerCase();
         var coord = KOTA_COORDS[key];
-        if (coord) dist = hvs(-7.749, 110.670, coord[0], coord[1]);
+        if (coord) dist = hvs(-7.749626, 110.670888, coord[0], coord[1]);
       }
       if (dist > rekorTerjauh) rekorTerjauh = dist;
     }
@@ -466,7 +466,7 @@ async function init() {
       statsHtml += '<div class="pstat-label">Rekor Terjauh</div>';
       if (rekorTerjauh > 0) {
         statsHtml += '<div class="pstat-val">' + rekorTerjauh.toLocaleString('id-ID') + '</div>';
-        statsHtml += '<div class="pstat-sub">km dari Klaten</div>';
+        statsHtml += '<div class="pstat-sub">km dari Blumbang ID</div>';
       } else {
         statsHtml += '<div class="pstat-val" style="font-size:1rem;color:var(--dim)">—</div>';
         statsHtml += '<div class="pstat-sub">belum terukur</div>';

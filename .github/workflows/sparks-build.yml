@@ -2,8 +2,11 @@ name: Build Sparks Pages
 
 on:
   schedule:
-    - cron: '0 23 * * *'  # jam 06.00 WIB = 23.00 UTC
-  workflow_dispatch:        # bisa trigger manual dari GitHub
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:

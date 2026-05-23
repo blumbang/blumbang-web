@@ -366,6 +366,9 @@ async function main() {
   fs.writeFileSync(path.join(SPARKS_DIR, 'index.html'), indexHtml);
   console.log(`✅ sparks/index.html — ${kotaList.length} kota`);
   console.log(`✅ ${kotaList.length} halaman kota di-generate`);
+
+  // Generate Hall of Fame
+  generateHOF(scanRows, garmentMap);
 }
 
 main().catch(console.error);

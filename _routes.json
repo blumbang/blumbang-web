@@ -1,5 +1,19 @@
 {
   "version": 1,
-  "include": ["/api/*", "/blog/*", "/id/*", "/qc/*", "/sitemap.xml"],
-  "exclude": ["/blog/", "/blog/index.html", "/blog/post.html", "/blog/posts.json", "/blog/*.html", "/sparks/kota/*.html"]
+  "include": [
+    "/api/*",
+    "/blog/*",
+    "/id/*",
+    "/qc/*",
+    "/sitemap.xml"
+  ],
+  "exclude": [
+    "/blog/",
+    "/blog/index.html",
+    "/blog/post.html",
+    "/blog/posts.json",
+    "/blog/*.html",
+    "/sparks/kota/*.html",
+    "/sparks/hof.html"
+  ]
 }

@@ -174,6 +174,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .k-ph svg{width:44px;height:44px;opacity:.1;}
 .k-body{padding:20px 20px 28px;}
 .k-nama{font-family:var(--fd);font-size:1.1rem;letter-spacing:.08em;line-height:1.1;margin-bottom:6px;color:var(--putih);}
+.k-sub{font-family:var(--fu);font-size:.68rem;color:var(--redup);letter-spacing:.05em;}
+/* HOF HOMEPAGE */
+.hof-hp{border-top:1px solid var(--border);padding:48px 32px;}
+.hof-hp-inner{max-width:1100px;margin:0 auto;}
+.hof-hp-title{font-family:var(--fd);font-size:1.2rem;letter-spacing:.15em;color:var(--emas);margin-bottom:6px;}
+.hof-hp-sub{font-family:var(--fu);font-size:.6rem;letter-spacing:.2em;color:var(--redup);text-transform:uppercase;margin-bottom:28px;}
+.hof-hp-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+.hof-hp-col-title{font-family:var(--fu);font-size:.58rem;font-weight:700;letter-spacing:.25em;color:var(--emas);text-transform:uppercase;margin-bottom:14px;}
+.hof-hp-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;}
+.hof-hp-item:hover .hof-hp-nama{color:var(--emas);}
+.hof-hp-rank{font-family:var(--fd);font-size:1rem;color:var(--emas);min-width:28px;}
+.hof-hp-nama{font-family:var(--fu);font-size:.75rem;color:var(--putih);transition:color .2s;}
+.hof-hp-info{font-family:var(--fu);font-size:.65rem;color:var(--redup);margin-top:2px;}
+.hof-hp-link{display:block;text-align:center;margin-top:24px;font-family:var(--fu);font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--redup);text-decoration:none;transition:color .2s;}
+.hof-hp-link:hover{color:var(--emas);}
+@media(max-width:768px){.hof-hp{padding:32px 20px;}.hof-hp-grid{grid-template-columns:1fr;gap:24px;}}
 .k-meta{font-family:var(--fu);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);}
 .k-bahan{display:inline-block;margin-top:10px;font-family:var(--fu);font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--dim);}
 .skel{background:linear-gradient(90deg,var(--charcoal) 25%,var(--abu2) 50%,var(--charcoal) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
@@ -372,6 +388,25 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   <span id="terbaru-teks" style="font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--emas);"></span>
 </a>
 
+<!-- HALL OF FAME -->
+<section class="hof-hp" id="hof-hp-section" style="display:none;">
+  <div class="hof-hp-inner">
+    <div class="hof-hp-title">✦ HALL OF FAME</div>
+    <div class="hof-hp-sub">Kaos dengan perjalanan paling luar biasa</div>
+    <div class="hof-hp-grid">
+      <div>
+        <div class="hof-hp-col-title">Paling Jauh dari Blumbang ID</div>
+        <div id="hof-hp-jauh"></div>
+      </div>
+      <div>
+        <div class="hof-hp-col-title">Paling Banyak Kota</div>
+        <div id="hof-hp-kota"></div>
+      </div>
+    </div>
+    <a href="/sparks" class="hof-hp-link">Lihat Peta Lengkap →</a>
+  </div>
+</section>
+
 <!-- KOLEKSI -->
 <section id="s-koleksi">
   <div class="koleksi-header">
@@ -381,11 +416,23 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
     </div>
     <a href="/karya" class="btn-emas-outline rv" data-i18n="kol_btn">Lihat Semua →</a>
   </div>
-  <div class="koleksi-grid" id="koleksi-grid">
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:65%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:40%;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:75%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:45%;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:55%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:35%;"></div></div></div>
-    <div class="k-card"><div class="k-ph skel" style="aspect-ratio:4/3;"></div><div class="k-body"><div class="skel" style="height:18px;width:70%;margin-bottom:8px;"></div><div class="skel" style="height:11px;width:50%;"></div></div></div>
+  <div class="koleksi-grid">
+    <a href="/karya/insanak-seiye-sekate" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005464990-insanak.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">INSANAK SEIYE SEKATE</div><div class="k-sub">Bapak Bujang · Pontianak</div></div>
+    </a>
+    <a href="/karya/lpk-ai-gakkou" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779420736004-KAOS-LPK-AI-GAKKOU.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LPK AI GAKKOU</div><div class="k-sub">Kaos LPK · Klaten</div></div>
+    </a>
+    <a href="/karya/lpk-ooita" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005407248-ooita.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LPK OOITA</div><div class="k-sub">LPK Ooita Gakkou · Bayat</div></div>
+    </a>
+    <a href="/karya/lensa-borneo-camp-sans" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005530313-lebo.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LENSA BORNEO</div><div class="k-sub">Camp Sans · Kalimantan</div></div>
+    </a>
   </div>
 </section>
 
@@ -787,8 +834,29 @@ async function isiDrawer(tipe){
   }
 }
 
+async function muatHOF(){
+  try {
+    const res = await fetch('/sparks/hof');
+    const html = await res.text();
+    const m = html.match(/<script id="hof-data" type="application\/json">([\s\S]*?)<\/script>/);
+    if(!m) return;
+    const hof = JSON.parse(m[1]);
+    const jauh = document.getElementById('hof-hp-jauh');
+    const kota = document.getElementById('hof-hp-kota');
+    const section = document.getElementById('hof-hp-section');
+    if(!jauh||!kota||!section) return;
+    jauh.innerHTML = hof.terjauh.slice(0,5).map(function(g,i){
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="hof-hp-item"><div class="hof-hp-rank">#'+(i+1)+'</div><div><div class="hof-hp-nama">'+g.nama+' · #'+g.nomor+'</div><div class="hof-hp-info">'+g.jarak+' km dari Blumbang ID</div></div></a>';
+    }).join('');
+    kota.innerHTML = hof.terbanyak.slice(0,5).map(function(g,i){
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="hof-hp-item"><div class="hof-hp-rank">#'+(i+1)+'</div><div><div class="hof-hp-nama">'+g.nama+' · #'+g.nomor+'</div><div class="hof-hp-info">'+g.kotaUnik+' kota unik</div></div></a>';
+    }).join('');
+    section.style.display = 'block';
+  } catch(e) {}
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
-  setLang(lang);muatStats();muatKoleksi();initReveal();initPetaObserver();
+  setLang(lang);muatStats();muatKoleksi();initReveal();initPetaObserver();muatHOF();
 });
 </script>
 </body>

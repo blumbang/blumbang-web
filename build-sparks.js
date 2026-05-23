@@ -238,6 +238,79 @@ ${navHTML('sparks')}
 </html>`;
 }
 
+function haversine(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLng = (lng2-lng1)*Math.PI/180;
+  const a = Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return Math.round(R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a)));
+}
+
+function generateHOF(scanRows, garmentMap) {
+  const KLATEN_LAT = -7.749626;
+  const KLATEN_LNG = 110.670888;
+
+  const CITY_COORDS = {
+    'yogyakarta':[-7.803,110.364],'jakarta':[-6.208,106.845],'bandung':[-6.917,107.609],
+    'surabaya':[-7.258,112.752],'semarang':[-6.966,110.423],'solo':[-7.574,110.827],
+    'surakarta':[-7.574,110.827],'denpasar':[-8.67,115.212],'medan':[3.595,98.679],
+    'pontianak':[-0.02,109.333],'samarinda':[-0.502,117.136],'balikpapan':[-1.268,116.854],
+    'banjarmasin':[-3.317,114.592],'banjarbaru':[-3.442,114.831],'makassar':[-5.147,119.432],
+    'tokyo':[35.69,139.69],'osaka':[34.694,135.502],'seychelles':[-4.679,55.492],
+    'ile au cerf':[-4.683,55.533],'victoria':[-4.62,55.455],'singapore':[1.352,103.82],
+    'kediri':[-7.816,112.018],'boyolali':[-7.534,110.593],'sleman':[-7.717,110.354],
+    'wonosobo':[-7.361,109.9],'banyumas':[-7.513,109.215],'sukoharjo':[-7.686,110.838],
+    'kijang':[0.917,104.633],'bulakamba':[-6.867,108.988],'trucuk':[-7.713,110.617],
+  };
+
+  function getCityCoord(cityStr) {
+    if(!cityStr) return null;
+    const lower = cityStr.toLowerCase();
+    const keys = Object.keys(CITY_COORDS).sort((a,b)=>b.length-a.length);
+    for(const key of keys) if(lower.includes(key)) return CITY_COORDS[key];
+    return null;
+  }
+
+  // Hitung jarak dan kota unik per garment
+  const garmentStats = {};
+  scanRows.forEach(r => {
+    const id = getVal(r.c[0]);
+    const city = getVal(r.c[2]);
+    if(!id || !city) return;
+    if(!garmentStats[id]) garmentStats[id] = { id, kotaSet: new Set(), maxJarak: 0 };
+    const kotaNama = city.split(',')[0].trim();
+    garmentStats[id].kotaSet.add(kotaNama);
+    const coord = getCityCoord(city);
+    if(coord) {
+      const jarak = haversine(KLATEN_LAT, KLATEN_LNG, coord[0], coord[1]);
+      if(jarak > garmentStats[id].maxJarak) garmentStats[id].maxJarak = jarak;
+    }
+  });
+
+  const semua = Object.values(garmentStats).map(g => ({
+    id: g.id,
+    nomor: g.id.split('-').pop(),
+    nama: garmentMap[g.id] || g.id,
+    jarak: g.maxJarak,
+    kotaUnik: g.kotaSet.size
+  }));
+
+  const terjauh = semua.filter(g=>g.jarak>0).sort((a,b)=>b.jarak-a.jarak).slice(0,5);
+  const terbanyak = semua.filter(g=>g.kotaUnik>0).sort((a,b)=>b.kotaUnik-a.kotaUnik).slice(0,5);
+
+  const hofData = JSON.stringify({ terjauh, terbanyak });
+  const html = `<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"></head>
+<body>
+<script id="hof-data" type="application/json">${hofData}</script>
+</body>
+</html>`;
+
+  fs.writeFileSync(path.join(SPARKS_DIR, 'hof.html'), html);
+  console.log('✅ sparks/hof.html — ' + terjauh.length + ' terjauh, ' + terbanyak.length + ' terbanyak kota');
+}
+
 async function main() {
   console.log('Fetching data dari Sheet...');
   const [spkRows, garRows] = await Promise.all([

@@ -214,6 +214,25 @@ gtag("config","G-39SRRM5GKK");
 
 </div>
 
+<!-- HALL OF FAME -->
+<section id="hof-section" style="display:none;border-top:1px solid var(--border);padding:48px 40px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.15em;color:var(--gold);margin-bottom:8px;">✦ HALL OF FAME</div>
+    <div style="font-family:var(--font-ui);font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:32px;">Kaos dengan perjalanan paling luar biasa</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;" id="hof-grid">
+      <div>
+        <div style="font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ Paling Jauh dari Klaten</div>
+        <div id="hof-jauh"></div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ Paling Banyak Kota</div>
+        <div id="hof-kota"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-family:var(--font-ui);font-size:.6rem;color:var(--muted);letter-spacing:.1em;">Diperbarui setiap pagi</div>
+  </div>
+</section>
+
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG</div>
@@ -976,6 +995,24 @@ requestAnimationFrame(function(){
     }
 
     buildMap(rows, worldData).catch(function(e){console.error('buildMap error:',e);});
+
+    // Fetch Hall of Fame
+    fetch('/sparks/hof.html').then(function(r){return r.text();}).then(function(html){
+      var m = html.match(/<script id="hof-data" type="application\/json">([\s\S]*?)<\/script>/);
+      if(!m) return;
+      var hof = JSON.parse(m[1]);
+      var hofSection = document.getElementById('hof-section');
+      var hofJauh = document.getElementById('hof-jauh');
+      var hofKota = document.getElementById('hof-kota');
+      if(!hofSection||!hofJauh||!hofKota) return;
+      hofJauh.innerHTML = hof.terjauh.map(function(g,i){
+        return '<a href="/id/'+encodeURIComponent(g.id)+'" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;"><div style="font-family:var(--font-logo);font-size:1rem;color:var(--gold);min-width:28px;">#'+(i+1)+'</div><div><div style="font-family:var(--font-ui);font-size:.75rem;color:var(--white);">'+g.nama+' · #'+g.nomor+'</div><div style="font-family:var(--font-ui);font-size:.65rem;color:var(--muted);">'+g.jarak+' km dari Blumbang ID</div></div></a>';
+      }).join('');
+      hofKota.innerHTML = hof.terbanyak.map(function(g,i){
+        return '<a href="/id/'+encodeURIComponent(g.id)+'" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;"><div style="font-family:var(--font-logo);font-size:1rem;color:var(--gold);min-width:28px;">#'+(i+1)+'</div><div><div style="font-family:var(--font-ui);font-size:.75rem;color:var(--white);">'+g.nama+' · #'+g.nomor+'</div><div style="font-family:var(--font-ui);font-size:.65rem;color:var(--muted);">'+g.kotaUnik+' kota</div></div></a>';
+      }).join('');
+      hofSection.style.display = 'block';
+    }).catch(function(){});
   }).catch(function(){
     document.getElementById('map-loading').style.display = 'none';
   });

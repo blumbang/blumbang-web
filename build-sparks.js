@@ -245,7 +245,7 @@ async function main() {
     fetchSheet('GARMENTS')
   ]);
 
-  const scanRows = spkRows.filter(r => r.c && r.c[0] && getVal(r.c[0]));
+  const scanRows = spkRows.filter(r => r.c && r.c[0] && getVal(r.c[0]) && getVal(r.c[0]) !== 'GARMENT_ID');
   const garRows2 = garRows.filter(r => r.c && r.c[0] && getVal(r.c[0]));
 
   console.log(`Data: ${scanRows.length} scan, ${garRows2.length} garment`);

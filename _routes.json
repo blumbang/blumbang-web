@@ -1,5 +1,5 @@
 {
   "version": 1,
   "include": ["/api/*", "/blog/*", "/id/*", "/qc/*", "/sitemap.xml"],
-  "exclude": ["/blog/", "/blog/index.html", "/blog/post.html", "/blog/posts.json", "/blog/*.html", "/sparks/", "/sparks/index.html", "/sparks/kota/", "/sparks/kota/*.html"]
+  "exclude": ["/blog/", "/blog/index.html", "/blog/post.html", "/blog/posts.json", "/blog/*.html", "/sparks/index.html", "/sparks/kota/*.html"]
 }

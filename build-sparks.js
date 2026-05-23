@@ -26,8 +26,14 @@ function slugify(str) {
 function formatTanggal(str) {
   if (!str) return '';
   try {
-    const d = new Date(str);
-    return d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    // Format: "10/3/2026, 12.10.58" → parse manual
+    const bagian = str.split(',')[0].trim(); // "10/3/2026"
+    const parts = bagian.split('/');
+    if (parts.length === 3) {
+      const d = new Date(parts[2], parts[1]-1, parts[0]);
+      return d.toLocaleDateString('id-ID', { month: 'long', year: 'numeric' });
+    }
+    return str;
   } catch(e) { return str; }
 }
 

@@ -107,15 +107,21 @@ function generateKotaHTML(kota, slug, scans, garmentMap) {
   // Hitung kaos unik
   const kaosUnik = [...new Set(scans.map(r => getVal(r.c[0])).filter(Boolean))];
 
-  // List scan terbaru
-  const scanList = scans.slice(-20).reverse().map(r => {
+  // List kaos unik — satu kaos satu baris, tanpa duplikat
+  const kaosUnikMap = {};
+  scans.forEach(r => {
     const id = getVal(r.c[0]);
     const ts = getVal(r.c[6]);
-    const nama = garmentMap[id] || id;
-    return `<a href="/id/${encodeURIComponent(id)}" class="scan-item">
-      <div class="scan-id">${id}</div>
-      <div class="scan-nama">${nama}</div>
-      <div class="scan-ts">${ts.split(',')[0]}</div>
+    if(!id) return;
+    if(!kaosUnikMap[id] || ts > kaosUnikMap[id].ts) {
+      kaosUnikMap[id] = { id, ts, nama: garmentMap[id] || id };
+    }
+  });
+  const scanList = Object.values(kaosUnikMap).sort((a,b) => b.ts.localeCompare(a.ts)).map(r => {
+    return `<a href="/id/${encodeURIComponent(r.id)}" class="scan-item">
+      <div class="scan-id">${r.id}</div>
+      <div class="scan-nama">${r.nama}</div>
+      <div class="scan-ts">${r.ts.split(',')[0]}</div>
     </a>`;
   }).join('');
 

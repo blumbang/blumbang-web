@@ -207,10 +207,10 @@ gtag("config","G-39SRRM5GKK");
   </div>
 
   <!-- LATEST -->
-  <div class="latest-section" id="latest-section" style="display:none">
+  <a class="latest-section" id="latest-section" href="#" style="display:none;text-decoration:none;">
     <div class="latest-dot"></div>
-    <div class="latest-text">Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
-  </div>
+    <div class="latest-text"><span id="ls-id" style="font-family:var(--font-logo);letter-spacing:.12em;color:var(--gold);"></span> <span style="color:var(--muted);">·</span> Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
+  </a>
 
 </div>
 
@@ -990,8 +990,10 @@ requestAnimationFrame(function(){
     const scans = rows.filter(function(r){return r.c[2]&&r.c[2].v;});
     if(scans.length){
       const last = scans[scans.length-1];
-      document.getElementById('ls-city').textContent = last.c[2].v.split(',')[0];
-      document.getElementById('latest-section').style.display = 'flex';
+      const lastId = last.c[0] && last.c[0].v ? last.c[0].v.toString().trim() : "";
+      document.getElementById("ls-city").textContent = last.c[2].v.split(",")[0];
+      if(lastId){document.getElementById("ls-id").textContent = lastId;document.getElementById("latest-section").setAttribute("href","/id/"+encodeURIComponent(lastId));}
+      document.getElementById("latest-section").style.display = "flex";
     }
 
     buildMap(rows, worldData).catch(function(e){console.error('buildMap error:',e);});

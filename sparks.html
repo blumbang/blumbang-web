@@ -928,7 +928,8 @@ async function buildMap(rows, preloadedWorld){
 
     // City tags - tambah kota yang punya spark
     Object.keys(cityMap).forEach(function(label){
-      citiesRow.innerHTML += '<div class="city-tag"><span class="dot"></span>' + label + '</div>';
+      var kotaSlug = label.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
+      citiesRow.innerHTML += '<a href="/sparks/kota/'+kotaSlug+'" class="city-tag" style="text-decoration:none;"><span class="dot"></span>' + label + '</a>';
     });
 
     document.getElementById('map-loading').style.display = 'none';

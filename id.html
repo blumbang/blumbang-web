@@ -9,6 +9,8 @@
 <title>Garment · Blumbang.id</title>
 <meta name="description" content="Lacak perjalanan kaos Blumbang dengan QR unik.">
 <link rel="canonical" href="https://blumbang.id/id/">
+<link rel="dns-prefetch" href="https://ipapi.co">
+<link rel="preconnect" href="https://ipapi.co">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -197,6 +199,12 @@ window.dataLayer=window.dataLayer||[];
 function gtag(){dataLayer.push(arguments);}
 gtag("js",new Date());
 gtag("config","G-39SRRM5GKK");
+</script>
+<!-- PREFETCH GEO: tembak ipapi sedini mungkin, sebelum apa pun -->
+<script>
+window._geoPromise = fetch('https://ipapi.co/json/')
+  .then(function(r){ return r.json(); })
+  .catch(function(){ return null; });
 </script>
 </head>
 <body>
@@ -581,8 +589,9 @@ function toSlug(str) {
 
 async function recordScan(garmentId) {
   try {
-    var res = await fetch('https://ipapi.co/json/');
-    var geo = await res.json();
+    // Pakai hasil prefetch yang sudah jalan sejak <head>. Kalau belum siap, await sebentar.
+    var geo = await window._geoPromise;
+    if (!geo) return;
     var kota = geo.city || '';
     var negara = geo.country_name || '';
     if (!kota) return;

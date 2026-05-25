@@ -613,35 +613,7 @@ async function muatStats(){
   }
 }
 
-async function muatKoleksi(){
-  const grid=document.getElementById('koleksi-grid');
-  try{
-    const res=await fetch(WORKER_URL+'/seri/list');
-    const json=await res.json();
-    if(!json.ok||!json.data) throw new Error('no data');
-    let pub=json.data.filter(s=>s.status==='published').sort((a,b)=>(b.created_at||'').localeCompare(a.created_at||''));
-    const dgMockup=pub.filter(s=>s.mockup_url).slice(0,4);
-    const list=dgMockup.length>=4?dgMockup:[...dgMockup,...pub.filter(s=>!s.mockup_url)].slice(0,4);
-    if(!list.length){grid.innerHTML='';return;}
-    const ikon=`<svg viewBox="0 0 120 110" fill="none"><path d="M24 8L5 24l18 8v68h70V32l18-8L93 8l-18 8c-4-12-26-12-30 0z" stroke="currentColor" stroke-width="1.5"/></svg>`;
-    grid.innerHTML=list.map(s=>{
-      const slug=s.id||(s.nama||'').toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
-      const img=s.mockup_url?driveUrl(s.mockup_url):null;
-      const meta=[s.jumlah?s.jumlah+' pcs':null,s.tahun].filter(Boolean).join(' · ');
-      return `<a href="/karya/${slug}" class="k-card rv">
-        ${img?`<img class="k-mockup" src="${img}" alt="${s.nama||''}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><div class="k-ph" style="display:none">${ikon}</div>`:`<div class="k-ph">${ikon}</div>`}
-        <div class="k-body">
-          <div class="k-nama">${s.nama||'—'}</div>
-          <div class="k-meta">${meta}</div>
-          ${s.bahan?`<div class="k-bahan">${s.bahan}</div>`:''}
-        </div>
-      </a>`;
-    }).join('');
-    setTimeout(()=>document.querySelectorAll('#koleksi-grid .rv').forEach(el=>el.classList.add('terlihat')),60);
-  }catch(e){
-    grid.innerHTML='<div style="grid-column:1/-1;padding:40px;text-align:center;font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--redup);">Gagal memuat koleksi</div>';
-  }
-}
+
 
 // PETA
 let _petaLoaded=false;
@@ -856,7 +828,7 @@ async function muatHOF(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
-  setLang(lang);muatStats();muatKoleksi();initReveal();initPetaObserver();muatHOF();
+  setLang(lang);muatStats();initReveal();initPetaObserver();muatHOF();
 });
 </script>
 </body>

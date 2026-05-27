@@ -647,6 +647,42 @@ function getCityCoord(str){
   return null;
 }
 
+// Cache geocoding
+var _geoCache=null;
+function getGeoCache(){
+  if(_geoCache) return _geoCache;
+  try{_geoCache=JSON.parse(sessionStorage.getItem('blumbang_geo_hp')||'{}');}
+  catch(e){_geoCache={};}
+  return _geoCache;
+}
+function setGeoCache(key,val){
+  var cache=getGeoCache();cache[key]=val;
+  try{sessionStorage.setItem('blumbang_geo_hp',JSON.stringify(cache));}catch(e){}
+}
+
+async function geocodeCity(cityStr){
+  if(!cityStr) return null;
+  var fromDict=getCityCoord(cityStr);
+  if(fromDict) return fromDict;
+  var stripped=cityStr.replace(/^kota\s+/i,'').trim();
+  if(stripped!==cityStr){var fd=getCityCoord(stripped);if(fd) return fd;}
+  var cache=getGeoCache();
+  var cacheKey=cityStr.toLowerCase().trim();
+  if(cache[cacheKey]!==undefined) return cache[cacheKey];
+  try{
+    var query=cityStr.split(',')[0].trim();
+    var res=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(query)+'&format=json&limit=1&accept-language=en',{headers:{'User-Agent':'blumbang.id/1.0'}});
+    var data=await res.json();
+    if(data&&data[0]){
+      var coord={ll:[parseFloat(data[0].lon),parseFloat(data[0].lat)],label:data[0].display_name.split(',')[0].trim()};
+      setGeoCache(cacheKey,coord);
+      return coord;
+    }
+  }catch(e){}
+  setGeoCache(cacheKey,null);
+  return null;
+}
+
 function typewriter(el, text, speed=40){
   el.textContent='';
   let i=0;
@@ -654,7 +690,7 @@ function typewriter(el, text, speed=40){
   tick();
 }
 
-function renderPeta(rows,world){
+async function renderPeta(rows,world){
   const KLATEN=[110.6,-7.7];
   const wrap=document.getElementById('peta-wrap');
   const w=wrap.offsetWidth||window.innerWidth,h=Math.min(w*0.55,320);
@@ -671,13 +707,13 @@ function renderPeta(rows,world){
     cityMap[key].count++;
   });
 
-  // Scan terbaru - ambil dari baris terakhir yang punya kota
+  // Scan terbaru - ambil dari baris terakhir, geocode kalau perlu
   let latestCity='', latestId='';
   for(let i=rows.length-1;i>=0;i--){
     const c=rows[i].c[2]?.v;
     const id=rows[i].c[0]?.v;
     if(!c||!id) continue;
-    const coord=getCityCoord(c);
+    const coord=await geocodeCity(c);
     if(coord){latestCity=coord.label;latestId=id;break;}
   }
 

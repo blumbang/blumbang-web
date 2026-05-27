@@ -813,7 +813,7 @@ async function buildMap(rows, preloadedWorld){
     var cityStr = uniqueCities[cityKeys[i]];
     var coord = await geocodeCity(cityStr);
     if(!coord) continue;
-    var label = coord.label;
+    var label = cityStr.split(',')[0].trim();
     if(!cityMap[label]) cityMap[label] = {coord, count:0};
     // Hitung total scan per kota
     rows.forEach(function(r){

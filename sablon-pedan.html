@@ -33,8 +33,9 @@
 {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
-  "name": "Blumbang ID — Konveksi & Sablon Pedan",
-  "description": "Workshop sablon dan konveksi kaos custom di Jeto, Gaden, Trucuk — melayani Pedan dan sekitarnya. Setiap kaos dilengkapi QR perjalanan unik.",
+  "@id": "https://blumbang.id/#business",
+  "name": "Blumbang ID — Sablon Pedan Klaten",
+  "description": "Workshop sablon dan konveksi kaos custom independen dari Jeto, Gaden, Trucuk, Klaten. Plastisol, DTF, rubber. Setiap kaos dilengkapi QR perjalanan unik.",
   "url": "https://blumbang.id",
   "telephone": "+6281234561146",
   "address": {
@@ -50,6 +51,19 @@
     "latitude": -7.749626,
     "longitude": 110.670888
   },
+  "areaServed": [
+    {"@type": "AdministrativeArea", "name": "Pedan"},
+    {"@type": "AdministrativeArea", "name": "Trucuk"},
+    {"@type": "AdministrativeArea", "name": "Cawas"},
+    {"@type": "AdministrativeArea", "name": "Wedi"},
+    {"@type": "City", "name": "Klaten"}
+  ],
+  "makesOffer": [
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Sablon Plastisol", "description": "Sablon kaos dengan tinta plastisol berbasis PVC. Hasil solid, warna tajam, tahan lama. Ideal untuk 12 kaos ke atas."}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Sablon DTF", "description": "Direct to Film — desain penuh warna, gradasi, atau foto. Fleksibel untuk jumlah kecil."}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Sablon Rubber", "description": "Tinta berbasis air, hasil matte dan elastis. Cocok untuk kaos gelap dan order massal."}},
+    {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Living Garment", "description": "Sistem identitas kaos unik dari Blumbang ID. Setiap kaos mendapat QR code tersendiri yang mencatat perjalanan pemiliknya ke peta dunia."}}
+  ],
   "openingHours": "Mo-Sa 08:00-17:00",
   "priceRange": "$$",
   "image": [
@@ -63,8 +77,6 @@
   ]
 }
 </script>
-
-<!-- Schema: FAQPage -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",

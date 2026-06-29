@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 <link rel="apple-touch-icon" href="/favicon-32.png">
 <title>Garment · Blumbang.id</title>
-<meta name="description" content="Lacak perjalanan kaos Blumbang dengan QR unik.">
+<meta name="description" content="Setiap kaos Blumbang menyimpan perjalanannya lewat QR unik.">
 <link rel="canonical" href="https://blumbang.id/id/">
 <link rel="dns-prefetch" href="https://ipapi.co">
 <link rel="preconnect" href="https://ipapi.co">
@@ -174,8 +174,8 @@ footer{border-top:1px solid var(--border);padding:32px 40px;display:flex;align-i
 }
 
 .checkin-headline{
-  font-family:var(--font-logo);font-size:clamp(2.2rem,11vw,3.4rem);
-  letter-spacing:.06em;line-height:1.05;color:var(--white);
+  font-family:var(--font-logo);font-size:clamp(1.9rem,8.5vw,3rem);
+  letter-spacing:.04em;line-height:1.1;color:var(--white);
   margin-bottom:20px;
 }
 .checkin-sub{
@@ -232,7 +232,7 @@ window._geoPromise = fetch('https://ipapi.co/json/')
     <div class="state-box">
       <div class="ico">✦</div>
       <h2>Memuat...</h2>
-      <p>Mengambil data garment</p>
+      <p>Membuka ingatan kaos ini…</p>
     </div>
   </div>
 </div>
@@ -247,8 +247,8 @@ window._geoPromise = fetch('https://ipapi.co/json/')
   <div class="checkin-modal" id="checkin-modal">
     <div class="checkin-topline"></div>
     <span class="checkin-spark">✦</span>
-    <div class="checkin-headline">INI BUKAN<br>KAOS<br>BIASA.</div>
-    <div class="checkin-sub">Perjalananmu tercatat.<br>Selamanya.</div>
+    <div class="checkin-headline" id="checkin-headline">Tersimpan.</div>
+    <div class="checkin-sub" id="checkin-sub">Perjalanan kaos ini bertambah.<br>Selamanya.</div>
   </div>
 </div>
 
@@ -445,6 +445,9 @@ async function init() {
       if (dist > rekorTerjauh) rekorTerjauh = dist;
     }
 
+    // Simpan kota unik (sebelum scan ini) untuk modal check-in
+    window._checkinKotaUnik = Array.from(kotaUnikSet);
+
     // Hitung peringkat kota unik dibanding semua garment
     var allGarmentKota = {};
     for (var i = 1; i < spkRows.length; i++) {
@@ -570,18 +573,51 @@ function bukaLightbox(src) {
 
 var APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbx3aQma_SB1gMiSUuPPr6Ol6BwKlN1QtIV5EUJa1UM6Fli0H88Jg0aIxxTnlR1bRNY/exec';
 
-function bukaCheckinModal() {
+async function bukaCheckinModal() {
   var overlay = document.getElementById('checkin-overlay');
+  var elH = document.getElementById('checkin-headline');
+  var elS = document.getElementById('checkin-sub');
+
+  // Tentukan copy momen check-in: kota (geo) + riwayat singgah kaos ini
+  try {
+    var geo = await window._geoPromise;            // bisa null kalau geo gagal
+    var kotaRaw = (geo && geo.city) ? geo.city : '';
+    var visited = window._checkinKotaUnik || [];   // kota sebelum scan ini (huruf kecil)
+    var scansCount = window._checkinScansCount || 0;
+
+    var headline, sub;
+    if (!kotaRaw) {
+      headline = 'Satu tempat baru, tersimpan.';
+      sub = 'Perjalanan kaos ini bertambah.<br>Selamanya.';
+    } else {
+      var kotaKey = kotaRaw.split(',')[0].trim().toLowerCase();
+      var isReturn = visited.indexOf(kotaKey) >= 0;
+      if (scansCount === 0) {
+        headline = 'Perjalanan dimulai di ' + kotaRaw + '.';
+        sub = 'Tempat pertama yang kaos ini singgahi.<br>Tersimpan, selamanya.';
+      } else if (isReturn) {
+        headline = 'Kembali ke ' + kotaRaw + '.';
+        sub = 'Kembali mengunjungi tempat ini.';
+      } else {
+        var N = visited.length + 1;
+        headline = 'Kita sampai di ' + kotaRaw + '.';
+        sub = 'Tempat ke-' + N + ' yang kaos ini singgahi.<br>Tersimpan, selamanya.';
+      }
+    }
+    if (elH) elH.textContent = headline;
+    if (elS) elS.innerHTML = sub;
+  } catch (e) { /* biarkan default HTML yang sudah hangat */ }
+
   overlay.classList.add('on');
   document.body.style.overflow = 'hidden';
-  // Record lokasi di background, tidak tunggu
+  // Rekam lokasi di background, tidak tunggu
   recordScan(window._checkinGarmentId);
-  // Auto tutup 3 detik
+  // Auto tutup 4 detik
   setTimeout(function() {
     overlay.classList.remove('on');
     document.body.style.overflow = '';
     revealSparkBox();
-  }, 3000);
+  }, 4000);
 }
 
 function toSlug(str) {

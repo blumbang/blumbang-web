@@ -235,6 +235,26 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://blumbang.id/sablon-trucuk</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-cawas</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-bayat</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://blumbang.id/sablon-pedan</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://blumbang.id/sablon-solo</loc>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>

@@ -273,6 +273,7 @@ function generateSitemap(posts, seriSlugs) {
     { loc: `${BASE_URL}/sablon-jogja`,          lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${BASE_URL}/sablon-banjarbaru`,     lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${BASE_URL}/sablon-brand-klaten`,   lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/apa-itu-living-garment`, lastmod: today, changefreq: 'monthly', priority: '0.7' },
     { loc: `${BASE_URL}/konveksi-klaten`,       lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${BASE_URL}/kaos-sekolah-klaten`,   lastmod: today, changefreq: 'monthly', priority: '0.8' },
     { loc: `${BASE_URL}/sablon-satuan-klaten`,  lastmod: today, changefreq: 'monthly', priority: '0.8' },

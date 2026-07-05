@@ -399,8 +399,9 @@ gtag("config","G-39SRRM5GKK");
 .team-list{margin-top:56px;display:flex;flex-direction:column;gap:0;}
 .tm-item{padding:28px 0;border-bottom:1px solid var(--border);display:flex;gap:20px;align-items:flex-start;}
 .tm-item:last-child{border-bottom:none;}
-.tm-photo-wrap{flex-shrink:0;width:72px;height:72px;}
+.tm-photo-wrap{flex-shrink:0;width:72px;height:72px;position:relative;}
 .tm-photo{width:72px;height:72px;object-fit:cover;filter:grayscale(30%);}
+.tm-initial{position:absolute;inset:0;width:72px;height:72px;display:flex;align-items:center;justify-content:center;background:var(--gold-bg);border:1px solid var(--gold-dim);color:var(--gold-dim);font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.05em;}
 .tm-content{flex:1;}
 .tm-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:6px;}
 .tm-name{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:0.08em;color:var(--white);}
@@ -458,8 +459,33 @@ const fotoMap = {
   'foto_arie'   : 'foto-arie',
   'foto_chandra': 'foto-chandra',
   'foto_danang' : 'foto-danang',
+  'foto_yoshi'  : 'foto-yoshi',
+  'foto_bambang': 'foto-bambang',
+  'foto_lintang': 'foto-lintang',
   'foto_betchak': 'foto-betchak',
 };
+
+// Render fallback avatar inisial LANGSUNG saat load — jangan tunggu fetch Apps Script.
+// Kalau nanti fetch berhasil dan foto ada, foto akan menimpa avatar ini.
+function renderInitialAvatar(wrap, img) {
+  const name = (img.getAttribute('alt') || '?').trim();
+  const initials = name
+    .split(/\s+/)
+    .map(w => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+  const div = document.createElement('div');
+  div.className = 'tm-initial';
+  div.textContent = initials;
+  wrap.appendChild(div);
+  img.style.display = 'none';
+}
+
+document.querySelectorAll('.tm-photo-wrap').forEach(wrap => {
+  const img = wrap.querySelector('img.tm-photo');
+  if (img) renderInitialAvatar(wrap, img);
+});
 
 fetch(APPS_SCRIPT + '?action=get_homepage')
   .then(r => r.json())
@@ -472,22 +498,22 @@ fetch(APPS_SCRIPT + '?action=get_homepage')
       const imgId = fotoMap[key];
       if (!imgId) return;
       const img = document.getElementById(imgId);
-      if (img) {
-        const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-        const src = match
-          ? 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w400'
-          : url;
-        img.onerror = () => { img.parentElement.style.display = 'none'; };
-        img.src = src;
-      }
-    });
-    // Sembunyikan semua wrap yang tidak dapat foto
-    document.querySelectorAll('.tm-photo-wrap').forEach(wrap => {
-      const img = wrap.querySelector('img');
-      if (img && !img.src) wrap.style.display = 'none';
+      if (!img) return;
+      const wrap = img.parentElement;
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      const src = match
+        ? 'https://drive.google.com/thumbnail?id=' + match[1] + '&sz=w400'
+        : url;
+      img.onload = () => {
+        const initial = wrap.querySelector('.tm-initial');
+        if (initial) initial.remove();
+        img.style.display = '';
+      };
+      img.onerror = () => { /* foto gagal load — avatar inisial tetap tampil, card tidak hilang */ };
+      img.src = src;
     });
   })
-  .catch(() => {});
+  .catch(() => { /* fetch gagal — avatar inisial tetap tampil di semua card */ });
 
 </script>
 </body>

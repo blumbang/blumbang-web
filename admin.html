@@ -611,7 +611,6 @@ tr:hover td{background:rgba(255,255,255,0.02);}
     </div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Bahan</label><input type="text" class="form-input" id="seri-bahan" placeholder="Cotton Combed 30s"></div>
-      <div class="form-group"><label class="form-label">Tahun</label><input type="number" class="form-input" id="seri-tahun" placeholder="2024" value="2024"></div>
     </div>
     <div class="form-group" style="margin-bottom:16px;"><label class="form-label">URL Mockup</label><input type="text" class="form-input" id="seri-mockup" placeholder="https://drive.google.com/file/d/..."></div>
     <div class="form-group" style="margin-bottom:16px;"><label class="form-label">Deskripsi / Copywriting (untuk SEO)</label><textarea class="form-input" id="seri-deskripsi" rows="5" placeholder="Tulis cerita di balik seri ini..." style="resize:vertical;line-height:1.7;font-size:0.85rem;"></textarea></div>
@@ -2769,7 +2768,6 @@ function resetSeriForm() {
   document.getElementById('seri-nama').value = '';
   document.getElementById('seri-pemesan').value = '';
   document.getElementById('seri-bahan').value = '';
-  document.getElementById('seri-tahun').value = '2024';
   document.getElementById('seri-mockup').value = '';
   document.getElementById('seri-deskripsi').value = '';
   document.getElementById('seri-status').value = 'draft';
@@ -2777,13 +2775,12 @@ function resetSeriForm() {
   document.getElementById('seri-form-msg').textContent = '';
 }
 
-function editSeri(id, nama, pemesan, bahan, tahun, mockup, deskripsi, status) {
+function editSeri(id, nama, pemesan, bahan, mockup, deskripsi, status) {
   editingSeriId = id;
   document.getElementById('seri-form-title').textContent = 'Edit Seri: ' + nama;
   document.getElementById('seri-nama').value = nama;
   document.getElementById('seri-pemesan').value = pemesan || '';
   document.getElementById('seri-bahan').value = bahan || '';
-  document.getElementById('seri-tahun').value = tahun || '2024';
   document.getElementById('seri-mockup').value = mockup || '';
   document.getElementById('seri-deskripsi').value = deskripsi || '';
   document.getElementById('seri-status').value = status || 'draft';
@@ -2800,7 +2797,6 @@ async function simpanSeri() {
     nama,
     pemesan: document.getElementById('seri-pemesan').value.trim(),
     bahan: document.getElementById('seri-bahan').value.trim(),
-    tahun: parseInt(document.getElementById('seri-tahun').value) || null,
     mockup_url: document.getElementById('seri-mockup').value.trim(),
     deskripsi: document.getElementById('seri-deskripsi').value.trim(),
     status: document.getElementById('seri-status').value,
@@ -2856,7 +2852,7 @@ async function loadSeriList() {
         <td><div style="font-weight:600;color:var(--white);">${s.nama}</div><div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">${s.id}</div></td>
         <td>${s.pemesan || '<span style="color:var(--muted)">—</span>'}</td>
         <td>${s.bahan || '<span style="color:var(--muted)">—</span>'}</td>
-        <td>${s.tahun || '<span style="color:var(--muted)">—</span>'}</td>
+        <td>${s.created_at ? new Date(s.created_at).getFullYear() : '<span style="color:var(--muted)">—</span>'}</td>
         <td><span style="font-size:0.65rem;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border:1px solid ${s.status==='published'?'#40916c':'var(--border)'};color:${s.status==='published'?'#86efac':'var(--muted)'};">${s.status==='published'?'PUBLISHED':'DRAFT'}</span></td>
         <td><div style="display:flex;gap:8px;">
           <button class="btn btn-ghost btn-sm" data-edit-id="${s.id}">Edit</button>
@@ -2872,7 +2868,7 @@ async function loadSeriList() {
       btn.addEventListener('click', function() {
         const s = window._seriMap[this.getAttribute('data-edit-id')];
         if (!s) return;
-        editSeri(s.id, s.nama, s.pemesan||'', s.bahan||'', s.tahun||'', s.mockup_url||'', s.deskripsi||'', s.status||'draft');
+        editSeri(s.id, s.nama, s.pemesan||'', s.bahan||'', s.mockup_url||'', s.deskripsi||'', s.status||'draft');
       });
     });
 

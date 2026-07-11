@@ -83,6 +83,74 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://blumbang.id/#organization",
+  "name": "Blumbang ID",
+  "alternateName": ["Blumbang", "Blumbang.id"],
+  "url": "https://blumbang.id",
+  "logo": "https://blumbang.id/og-image.jpg",
+  "description": "Blumbang ID adalah studio sablon dan konveksi independen di Jeto, Klaten, Jawa Tengah, dikenal lewat sistem Living Garment — setiap kaos dilengkapi QR unik yang menyimpan perjalanan pemiliknya setelah dibeli.",
+  "disambiguatingDescription": "Blumbang ID adalah brand studio sablon dan konveksi kaos custom, pencipta sistem Living Garment. Bukan tempat wisata, kolam, atau pemancingan — berbeda dari Blumbang Sabranglor di Desa Sabranglor, Trucuk, Klaten.",
+  "knowsAbout": ["Sablon kaos custom", "Konveksi", "Sablon plastisol", "Sablon DTF", "Sablon rubber", "Living Garment", "QR code pada apparel", "Konveksi Klaten"],
+  "foundingDate": "2022",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "Jeto, Gaden, Trucuk, Klaten, Jawa Tengah"
+  },
+  "sameAs": [
+    "https://blumbang.com",
+    "https://www.instagram.com/blumbang.id",
+    "https://www.tiktok.com/@blumbang.id",
+    "https://www.threads.net/@blumbang.id",
+    "https://wa.me/6281234561146",
+    "https://maps.app.goo.gl/eZ2dzu6utM5yrK8C7"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "https://blumbang.id/#faq",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Apa itu Blumbang ID?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Blumbang ID adalah studio sablon dan konveksi custom yang berdiri sejak 2022 di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah. Blumbang ID dikenal lewat sistem Living Garment — setiap kaos dilengkapi QR unik di label dalam yang menyimpan perjalanan kaos itu setelah dibeli, bukan sekadar asal produksinya."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apa itu Living Garment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Living Garment adalah sistem identitas kaos dari Blumbang ID. Setiap kaos dilengkapi QR code unik di label dalam yang menyimpan perjalanan kaos tersebut setelah dibeli — kota, waktu, dan cerita pemiliknya. Berbeda dari QR biasa yang menunjukkan asal produksi, Living Garment menunjukkan ke mana kaos itu pergi. Satu kaos, satu QR, perjalanan tanpa akhir."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bagaimana cara kerja QR di kaos Blumbang ID?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "QR unik tertempel di label dalam setiap kaos Blumbang ID. Saat discan menggunakan kamera ponsel — tanpa perlu aplikasi khusus — lokasi dan waktu scan tersebut tersimpan dan ditampilkan di peta perjalanan kaos, dari Klaten hingga ke kota mana pun kaos itu dibawa."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apakah Blumbang ID sama dengan Blumbang Sabranglor di Trucuk?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tidak. Blumbang ID adalah brand studio sablon dan konveksi kaos custom di Jeto, Gaden, Trucuk, Klaten. Blumbang Sabranglor adalah tempat wisata pemancingan di Desa Sabranglor, Trucuk, Klaten — sebuah lokasi yang berbeda dan tidak berafiliasi dengan Blumbang ID."
+      }
+    }
+  ]
+}
+</script>
 <!-- SEO-INJECT-END -->
 <link rel="preload" as="image" href="https://blumbang.id/og-image.jpg" type="image/jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -302,6 +370,13 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
 .seo-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;}
 .seo-links a{font-family:"Inter",sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;border:1px solid #2a2a2a;color:#ddd;text-decoration:none;transition:all .2s;}
 .seo-links a:hover{border-color:#C9A84C;color:#C9A84C;}
+.faq-list{margin-top:8px;border-top:1px solid #2a2a2a;}
+.faq-item{border-bottom:1px solid #2a2a2a;}
+.faq-item summary{font-family:"Montserrat",sans-serif;font-size:.9rem;font-weight:600;color:#F5F0E8;padding:18px 4px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:"+";font-family:"Bebas Neue",sans-serif;font-size:1.3rem;color:#C9A84C;flex-shrink:0;transition:transform .2s;}
+.faq-item[open] summary::after{transform:rotate(45deg);}
+.faq-item p{font-size:.82rem;line-height:1.8;color:#aaa;padding:0 4px 20px;}
 @media(max-width:768px){.seo-section{padding:40px 20px;}.seo-grid{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -490,6 +565,33 @@ footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40p
   </div>
 </section>
 <!-- END SEO STATIC CONTENT -->
+
+<!-- FAQ SECTION -->
+<section class="seo-section" id="faq">
+  <div class="seo-inner">
+    <span class="seo-tag">Pertanyaan Umum</span>
+    <h2 class="seo-h2">APA ITU<br>BLUMBANG ID?</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Apa itu Blumbang ID?</summary>
+        <p>Blumbang ID adalah studio sablon dan konveksi custom yang berdiri sejak 2022 di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah. Blumbang ID dikenal lewat sistem Living Garment — setiap kaos dilengkapi QR unik di label dalam yang menyimpan perjalanan kaos itu setelah dibeli, bukan sekadar asal produksinya.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apa itu Living Garment?</summary>
+        <p>Living Garment adalah sistem identitas kaos dari Blumbang ID. Setiap kaos dilengkapi QR code unik di label dalam yang menyimpan perjalanan kaos tersebut setelah dibeli — kota, waktu, dan cerita pemiliknya. Berbeda dari QR biasa yang menunjukkan asal produksi, Living Garment menunjukkan ke mana kaos itu pergi. Satu kaos, satu QR, perjalanan tanpa akhir.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Bagaimana cara kerja QR di kaos Blumbang ID?</summary>
+        <p>QR unik tertempel di label dalam setiap kaos Blumbang ID. Saat discan menggunakan kamera ponsel — tanpa perlu aplikasi khusus — lokasi dan waktu scan tersebut tersimpan dan ditampilkan di peta perjalanan kaos, dari Klaten hingga ke kota mana pun kaos itu dibawa.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apakah Blumbang ID sama dengan Blumbang Sabranglor di Trucuk?</summary>
+        <p>Tidak. Blumbang ID adalah brand studio sablon dan konveksi kaos custom di Jeto, Gaden, Trucuk, Klaten. Blumbang Sabranglor adalah tempat wisata pemancingan di Desa Sabranglor, Trucuk, Klaten — sebuah lokasi yang berbeda dan tidak berafiliasi dengan Blumbang ID.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<!-- END FAQ SECTION -->
 
 <!-- FOOTER -->
 <footer>

@@ -345,6 +345,107 @@ function generateHOF(scanRows, garmentMap) {
   console.log('✅ sparks/hof.html — ' + terjauh.length + ' terjauh, ' + terbanyak.length + ' terbanyak kota');
 }
 
+// ============================================================
+// SPARKS SNAPSHOT — suntik ringkasan statis ke sparks.html
+// supaya AI/crawler bisa baca data tanpa render JavaScript.
+// Menyentuh HANYA blok di antara marker SPARKS-SNAPSHOT.
+// Kalau marker tidak ditemukan / rusak, BATAL menulis file.
+// ============================================================
+function generateSparksSnapshot(kotaList, totalScan, totalKaosUnik) {
+  const SPARKS_HTML_PATH = path.join(__dirname, 'sparks.html');
+
+  if (!fs.existsSync(SPARKS_HTML_PATH)) {
+    console.log('[sparks-snapshot] sparks.html tidak ditemukan — SKIP, tidak menyentuh apapun.');
+    return;
+  }
+
+  let html = fs.readFileSync(SPARKS_HTML_PATH, 'utf-8');
+
+  const totalKota = kotaList.length;
+  const kotaTerbaruList = [...kotaList].sort((a, b) => {
+    const da = a.pertamaTanggal ? new Date(a.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
+    const db = b.pertamaTanggal ? new Date(b.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
+    return db - da;
+  });
+  const kotaTerbaru = kotaTerbaruList[0];
+  const namaKotaTerbaru = kotaTerbaru ? kotaTerbaru.nama : '';
+  const tanggalTerbaru = kotaTerbaru ? kotaTerbaru.pertamaTanggal : '';
+
+  // Narasi — "dingin tapi kejam", personal, singkat
+  const narasi = `${totalKota} kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. ${totalKaosUnik} kaos unik sudah berjalan, ${totalScan} kali dipindai. Kota terbaru yang menyimpan jejak: ${namaKotaTerbaru}${tanggalTerbaru ? ', ' + tanggalTerbaru : ''}. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai.`;
+
+  // Schema JSON-LD — ItemList seluruh kota, untuk AI/Google
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kota yang telah disinggahi kaos Blumbang ID Klaten",
+    "description": narasi,
+    "numberOfItems": totalKota,
+    "itemListElement": kotaList.map((k, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": k.nama,
+      "url": `${BASE_URL}/sparks/kota/${k.slug}`
+    }))
+  };
+
+  const textBlock = `<!--SPARKS-SNAPSHOT-TEXT-START-->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="false">
+  <p>${narasi}</p>
+</div>
+<!--SPARKS-SNAPSHOT-TEXT-END-->`;
+
+  const schemaBlock = `<!--SPARKS-SNAPSHOT-SCHEMA-START-->
+<script type="application/ld+json">
+${JSON.stringify(itemListSchema, null, 2)}
+</script>
+<!--SPARKS-SNAPSHOT-SCHEMA-END-->`;
+
+  const textMarkerRegex = /<!--SPARKS-SNAPSHOT-TEXT-START-->[\s\S]*?<!--SPARKS-SNAPSHOT-TEXT-END-->/;
+  const schemaMarkerRegex = /<!--SPARKS-SNAPSHOT-SCHEMA-START-->[\s\S]*?<!--SPARKS-SNAPSHOT-SCHEMA-END-->/;
+
+  let newHtml = html;
+  let textInjected = false;
+  let schemaInjected = false;
+
+  if (textMarkerRegex.test(html)) {
+    newHtml = newHtml.replace(textMarkerRegex, textBlock);
+    textInjected = true;
+  } else if (html.includes('<body>')) {
+    newHtml = newHtml.replace('<body>', `<body>\n${textBlock}\n`);
+    textInjected = true;
+  }
+
+  if (schemaMarkerRegex.test(newHtml)) {
+    newHtml = newHtml.replace(schemaMarkerRegex, schemaBlock);
+    schemaInjected = true;
+  } else if (newHtml.includes('</head>')) {
+    newHtml = newHtml.replace('</head>', `${schemaBlock}\n</head>`);
+    schemaInjected = true;
+  }
+
+  if (!textInjected || !schemaInjected) {
+    console.log('[sparks-snapshot] Titik suntik tidak lengkap ditemukan — BATAL, sparks.html tidak ditulis.');
+    return;
+  }
+
+  // Validasi ringan: pastikan JSON-LD yang baru valid sebelum ditulis
+  try {
+    const schemaCheck = newHtml.match(schemaMarkerRegex)[0]
+      .replace('<!--SPARKS-SNAPSHOT-SCHEMA-START-->', '')
+      .replace('<!--SPARKS-SNAPSHOT-SCHEMA-END-->', '')
+      .replace(/<script type="application\/ld\+json">|<\/script>/g, '')
+      .trim();
+    JSON.parse(schemaCheck);
+  } catch (e) {
+    console.log('[sparks-snapshot] JSON-LD hasil suntik tidak valid — BATAL, sparks.html tidak ditulis. Error:', e.message);
+    return;
+  }
+
+  fs.writeFileSync(SPARKS_HTML_PATH, newHtml, 'utf-8');
+  console.log(`✅ sparks.html — snapshot disuntik (${totalKota} kota, ${totalKaosUnik} kaos unik, ${totalScan} scan)`);
+}
+
 async function main() {
   console.log('Fetching data dari Sheet...');
   const [spkRows, garRows] = await Promise.all([
@@ -394,6 +495,10 @@ async function main() {
 
   // Sort by scan count
   kotaList.sort((a, b) => b.scanCount - a.scanCount);
+
+  // Suntik snapshot statis ke sparks.html (untuk AI/crawler)
+  const totalKaosUnikGlobal = new Set(scanRows.map(r => getVal(r.c[0])).filter(Boolean)).size;
+  generateSparksSnapshot(kotaList, scanRows.length, totalKaosUnikGlobal);
 
   // Generate index
   const indexHtml = generateIndexHTML(kotaList);

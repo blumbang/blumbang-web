@@ -174,6 +174,7 @@ ${baseCSS()}
 .hero-inner{max-width:900px;margin:0 auto;}
 .hero-eyebrow{font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hero-kota{font-family:var(--font-logo);font-size:clamp(3rem,10vw,7rem);letter-spacing:.06em;line-height:.95;color:var(--white);margin-bottom:24px;}
+.hero-kota-sub{font-family:var(--font-ui);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-top:-16px;margin-bottom:24px;}
 .tanda-tangan{background:var(--charcoal);border:1px solid var(--border);border-left:3px solid var(--gold);padding:20px 24px;margin-bottom:32px;}
 .tt-label{font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:8px;}
 .tt-teks{font-family:var(--font-ui);font-size:.85rem;color:var(--light);line-height:1.6;}
@@ -200,7 +201,8 @@ ${navHTML('sparks')}
   <div class="hero-inner">
     <a href="/sparks" class="back-link">← Peta Perjalanan</a>
     <div class="hero-eyebrow">✦ Peta Perjalanan · Blumbang ID</div>
-    <div class="hero-kota">${kota}</div>
+    <h1 class="hero-kota">${kota}</h1>
+    <p class="hero-kota-sub">Blumbang ID · Sablon Klaten · Living Garment</p>
     ${pertamaId ? `<div class="tanda-tangan">
       <div class="tt-label">Tanda Tangan Kota</div>
       <div class="tt-teks">Pertama dibawa ke sini oleh <strong><a href="/id/${encodeURIComponent(pertamaId)}" style="color:var(--gold)">${pertamaId}</a></strong> · ${pertamaTanggal}</div>
@@ -288,7 +290,8 @@ ${navHTML('sparks')}
   <div class="hero-inner">
     <a href="/sparks" style="font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);display:inline-block;margin-bottom:20px;">← Peta Perjalanan</a>
     <div class="hero-eyebrow">✦ ${kotaList.length} Kota · Blumbang ID</div>
-    <div class="hero-title">SEMUA KOTA</div>
+    <h1 class="hero-title">SEMUA KOTA</h1>
+    <p class="hero-kota-sub">Blumbang ID · Sablon Klaten · Living Garment</p>
   </div>
 </div>
 <div class="grid">${cards}</div>

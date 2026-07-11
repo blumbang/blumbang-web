@@ -53,7 +53,7 @@ function getVal(cell) {
 
 function navHTML(activePage = '') {
   return `<nav>
-  <a href="/" class="nav-brand">BLUMB✦NG</a>
+  <a href="/" class="nav-brand">BLUMB✦NG ID</a>
   <div class="nav-links">
     <a href="/karya"${activePage === 'karya' ? ' class="active"' : ''}>Karya</a>
     <a href="/sparks"${activePage === 'sparks' ? ' class="active"' : ''}>Perjalanan</a>
@@ -126,19 +126,47 @@ function generateKotaHTML(kota, slug, scans, garmentMap) {
   }).join('');
 
   const canonical = `${BASE_URL}/sparks/kota/${slug}`;
-  const metaDesc = `Kaos Blumbang yang pernah sampai ke ${kota}. ${kaosUnik.length} kaos, ${scans.length} scan tercatat.`;
+  const namaPembawa = pertamaNama || pertamaId || 'seseorang';
+  const metaDesc = kaosUnik.length === 1
+    ? `Satu kaos Blumbang ID Klaten sudah menyimpan jejaknya di ${kota} — dibawa pertama kali oleh ${namaPembawa}. Setiap yang sampai di sini punya cerita sendiri.`
+    : `${kaosUnik.length} kaos Blumbang ID Klaten sudah menyimpan jejaknya di ${kota}. Yang pertama dibawa oleh ${namaPembawa}, ${pertamaTanggal || 'beberapa waktu lalu'}.`;
 
   return `<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${kota} · Peta Perjalanan Blumbang</title>
+<title>${kota} · Peta Perjalanan Blumbang ID Klaten</title>
 <meta name="description" content="${metaDesc}">
-<meta property="og:title" content="${kota} · Peta Perjalanan Blumbang">
+<meta property="og:title" content="${kota} · Peta Perjalanan Blumbang ID Klaten">
 <meta property="og:description" content="${metaDesc}">
 <meta property="og:type" content="website">
 <link rel="canonical" href="${canonical}">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Kaos Blumbang ID yang sampai ke ${kota}",
+  "description": "${metaDesc.replace(/"/g, '\\"')}",
+  "numberOfItems": ${kaosUnik.length},
+  "itemListElement": [
+    ${Object.values(kaosUnikMap).map((r, i) => `{
+      "@type": "ListItem",
+      "position": ${i + 1},
+      "name": "${(r.nama || r.id).replace(/"/g, '\\"')}",
+      "url": "${BASE_URL}/id/${encodeURIComponent(r.id)}"
+    }`).join(',\n    ')}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Place",
+  "name": "${kota}",
+  "description": "${metaDesc.replace(/"/g, '\\"')}"
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 ${baseCSS()}
 <style>
@@ -188,7 +216,7 @@ ${navHTML('sparks')}
   ${scanList || '<div style="color:var(--muted);font-size:.8rem;">Belum ada data</div>'}
 </div>
 <footer>
-  <a href="/" class="footer-brand">BLUMB✦NG</a>
+  <a href="/" class="footer-brand">BLUMB✦NG ID</a>
   <a href="https://wa.me/6281234561146" class="footer-link">Order via WhatsApp →</a>
 </footer>
 </body>
@@ -207,7 +235,7 @@ function generateIndexHTML(kotaList) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semua Kota · Peta Perjalanan Blumbang</title>
+<title>Semua Kota · Peta Perjalanan Blumbang ID Klaten</title>
 <meta name="description" content="Semua kota yang pernah dikunjungi kaos Blumbang. ${kotaList.length} kota di seluruh dunia.">
 <link rel="canonical" href="${BASE_URL}/sparks/kota">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -237,7 +265,7 @@ ${navHTML('sparks')}
 </div>
 <div class="grid">${cards}</div>
 <footer>
-  <a href="/" class="footer-brand">BLUMB✦NG</a>
+  <a href="/" class="footer-brand">BLUMB✦NG ID</a>
   <a href="https://wa.me/6281234561146" class="footer-link">Order via WhatsApp →</a>
 </footer>
 </body>

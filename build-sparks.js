@@ -223,7 +223,29 @@ ${navHTML('sparks')}
 </html>`;
 }
 
-function generateIndexHTML(kotaList) {
+function generateIndexHTML(kotaList, totalKaosTerdaftar, totalScan, namaKotaTerbaru, tanggalTerbaru) {
+  const totalKotaTermasukKlaten = kotaList.length + 1; // +1 untuk Klaten sebagai origin
+  const narasi = `${totalKotaTermasukKlaten} kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan tercipta. Kota terbaru yang menyimpan jejak: ${namaKotaTerbaru}${tanggalTerbaru ? ', ' + tanggalTerbaru : ''}. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai. Blumbang ID berdiri 2022, Living Garment System baru lahir 2026 setelah bertahun-tahun menguji kualitas produksi.`;
+
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kota yang telah disinggahi kaos Blumbang ID Klaten",
+    "description": narasi,
+    "numberOfItems": totalKotaTermasukKlaten,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "Blumbang ID berdiri", "value": "2022" },
+      { "@type": "PropertyValue", "name": "Living Garment System diluncurkan", "value": "2026" }
+    ],
+    "itemListElement": kotaList.map((k, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": k.nama,
+      "description": `${k.kaosUnik} kaos unik, ${k.scanCount} kali dipindai di ${k.nama}`,
+      "url": `${BASE_URL}/sparks/kota/${k.slug}`
+    }))
+  };
+
   const cards = kotaList.map(k => `<a href="/sparks/kota/${k.slug}" class="kota-card">
     <div class="kota-nama">${k.nama}</div>
     <div class="kota-info">${k.scanCount} scan · ${k.kaosUnik} kaos</div>
@@ -236,8 +258,11 @@ function generateIndexHTML(kotaList) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Semua Kota · Peta Perjalanan Blumbang ID Klaten</title>
-<meta name="description" content="Semua kota yang pernah dikunjungi kaos Blumbang. ${kotaList.length} kota di seluruh dunia.">
+<meta name="description" content="${totalKotaTermasukKlaten} kota yang pernah dikunjungi kaos Blumbang ID Klaten. ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan.">
 <link rel="canonical" href="${BASE_URL}/sparks/kota">
+<script type="application/ld+json">
+${JSON.stringify(itemListSchema, null, 2)}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 ${baseCSS()}
 <style>
@@ -255,6 +280,9 @@ ${baseCSS()}
 </style>
 </head>
 <body>
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="false">
+  <p>${narasi}</p>
+</div>
 ${navHTML('sparks')}
 <div class="hero">
   <div class="hero-inner">
@@ -351,20 +379,9 @@ function generateHOF(scanRows, garmentMap) {
 // Menyentuh HANYA blok di antara marker SPARKS-SNAPSHOT.
 // Kalau marker tidak ditemukan / rusak, BATAL menulis file.
 // ============================================================
-function generateSparksSnapshot(kotaList, scanRows, totalScan, totalKaosTerdaftar, totalKotaTermasukKlaten) {
-  const SPARKS_HTML_PATH = path.join(__dirname, 'sparks.html');
-
-  if (!fs.existsSync(SPARKS_HTML_PATH)) {
-    console.log('[sparks-snapshot] sparks.html tidak ditemukan — SKIP, tidak menyentuh apapun.');
-    return;
-  }
-
-  let html = fs.readFileSync(SPARKS_HTML_PATH, 'utf-8');
-
-  const totalKota = totalKotaTermasukKlaten;
-
-  // Cari scan PALING BARU secara global (bukan "kota yang pertama kali muncul paling belakangan").
-  // Parse timestamp asli dari kolom c[6], format: "10/3/2026, 12.10.58"
+// Cari scan PALING BARU secara global (bukan "kota yang pertama kali muncul paling belakangan").
+// Dipakai bersama oleh generateSparksSnapshot() dan generateIndexHTML().
+function cariScanTerbaru(scanRows) {
   function parseTimestamp(raw) {
     if (!raw) return new Date(0);
     const tgl = raw.split(',')[0].trim(); // "10/3/2026"
@@ -372,7 +389,6 @@ function generateSparksSnapshot(kotaList, scanRows, totalScan, totalKaosTerdafta
     if (parts.length !== 3) return new Date(0);
     return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
   }
-
   let scanTerbaru = null;
   let scanTerbaruDate = new Date(0);
   scanRows.forEach(r => {
@@ -385,6 +401,21 @@ function generateSparksSnapshot(kotaList, scanRows, totalScan, totalKaosTerdafta
       scanTerbaru = { nama: city.split(',')[0].trim(), tanggal: formatTanggal(rawTs) };
     }
   });
+  return scanTerbaru;
+}
+
+function generateSparksSnapshot(kotaList, scanRows, totalScan, totalKaosTerdaftar, totalKotaTermasukKlaten) {
+  const SPARKS_HTML_PATH = path.join(__dirname, 'sparks.html');
+
+  if (!fs.existsSync(SPARKS_HTML_PATH)) {
+    console.log('[sparks-snapshot] sparks.html tidak ditemukan — SKIP, tidak menyentuh apapun.');
+    return;
+  }
+
+  let html = fs.readFileSync(SPARKS_HTML_PATH, 'utf-8');
+
+  const totalKota = totalKotaTermasukKlaten;
+  const scanTerbaru = cariScanTerbaru(scanRows);
 
   const namaKotaTerbaru = scanTerbaru ? scanTerbaru.nama : '';
   const tanggalTerbaru = scanTerbaru ? scanTerbaru.tanggal : '';
@@ -527,8 +558,15 @@ async function main() {
   const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
   generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
 
-  // Generate index
-  const indexHtml = generateIndexHTML(kotaList);
+  // Generate index — parameter sama persis dengan snapshot sparks.html, supaya kedua halaman konsisten
+  const scanTerbaruUntukIndex = cariScanTerbaru(scanRows);
+  const indexHtml = generateIndexHTML(
+    kotaList,
+    garRows2.length,
+    scanRows.length,
+    scanTerbaruUntukIndex ? scanTerbaruUntukIndex.nama : '',
+    scanTerbaruUntukIndex ? scanTerbaruUntukIndex.tanggal : ''
+  );
   fs.writeFileSync(path.join(SPARKS_DIR, 'index.html'), indexHtml);
   console.log(`✅ sparks/index.html — ${kotaList.length} kota`);
   console.log(`✅ ${kotaList.length} halaman kota di-generate`);

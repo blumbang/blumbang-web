@@ -351,7 +351,7 @@ function generateHOF(scanRows, garmentMap) {
 // Menyentuh HANYA blok di antara marker SPARKS-SNAPSHOT.
 // Kalau marker tidak ditemukan / rusak, BATAL menulis file.
 // ============================================================
-function generateSparksSnapshot(kotaList, totalScan, totalKaosTerdaftar, totalKotaTermasukKlaten) {
+function generateSparksSnapshot(kotaList, scanRows, totalScan, totalKaosTerdaftar, totalKotaTermasukKlaten) {
   const SPARKS_HTML_PATH = path.join(__dirname, 'sparks.html');
 
   if (!fs.existsSync(SPARKS_HTML_PATH)) {
@@ -362,14 +362,32 @@ function generateSparksSnapshot(kotaList, totalScan, totalKaosTerdaftar, totalKo
   let html = fs.readFileSync(SPARKS_HTML_PATH, 'utf-8');
 
   const totalKota = totalKotaTermasukKlaten;
-  const kotaTerbaruList = [...kotaList].sort((a, b) => {
-    const da = a.pertamaTanggal ? new Date(a.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
-    const db = b.pertamaTanggal ? new Date(b.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
-    return db - da;
+
+  // Cari scan PALING BARU secara global (bukan "kota yang pertama kali muncul paling belakangan").
+  // Parse timestamp asli dari kolom c[6], format: "10/3/2026, 12.10.58"
+  function parseTimestamp(raw) {
+    if (!raw) return new Date(0);
+    const tgl = raw.split(',')[0].trim(); // "10/3/2026"
+    const parts = tgl.split('/');
+    if (parts.length !== 3) return new Date(0);
+    return new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+  }
+
+  let scanTerbaru = null;
+  let scanTerbaruDate = new Date(0);
+  scanRows.forEach(r => {
+    const rawTs = getVal(r.c[6]);
+    const city = getVal(r.c[2]);
+    if (!rawTs || !city) return;
+    const d = parseTimestamp(rawTs);
+    if (d > scanTerbaruDate) {
+      scanTerbaruDate = d;
+      scanTerbaru = { nama: city.split(',')[0].trim(), tanggal: formatTanggal(rawTs) };
+    }
   });
-  const kotaTerbaru = kotaTerbaruList[0];
-  const namaKotaTerbaru = kotaTerbaru ? kotaTerbaru.nama : '';
-  const tanggalTerbaru = kotaTerbaru ? kotaTerbaru.pertamaTanggal : '';
+
+  const namaKotaTerbaru = scanTerbaru ? scanTerbaru.nama : '';
+  const tanggalTerbaru = scanTerbaru ? scanTerbaru.tanggal : '';
 
   // Narasi — "dingin tapi kejam", personal, singkat. Angka SAMA PERSIS dengan stat bar /sparks
   // supaya AI dan manusia melihat data yang identik.
@@ -507,7 +525,7 @@ async function main() {
   // - totalKaosTerdaftar dari Sheet GARMENTS (bukan hitung unik dari scan)
   // - totalKotaTermasukKlaten mengikuti logic citySet di sparks.html (klaten dihitung sebagai anggota)
   const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
-  generateSparksSnapshot(kotaList, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
+  generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
 
   // Generate index
   const indexHtml = generateIndexHTML(kotaList);

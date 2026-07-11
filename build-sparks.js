@@ -351,7 +351,7 @@ function generateHOF(scanRows, garmentMap) {
 // Menyentuh HANYA blok di antara marker SPARKS-SNAPSHOT.
 // Kalau marker tidak ditemukan / rusak, BATAL menulis file.
 // ============================================================
-function generateSparksSnapshot(kotaList, totalScan, totalKaosUnik) {
+function generateSparksSnapshot(kotaList, totalScan, totalKaosTerdaftar, totalKotaTermasukKlaten) {
   const SPARKS_HTML_PATH = path.join(__dirname, 'sparks.html');
 
   if (!fs.existsSync(SPARKS_HTML_PATH)) {
@@ -361,7 +361,7 @@ function generateSparksSnapshot(kotaList, totalScan, totalKaosUnik) {
 
   let html = fs.readFileSync(SPARKS_HTML_PATH, 'utf-8');
 
-  const totalKota = kotaList.length;
+  const totalKota = totalKotaTermasukKlaten;
   const kotaTerbaruList = [...kotaList].sort((a, b) => {
     const da = a.pertamaTanggal ? new Date(a.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
     const db = b.pertamaTanggal ? new Date(b.pertamaTanggal.split('/').reverse().join('-')) : new Date(0);
@@ -371,8 +371,9 @@ function generateSparksSnapshot(kotaList, totalScan, totalKaosUnik) {
   const namaKotaTerbaru = kotaTerbaru ? kotaTerbaru.nama : '';
   const tanggalTerbaru = kotaTerbaru ? kotaTerbaru.pertamaTanggal : '';
 
-  // Narasi — "dingin tapi kejam", personal, singkat
-  const narasi = `${totalKota} kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. ${totalKaosUnik} kaos unik sudah berjalan, ${totalScan} kali dipindai. Kota terbaru yang menyimpan jejak: ${namaKotaTerbaru}${tanggalTerbaru ? ', ' + tanggalTerbaru : ''}. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai.`;
+  // Narasi — "dingin tapi kejam", personal, singkat. Angka SAMA PERSIS dengan stat bar /sparks
+  // supaya AI dan manusia melihat data yang identik.
+  const narasi = `${totalKota} kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan tercipta. Kota terbaru yang menyimpan jejak: ${namaKotaTerbaru}${tanggalTerbaru ? ', ' + tanggalTerbaru : ''}. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai. Blumbang ID berdiri 2022, Living Garment System baru lahir 2026 setelah bertahun-tahun menguji kualitas produksi.`;
 
   // Schema JSON-LD — ItemList seluruh kota, untuk AI/Google
   const itemListSchema = {
@@ -381,10 +382,15 @@ function generateSparksSnapshot(kotaList, totalScan, totalKaosUnik) {
     "name": "Kota yang telah disinggahi kaos Blumbang ID Klaten",
     "description": narasi,
     "numberOfItems": totalKota,
+    "additionalProperty": [
+      { "@type": "PropertyValue", "name": "Blumbang ID berdiri", "value": "2022" },
+      { "@type": "PropertyValue", "name": "Living Garment System diluncurkan", "value": "2026" }
+    ],
     "itemListElement": kotaList.map((k, i) => ({
       "@type": "ListItem",
       "position": i + 1,
       "name": k.nama,
+      "description": `${k.kaosUnik} kaos unik, ${k.scanCount} kali dipindai di ${k.nama}`,
       "url": `${BASE_URL}/sparks/kota/${k.slug}`
     }))
   };
@@ -443,7 +449,7 @@ ${JSON.stringify(itemListSchema, null, 2)}
   }
 
   fs.writeFileSync(SPARKS_HTML_PATH, newHtml, 'utf-8');
-  console.log(`✅ sparks.html — snapshot disuntik (${totalKota} kota, ${totalKaosUnik} kaos unik, ${totalScan} scan)`);
+  console.log(`✅ sparks.html — snapshot disuntik (${totalKota} kota, ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan)`);
 }
 
 async function main() {
@@ -497,8 +503,11 @@ async function main() {
   kotaList.sort((a, b) => b.scanCount - a.scanCount);
 
   // Suntik snapshot statis ke sparks.html (untuk AI/crawler)
-  const totalKaosUnikGlobal = new Set(scanRows.map(r => getVal(r.c[0])).filter(Boolean)).size;
-  generateSparksSnapshot(kotaList, scanRows.length, totalKaosUnikGlobal);
+  // Angka disamakan PERSIS dengan stat bar /sparks (yang diisi JS di browser):
+  // - totalKaosTerdaftar dari Sheet GARMENTS (bukan hitung unik dari scan)
+  // - totalKotaTermasukKlaten mengikuti logic citySet di sparks.html (klaten dihitung sebagai anggota)
+  const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
+  generateSparksSnapshot(kotaList, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
 
   // Generate index
   const indexHtml = generateIndexHTML(kotaList);

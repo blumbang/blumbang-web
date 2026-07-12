@@ -35,6 +35,12 @@ jobs:
       - name: Refresh stats homepage
         run: node inject-stats.js
 
+      - name: Refresh sparks description
+        run: node inject-sparks-desc.js
+
+      - name: Refresh sparks description
+        run: node inject-sparks-desc.js
+
       - name: Commit dan push
         run: |
           git config user.name "github-actions[bot]"

@@ -303,4 +303,750 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .hof-hp-sub{font-family:var(--fu);font-size:.6rem;letter-spacing:.2em;color:var(--redup);text-transform:uppercase;margin-bottom:28px;}
 .hof-hp-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
 .hof-hp-col-title{font-family:var(--fu);font-size:.58rem;font-weight:700;letter-spacing:.25em;color:var(--emas);text-transform:uppercase;margin-bottom:14px;}
-.hof-hp-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:n
+.hof-hp-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;}
+.hof-hp-item:hover .hof-hp-nama{color:var(--emas);}
+.hof-hp-rank{font-family:var(--fd);font-size:1rem;color:var(--emas);min-width:28px;}
+.hof-hp-nama{font-family:var(--fu);font-size:.75rem;color:var(--putih);transition:color .2s;}
+.hof-hp-info{font-family:var(--fu);font-size:.65rem;color:var(--redup);margin-top:2px;}
+.hof-hp-link{display:block;text-align:center;margin-top:24px;font-family:var(--fu);font-size:.65rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--redup);text-decoration:none;transition:color .2s;}
+.hof-hp-link:hover{color:var(--emas);}
+@media(max-width:768px){.hof-hp{padding:32px 20px;}.hof-hp-grid{grid-template-columns:1fr;gap:24px;}}
+.k-meta{font-family:var(--fu);font-size:.58rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);}
+.k-bahan{display:inline-block;margin-top:10px;font-family:var(--fu);font-size:.55rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--border);color:var(--dim);}
+.skel{background:linear-gradient(90deg,var(--charcoal) 25%,var(--abu2) 50%,var(--charcoal) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* STATS BAWAH (di section koleksi) */
+.stats-bawah{display:grid;grid-template-columns:repeat(5,1fr);background:var(--charcoal);border-top:1px solid var(--border);}
+
+/* FOOTER */
+footer{background:var(--charcoal);border-top:1px solid var(--border);padding:40px 32px;}
+.ft{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.ft-brand{font-family:var(--fd);font-size:1.5rem;letter-spacing:.12em;color:var(--putih);}
+.ft-brand span{color:var(--emas);}
+.ft-links{display:flex;gap:18px;flex-wrap:wrap;}
+.ft-links a{font-family:var(--fu);font-size:.65rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);transition:color .2s;}
+.ft-links a:hover{color:var(--putih);}
+.ft-copy{width:100%;font-family:var(--fu);font-size:.62rem;color:var(--border);letter-spacing:.08em;margin-top:4px;}
+
+/* WA FLOAT */
+.wa-float{position:fixed;bottom:24px;left:20px;z-index:200;width:50px;height:50px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(0,0,0,.4);transition:transform .2s,box-shadow .2s;}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(0,0,0,.5);}
+.wa-float svg{width:24px;height:24px;fill:#fff;}
+
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.drawer-overlay.aktif{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:151;background:var(--charcoal);border-top:1px solid var(--border);max-height:70vh;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.drawer.aktif{transform:translateY(0);}
+.drawer-head{padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
+.drawer-judul{font-family:var(--fd);font-size:1.2rem;letter-spacing:.08em;color:var(--emas);}
+.drawer-tutup{background:none;border:1px solid var(--border);font-family:var(--fu);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;cursor:pointer;color:var(--dim);transition:all .2s;}
+.drawer-tutup:hover{background:var(--putih);color:var(--hitam);border-color:var(--putih);}
+.drawer-list{overflow-y:auto;flex:1;}
+.drawer-item{display:flex;align-items:center;justify-content:space-between;padding:13px 24px;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;transition:background .15s;}
+.drawer-item:hover{background:var(--abu2);}
+.di-id{font-family:var(--fd);font-size:.95rem;letter-spacing:.12em;color:var(--emas);}
+.di-info{font-family:var(--fu);font-size:.65rem;color:var(--redup);margin-top:2px;}
+.di-arrow{font-size:1rem;color:var(--redup);}
+.drawer-kosong{text-align:center;padding:40px;font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--redup);}
+
+/* ANIMASI */
+@keyframes naik{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .55s,transform .55s;}
+.rv.terlihat{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:900px){.koleksi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){
+  nav{padding:0 16px;}
+  .nav-kanan{display:none;}
+  .nav-burger{display:flex;}
+  .nav-brand-sub{max-width:200px;font-size:.55rem;}
+  .hero-hitam{padding:40px 20px 28px;}
+  .hero-krem{padding:22px 20px;}
+  .stats-bar{grid-template-columns:repeat(3,1fr);}
+  .stat-item:nth-child(3){border-right:none;}
+  .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
+  .stats-bawah{grid-template-columns:repeat(3,1fr);}
+  .stats-bawah .stat-item:nth-child(3){border-right:none;}
+  .stats-bawah .stat-item:nth-child(4){grid-column:1/span 2;border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bawah .stat-item:nth-child(5){grid-column:3/span 1;border-right:none;border-top:1px solid var(--border);}
+  .cara-header{padding:40px 20px 32px;}
+  .cara-grid{grid-template-columns:1fr;}
+  .cara-item{border-bottom:1px solid var(--border);}
+  .cara-item:last-child{border-bottom:none;}
+  .koleksi-header{padding:40px 20px 28px;}
+  .koleksi-grid{grid-template-columns:repeat(2,1fr);}
+  .kota-row{padding:10px 20px;}
+  footer{padding:32px 20px;}
+  .ft{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:420px){
+  .koleksi-grid{grid-template-columns:1fr;}
+  .stats-bar,.stats-bawah{grid-template-columns:repeat(2,1fr);}
+  .stats-bar .stat-item:nth-child(3),
+  .stats-bawah .stat-item:nth-child(3){border-right:1px solid var(--border);border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(4),
+  .stats-bawah .stat-item:nth-child(4){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
+  .stats-bar .stat-item:nth-child(5),
+  .stats-bawah .stat-item:nth-child(5){grid-column:auto;border-right:none;border-top:1px solid var(--border);}
+}
+
+.seo-section{padding:56px 32px;border-top:1px solid #2a2a2a;background:#141414;}
+.seo-inner{max-width:900px;margin:0 auto;}
+.seo-tag{font-family:"Inter",sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.4em;text-transform:uppercase;color:#C9A84C;display:block;margin-bottom:14px;}
+.seo-h2{font-family:"Bebas Neue",sans-serif;font-size:clamp(2rem,5vw,3.5rem);letter-spacing:.04em;line-height:.95;color:#F5F0E8;margin-bottom:24px;}
+.seo-body{font-size:.88rem;line-height:1.85;color:#ddd;margin-bottom:20px;}
+.seo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#2a2a2a;margin-top:32px;}
+.seo-item{background:#141414;padding:28px 24px;}
+.seo-item h3{font-family:"Bebas Neue",sans-serif;font-size:1.2rem;letter-spacing:.08em;color:#F5F0E8;margin-bottom:10px;}
+.seo-item p{font-size:.78rem;line-height:1.7;color:#aaa;}
+.seo-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px;}
+.seo-links a{font-family:"Inter",sans-serif;font-size:.62rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:8px 16px;border:1px solid #2a2a2a;color:#ddd;text-decoration:none;transition:all .2s;}
+.seo-links a:hover{border-color:#C9A84C;color:#C9A84C;}
+.faq-list{margin-top:8px;border-top:1px solid #2a2a2a;}
+.faq-item{border-bottom:1px solid #2a2a2a;}
+.faq-item summary{font-family:"Montserrat",sans-serif;font-size:.9rem;font-weight:600;color:#F5F0E8;padding:18px 4px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;}
+.faq-item summary::-webkit-details-marker{display:none;}
+.faq-item summary::after{content:"+";font-family:"Bebas Neue",sans-serif;font-size:1.3rem;color:#C9A84C;flex-shrink:0;transition:transform .2s;}
+.faq-item[open] summary::after{transform:rotate(45deg);}
+.faq-item p{font-size:.82rem;line-height:1.8;color:#aaa;padding:0 4px 20px;}
+.faq-item img{width:100%;height:auto;border-radius:8px;margin:8px 0 14px;display:block;}
+.seo-body img{width:100%;height:auto;border-radius:8px;margin:16px 0;display:block;}
+@media(max-width:768px){.seo-section{padding:40px 20px;}.seo-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-brand">
+    <div class="nav-brand-nama">BLUMB<span>✦</span>NG ID</div>
+    <div class="nav-brand-sub">Independent T-Shirt Studio & Screen Printing — Jeto, Klaten, Indonesia since 2022</div>
+  </a>
+  <div class="nav-kanan">
+    <a href="/karya" data-i18n="nav_koleksi">Koleksi</a>
+    <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+    <a href="/kemitraan">Kemitraan</a>
+    <a href="/blog">Blog</a>
+    <a href="/about" data-i18n="nav_tentang">Tentang</a>
+    <div class="lang-toggle">
+      <button class="lang-btn aktif" id="btn-id" onclick="setLang('id')">ID</button>
+      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+  <button class="nav-burger" id="burger" onclick="toggleNav()">
+    <span id="burger-ikon">☰</span>
+    <span style="font-size:.5rem;letter-spacing:.2em;">MENU</span>
+  </button>
+</nav>
+<div class="nav-mob" id="nav-mob">
+  <a href="/karya" onclick="toggleNav()" data-i18n="nav_koleksi">Koleksi</a>
+  <a href="/sparks" onclick="toggleNav()" data-i18n="nav_perjalanan">Perjalanan</a>
+  <a href="/kemitraan" onclick="toggleNav()">Kemitraan</a>
+  <a href="/blog" onclick="toggleNav()">Blog</a>
+  <a href="/about" onclick="toggleNav()" data-i18n="nav_tentang">Tentang</a>
+  <a href="https://wa.me/6281234561146" onclick="toggleNav()">✦ Order Sekarang</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-hitam">
+    <div class="hero-tag" data-i18n="hero_tag">Independent T-Shirt Studio · Est. 2022</div>
+    <h1 class="hero-h1" data-i18n="hero_h1">Kaos yang mengingat<br>ke mana saja kamu pergi</h1>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <a href="/karya" class="stat-item klik">
+      <div class="stat-num" id="stat-garment"><!--LGS:GARMENT-->899<!--/LGS:GARMENT--></div>
+      <div class="stat-lbl" data-i18n="stat_kaos">Kaos Terdaftar</div>
+    </a>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')">
+      <div class="stat-num" id="stat-berjalan"><!--LGS:BERJALAN-->208<!--/LGS:BERJALAN--></div>
+      <div class="stat-lbl" data-i18n="stat_berjalan">Sudah Berjalan</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" id="stat-scan"><!--LGS:SCAN-->275<!--/LGS:SCAN--></div>
+      <div class="stat-lbl" data-i18n="stat_scan">Perjalanan Tersimpan</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')">
+      <div class="stat-num" id="stat-kota"><!--LGS:KOTA-->38<!--/LGS:KOTA--></div>
+      <div class="stat-lbl" data-i18n="stat_kota">Kota</div>
+    </div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')">
+      <div class="stat-num" id="stat-negara"><!--LGS:NEGARA-->3<!--/LGS:NEGARA--></div>
+      <div class="stat-lbl" data-i18n="stat_negara">Negara</div>
+    </div>
+  </div>
+
+  <!-- 3 TOMBOL -->
+  <div class="hero-tombol">
+    <a href="/sparks" class="ht-item primer">
+      <span class="ht-ikon">◎</span>
+      <span class="ht-lbl" data-i18n="ht_peta">Lihat Peta</span>
+    </a>
+    <a href="/karya" class="ht-item">
+      <span class="ht-ikon">✦</span>
+      <span class="ht-lbl" data-i18n="ht_koleksi">Koleksi</span>
+    </a>
+    <a href="https://www.tiktok.com/@blumbang.id" class="ht-item" target="_blank" rel="noopener">
+      <span class="ht-ikon">▶</span>
+      <span class="ht-lbl" data-i18n="ht_tiktok">TikTok</span>
+    </a>
+  </div>
+
+  <!-- BOX KREM -->
+  <div class="hero-krem">
+    <p class="hero-sub" data-i18n="hero_sub">Scan QR tiap kali kamu sampai di tempat baru. Kaos ini menyimpan tiap tempat yang kalian datangi — selamanya.</p>
+  </div>
+</section>
+
+<!-- SPARK MAP -->
+<section id="s-peta">
+  <a href="/sparks" id="peta-wrap" style="display:block;cursor:pointer;text-decoration:none;">
+    <div id="peta-loading" data-i18n="peta_loading">Peta perjalanan live — kaos Blumbang ID sudah dipindai di <!--LGS:KOTA-->38<!--/LGS:KOTA--> kota di <!--LGS:NEGARA-->3<!--/LGS:NEGARA--> negara, dari Klaten sampai Tokyo dan Seychelles.</div>
+    <svg id="d3-map"></svg>
+  </a>
+  <div class="kota-row" id="kota-row">
+    <div class="kota-tag origin"><span class="kota-dot"></span>Klaten · Origin</div>
+  </div>
+</section>
+
+<!-- SCAN TERBARU -->
+<a id="terbaru-wrap" href="#" style="display:block;background:var(--hitam);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 24px;text-align:center;text-decoration:none;cursor:pointer;transition:background .2s;" onmouseover="this.style.background='var(--charcoal)'" onmouseout="this.style.background='var(--hitam)'">
+  <span id="terbaru-teks" style="font-family:var(--fu);font-size:.72rem;letter-spacing:.15em;color:var(--emas);"></span>
+</a>
+
+<!-- HALL OF FAME -->
+<section class="hof-hp" id="hof-hp-section" style="display:none;">
+  <div class="hof-hp-inner">
+    <div class="hof-hp-title">✦ HALL OF FAME</div>
+    <div class="hof-hp-sub">Kaos dengan perjalanan paling luar biasa</div>
+    <div class="hof-hp-grid">
+      <div>
+        <div class="hof-hp-col-title">Paling Jauh dari Blumbang ID</div>
+        <div id="hof-hp-jauh"></div>
+      </div>
+      <div>
+        <div class="hof-hp-col-title">Paling Banyak Kota</div>
+        <div id="hof-hp-kota"></div>
+      </div>
+    </div>
+    <a href="/sparks" class="hof-hp-link">Lihat Peta Lengkap →</a>
+  </div>
+</section>
+
+<!-- KOLEKSI -->
+<section id="s-koleksi">
+  <div class="koleksi-header">
+    <div>
+      <span class="sec-tag rv" data-i18n="kol_tag">Koleksi</span>
+      <h2 class="sec-h2 rv" data-i18n="kol_h2">JEJAK PRODUKSI.</h2>
+    </div>
+    <a href="/karya" class="btn-emas-outline rv" data-i18n="kol_btn">Lihat Semua →</a>
+  </div>
+  <div class="koleksi-grid">
+    <a href="/karya/insanak-seiye-sekate" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005464990-insanak.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">INSANAK SEIYE SEKATE</div><div class="k-sub">Bapak Bujang · Pontianak</div></div>
+    </a>
+    <a href="/karya/lpk-ai-gakkou" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779420736004-KAOS-LPK-AI-GAKKOU.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LPK AI GAKKOU</div><div class="k-sub">Kaos LPK · Klaten</div></div>
+    </a>
+    <a href="/karya/lpk-ooita" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005407248-ooita.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LPK OOITA</div><div class="k-sub">LPK Ooita Gakkou · Bayat</div></div>
+    </a>
+    <a href="/karya/lensa-borneo-camp-sans" class="k-card">
+      <div class="k-ph" style="aspect-ratio:4/3;background-image:url('https://media.blumbang.id/1779005530313-lebo.webp');background-size:cover;background-position:center;"></div>
+      <div class="k-body"><div class="k-nama">LENSA BORNEO</div><div class="k-sub">Camp Sans · Kalimantan</div></div>
+    </a>
+  </div>
+</section>
+
+<!-- SEO STATIC CONTENT -->
+<section class="seo-section">
+  <div class="seo-inner">
+    <span class="seo-tag">Konveksi & Sablon · Klaten</span>
+    <h2 class="seo-h2">STUDIO KAOS INDEPENDEN<br>DARI JETO, KLATEN.</h2>
+    <p class="seo-body">Blumbang ID adalah workshop sablon dan konveksi kaos custom yang berdiri sejak 2022 di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah. Bukan agen, bukan reseller — produksi langsung di tempat, dikerjakan oleh tim yang sama sejak hari pertama.</p>
+    <p class="seo-body">Kami mengerjakan sablon plastisol, DTF, dan rubber untuk komunitas, sekolah, event, dan brand independen. Melayani order dari Klaten, Solo, Jogja, Banjarbaru, hingga seluruh Indonesia. Setiap kaos dilengkapi QR unik yang menyimpan perjalanan pemiliknya di peta dunia — <a href="/apa-itu-living-garment" style="color:#C9A84C;border-bottom:1px solid rgba(201,168,76,0.4);">Living Garment System</a>.</p>
+    <img src="https://media.blumbang.id/1784112540462-1000250762.webp" alt="Proses heat press kaos custom Class Six Dewastu di workshop Blumbang ID, Jeto Klaten — kolam renang workshop terlihat dari jendela" loading="lazy" width="1200" height="1600">
+    <div class="seo-grid">
+      <div class="seo-item">
+        <h3>SABLON PLASTISOL</h3>
+        <p>Tinta solid, warna tajam, tahan lama. Standar industri untuk kaos komunitas dan event skala menengah ke atas.</p>
+      </div>
+      <div class="seo-item">
+        <h3>SABLON DTF</h3>
+        <p>Direct to Film — ideal untuk desain penuh warna dan gradasi. Fleksibel untuk jumlah kecil tanpa minimum order ketat.</p>
+      </div>
+      <div class="seo-item">
+        <h3>SABLON RUBBER</h3>
+        <p>Hasil matte dan elastis, harga lebih terjangkau untuk order massal. Cocok untuk kaos berwarna gelap dengan desain solid.</p>
+      </div>
+    </div>
+    <div class="seo-links">
+      <a href="/sablon-klaten">Sablon Klaten</a>
+      <a href="/sablon-banjarbaru">Sablon Banjarbaru</a>
+      <a href="/konveksi-klaten">Konveksi Klaten</a>
+      <a href="/kaos-sekolah-klaten">Kaos Kelas</a>
+      <a href="/sablon-satuan-klaten">Sablon Satuan</a>
+      <a href="/karya">Lihat Koleksi</a>
+      <a href="/about">Tentang Tim</a>
+    </div>
+  </div>
+</section>
+<!-- END SEO STATIC CONTENT -->
+
+<!-- FAQ SECTION -->
+<section class="seo-section" id="faq">
+  <div class="seo-inner">
+    <span class="seo-tag">Pertanyaan Umum</span>
+    <h2 class="seo-h2">APA ITU<br>BLUMBANG ID?</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>Apa itu Blumbang ID?</summary>
+        <p>Blumbang ID adalah studio sablon dan konveksi custom yang berdiri sejak 2022 di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah. Blumbang ID dikenal lewat sistem Living Garment — setiap kaos dilengkapi QR unik di label dalam yang menyimpan perjalanan kaos itu setelah dibeli, bukan sekadar asal produksinya.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apa itu Living Garment?</summary>
+        <p>Living Garment adalah sistem identitas kaos dari Blumbang ID. Setiap kaos dilengkapi QR code unik di label dalam yang menyimpan perjalanan kaos tersebut setelah dibeli — kota, waktu, dan cerita pemiliknya. Berbeda dari QR biasa yang menunjukkan asal produksi, Living Garment menunjukkan ke mana kaos itu pergi. Satu kaos, satu QR, perjalanan tanpa akhir.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Bagaimana cara kerja QR di kaos Blumbang ID?</summary>
+        <p>QR unik tertempel di label dalam setiap kaos Blumbang ID. Saat discan menggunakan kamera ponsel — tanpa perlu aplikasi khusus — lokasi dan waktu scan tersebut tersimpan dan ditampilkan di peta perjalanan kaos, dari Klaten hingga ke kota mana pun kaos itu dibawa.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apakah Blumbang ID sama dengan Blumbang Sabranglor di Trucuk?</summary>
+        <p>Tidak. Blumbang ID adalah brand studio sablon dan konveksi kaos custom di Jeto, Gaden, Trucuk, Klaten. Blumbang Sabranglor adalah tempat wisata pemancingan di Desa Sabranglor, Trucuk, Klaten — sebuah lokasi yang berbeda dan tidak berafiliasi dengan Blumbang ID.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apakah Blumbang ID menerima pesanan atribut partai politik atau kampanye?</summary>
+        <p>Tidak. Blumbang ID tidak menerima pesanan kaos, seragam, atau atribut untuk kepentingan partai politik maupun kampanye calon legislatif (caleg). Di luar itu, Blumbang ID terbuka untuk semua kalangan — termasuk pesanan dari komunitas dan rumah ibadah lintas agama (masjid, gereja, dan komunitas keagamaan lainnya) tanpa perbedaan.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Siapa yang membuat kaos di Blumbang ID?</summary>
+        <img src="https://media.blumbang.id/1784114417745-1000250761.webp" alt="Bang Arie, Head of Screen Printing Blumbang ID, menyiapkan puluhan kaos custom bernomor di workshop Jeto Klaten" loading="lazy" width="1600" height="2000">
+        <p>Blumbang ID didirikan oleh Betchak sejak 2022. Proses sablon dikepalai oleh Bang Arie, yang aktif menyablon sejak 1998. Blumbang ID memiliki rating 5.0 dari 35 ulasan di Google Maps per pertengahan 2026, dan foto workshop serta proses produksi bisa dilihat langsung di sana: <a href="https://g.page/r/CU_3657HCSfeEAI/review" style="color:#C9A84C;border-bottom:1px solid rgba(201,168,76,0.4);">lihat ulasan Google Maps</a>.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Apa yang unik dari workshop Blumbang ID?</summary>
+        <img src="https://media.blumbang.id/1784120774105-1000250760.webp" alt="Kolam renang di workshop Blumbang ID, Jeto Klaten, digunakan anak-anak pelanggan sambil menunggu pesanan sablon selesai" loading="lazy" width="1600" height="2133">
+        <p>Selain ruang produksi sablon dan konveksi, workshop Blumbang ID di Jeto, Klaten juga punya kolam renang yang bisa digunakan pelanggan menunggu pesanan selesai — sesuatu yang jarang ditemukan di studio sablon pada umumnya. Beberapa pelanggan bahkan membawa keluarga sambil menunggu proses produksi, seperti yang diceritakan di beberapa ulasan Google Maps Blumbang ID.</p>
+      </details>
+    </div>
+  </div>
+</section>
+<!-- END FAQ SECTION -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">BLUMB<span>✦</span>NG ID</div>
+    <div class="ft-links">
+      <a href="/karya" data-i18n="nav_koleksi">Koleksi</a>
+      <a href="/sparks" data-i18n="nav_perjalanan">Perjalanan</a>
+      <a href="/kemitraan">Kemitraan</a>
+      <a href="/blog">Blog</a>
+      <a href="/about" data-i18n="nav_tentang">Tentang</a>
+      <a href="/ria">Ria AI</a>
+      <a href="https://www.tiktok.com/@blumbang.id" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="ft-links" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <span style="font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--emas-dim);">Layanan →</span>
+      <a href="/sablon-klaten">Sablon Klaten</a>
+      <a href="/sablon-banjarbaru">Sablon Banjarbaru</a>
+      <a href="/konveksi-klaten">Konveksi Klaten</a>
+      <a href="/kaos-sekolah-klaten">Kaos Kelas</a>
+      <a href="/sablon-satuan-klaten">Sablon Satuan</a>
+    <div class="ft-links" style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+      <span style="font-family:var(--fu);font-size:.55rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:var(--emas-dim);">Global →</span>
+      <a href="https://blumbang.com" target="_blank" rel="noopener">Blumbang.com</a>
+      <a href="https://blumbang.com/makers" target="_blank" rel="noopener">Craft Makers</a>
+    </div>
+    <div class="ft-copy">© 2026 Blumbang ID · Jeto RT 32 RW 10, Gaden, Trucuk, Klaten, Jawa Tengah</div>
+  </div>
+<!-- SEO Internal Links Kecamatan -->
+<div style="display:none;">
+  <a href="/sablon-trucuk">Sablon Trucuk</a>
+  <a href="/sablon-klaten">Sablon Klaten</a>
+</div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/6281234561146" class="wa-float" target="_blank" rel="noopener" title="Chat WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+    <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.555 4.122 1.523 5.854L.057 23.882a.5.5 0 00.611.611l6.048-1.461A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.93 0-3.73-.5-5.3-1.377l-.38-.217-3.94.952.97-3.836-.23-.386A9.963 9.963 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+  </svg>
+</a>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-judul" id="drawer-judul">—</div>
+    <button class="drawer-tutup" onclick="tutupDrawer()">✕ Tutup</button>
+  </div>
+  <div class="drawer-list" id="drawer-list"></div>
+</div>
+
+<script>
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+const WORKER_URL='https://catalog-builder.blmbng-id.workers.dev';
+let _sparks=[];
+
+const T={
+  id:{
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'Kaos yang mengingat<br>ke mana saja kamu pergi',
+    hero_sub:'Scan QR tiap kali kamu sampai di tempat baru. Kaos ini menyimpan tiap tempat yang kalian datangi — selamanya.',
+    stat_kaos:'Kaos Terdaftar',stat_berjalan:'Sudah Berjalan',stat_scan:'Perjalanan Tersimpan',stat_kota:'Kota',stat_negara:'Negara',
+    peta_loading:'Peta perjalanan live — kaos Blumbang ID sudah dipindai di <!--LGS:KOTA-->38<!--/LGS:KOTA--> kota di <!--LGS:NEGARA-->3<!--/LGS:NEGARA--> negara, dari Klaten sampai Tokyo dan Seychelles.',
+    ck_tag:'Cara Kerja',ck_h2:'CARA KERJANYA SEDERHANA',
+    ck1_judul:'Beli Kaos',ck1_desc:'Pilih seri koleksi Blumbang ID. Setiap kaos punya ID unik yang tersimpan selamanya.',ck1_link:'Lihat Koleksi →',
+    ck2_judul:'Scan QR',ck2_desc:'QR ada di label bagian dalam. Scan saat kamu mengunjungi tempat baru — tidak perlu app khusus.',ck2_link:'Lihat Contoh →',
+    ck3_judul:'Lihat Perjalanan',ck3_desc:'Setiap scan menyimpan posisimu di peta dunia. Perjalanan dan ceritanya tersimpan selamanya.',ck3_link:'Lihat Peta →',
+    kol_tag:'Koleksi',kol_h2:'JEJAK PRODUKSI.',kol_btn:'Lihat Semua →',
+    ht_peta:'Lihat Peta',ht_koleksi:'Koleksi',ht_tiktok:'TikTok',
+    nav_koleksi:'Koleksi',nav_perjalanan:'Perjalanan',nav_tentang:'Tentang',
+  },
+  en:{
+    hero_tag:'Independent T-Shirt Studio · Est. 2022',
+    hero_h1:'The shirt that remembers<br>everywhere you go',
+    hero_sub:'Scan the QR each time you reach somewhere new. This shirt keeps every place you\'ve been — forever.',
+    stat_kaos:'Shirts Registered',stat_berjalan:'Already Traveling',stat_scan:'Journeys Recorded',stat_kota:'Cities',stat_negara:'Countries',
+    peta_loading:'Live journey map — Blumbang ID shirts have been scanned in <!--LGS:KOTA-->38<!--/LGS:KOTA--> cities across <!--LGS:NEGARA-->3<!--/LGS:NEGARA--> countries, from Klaten to Tokyo and the Seychelles.',
+    ck_tag:'How It Works',ck_h2:"IT'S SIMPLE.",
+    ck1_judul:'Buy a Shirt',ck1_desc:"Choose from Blumbang ID's collections. Each shirt has a unique ID recorded forever.",ck1_link:'View Collection →',
+    ck2_judul:'Scan QR',ck2_desc:'QR is on the inner label. Scan when you visit a new place — no special app needed.',ck2_link:'See Example →',
+    ck3_judul:'See Your Journey',ck3_desc:'Each scan records your position on the world map. Your journey is saved forever.',ck3_link:'See Map →',
+    kol_tag:'Collection',kol_h2:'OUR WORK.',kol_btn:'View All →',
+    ht_peta:'View Map',ht_koleksi:'Collection',ht_tiktok:'TikTok',
+    nav_koleksi:'Collection',nav_perjalanan:'Journey',nav_tentang:'About',
+  }
+};
+let lang=localStorage.getItem('blumbang_lang')||'id';
+
+function setLang(l){
+  lang=l;localStorage.setItem('blumbang_lang',l);
+  document.getElementById('btn-id').classList.toggle('aktif',l==='id');
+  document.getElementById('btn-en').classList.toggle('aktif',l==='en');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(T[l][k]!==undefined) el.innerHTML=T[l][k];
+  });
+}
+
+function toggleNav(){
+  const m=document.getElementById('nav-mob'),i=document.getElementById('burger-ikon');
+  m.classList.toggle('buka');i.textContent=m.classList.contains('buka')?'✕':'☰';
+}
+
+function driveUrl(u){
+  if(!u) return '';
+  if(u.includes('media.blumbang.id')) return u;
+  const m=u.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return m?'https://drive.google.com/thumbnail?id='+m[1]+'&sz=w800':u;
+}
+
+function animNum(id,target){
+  const el=document.getElementById(id);if(!el) return;
+  let cur=0;const step=Math.max(1,Math.ceil(target/30));
+  const t=setInterval(()=>{cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+async function muatStats(){
+  try{
+    const[txtG,txtS]=await Promise.all([
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS').then(r=>r.text()),
+      fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text())
+    ]);
+    const pG=txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const pS=txtS.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    const barisG=pG?JSON.parse(pG[1]).table.rows||[]:[];
+    const barisS=pS?JSON.parse(pS[1]).table.rows||[]:[];
+    _sparks=barisS;
+    const totalGarment=barisG.filter(r=>r.c[0]?.v).length||350;
+    const kotaSet=new Set(['Klaten']),negaraSet=new Set(['Indonesia']),garmentJalan=new Set();
+    let totalScan=0;
+    barisS.forEach(r=>{
+      const id=r.c[0]?.v,c=r.c[2]?.v;
+      if(id) garmentJalan.add(id);
+      if(c){totalScan++;kotaSet.add(c.split(',')[0].trim());if(c.includes(','))negaraSet.add(c.split(',').pop().trim());}
+    });
+    // Isi stats atas dan bawah sekaligus
+    const pairs=[['stat-garment','stat-garment2',totalGarment],['stat-berjalan','stat-berjalan2',garmentJalan.size],['stat-scan','stat-scan2',totalScan],['stat-kota','stat-kota2',kotaSet.size],['stat-negara','stat-negara2',negaraSet.size]];
+    pairs.forEach(([id1,id2,val])=>{animNum(id1,val);animNum(id2,val);});
+  }catch(e){
+    [['stat-garment','stat-garment2','350'],['stat-berjalan','stat-berjalan2','—'],['stat-scan','stat-scan2','—'],['stat-kota','stat-kota2','—'],['stat-negara','stat-negara2','—']]
+      .forEach(([id1,id2,v])=>{
+        const e1=document.getElementById(id1),e2=document.getElementById(id2);
+        if(e1)e1.textContent=v;if(e2)e2.textContent=v;
+      });
+  }
+}
+
+
+
+// PETA
+let _petaLoaded=false;
+const CITY_COORDS={
+  'klaten':{ll:[110.6,-7.7],label:'Klaten'},'yogyakarta':{ll:[110.364,-7.803],label:'Yogyakarta'},
+  'jogja':{ll:[110.364,-7.803],label:'Yogyakarta'},'jakarta':{ll:[106.845,-6.208],label:'Jakarta'},
+  'bandung':{ll:[107.609,-6.917],label:'Bandung'},'surabaya':{ll:[112.752,-7.258],label:'Surabaya'},
+  'semarang':{ll:[110.423,-6.966],label:'Semarang'},'solo':{ll:[110.827,-7.574],label:'Solo'},
+  'surakarta':{ll:[110.827,-7.574],label:'Solo'},'bali':{ll:[115.092,-8.34],label:'Bali'},
+  'denpasar':{ll:[115.212,-8.67],label:'Denpasar'},'medan':{ll:[98.679,3.595],label:'Medan'},
+  'makassar':{ll:[119.432,-5.147],label:'Makassar'},'malang':{ll:[112.632,-7.983],label:'Malang'},
+  'pontianak':{ll:[109.333,-0.02],label:'Pontianak'},'manado':{ll:[124.842,1.487],label:'Manado'},
+  'banjarmasin':{ll:[114.592,-3.317],label:'Banjarmasin'},'banjarbaru':{ll:[114.831,-3.442],label:'Banjarbaru'},
+  'samarinda':{ll:[117.136,-0.502],label:'Samarinda'},'balikpapan':{ll:[116.854,-1.268],label:'Balikpapan'},
+  'singapore':{ll:[103.82,1.352],label:'Singapore'},'singapura':{ll:[103.82,1.352],label:'Singapore'},
+  'kuala lumpur':{ll:[101.686,3.139],label:'Kuala Lumpur'},'tokyo':{ll:[139.69,35.69],label:'Tokyo'},
+  'osaka':{ll:[135.502,34.694],label:'Osaka'},'seoul':{ll:[126.978,37.566],label:'Seoul'},
+  'bangkok':{ll:[100.523,13.736],label:'Bangkok'},'sydney':{ll:[151.21,-33.87],label:'Sydney'},
+  'london':{ll:[-0.118,51.508],label:'London'},'new york':{ll:[-74.006,40.713],label:'New York'},
+  'seychelles':{ll:[55.492,-4.679],label:'Seychelles'},'ile au cerf':{ll:[55.533,-4.683],label:'Ile Au Cerf'},
+  'boyolali':{ll:[110.599,-7.534],label:'Boyolali'},'klaten':{ll:[110.6,-7.7],label:'Klaten'},
+  'sukoharjo':{ll:[110.833,-7.683],label:'Sukoharjo'},'wonogiri':{ll:[110.922,-7.813],label:'Wonogiri'},
+  'sleman':{ll:[110.354,-7.717],label:'Sleman'},'wonosobo':{ll:[109.9,-7.362],label:'Wonosobo'},
+  'banyumas':{ll:[109.228,-7.513],label:'Banyumas'},'kediri':{ll:[112.018,-7.816],label:'Kediri'},
+  'blora':{ll:[111.413,-6.962],label:'Blora'},
+};
+function getCityCoord(str){
+  if(!str) return null;
+  const lower=str.toLowerCase();
+  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
+  for(const key of keys){if(lower.includes(key)) return CITY_COORDS[key];}
+  return null;
+}
+
+// Cache geocoding
+var _geoCache=null;
+function getGeoCache(){
+  if(_geoCache) return _geoCache;
+  try{_geoCache=JSON.parse(sessionStorage.getItem('blumbang_geo_hp')||'{}');}
+  catch(e){_geoCache={};}
+  return _geoCache;
+}
+function setGeoCache(key,val){
+  var cache=getGeoCache();cache[key]=val;
+  try{sessionStorage.setItem('blumbang_geo_hp',JSON.stringify(cache));}catch(e){}
+}
+
+async function geocodeCity(cityStr){
+  if(!cityStr) return null;
+  var fromDict=getCityCoord(cityStr);
+  if(fromDict) return fromDict;
+  var stripped=cityStr.replace(/^kota\s+/i,'').trim();
+  if(stripped!==cityStr){var fd=getCityCoord(stripped);if(fd) return fd;}
+  var cache=getGeoCache();
+  var cacheKey=cityStr.toLowerCase().trim();
+  if(cache[cacheKey]!==undefined) return cache[cacheKey];
+  try{
+    var query=cityStr.split(',')[0].trim();
+    var res=await fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(query)+'&format=json&limit=1&accept-language=en',{headers:{'User-Agent':'blumbang.id/1.0'}});
+    var data=await res.json();
+    if(data&&data[0]){
+      var coord={ll:[parseFloat(data[0].lon),parseFloat(data[0].lat)],label:data[0].display_name.split(',')[0].trim()};
+      setGeoCache(cacheKey,coord);
+      return coord;
+    }
+  }catch(e){}
+  setGeoCache(cacheKey,null);
+  return null;
+}
+
+function typewriter(el, text, speed=40){
+  el.textContent='';
+  let i=0;
+  const tick=()=>{if(i<text.length){el.textContent+=text[i++];setTimeout(tick,speed);}};
+  tick();
+}
+
+async function renderPeta(rows,world){
+  const KLATEN=[110.6,-7.7];
+  const wrap=document.getElementById('peta-wrap');
+  const w=wrap.offsetWidth||window.innerWidth,h=Math.min(w*0.55,320);
+  wrap.style.height=h+'px';
+
+  // Kumpulkan data kota
+  const cityMap={};
+  rows.forEach(r=>{
+    const c=r.c[2]?.v;
+    if(!c) return;
+    const coord=getCityCoord(c);if(!coord) return;
+    const key=coord.label;
+    if(!cityMap[key])cityMap[key]={coord,count:0};
+    cityMap[key].count++;
+  });
+
+  // Scan terbaru - label ikut Sheet, koordinat dari geocoding
+  let latestCity='', latestId='';
+  for(let i=rows.length-1;i>=0;i--){
+    const c=rows[i].c[2]?.v;
+    const id=rows[i].c[0]?.v;
+    if(!c||!id) continue;
+    const coord=await geocodeCity(c);
+    if(coord){latestCity=c.split(',')[0].trim();latestId=id;break;}
+  }
+
+  // Typewriter terbaru
+  if(latestCity && latestId){
+    const el=document.getElementById('terbaru-teks');
+    const wrap=document.getElementById('terbaru-wrap');
+    if(wrap) wrap.href='/id/'+encodeURIComponent(latestId);
+    setTimeout(()=>typewriter(el,'✦ Scan terbaru: '+latestId+' · '+latestCity),800);
+  }
+
+  // Kota tags
+  const kotaRow=document.getElementById('kota-row');
+  Object.values(cityMap).slice(0,8).forEach(item=>{
+    const d=document.createElement('div');
+    d.className='kota-tag';
+    d.innerHTML=`<span class="kota-dot"></span>${item.coord.label}`;
+    kotaRow.appendChild(d);
+  });
+
+  // Render SVG
+  const svg=d3.select('#d3-map').attr('width',w).attr('height',h).attr('viewBox',`0 0 ${w} ${h}`);
+  const allPts=[KLATEN,...Object.values(cityMap).map(x=>x.coord.ll)];
+  const ptGeo={type:'FeatureCollection',features:allPts.map(pt=>({type:'Feature',geometry:{type:'Point',coordinates:pt},properties:{}}))};
+  const proj=d3.geoMercator().fitExtent([[32,16],[w-32,h-16]],ptGeo);
+  const path=d3.geoPath().projection(proj);
+
+  // Peta dunia
+  svg.append('g').selectAll('path').data(topojson.feature(world,world.objects.countries).features).join('path').attr('d',path).attr('fill','#0d2137').attr('stroke','#1a3a5c').attr('stroke-width','0.4');
+
+  // Garis dari Klaten ke setiap kota
+  const[kx,ky]=proj(KLATEN);
+  Object.values(cityMap).forEach(item=>{
+    const[cx,cy]=proj(item.coord.ll);
+    svg.append('line')
+      .attr('x1',kx).attr('y1',ky).attr('x2',cx).attr('y2',cy)
+      .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.8')
+      .attr('stroke-dasharray','3,3');
+  });
+
+  // Titik kota dengan pulse
+  Object.values(cityMap).forEach(item=>{
+    const[cx,cy]=proj(item.coord.ll);
+    function br(){svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','none').attr('stroke','rgba(201,168,76,0.7)').attr('stroke-width','1').transition().duration(1800).ease(d3.easeLinear).attr('r',12).attr('stroke-opacity',0).remove();setTimeout(br,1800+Math.random()*1000);}br();
+    svg.append('circle').attr('cx',cx).attr('cy',cy).attr('r',3).attr('fill','#C9A84C').attr('stroke','rgba(255,255,255,0.4)').attr('stroke-width','0.5');
+  });
+
+  // Klaten origin pulse lebih besar
+  function bk(){svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','none').attr('stroke','rgba(201,168,76,0.9)').attr('stroke-width','1.5').transition().duration(2500).ease(d3.easeLinear).attr('r',22).attr('stroke-opacity',0).remove();setTimeout(bk,2500);}bk();
+  svg.append('circle').attr('cx',kx).attr('cy',ky).attr('r',5).attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1.5');
+
+  document.getElementById('peta-loading').style.display='none';
+}
+function loadPeta(){
+  if(_petaLoaded) return;_petaLoaded=true;
+  const doLoad=()=>{
+    Promise.all([
+      _sparks.length?Promise.resolve(_sparks):fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text()).then(txt=>{const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);return m?JSON.parse(m[1]).table.rows||[]:[]; }),
+      fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json())
+    ]).then(([rows,world])=>{if(!_sparks.length)_sparks=rows;renderPeta(rows,world);}).catch(()=>{document.getElementById('peta-loading').textContent='—';});
+  };
+  if(!window.d3){
+    const s1=document.createElement('script');s1.src='https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    s1.onload=()=>{const s2=document.createElement('script');s2.src='https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js';s2.onload=doLoad;document.head.appendChild(s2);};
+    document.head.appendChild(s1);
+  } else doLoad();
+}
+
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('terlihat');obs.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+}
+function initPetaObserver(){
+  const obs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting){loadPeta();obs.disconnect();}},{rootMargin:'300px'});
+  const el=document.getElementById('s-peta');if(el) obs.observe(el);
+}
+
+
+// HISTORY API — drawer
+function bukaDrawer(tipe){
+  const label={berjalan:'Kaos yang Sudah Berjalan',kota:'Kota yang Sudah Discan',negara:'Negara yang Sudah Discan'};
+  document.getElementById('drawer-judul').textContent=label[tipe]||tipe;
+  document.getElementById('drawer-list').innerHTML='<div class="drawer-kosong">Memuat...</div>';
+  document.getElementById('drawer-overlay').classList.add('aktif');
+  document.getElementById('drawer').classList.add('aktif');
+  document.body.style.overflow='hidden';
+  history.pushState({drawer:tipe},'','#'+tipe);
+  isiDrawer(tipe);
+}
+function tutupDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('aktif');
+  document.getElementById('drawer').classList.remove('aktif');
+  document.body.style.overflow='';
+  if(location.hash)history.pushState({},'',location.pathname);
+}
+window.addEventListener('popstate',function(e){
+  const overlay=document.getElementById('drawer-overlay');
+  if(overlay&&overlay.classList.contains('aktif')){
+    document.getElementById('drawer-overlay').classList.remove('aktif');
+    document.getElementById('drawer').classList.remove('aktif');
+    document.body.style.overflow='';
+  }
+});
+
+async function isiDrawer(tipe){
+  const list=document.getElementById('drawer-list');
+  let rows=_sparks;
+  if(!rows.length){
+    try{const txt=await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(r=>r.text());const m=txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);rows=m?JSON.parse(m[1]).table.rows||[]:[];_sparks=rows;}
+    catch(e){list.innerHTML='<div class="drawer-kosong">Gagal memuat data</div>';return;}
+  }
+  if(tipe==='berjalan'){
+    const map={};rows.forEach(r=>{const id=r.c[0]?.v,c=r.c[2]?.v;if(!id) return;if(!map[id])map[id]={id,kota:[],count:0};map[id].count++;if(c)map[id].kota.push(c.split(',')[0].trim());});
+    const arr=Object.values(map);if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
+    list.innerHTML=arr.map(g=>{const k=[...new Set(g.kota)].slice(0,3).join(' → ');return`<a href="/id/${g.id}" class="drawer-item"><div><div class="di-id">${g.id}</div><div class="di-info">${g.count} scan · ${k||'—'}</div></div><div class="di-arrow">›</div></a>`;}).join('');
+  }
+  if(tipe==='kota'){
+    const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const k=c.split(',')[0].trim();cnt[k]=(cnt[k]||0)+1;});cnt['Klaten']=cnt['Klaten']||0;
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
+    list.innerHTML=sorted.map(([k,n])=>`<div class="drawer-item"><div><div class="di-id">${k}</div><div class="di-info">${n>0?n+' scan':'Origin'}</div></div></div>`).join('');
+  }
+  if(tipe==='negara'){
+    const cnt={};rows.forEach(r=>{const c=r.c[2]?.v;if(!c) return;const parts=c.split(',');const n=parts.length>1?parts.pop().trim():'Indonesia';cnt[n]=(cnt[n]||0)+1;});
+    const sorted=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
+    list.innerHTML=sorted.map(([n,c])=>`<div class="drawer-item"><div><div class="di-id">${n}</div><div class="di-info">${c} scan</div></div></div>`).join('');
+  }
+}
+
+async function muatHOF(){
+  try {
+    const res = await fetch('/sparks/hof');
+    const html = await res.text();
+    const m = html.match(/<script id="hof-data" type="application\/json">([\s\S]*?)<\/script>/);
+    if(!m) return;
+    const hof = JSON.parse(m[1]);
+    const jauh = document.getElementById('hof-hp-jauh');
+    const kota = document.getElementById('hof-hp-kota');
+    const section = document.getElementById('hof-hp-section');
+    if(!jauh||!kota||!section) return;
+    jauh.innerHTML = hof.terjauh.slice(0,5).map(function(g,i){
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="hof-hp-item"><div class="hof-hp-rank">#'+(i+1)+'</div><div><div class="hof-hp-nama">'+g.nama+' · #'+g.nomor+'</div><div class="hof-hp-info">'+g.jarak+' km dari Blumbang ID</div></div></a>';
+    }).join('');
+    kota.innerHTML = hof.terbanyak.slice(0,5).map(function(g,i){
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="hof-hp-item"><div class="hof-hp-rank">#'+(i+1)+'</div><div><div class="hof-hp-nama">'+g.nama+' · #'+g.nomor+'</div><div class="hof-hp-info">'+g.kotaUnik+' kota unik</div></div></a>';
+    }).join('');
+    section.style.display = 'block';
+  } catch(e) {}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  setLang(lang);muatStats();initReveal();initPetaObserver();muatHOF();
+});
+</script>
+</body>
+</html>

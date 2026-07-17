@@ -3,8 +3,10 @@
 // Mengisi angka statistik statis di index.html (marker LGS)
 // supaya bukti sosial terbaca crawler/AI tanpa JavaScript.
 //
-// Rumus PERSIS sama dengan muatStats() di index.html —
-// jangan ubah salah satu tanpa ubah keduanya.
+// Rumus hitung diambil dari lib-stats.js — SUMBER TUNGGAL,
+// dipakai bersama oleh build-sparks.js dan inject-sparks-desc.js
+// supaya angka di /sparks dan homepage dijamin identik secara
+// struktural, bukan cuma dijaga manual lewat komentar.
 //
 // Dipanggil oleh: .github/workflows/sparks-build.yml (harian)
 // Bisa juga dijalankan manual: node inject-stats.js
@@ -18,6 +20,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { hitungStatistik } = require('./lib-stats.js');
 
 const SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 const INDEX_PATH = path.join(__dirname, 'index.html');
@@ -74,29 +77,14 @@ async function main() {
     return;
   }
 
-  // ── 3. Hitung — rumus identik dengan muatStats() di index.html ──
-  const totalGarment = barisG.filter(r => r.c[0]?.v).length;
-  const kotaSet = new Set(['Klaten']);
-  const negaraSet = new Set(['Indonesia']);
-  const garmentJalan = new Set();
-  let totalScan = 0;
-
-  barisS.forEach(r => {
-    const id = r.c[0]?.v, c = r.c[2]?.v;
-    if (id) garmentJalan.add(id);
-    if (c) {
-      totalScan++;
-      kotaSet.add(String(c).split(',')[0].trim());
-      if (String(c).includes(',')) negaraSet.add(String(c).split(',').pop().trim());
-    }
-  });
-
+  // ── 3. Hitung — pakai lib-stats.js, sumber kebenaran tunggal ──
+  const hasil = hitungStatistik(barisS, barisG);
   const nilai = {
-    GARMENT: totalGarment,
-    BERJALAN: garmentJalan.size,
-    SCAN: totalScan,
-    KOTA: kotaSet.size,
-    NEGARA: negaraSet.size,
+    GARMENT: hasil.totalGarment,
+    BERJALAN: hasil.totalBerjalan,
+    SCAN: hasil.totalScan,
+    KOTA: hasil.totalKota,
+    NEGARA: hasil.totalNegara,
   };
 
   // ── 4. Sanity check — angka nol/aneh berarti data bermasalah ──

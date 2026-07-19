@@ -136,9 +136,9 @@ function generateKotaHTML(kota, slug, scans, garmentMap) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${kota} · Peta Perjalanan Blumbang ID Klaten</title>
+<title>Sablon Kaos Sampai ${kota} · Peta Perjalanan Blumbang ID</title>
 <meta name="description" content="${metaDesc}">
-<meta property="og:title" content="${kota} · Peta Perjalanan Blumbang ID Klaten">
+<meta property="og:title" content="Sablon Kaos Sampai ${kota} · Peta Perjalanan Blumbang ID">
 <meta property="og:description" content="${metaDesc}">
 <meta property="og:type" content="website">
 <link rel="canonical" href="${canonical}">
@@ -259,7 +259,7 @@ function generateIndexHTML(kotaList, totalKaosTerdaftar, totalScan, namaKotaTerb
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Semua Kota · Peta Perjalanan Blumbang ID Klaten</title>
+<title>Sablon Kaos & Peta Perjalanan Blumbang ID · Semua Kota</title>
 <meta name="description" content="${totalKotaTermasukKlaten} kota yang pernah dikunjungi kaos Blumbang ID Klaten. ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan.">
 <link rel="canonical" href="${BASE_URL}/sparks/kota">
 <script type="application/ld+json">

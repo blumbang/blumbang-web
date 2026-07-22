@@ -459,12 +459,23 @@ ${JSON.stringify(itemListSchema, null, 2)}
 </script>
 <!--SPARKS-SNAPSHOT-SCHEMA-END-->`;
 
+  // Meta description — versi ringkas dari narasi, ikut ter-update tiap build.
+  // Sebelumnya hardcoded di sparks.html sehingga membeku di angka lama
+  // (mesin pencari membaca angka basi walau snapshot & schema sudah benar).
+  const escAttr = (s) => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const metaDescText = `${totalKota} kota telah menyimpan jejak kaos Blumbang ID Klaten${namaKotaTerbaru ? ' — kota terbaru: ' + namaKotaTerbaru + (tanggalTerbaru ? ', ' + tanggalTerbaru : '') : ''}. ${totalScan} perjalanan tersimpan dari Klaten ke seluruh dunia.`;
+  const metaDescBlock = `<meta name="description" content="${escAttr(metaDescText)}">`;
+
   const textMarkerRegex = /<!--SPARKS-SNAPSHOT-TEXT-START-->[\s\S]*?<!--SPARKS-SNAPSHOT-TEXT-END-->/;
   const schemaMarkerRegex = /<!--SPARKS-SNAPSHOT-SCHEMA-START-->[\s\S]*?<!--SPARKS-SNAPSHOT-SCHEMA-END-->/;
+  // Hanya menyasar <meta name="description">. og:description & twitter:description
+  // pakai atribut "property"/nama berbeda, jadi tidak akan tersentuh.
+  const metaDescRegex = /<meta\s+name="description"\s+content="[^"]*"\s*\/?>/i;
 
   let newHtml = html;
   let textInjected = false;
   let schemaInjected = false;
+  let metaInjected = false;
 
   if (textMarkerRegex.test(html)) {
     newHtml = newHtml.replace(textMarkerRegex, textBlock);
@@ -482,9 +493,19 @@ ${JSON.stringify(itemListSchema, null, 2)}
     schemaInjected = true;
   }
 
-  if (!textInjected || !schemaInjected) {
+  if (metaDescRegex.test(newHtml)) {
+    newHtml = newHtml.replace(metaDescRegex, metaDescBlock);
+    metaInjected = true;
+  }
+
+  if (!textInjected || !schemaInjected || !metaInjected) {
     console.log('[sparks-snapshot] Titik suntik tidak lengkap ditemukan — BATAL, sparks.html tidak ditulis.');
+    console.log(`[sparks-snapshot] Detail: text=${textInjected} schema=${schemaInjected} meta=${metaInjected}`);
     return;
+  }
+
+  if (metaDescText.length > 160) {
+    console.log(`[sparks-snapshot] ⚠️  Meta description ${metaDescText.length} karakter (>160) — kemungkinan dipotong di hasil pencarian.`);
   }
 
   // Validasi ringan: pastikan JSON-LD yang baru valid sebelum ditulis
@@ -502,6 +523,7 @@ ${JSON.stringify(itemListSchema, null, 2)}
 
   fs.writeFileSync(SPARKS_HTML_PATH, newHtml, 'utf-8');
   console.log(`✅ sparks.html — snapshot disuntik (${totalKota} kota, ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan)`);
+  console.log(`✅ sparks.html — meta description diperbarui (${metaDescText.length} karakter)`);
 }
 
 async function main() {

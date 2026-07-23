@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Peta Perjalanan · Blumbang.id</title>
+<meta name="description" content="39 kota telah menyimpan jejak kaos Blumbang ID Klaten — kota terbaru: Trucuk, Juli 2026. 284 perjalanan tersimpan dari Klaten ke seluruh dunia.">
+<link rel="preload" as="image" href="https://blumbang.id/og-image.webp" type="image/webp">
+<link rel="canonical" href="https://blumbang.id/sparks/">
+<!-- SEO-INJECT-START -->
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:locale" content="id_ID">
+<meta property="og:image" content="https://blumbang.id/og-image.webp">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Blumbang ID — Studio Kaos Independen dari Klaten">
+<meta property="og:image:type" content="image/webp">
+<meta name="twitter:title" content="Peta Perjalanan Kaos · Blumbang ID">
+<meta name="twitter:description" content="Dari Klaten ke seluruh dunia. Setiap kaos Blumbang ID menyimpan perjalanannya.">
+<meta name="twitter:image" content="https://blumbang.id/og-image.webp">
+<link rel="alternate" hreflang="id" href="https://blumbang.id/sparks/">
+<link rel="alternate" hreflang="x-default" href="https://blumbang.id/sparks/">
+<!-- SEO-INJECT-END -->
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:ital,wght@0,300;0,400;0,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+:root{
+  --black:#080808;--charcoal:#141414;--grey:#1e1e1e;--border:#2a2a2a;
+  --muted:#666;--dim:#888;--light:#ccc;--white:#F5F0E8;
+  --gold:#C9A84C;--gold-dim:#7a6028;
+  --font-logo:'Bebas Neue',sans-serif;
+  --font-body:'Montserrat',sans-serif;
+  --font-ui:'Inter',sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 40px;background:rgba(8,8,8,0.95);border-bottom:1px solid var(--border);}
+.nav-brand{font-family:var(--font-logo);font-size:1.6rem;letter-spacing:0.15em;color:var(--gold);text-decoration:none;line-height:1;}
+.spark-spin{display:inline-block;animation:spin 6s linear infinite;font-size:1rem;vertical-align:middle;}
+.nav-links{display:flex;gap:32px;}
+.nav-links a{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+.nav-order{font-family:var(--font-ui);font-size:0.72rem;font-weight:700;letter-spacing:0.2em;color:var(--black);background:var(--gold);padding:9px 20px;text-decoration:none;transition:all 0.2s;text-transform:uppercase;}
+.nav-order:hover{background:var(--white);}
+.nav-hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.4rem;cursor:pointer;}
+.nav-mobile{display:none;position:fixed;top:61px;left:0;right:0;background:var(--charcoal);border-bottom:1px solid var(--border);z-index:99;flex-direction:column;padding:20px;}
+.nav-mobile.open{display:flex;}
+.nav-mobile a{font-family:var(--font-ui);font-size:0.85rem;font-weight:500;letter-spacing:0.12em;color:var(--light);text-decoration:none;padding:12px 0;border-bottom:1px solid var(--border);text-transform:uppercase;}
+.nav-mobile a:last-child{border-bottom:none;}
+.mobile-order{color:var(--gold)!important;font-weight:700!important;}
+
+/* PAGE WRAP */
+.page{padding-top:61px;}
+
+/* HEADER */
+.sparks-header{padding:48px 40px 32px;text-align:center;border-bottom:1px solid var(--border);}
+.sparks-title{font-family:var(--font-logo);font-size:clamp(2.5rem,6vw,5rem);letter-spacing:0.08em;color:var(--white);line-height:1;margin-bottom:8px;}
+.sparks-sub{font-family:var(--font-ui);font-size:0.7rem;font-weight:500;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;}
+
+/* STATS */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-bottom:1px solid var(--border);}
+.stat-item{background:var(--charcoal);padding:20px 16px;text-align:center;}
+.stat-num{font-family:var(--font-logo);font-size:clamp(1.8rem,4vw,2.8rem);color:var(--gold);letter-spacing:0.08em;line-height:1;}
+.stat-lbl{font-family:var(--font-ui);font-size:0.6rem;font-weight:600;letter-spacing:0.25em;color:var(--dim);text-transform:uppercase;margin-top:5px;}
+.stat-item.klik{cursor:pointer;transition:background .2s;}
+.stat-item.klik:hover{background:rgba(201,168,76,0.08);}
+/* DRAWER */
+.drawer-overlay{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s;}
+.drawer-overlay.aktif{opacity:1;pointer-events:all;}
+.drawer{position:fixed;bottom:0;left:0;right:0;z-index:151;background:var(--charcoal);border-top:1px solid var(--border);max-height:70vh;transform:translateY(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+.drawer.aktif{transform:translateY(0);}
+.drawer-head{padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);flex-shrink:0;}
+.drawer-judul{font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.08em;color:var(--gold);}
+.drawer-tutup{background:none;border:1px solid var(--border);font-family:var(--font-ui);font-size:.62rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;padding:5px 12px;cursor:pointer;color:var(--dim);transition:all .2s;}
+.drawer-tutup:hover{background:var(--white);color:var(--black);border-color:var(--white);}
+.drawer-list{overflow-y:auto;flex:1;}
+.drawer-item{display:flex;align-items:center;justify-content:space-between;padding:13px 24px;border-bottom:1px solid var(--border);font-family:var(--font-ui);font-size:.78rem;color:var(--light);}
+.drawer-item-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:12px;flex-shrink:0;}
+.drawer-item-kota{flex:1;}
+.drawer-item-count{font-size:.65rem;color:var(--muted);letter-spacing:.1em;}
+.drawer-kosong{text-align:center;padding:40px;font-family:var(--font-ui);font-size:.72rem;letter-spacing:.15em;color:var(--dim);}
+.di-id{font-family:var(--font-logo);font-size:.95rem;letter-spacing:.12em;color:var(--gold);}
+.di-info{font-family:var(--font-ui);font-size:.65rem;color:var(--muted);margin-top:2px;}
+.di-arrow{font-size:1rem;color:var(--muted);}
+.drawer-item a,.drawer-item[href]{text-decoration:none;color:inherit;}
+
+/* MAP */
+.map-section{background:#0a1628;position:relative;}
+.map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#0a1628;z-index:10;}
+.map-loading-text{font-family:var(--font-ui);font-size:0.72rem;font-weight:600;letter-spacing:0.4em;color:var(--gold);text-transform:uppercase;animation:denyut 2s ease-in-out infinite;}
+#d3-world-map{display:block;width:100%;}
+
+/* MAP TOOLTIP */
+.map-tooltip{position:fixed;background:rgba(8,8,8,0.92);border:1px solid var(--gold);color:var(--white);font-family:var(--font-ui);font-size:0.7rem;font-weight:600;letter-spacing:0.1em;padding:5px 12px;pointer-events:none;z-index:200;display:none;white-space:nowrap;transform:translate(-50%,-130%);}
+.map-tooltip.on{display:block;}
+
+/* CITIES */
+.cities-section{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:20px 24px;display:flex;flex-wrap:wrap;gap:8px;background:var(--charcoal);}
+.city-tag{display:inline-flex;align-items:center;gap:5px;font-family:var(--font-ui);font-size:0.65rem;font-weight:500;color:var(--light);background:var(--black);border:1px solid var(--border);padding:5px 12px;}
+.city-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:denyut 2s ease-in-out infinite;flex-shrink:0;}
+.city-tag.origin{border-color:var(--gold-dim);color:var(--gold);}
+
+/* LATEST */
+.latest-section{padding:20px 24px;display:flex;align-items:center;gap:12px;}
+.latest-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:denyut 1.5s ease-in-out infinite;flex-shrink:0;}
+.latest-text{font-family:var(--font-ui);font-size:0.75rem;font-weight:500;letter-spacing:0.08em;color:var(--light);}
+.latest-city{color:var(--gold);font-weight:600;}
+
+/* FOOTER */
+footer{padding:36px 40px;border-top:1px solid var(--border);}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-brand{font-family:var(--font-logo);font-size:1.3rem;letter-spacing:0.15em;color:var(--gold);}
+.footer-links{display:flex;gap:28px;}
+.footer-links a{font-family:var(--font-ui);font-size:0.72rem;font-weight:500;letter-spacing:0.15em;color:var(--light);text-decoration:none;transition:color 0.2s;text-transform:uppercase;}
+.footer-links a:hover{color:var(--gold);}
+.footer-copy{font-family:var(--font-ui);font-size:0.68rem;letter-spacing:0.1em;color:var(--muted);}
+
+@keyframes spin{0%,100%{transform:rotate(0deg)scale(1);}50%{transform:rotate(180deg)scale(0.8);}}
+@keyframes denyut{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .nav-links{display:none;}
+  .nav-order{display:none;}
+  .nav-hamburger{display:block;}
+  .sparks-header{padding:32px 20px 24px;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .cities-section{padding:16px 20px;}
+  .latest-section{padding:16px 20px;}
+  footer{padding:24px 20px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .footer-links{justify-content:center;}
+}
+</style>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-39SRRM5GKK"></script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments);}
+gtag("js",new Date());
+gtag("config","G-39SRRM5GKK");
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://blumbang.id"},
+    {"@type": "ListItem", "position": 2, "name": "Perjalanan", "item": "https://blumbang.id/sparks"}
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://blumbang.id/sparks/",
+  "name": "Peta Perjalanan Kaos · Blumbang ID",
+  "description": "Living Garment adalah konsep apparel dari Blumbang ID di mana setiap kaos memiliki identitas digital berbasis QR code yang menyimpan perjalanan pemiliknya ke peta dunia. Lahir di Klaten, sudah tersimpan di Tokyo, Seychelles, dan puluhan kota di Indonesia.",
+  "url": "https://blumbang.id/sparks/",
+  "about": {
+    "@type": "Thing",
+    "name": "Living Garment",
+    "description": "Sistem identitas kaos unik dari Blumbang ID. Setiap kaos tertentu mendapat QR code tersendiri. Saat pemilik memindai QR dari lokasi manapun, titik perjalanan baru tersimpan di peta dunia. Lahir di Jeto, Gaden, Trucuk, Klaten pada 2022.",
+    "url": "https://blumbang.id/sparks/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "@id": "https://blumbang.id/#business",
+    "name": "Blumbang ID",
+    "url": "https://blumbang.id"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Apa itu Living Garment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Living Garment adalah konsep apparel dari Blumbang ID di mana setiap kaos memiliki identitas digital berbasis QR code. Setiap kali pemilik memindai QR dari lokasi baru, titik perjalanan tersimpan di peta dunia. Kaos tidak berhenti menjadi produk setelah dikirim — ia terus hidup bersama pemiliknya. Penjelasan lengkap konsep ini tersedia di blumbang.id/apa-itu-living-garment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Bagaimana cara kerja sistem QR perjalanan kaos Blumbang ID?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Setiap kaos Living Garment dari Blumbang ID dilengkapi QR code unik pada label. Pemilik cukup memindai QR dari lokasi manapun, lalu mengisi nama kota dan cerita singkat. Titik tersebut otomatis muncul di peta perjalanan global di blumbang.id/sparks."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Sudah ke mana saja kaos Blumbang ID tersimpan bepergian?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Kaos Blumbang ID sudah tersimpan di puluhan kota — Surakarta, Yogyakarta, Semarang, Jakarta, Bandung, Pontianak, Banjarmasin, Banjarbaru, Denpasar, Samarinda, Kediri, Wonosobo, Boyolali, Sukoharjo — hingga Tokyo, Jepang dan Victoria, Seychelles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Apakah semua kaos Blumbang ID bisa menyimpan perjalanan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tidak semua. Fitur Living Garment tersedia pada seri tertentu yang diproduksi dengan sistem identitas QR. Untuk order custom yang ingin dilengkapi fitur ini, bisa dikonsultasikan langsung via WhatsApp."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Di mana workshop Blumbang ID berada?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Workshop Blumbang ID berlokasi di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah. Berdiri sejak 2022 sebagai independent t-shirt studio dengan spesialisasi sablon plastisol, DTF, dan rubber."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": "https://blumbang.id/#business",
+  "name": "Blumbang ID",
+  "url": "https://blumbang.id",
+  "telephone": "+6281234561146",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Jeto RT 32 RW 10, Gaden, Trucuk",
+    "addressLocality": "Klaten",
+    "addressRegion": "Jawa Tengah",
+    "postalCode": "57467",
+    "addressCountry": "ID"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -7.749626,
+    "longitude": 110.670888
+  },
+  "hasMap": "https://www.google.com/maps/place/blumbang+id/@-7.749626,110.670888,17z",
+  "sameAs": [
+    "https://www.tiktok.com/@blumbang.id",
+    "https://wa.me/6281234561146"
+  ]
+}
+</script>
+<!--SPARKS-SNAPSHOT-SCHEMA-START-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "name": "Kota yang telah disinggahi kaos Blumbang ID Klaten",
+  "description": "39 kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. 1244 kaos terdaftar, 284 perjalanan tercipta. Kota terbaru yang menyimpan jejak: Trucuk, Juli 2026. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai. Blumbang ID berdiri 2022, Living Garment System baru lahir 2026 setelah bertahun-tahun menguji kualitas produksi.",
+  "numberOfItems": 39,
+  "additionalProperty": [
+    {
+      "@type": "PropertyValue",
+      "name": "Blumbang ID berdiri",
+      "value": "2022"
+    },
+    {
+      "@type": "PropertyValue",
+      "name": "Living Garment System diluncurkan",
+      "value": "2026"
+    }
+  ],
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Surakarta",
+      "description": "134 kaos unik, 148 kali dipindai di Surakarta",
+      "url": "https://blumbang.id/sparks/kota/surakarta"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Banjarmasin",
+      "description": "22 kaos unik, 31 kali dipindai di Banjarmasin",
+      "url": "https://blumbang.id/sparks/kota/banjarmasin"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Jakarta",
+      "description": "13 kaos unik, 13 kali dipindai di Jakarta",
+      "url": "https://blumbang.id/sparks/kota/jakarta"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Pontianak",
+      "description": "6 kaos unik, 10 kali dipindai di Pontianak",
+      "url": "https://blumbang.id/sparks/kota/pontianak"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "Yogyakarta",
+      "description": "7 kaos unik, 8 kali dipindai di Yogyakarta",
+      "url": "https://blumbang.id/sparks/kota/yogyakarta"
+    },
+    {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "Denpasar",
+      "description": "6 kaos unik, 8 kali dipindai di Denpasar",
+      "url": "https://blumbang.id/sparks/kota/denpasar"
+    },
+    {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "Trucuk",
+      "description": "4 kaos unik, 8 kali dipindai di Trucuk",
+      "url": "https://blumbang.id/sparks/kota/trucuk"
+    },
+    {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "Bandung",
+      "description": "6 kaos unik, 7 kali dipindai di Bandung",
+      "url": "https://blumbang.id/sparks/kota/bandung"
+    },
+    {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "Banjarbaru",
+      "description": "3 kaos unik, 5 kali dipindai di Banjarbaru",
+      "url": "https://blumbang.id/sparks/kota/banjarbaru"
+    },
+    {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "Victoria",
+      "description": "1 kaos unik, 4 kali dipindai di Victoria",
+      "url": "https://blumbang.id/sparks/kota/victoria"
+    },
+    {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "Wonosobo",
+      "description": "2 kaos unik, 4 kali dipindai di Wonosobo",
+      "url": "https://blumbang.id/sparks/kota/wonosobo"
+    },
+    {
+      "@type": "ListItem",
+      "position": 12,
+      "name": "Kutoarjo",
+      "description": "1 kaos unik, 3 kali dipindai di Kutoarjo",
+      "url": "https://blumbang.id/sparks/kota/kutoarjo"
+    },
+    {
+      "@type": "ListItem",
+      "position": 13,
+      "name": "Samarinda",
+      "description": "2 kaos unik, 2 kali dipindai di Samarinda",
+      "url": "https://blumbang.id/sparks/kota/samarinda"
+    },
+    {
+      "@type": "ListItem",
+      "position": 14,
+      "name": "Sleman",
+      "description": "2 kaos unik, 2 kali dipindai di Sleman",
+      "url": "https://blumbang.id/sparks/kota/sleman"
+    },
+    {
+      "@type": "ListItem",
+      "position": 15,
+      "name": "Kota Banjarmasin",
+      "description": "2 kaos unik, 2 kali dipindai di Kota Banjarmasin",
+      "url": "https://blumbang.id/sparks/kota/kota-banjarmasin"
+    },
+    {
+      "@type": "ListItem",
+      "position": 16,
+      "name": "Blora Regency",
+      "description": "1 kaos unik, 2 kali dipindai di Blora Regency",
+      "url": "https://blumbang.id/sparks/kota/blora-regency"
+    },
+    {
+      "@type": "ListItem",
+      "position": 17,
+      "name": "Sragen",
+      "description": "1 kaos unik, 2 kali dipindai di Sragen",
+      "url": "https://blumbang.id/sparks/kota/sragen"
+    },
+    {
+      "@type": "ListItem",
+      "position": 18,
+      "name": "Surabaya",
+      "description": "2 kaos unik, 2 kali dipindai di Surabaya",
+      "url": "https://blumbang.id/sparks/kota/surabaya"
+    },
+    {
+      "@type": "ListItem",
+      "position": 19,
+      "name": "Satui",
+      "description": "2 kaos unik, 2 kali dipindai di Satui",
+      "url": "https://blumbang.id/sparks/kota/satui"
+    },
+    {
+      "@type": "ListItem",
+      "position": 20,
+      "name": "Kediri",
+      "description": "1 kaos unik, 1 kali dipindai di Kediri",
+      "url": "https://blumbang.id/sparks/kota/kediri"
+    },
+    {
+      "@type": "ListItem",
+      "position": 21,
+      "name": "Ile au Cerf",
+      "description": "1 kaos unik, 1 kali dipindai di Ile au Cerf",
+      "url": "https://blumbang.id/sparks/kota/ile-au-cerf"
+    },
+    {
+      "@type": "ListItem",
+      "position": 22,
+      "name": "Bali",
+      "description": "1 kaos unik, 1 kali dipindai di Bali",
+      "url": "https://blumbang.id/sparks/kota/bali"
+    },
+    {
+      "@type": "ListItem",
+      "position": 23,
+      "name": "Tokyo",
+      "description": "1 kaos unik, 1 kali dipindai di Tokyo",
+      "url": "https://blumbang.id/sparks/kota/tokyo"
+    },
+    {
+      "@type": "ListItem",
+      "position": 24,
+      "name": "Bulakamba",
+      "description": "1 kaos unik, 1 kali dipindai di Bulakamba",
+      "url": "https://blumbang.id/sparks/kota/bulakamba"
+    },
+    {
+      "@type": "ListItem",
+      "position": 25,
+      "name": "Boyolali",
+      "description": "1 kaos unik, 1 kali dipindai di Boyolali",
+      "url": "https://blumbang.id/sparks/kota/boyolali"
+    },
+    {
+      "@type": "ListItem",
+      "position": 26,
+      "name": "Sukoharjo",
+      "description": "1 kaos unik, 1 kali dipindai di Sukoharjo",
+      "url": "https://blumbang.id/sparks/kota/sukoharjo"
+    },
+    {
+      "@type": "ListItem",
+      "position": 27,
+      "name": "Banyumas",
+      "description": "1 kaos unik, 1 kali dipindai di Banyumas",
+      "url": "https://blumbang.id/sparks/kota/banyumas"
+    },
+    {
+      "@type": "ListItem",
+      "position": 28,
+      "name": "Selogiri",
+      "description": "1 kaos unik, 1 kali dipindai di Selogiri",
+      "url": "https://blumbang.id/sparks/kota/selogiri"
+    },
+    {
+      "@type": "ListItem",
+      "position": 29,
+      "name": "Semarang",
+      "description": "1 kaos unik, 1 kali dipindai di Semarang",
+      "url": "https://blumbang.id/sparks/kota/semarang"
+    },
+    {
+      "@type": "ListItem",
+      "position": 30,
+      "name": "Kijang",
+      "description": "1 kaos unik, 1 kali dipindai di Kijang",
+      "url": "https://blumbang.id/sparks/kota/kijang"
+    },
+    {
+      "@type": "ListItem",
+      "position": 31,
+      "name": "Berbak",
+      "description": "1 kaos unik, 1 kali dipindai di Berbak",
+      "url": "https://blumbang.id/sparks/kota/berbak"
+    },
+    {
+      "@type": "ListItem",
+      "position": 32,
+      "name": "Muntilan",
+      "description": "1 kaos unik, 1 kali dipindai di Muntilan",
+      "url": "https://blumbang.id/sparks/kota/muntilan"
+    },
+    {
+      "@type": "ListItem",
+      "position": 33,
+      "name": "East Jakarta",
+      "description": "1 kaos unik, 1 kali dipindai di East Jakarta",
+      "url": "https://blumbang.id/sparks/kota/east-jakarta"
+    },
+    {
+      "@type": "ListItem",
+      "position": 34,
+      "name": "Palangkaraya",
+      "description": "1 kaos unik, 1 kali dipindai di Palangkaraya",
+      "url": "https://blumbang.id/sparks/kota/palangkaraya"
+    },
+    {
+      "@type": "ListItem",
+      "position": 35,
+      "name": "West Jakarta",
+      "description": "1 kaos unik, 1 kali dipindai di West Jakarta",
+      "url": "https://blumbang.id/sparks/kota/west-jakarta"
+    },
+    {
+      "@type": "ListItem",
+      "position": 36,
+      "name": "Depok",
+      "description": "1 kaos unik, 1 kali dipindai di Depok",
+      "url": "https://blumbang.id/sparks/kota/depok"
+    },
+    {
+      "@type": "ListItem",
+      "position": 37,
+      "name": "Purworejo",
+      "description": "1 kaos unik, 1 kali dipindai di Purworejo",
+      "url": "https://blumbang.id/sparks/kota/purworejo"
+    },
+    {
+      "@type": "ListItem",
+      "position": 38,
+      "name": "Kaliori",
+      "description": "1 kaos unik, 1 kali dipindai di Kaliori",
+      "url": "https://blumbang.id/sparks/kota/kaliori"
+    }
+  ]
+}
+</script>
+<!--SPARKS-SNAPSHOT-SCHEMA-END-->
+</head>
+<body>
+<!--SPARKS-SNAPSHOT-TEXT-START-->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="false">
+  <p>39 kota telah menyimpan jejak kaos Blumbang ID Klaten — dari Klaten ke seluruh Indonesia dan dunia. 1244 kaos terdaftar, 284 perjalanan tercipta. Kota terbaru yang menyimpan jejak: Trucuk, Juli 2026. Setiap kaos yang pergi, membawa cerita yang tidak pernah selesai. Blumbang ID berdiri 2022, Living Garment System baru lahir 2026 setelah bertahun-tahun menguji kualitas produksi.</p>
+</div>
+<!--SPARKS-SNAPSHOT-TEXT-END-->
+
+
+<nav>
+  <a href="/" class="nav-brand">BLUMB<span class="spark-spin">✦</span>NG<span style="font-size:0.55rem;letter-spacing:0.3em;vertical-align:super;color:var(--gold-dim)"> ID</span></a>
+  <div class="nav-links">
+    <a href="/karya">Karya</a>
+    <a href="/sparks" class="active">Perjalanan</a>
+    <a href="/about">Tentang</a>
+  </div>
+  <a href="https://wa.me/6281234561146" class="nav-order">✦ ORDER</a>
+  <button class="nav-hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+</nav>
+<div class="nav-mobile" id="nav-mobile">
+  <a href="/karya" onclick="toggleMenu()">Karya</a>
+  <a href="/sparks" onclick="toggleMenu()">Perjalanan</a>
+  <a href="/about" onclick="toggleMenu()">Tentang</a>
+  <a href="https://wa.me/6281234561146" class="mobile-order" onclick="toggleMenu()">✦ ORDER SEKARANG</a>
+</div>
+
+<div class="map-tooltip" id="map-tooltip"></div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="sparks-header">
+    <div class="sparks-title">PETA PERJALANAN</div>
+    <div class="sparks-sub">Dari Klaten · Ke Dunia</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-num" id="stat-garments">—</div><div class="stat-lbl">Kaos Terdaftar</div></div>
+    <div class="stat-item klik" onclick="bukaDrawer('berjalan')"><div class="stat-num" id="stat-perjalanan">—</div><div class="stat-lbl">Perjalanan</div></div>
+    <div class="stat-item klik" onclick="bukaDrawer('kota')"><div class="stat-num" id="stat-kota">—</div><div class="stat-lbl">Kota</div></div>
+    <div class="stat-item klik" onclick="bukaDrawer('negara')"><div class="stat-num" id="stat-negara">—</div><div class="stat-lbl">Negara</div></div>
+  </div>
+
+  <!-- MAP -->
+  <div class="map-section" id="map-section">
+    <div class="map-loading" id="map-loading">
+      <div class="map-loading-text">Memuat peta perjalanan...</div>
+    </div>
+    <svg id="d3-world-map"></svg>
+  </div>
+
+  <!-- CITIES -->
+  <div class="cities-section" id="cities-row">
+    <div class="city-tag origin"><span class="dot"></span>Klaten · Origin</div>
+  </div>
+
+  <!-- LATEST -->
+  <a class="latest-section" id="latest-section" href="#" style="display:none;text-decoration:none;">
+    <div class="latest-dot"></div>
+    <div class="latest-text"><span id="ls-id" style="font-family:var(--font-logo);letter-spacing:.12em;color:var(--gold);"></span> <span style="color:var(--muted);">·</span> Terbaru dari <span class="latest-city" id="ls-city">—</span></div>
+  </a>
+
+</div>
+
+<!-- HALL OF FAME -->
+<section id="hof-section" style="display:none;border-top:1px solid var(--border);padding:48px 40px;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <div style="font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.15em;color:var(--gold);margin-bottom:8px;">✦ HALL OF FAME</div>
+    <div style="font-family:var(--font-ui);font-size:.65rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;margin-bottom:32px;">Kaos dengan perjalanan paling luar biasa</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;" id="hof-grid">
+      <div>
+        <div style="font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ Paling Jauh dari Blumbang ID</div>
+        <div id="hof-jauh"></div>
+      </div>
+      <div>
+        <div style="font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;">✦ PETA PERJALANAN TERBANYAK</div>
+        <div id="hof-kota"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:8px;font-family:var(--font-ui);font-size:.6rem;color:var(--muted);letter-spacing:.1em;">Diperbarui setiap pagi</div>
+  </div>
+</section>
+
+<!-- SEO SECTION -->
+<section style="border-top:1px solid var(--border);padding:64px 40px;background:var(--charcoal);">
+  <div style="max-width:900px;margin:0 auto;">
+    <h2 style="font-family:var(--font-logo);font-size:1.6rem;letter-spacing:.08em;color:var(--white);margin-bottom:24px;line-height:1.1;">Living Garment Blumbang ID: Jejak Perjalanan Kaos dari Berbagai Kota</h2>
+    <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;">Setiap pakaian sebenarnya menyimpan cerita. Hanya saja, kebanyakan cerita itu hilang begitu saja—dipakai, dicuci, lalu dilupakan. Di Blumbang ID, kami melihat kaos sedikit berbeda. Bagi kami, garment bukan sekadar produk jadi yang selesai setelah keluar dari workshop. Kaos hidup bersama pemiliknya. Pergi ke kota lain, ikut event, dipakai saat touring, gathering, kerja lapangan, bahkan kadang ikut sampai luar negeri. Karena itulah kami membangun konsep <a href="/apa-itu-living-garment" style="color:var(--gold);border-bottom:1px solid var(--gold-dim);">Living Garment</a> — sebuah pendekatan apparel di mana setiap kaos tertentu memiliki identitas digital berbasis QR code, sehingga perjalanan garment bisa terus tersimpan dari waktu ke waktu.</p>
+
+    <h3 style="font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.08em;color:var(--white);margin:32px 0 16px;">Kaos yang Bisa Menyimpan Jejak Perjalanan</h3>
+    <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;">Melalui sistem scan garment Blumbang ID, pemilik kaos dapat memindai QR identity yang ada pada label tertentu untuk membuka halaman digital garment mereka. Di sana, perjalanan sebuah pakaian bisa terus berkembang — mulai dari asal produksi di Klaten, lokasi scan, perpindahan kota, hingga tempat-tempat yang pernah menjadi bagian dari perjalanan pemiliknya. Kadang sebuah kaos dibuat untuk komunitas touring lalu terbaca di beberapa kota berbeda. Ada yang awalnya diproduksi untuk event sekolah, kemudian muncul lagi saat reuni. Bahkan beberapa garment kami sudah terdeteksi berpindah hingga luar daerah dan luar negeri.</p>
+
+    <h3 style="font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.08em;color:var(--white);margin:32px 0 16px;">Dari Klaten Menuju Berbagai Kota</h3>
+    <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;">Berawal dari workshop kecil di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah, garment dari Blumbang ID perlahan bergerak ke banyak wilayah. Beberapa kota yang pernah tersimpan dalam perjalanan garment antara lain: Surakarta, Yogyakarta, Semarang, Jakarta, Bandung, Pontianak, Banjarmasin, Banjarbaru, Denpasar, Bali, Samarinda, Kediri, Sleman, Wonosobo, Banyumas, Boyolali, Sukoharjo, hingga Tokyo dan Victoria, Seychelles. Kalau dipikir-pikir, ini mungkin salah satu hal yang jarang ditemukan di dunia apparel lokal — kaos biasanya selesai saat dikirim, di Blumbang ID justru cerita sering dimulai setelah pesanan sampai.</p>
+
+    <h3 style="font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.08em;color:var(--white);margin:32px 0 16px;">Bukan Sekadar Sablon Kaos, Tapi Pengalaman Garment</h3>
+    <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;">Blumbang ID lahir dari workshop sablon baju Klaten, sablon kaos Klaten, dan konveksi Klaten yang dekat dengan kebutuhan komunitas, sekolah, UMKM, organisasi, hingga apparel event. Kami memproduksi berbagai kebutuhan: kaos custom, polo shirt custom, jersey komunitas, hoodie &amp; crewneck, seragam kerja, apparel sekolah, merchandise event, kaos gathering &amp; rombongan, hingga apparel brand lokal. Tapi yang ingin kami bangun bukan cuma soal produksi — kami ingin membuat pakaian terasa lebih personal.</p>
+
+    <h3 style="font-family:var(--font-logo);font-size:1.2rem;letter-spacing:.08em;color:var(--white);margin:32px 0 16px;">Workshop Sablon &amp; Konveksi Klaten dengan Pendekatan yang Berbeda</h3>
+    <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;"><strong style="color:var(--light);">BLUMBANG ID – Independent T-Shirt Studio &amp; Screen Printing</strong> berbasis di Jeto, Gaden, Trucuk, Klaten, Jawa Tengah, Indonesia. Est. 2022 • Google Rating 4.9⭐. Workshop aktif sejak 2022 dengan fokus pada kebutuhan sablon baju custom, sablon kaos, produksi apparel komunitas, merchandise event, hingga kebutuhan seragam untuk sekolah, instansi, UMKM, dan perusahaan. Layanan kami meliputi: sablon baju Klaten, sablon kaos Klaten, konveksi Klaten, produksi kaos komunitas, apparel sekolah &amp; event, merchandise custom, kaos satuan hingga produksi skala komunitas. Pemesanan bisa dilakukan dari berbagai kota di Indonesia dengan sistem konsultasi online dan pengiriman nasional.</p>
+
+    <div style="border-top:1px solid var(--border);margin-top:32px;padding-top:32px;">
+      <p style="font-family:var(--font-body);font-size:.9rem;font-weight:300;line-height:1.9;color:var(--muted);margin-bottom:16px;">Kalau kamu sedang mencari tempat <a href="/sablon-klaten" style="color:var(--light);text-decoration:underline;text-underline-offset:3px;">sablon baju Klaten</a>, <a href="/sablon-klaten" style="color:var(--light);text-decoration:underline;text-underline-offset:3px;">sablon kaos Klaten</a>, atau <a href="/konveksi-klaten" style="color:var(--light);text-decoration:underline;text-underline-offset:3px;">konveksi Klaten</a> untuk kebutuhan apparel custom, komunitas, sekolah, event, atau merchandise brand, Blumbang ID siap membantu dari proses diskusi desain sampai produksi.</p>
+      <a href="https://wa.me/6281234561146" style="display:inline-block;font-family:var(--font-ui);font-size:.72rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--black);background:var(--gold);padding:12px 28px;text-decoration:none;">✦ Hubungi Kami</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">BLUMB<span style="font-size:0.8rem;">✦</span>NG ID</div>
+    <div class="footer-links">
+      <a href="/karya">Karya</a>
+      <a href="/sparks">Perjalanan</a>
+      <a href="/about">Tentang</a>
+      <a href="https://wa.me/6281234561146">WhatsApp</a>
+    </div>
+    <div class="footer-copy">© 2026 Blumbang ID · Jeto, Klaten, Jawa Tengah</div>
+  </div>
+</footer>
+
+<script>
+const SHEET_ID='1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
+
+function toggleMenu(){
+  const m=document.getElementById('nav-mobile');
+  const h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.textContent=m.classList.contains('open')?'✕':'☰';
+}
+
+function animateNum(elId,target){
+  const el=document.getElementById(elId);
+  if(!el) return;
+  let cur=0;
+  const step=Math.ceil(target/30)||1;
+  const t=setInterval(function(){cur=Math.min(cur+step,target);el.textContent=cur;if(cur>=target)clearInterval(t);},40);
+}
+
+const CITY_COORDS={
+  'abu dhabi':{lonlat:[54.367,24.453],label:'Abu Dhabi'},
+  'accra':{lonlat:[-0.186,5.556],label:'Accra'},
+  'addis ababa':{lonlat:[38.747,8.996],label:'Addis Ababa'},
+  'adelaide':{lonlat:[138.6,-34.929],label:'Adelaide'},
+  'ahmedabad':{lonlat:[72.587,23.023],label:'Ahmedabad'},
+  'ambon':{lonlat:[128.192,-3.695],label:'Ambon'},
+  'amman':{lonlat:[35.945,31.963],label:'Amman'},
+  'amsterdam':{lonlat:[4.905,52.37],label:'Amsterdam'},
+  'ankara':{lonlat:[32.859,39.92],label:'Ankara'},
+  'athens':{lonlat:[23.728,37.984],label:'Athens'},
+  'atlanta':{lonlat:[-84.388,33.749],label:'Atlanta'},
+  'auckland':{lonlat:[174.763,-36.848],label:'Auckland'},
+  'baghdad':{lonlat:[44.361,33.341],label:'Baghdad'},
+  'balikpapan':{lonlat:[116.854,-1.268],label:'Balikpapan'},
+  'banda aceh':{lonlat:[95.323,5.548],label:'Banda Aceh'},
+  'bandar lampung':{lonlat:[105.261,-5.454],label:'Bandar Lampung'},
+  'bandar seri begawan':{lonlat:[114.941,4.89],label:'Bandar Seri Begawan'},
+  'bandung':{lonlat:[107.608,-6.917],label:'Bandung'},
+  'bangalore':{lonlat:[77.594,12.972],label:'Bangalore'},
+  'bangkalan':{lonlat:[112.73,-7.044],label:'Bangkalan'},
+  'bangkok':{lonlat:[100.501,13.756],label:'Bangkok'},
+  'banjar':{lonlat:[108.54,-7.368],label:'Banjar'},
+  'bali':{lonlat:[115.092,-8.34],label:'Bali'},
+  'bulakamba':{lonlat:[108.988,-6.867],label:'Bulakamba'},
+  'kijang':{lonlat:[104.633,0.917],label:'Kijang'},
+  'selogiri':{lonlat:[110.895,-7.783],label:'Selogiri'},
+  'trucuk':{lonlat:[110.617,-7.713],label:'Trucuk'},
+  'victoria, seychelles':{lonlat:[55.455,-4.62],label:'Victoria'},
+  'kota banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
+  'banjarbaru':{lonlat:[114.831,-3.442],label:'Banjarbaru'},
+  'banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
+  'banjarnegara':{lonlat:[109.693,-7.388],label:'Banjarnegara'},
+  'bantul':{lonlat:[110.328,-7.888],label:'Bantul'},
+  'banyumas':{lonlat:[109.215,-7.513],label:'Banyumas'},
+  'banyuwangi':{lonlat:[114.37,-8.219],label:'Banyuwangi'},
+  'barcelona':{lonlat:[2.154,41.389],label:'Barcelona'},
+  'batam':{lonlat:[104.03,1.136],label:'Batam'},
+  'batang':{lonlat:[109.729,-6.915],label:'Batang'},
+  'batu':{lonlat:[122.516,-7.871],label:'Batu'},
+  'bau-bau':{lonlat:[122.626,-5.467],label:'Bau-bau'},
+  'beijing':{lonlat:[116.407,39.904],label:'Beijing'},
+  'beirut':{lonlat:[35.502,33.889],label:'Beirut'},
+  'bekasi':{lonlat:[107.017,-6.234],label:'Bekasi'},
+  'bengkulu':{lonlat:[102.261,-3.8],label:'Bengkulu'},
+  'berlin':{lonlat:[13.405,52.52],label:'Berlin'},
+  'bima':{lonlat:[118.689,-8.458],label:'Bima'},
+  'binjai':{lonlat:[98.485,3.6],label:'Binjai'},
+  'bitung':{lonlat:[125.192,1.44],label:'Bitung'},
+  'blitar':{lonlat:[112.168,-8.096],label:'Blitar'},
+  'blora':{lonlat:[111.407,-6.962],label:'Blora'},
+  'bogor':{lonlat:[106.8,-6.6],label:'Bogor'},
+  'bogota':{lonlat:[-74.085,4.711],label:'Bogota'},
+  'bojonegoro':{lonlat:[111.881,-7.151],label:'Bojonegoro'},
+  'bondowoso':{lonlat:[113.823,-7.912],label:'Bondowoso'},
+  'bontang':{lonlat:[117.5,0.132],label:'Bontang'},
+  'boston':{lonlat:[-71.058,42.36],label:'Boston'},
+  'boyolali':{lonlat:[110.593,-7.53],label:'Boyolali'},
+  'brebes':{lonlat:[108.754,-6.873],label:'Brebes'},
+  'brisbane':{lonlat:[153.028,-27.468],label:'Brisbane'},
+  'brunei':{lonlat:[114.941,4.89],label:'Brunei'},
+  'brussels':{lonlat:[4.352,50.85],label:'Brussels'},
+  'bucharest':{lonlat:[26.097,44.44],label:'Bucharest'},
+  'budapest':{lonlat:[19.04,47.498],label:'Budapest'},
+  'buenos aires':{lonlat:[-58.382,-34.614],label:'Buenos Aires'},
+  'bukit tinggi':{lonlat:[100.372,-0.308],label:'Bukit Tinggi'},
+  'busan':{lonlat:[129.075,35.18],label:'Busan'},
+  'cairo':{lonlat:[31.235,30.045],label:'Cairo'},
+  'calgary':{lonlat:[-114.066,51.045],label:'Calgary'},
+  'canberra':{lonlat:[149.128,-35.282],label:'Canberra'},
+  'cape town':{lonlat:[18.424,-33.925],label:'Cape Town'},
+  'caracas':{lonlat:[-66.914,10.48],label:'Caracas'},
+  'casablanca':{lonlat:[-7.59,33.573],label:'Casablanca'},
+  'cebu':{lonlat:[123.892,10.317],label:'Cebu'},
+  'chengdu':{lonlat:[104.066,30.572],label:'Chengdu'},
+  'chennai':{lonlat:[80.27,13.083],label:'Chennai'},
+  'chiang mai':{lonlat:[98.993,18.788],label:'Chiang Mai'},
+  'chiba':{lonlat:[140.116,35.605],label:'Chiba'},
+  'chicago':{lonlat:[-87.63,41.878],label:'Chicago'},
+  'chittagong':{lonlat:[91.832,22.335],label:'Chittagong'},
+  'chongqing':{lonlat:[106.553,29.563],label:'Chongqing'},
+  'christchurch':{lonlat:[172.637,-43.531],label:'Christchurch'},
+  'ciamis':{lonlat:[108.349,-7.332],label:'Ciamis'},
+  'cianjur':{lonlat:[107.139,-6.82],label:'Cianjur'},
+  'cilacap':{lonlat:[108.83,-7.719],label:'Cilacap'},
+  'cilegon':{lonlat:[106.052,-5.988],label:'Cilegon'},
+  'cirebon':{lonlat:[108.552,-6.732],label:'Cirebon'},
+  'colombo':{lonlat:[79.862,6.927],label:'Colombo'},
+  'copenhagen':{lonlat:[12.568,55.676],label:'Copenhagen'},
+  'da nang':{lonlat:[108.22,16.054],label:'Da Nang'},
+  'dallas':{lonlat:[-96.797,32.781],label:'Dallas'},
+  'dar es salaam':{lonlat:[39.289,-6.813],label:'Dar Es Salaam'},
+  'davao':{lonlat:[125.613,7.073],label:'Davao'},
+  'demak':{lonlat:[110.639,-6.894],label:'Demak'},
+  'denpasar':{lonlat:[115.217,-8.65],label:'Denpasar'},
+  'depok':{lonlat:[106.776,-6.385],label:'Depok'},
+  'dhaka':{lonlat:[90.407,23.724],label:'Dhaka'},
+  'dili':{lonlat:[125.575,-8.559],label:'Dili'},
+  'doha':{lonlat:[51.531,25.286],label:'Doha'},
+  'dubai':{lonlat:[55.296,25.276],label:'Dubai'},
+  'dumai':{lonlat:[101.454,1.672],label:'Dumai'},
+  'ende':{lonlat:[121.66,-8.843],label:'Ende'},
+  'frankfurt':{lonlat:[8.682,50.111],label:'Frankfurt'},
+  'fukuoka':{lonlat:[130.402,33.589],label:'Fukuoka'},
+  'garut':{lonlat:[107.905,-7.22],label:'Garut'},
+  'gianyar':{lonlat:[115.331,-8.538],label:'Gianyar'},
+  'gold coast':{lonlat:[153.431,-28.002],label:'Gold Coast'},
+  'gorontalo':{lonlat:[123.062,0.544],label:'Gorontalo'},
+  'gresik':{lonlat:[112.655,-7.157],label:'Gresik'},
+  'grobogan':{lonlat:[110.895,-7.042],label:'Grobogan'},
+  'guadalajara':{lonlat:[-103.344,20.659],label:'Guadalajara'},
+  'guangzhou':{lonlat:[113.264,23.129],label:'Guangzhou'},
+  'gunungkidul':{lonlat:[110.614,-7.97],label:'Gunungkidul'},
+  'gunungsitoli':{lonlat:[97.613,1.289],label:'Gunungsitoli'},
+  'hamamatsu':{lonlat:[137.727,34.711],label:'Hamamatsu'},
+  'hamburg':{lonlat:[9.993,53.551],label:'Hamburg'},
+  'hanoi':{lonlat:[105.804,21.028],label:'Hanoi'},
+  'helsinki':{lonlat:[24.941,60.17],label:'Helsinki'},
+  'hiroshima':{lonlat:[132.46,34.385],label:'Hiroshima'},
+  'ho chi minh':{lonlat:[106.66,10.823],label:'Ho Chi Minh'},
+  'hong kong':{lonlat:[114.109,22.397],label:'Hong Kong'},
+  'hongkong':{lonlat:[114.109,22.397],label:'Hongkong'},
+  'houston':{lonlat:[-95.37,29.76],label:'Houston'},
+  'hyderabad':{lonlat:[78.474,17.385],label:'Hyderabad'},
+  'ile au cerf':{lonlat:[55.508,-4.64],label:'Ile Au Cerf'},
+  'incheon':{lonlat:[126.705,37.456],label:'Incheon'},
+  'indramayu':{lonlat:[108.316,-6.325],label:'Indramayu'},
+  'ipoh':{lonlat:[101.083,4.597],label:'Ipoh'},
+  'islamabad':{lonlat:[73.048,33.725],label:'Islamabad'},
+  'istanbul':{lonlat:[28.979,41.015],label:'Istanbul'},
+  'jakarta':{lonlat:[106.845,-6.208],label:'Jakarta'},
+  'jakarta barat':{lonlat:[106.754,-6.168],label:'Jakarta Barat'},
+  'jakarta pusat':{lonlat:[106.83,-6.186],label:'Jakarta Pusat'},
+  'jakarta selatan':{lonlat:[106.814,-6.261],label:'Jakarta Selatan'},
+  'jakarta timur':{lonlat:[106.9,-6.225],label:'Jakarta Timur'},
+  'jakarta utara':{lonlat:[106.938,-6.121],label:'Jakarta Utara'},
+  'jambi':{lonlat:[103.612,-1.61],label:'Jambi'},
+  'jayapura':{lonlat:[140.717,-2.534],label:'Jayapura'},
+  'jeddah':{lonlat:[39.192,21.543],label:'Jeddah'},
+  'jember':{lonlat:[113.7,-8.172],label:'Jember'},
+  'jepara':{lonlat:[110.668,-6.587],label:'Jepara'},
+  'jogja':{lonlat:[110.364,-7.803],label:'Jogja'},
+  'johannesburg':{lonlat:[28.045,-26.202],label:'Johannesburg'},
+  'johor bahru':{lonlat:[103.758,1.492],label:'Johor Bahru'},
+  'jombang':{lonlat:[112.23,-7.547],label:'Jombang'},
+  'kagoshima':{lonlat:[130.558,31.56],label:'Kagoshima'},
+  'kanazawa':{lonlat:[136.626,36.561],label:'Kanazawa'},
+  'kandangan':{lonlat:[115.267,-2.78],label:'Kandangan'},
+  'kaohsiung':{lonlat:[120.312,22.621],label:'Kaohsiung'},
+  'karachi':{lonlat:[67.011,24.861],label:'Karachi'},
+  'karanganyar':{lonlat:[111.024,-7.601],label:'Karanganyar'},
+  'karawang':{lonlat:[107.302,-6.321],label:'Karawang'},
+  'kathmandu':{lonlat:[85.314,27.717],label:'Kathmandu'},
+  'kawasaki':{lonlat:[139.703,35.53],label:'Kawasaki'},
+  'kebumen':{lonlat:[109.652,-7.668],label:'Kebumen'},
+  'kediri':{lonlat:[112.008,-7.816],label:'Kediri'},
+  'kendal':{lonlat:[110.196,-6.921],label:'Kendal'},
+  'kendari':{lonlat:[122.515,-3.972],label:'Kendari'},
+  'kiev':{lonlat:[30.523,50.45],label:'Kiev'},
+  'kinshasa':{lonlat:[15.322,-4.324],label:'Kinshasa'},
+  'kitakyushu':{lonlat:[130.842,33.883],label:'Kitakyushu'},
+  'kl':{lonlat:[101.687,3.139],label:'Kl'},
+  'klaten':{lonlat:[110.61,-7.706],label:'Klaten'},
+  'kobe':{lonlat:[135.195,34.69],label:'Kobe'},
+  'kolkata':{lonlat:[88.363,22.573],label:'Kolkata'},
+  'kota kinabalu':{lonlat:[116.075,5.979],label:'Kota Kinabalu'},
+  'kotabaru':{lonlat:[116.182,-3.297],label:'Kotabaru'},
+  'kotamobagu':{lonlat:[124.317,0.728],label:'Kotamobagu'},
+  'kuala lumpur':{lonlat:[101.687,3.139],label:'Kuala Lumpur'},
+  'kuching':{lonlat:[110.33,1.55],label:'Kuching'},
+  'kudus':{lonlat:[110.836,-6.805],label:'Kudus'},
+  'kulonprogo':{lonlat:[110.155,-7.828],label:'Kulonprogo'},
+  'kumamoto':{lonlat:[130.742,32.79],label:'Kumamoto'},
+  'kuningan':{lonlat:[108.479,-6.976],label:'Kuningan'},
+  'kupang':{lonlat:[123.607,-10.169],label:'Kupang'},
+  'kuwait city':{lonlat:[47.978,29.375],label:'Kuwait City'},
+  'kyiv':{lonlat:[30.523,50.45],label:'Kyiv'},
+  'kyoto':{lonlat:[135.768,35.012],label:'Kyoto'},
+  'lagos':{lonlat:[3.379,6.455],label:'Lagos'},
+  'lahore':{lonlat:[74.344,31.549],label:'Lahore'},
+  'lamongan':{lonlat:[112.413,-7.117],label:'Lamongan'},
+  'langsa':{lonlat:[97.968,4.47],label:'Langsa'},
+  'lebak':{lonlat:[106.25,-6.56],label:'Lebak'},
+  'lhokseumawe':{lonlat:[97.14,5.181],label:'Lhokseumawe'},
+  'lima':{lonlat:[-77.028,-12.046],label:'Lima'},
+  'lisbon':{lonlat:[-9.139,38.722],label:'Lisbon'},
+  'london':{lonlat:[-0.128,51.507],label:'London'},
+  'los angeles':{lonlat:[-118.244,34.052],label:'Los Angeles'},
+  'lubuklinggau':{lonlat:[102.861,-3.3],label:'Lubuklinggau'},
+  'lumajang':{lonlat:[113.222,-8.131],label:'Lumajang'},
+  'macau':{lonlat:[113.549,22.199],label:'Macau'},
+  'madinah':{lonlat:[39.612,24.469],label:'Madinah'},
+  'madiun':{lonlat:[111.524,-7.63],label:'Madiun'},
+  'madrid':{lonlat:[-3.703,40.417],label:'Madrid'},
+  'magelang':{lonlat:[110.217,-7.47],label:'Magelang'},
+  'magetan':{lonlat:[111.343,-7.642],label:'Magetan'},
+  'majalengka':{lonlat:[108.227,-6.836],label:'Majalengka'},
+  'makassar':{lonlat:[119.419,-5.147],label:'Makassar'},
+  'malang':{lonlat:[112.616,-7.983],label:'Malang'},
+  'mamuju':{lonlat:[118.889,-2.681],label:'Mamuju'},
+  'manado':{lonlat:[124.842,1.48],label:'Manado'},
+  'manama':{lonlat:[50.586,26.215],label:'Manama'},
+  'manila':{lonlat:[120.984,14.599],label:'Manila'},
+  'manokwari':{lonlat:[134.062,-0.861],label:'Manokwari'},
+  'mataram':{lonlat:[116.117,-8.583],label:'Mataram'},
+  'matsuyama':{lonlat:[132.765,33.839],label:'Matsuyama'},
+  'maumere':{lonlat:[122.212,-8.623],label:'Maumere'},
+  'mecca':{lonlat:[39.826,21.423],label:'Mecca'},
+  'medan':{lonlat:[98.679,3.595],label:'Medan'},
+  'medina':{lonlat:[39.612,24.469],label:'Medina'},
+  'mekkah':{lonlat:[39.826,21.423],label:'Mekkah'},
+  'melbourne':{lonlat:[144.963,-37.814],label:'Melbourne'},
+  'merauke':{lonlat:[140.362,-8.494],label:'Merauke'},
+  'metro':{lonlat:[105.307,-5.113],label:'Metro'},
+  'mexico city':{lonlat:[-99.133,19.433],label:'Mexico City'},
+  'miami':{lonlat:[-80.192,25.775],label:'Miami'},
+  'milan':{lonlat:[9.19,45.465],label:'Milan'},
+  'mojokerto':{lonlat:[112.434,-7.471],label:'Mojokerto'},
+  'montreal':{lonlat:[-73.554,45.509],label:'Montreal'},
+  'moscow':{lonlat:[37.618,55.755],label:'Moscow'},
+  'mumbai':{lonlat:[72.878,19.076],label:'Mumbai'},
+  'munich':{lonlat:[11.582,48.135],label:'Munich'},
+  'muscat':{lonlat:[58.405,23.614],label:'Muscat'},
+  'nagasaki':{lonlat:[129.873,32.749],label:'Nagasaki'},
+  'nagoya':{lonlat:[136.907,35.181],label:'Nagoya'},
+  'naha':{lonlat:[127.681,26.212],label:'Naha'},
+  'nairobi':{lonlat:[36.817,-1.286],label:'Nairobi'},
+  'naypyidaw':{lonlat:[96.129,19.745],label:'Naypyidaw'},
+  'new delhi':{lonlat:[77.209,28.614],label:'New Delhi'},
+  'new york':{lonlat:[-74.006,40.713],label:'New York'},
+  'newcastle':{lonlat:[151.776,-32.927],label:'Newcastle'},
+  'nganjuk':{lonlat:[111.905,-7.605],label:'Nganjuk'},
+  'ngawi':{lonlat:[111.451,-7.408],label:'Ngawi'},
+  'niigata':{lonlat:[139.044,37.916],label:'Niigata'},
+  'nunukan':{lonlat:[117.666,4.136],label:'Nunukan'},
+  'okayama':{lonlat:[133.935,34.662],label:'Okayama'},
+  'osaka':{lonlat:[135.502,34.694],label:'Osaka'},
+  'oslo':{lonlat:[10.752,59.914],label:'Oslo'},
+  'pacitan':{lonlat:[111.099,-8.198],label:'Pacitan'},
+  'padang':{lonlat:[100.354,-0.947],label:'Padang'},
+  'padang panjang':{lonlat:[100.408,-0.455],label:'Padang Panjang'},
+  'padang sidempuan':{lonlat:[99.27,1.379],label:'Padang Sidempuan'},
+  'pagar alam':{lonlat:[103.264,-4.025],label:'Pagar Alam'},
+  'palangka raya':{lonlat:[113.921,-2.208],label:'Palangka Raya'},
+  'palembang':{lonlat:[104.745,-2.916],label:'Palembang'},
+  'palopo':{lonlat:[120.198,-3.004],label:'Palopo'},
+  'palu':{lonlat:[119.872,-0.9],label:'Palu'},
+  'pamekasan':{lonlat:[113.47,-7.157],label:'Pamekasan'},
+  'pandeglang':{lonlat:[106.108,-6.298],label:'Pandeglang'},
+  'pangandaran':{lonlat:[108.65,-7.69],label:'Pangandaran'},
+  'pangkalpinang':{lonlat:[106.118,-2.131],label:'Pangkalpinang'},
+  'parepare':{lonlat:[119.623,-4.014],label:'Parepare'},
+  'paris':{lonlat:[2.349,48.864],label:'Paris'},
+  'pasuruan':{lonlat:[112.907,-7.644],label:'Pasuruan'},
+  'pati':{lonlat:[111.035,-6.748],label:'Pati'},
+  'payakumbuh':{lonlat:[100.625,-0.22],label:'Payakumbuh'},
+  'pekalongan':{lonlat:[109.675,-6.889],label:'Pekalongan'},
+  'pekanbaru':{lonlat:[101.447,0.507],label:'Pekanbaru'},
+  'pemalang':{lonlat:[109.378,-6.889],label:'Pemalang'},
+  'pematang siantar':{lonlat:[99.069,2.958],label:'Pematang Siantar'},
+  'penang':{lonlat:[100.33,5.414],label:'Penang'},
+  'perth':{lonlat:[115.861,-31.953],label:'Perth'},
+  'philadelphia':{lonlat:[-75.165,39.952],label:'Philadelphia'},
+  'phnom penh':{lonlat:[104.916,11.562],label:'Phnom Penh'},
+  'phoenix':{lonlat:[-112.074,33.448],label:'Phoenix'},
+  'phuket':{lonlat:[98.392,7.879],label:'Phuket'},
+  'ponorogo':{lonlat:[111.463,-7.866],label:'Ponorogo'},
+  'pontianak':{lonlat:[109.332,-0.022],label:'Pontianak'},
+  'prabumulih':{lonlat:[104.236,-3.432],label:'Prabumulih'},
+  'prague':{lonlat:[14.421,50.088],label:'Prague'},
+  'probolinggo':{lonlat:[113.215,-7.755],label:'Probolinggo'},
+  'pune':{lonlat:[73.857,18.521],label:'Pune'},
+  'purbalingga':{lonlat:[109.362,-7.389],label:'Purbalingga'},
+  'purwakarta':{lonlat:[107.444,-6.552],label:'Purwakarta'},
+  'purworejo':{lonlat:[110.018,-7.714],label:'Purworejo'},
+  'rembang':{lonlat:[111.34,-6.708],label:'Rembang'},
+  'rio de janeiro':{lonlat:[-43.172,-22.909],label:'Rio De Janeiro'},
+  'riyadh':{lonlat:[46.675,24.687],label:'Riyadh'},
+  'rome':{lonlat:[12.496,41.903],label:'Rome'},
+  'sabang':{lonlat:[95.321,5.893],label:'Sabang'},
+  'sagamihara':{lonlat:[139.397,35.573],label:'Sagamihara'},
+  'saint petersburg':{lonlat:[30.316,59.939],label:'Saint Petersburg'},
+  'saitama':{lonlat:[139.649,35.861],label:'Saitama'},
+  'sakai':{lonlat:[135.553,34.573],label:'Sakai'},
+  'salatiga':{lonlat:[110.501,-7.331],label:'Salatiga'},
+  'samarinda':{lonlat:[117.136,-0.502],label:'Samarinda'},
+  'sampang':{lonlat:[113.249,-7.197],label:'Sampang'},
+  'sampit':{lonlat:[112.953,-2.535],label:'Sampit'},
+  'san antonio':{lonlat:[-98.494,29.424],label:'San Antonio'},
+  'san diego':{lonlat:[-117.157,32.716],label:'San Diego'},
+  'san francisco':{lonlat:[-122.419,37.775],label:'San Francisco'},
+  'san jose':{lonlat:[-121.886,37.339],label:'San Jose'},
+  'santiago':{lonlat:[-70.667,-33.457],label:'Santiago'},
+  'sao paulo':{lonlat:[-46.633,-23.55],label:'Sao Paulo'},
+  'sapporo':{lonlat:[141.354,43.061],label:'Sapporo'},
+  'sawahlunto':{lonlat:[100.776,-0.682],label:'Sawahlunto'},
+  'seattle':{lonlat:[-122.333,47.607],label:'Seattle'},
+  'semarang':{lonlat:[110.438,-6.967],label:'Semarang'},
+  'sendai':{lonlat:[140.882,38.268],label:'Sendai'},
+  'seoul':{lonlat:[126.978,37.566],label:'Seoul'},
+  'serang':{lonlat:[106.152,-6.11],label:'Serang'},
+  'shanghai':{lonlat:[121.474,31.23],label:'Shanghai'},
+  'sharjah':{lonlat:[55.382,25.357],label:'Sharjah'},
+  'shenzhen':{lonlat:[114.058,22.543],label:'Shenzhen'},
+  'shizuoka':{lonlat:[138.383,34.977],label:'Shizuoka'},
+  'sibolga':{lonlat:[98.779,1.742],label:'Sibolga'},
+  'sidoarjo':{lonlat:[112.718,-7.447],label:'Sidoarjo'},
+  'singapore':{lonlat:[103.82,1.352],label:'Singapore'},
+  'singapura':{lonlat:[103.82,1.352],label:'Singapura'},
+  'singaraja':{lonlat:[115.088,-8.112],label:'Singaraja'},
+  'singkawang':{lonlat:[108.995,0.908],label:'Singkawang'},
+  'situbondo':{lonlat:[114.003,-7.706],label:'Situbondo'},
+  'sleman':{lonlat:[110.354,-7.716],label:'Sleman'},
+  'solo':{lonlat:[110.831,-7.576],label:'Solo'},
+  'solok':{lonlat:[100.654,-0.789],label:'Solok'},
+  'sorong':{lonlat:[131.255,-0.876],label:'Sorong'},
+  'sragen':{lonlat:[111.027,-7.424],label:'Sragen'},
+  'stockholm':{lonlat:[18.068,59.33],label:'Stockholm'},
+  'subang':{lonlat:[107.758,-6.57],label:'Subang'},
+  'sukabumi':{lonlat:[106.93,-6.92],label:'Sukabumi'},
+  'sukoharjo':{lonlat:[110.838,-7.686],label:'Sukoharjo'},
+  'sumedang':{lonlat:[107.921,-6.854],label:'Sumedang'},
+  'sumenep':{lonlat:[113.862,-6.99],label:'Sumenep'},
+  'sungai penuh':{lonlat:[101.397,-2.06],label:'Sungai Penuh'},
+  'surabaya':{lonlat:[112.752,-7.257],label:'Surabaya'},
+  'surakarta':{lonlat:[110.831,-7.576],label:'Surakarta'},
+  'sydney':{lonlat:[151.209,-33.869],label:'Sydney'},
+  'tabanan':{lonlat:[115.124,-8.541],label:'Tabanan'},
+  'taipei':{lonlat:[121.565,25.033],label:'Taipei'},
+  'tangerang':{lonlat:[106.64,-6.178],label:'Tangerang'},
+  'tangerang selatan':{lonlat:[106.744,-6.289],label:'Tangerang Selatan'},
+  'tanjung balai':{lonlat:[99.801,2.966],label:'Tanjung Balai'},
+  'tanjung selor':{lonlat:[117.374,2.841],label:'Tanjung Selor'},
+  'tanjungpinang':{lonlat:[104.444,0.918],label:'Tanjungpinang'},
+  'tarakan':{lonlat:[117.637,3.3],label:'Tarakan'},
+  'tasikmalaya':{lonlat:[108.22,-7.327],label:'Tasikmalaya'},
+  'tebing tinggi':{lonlat:[99.162,3.328],label:'Tebing Tinggi'},
+  'tegal':{lonlat:[109.126,-6.869],label:'Tegal'},
+  'tehran':{lonlat:[51.388,35.69],label:'Tehran'},
+  'tel aviv':{lonlat:[34.781,32.085],label:'Tel Aviv'},
+  'temanggung':{lonlat:[110.18,-7.317],label:'Temanggung'},
+  'ternate':{lonlat:[127.38,0.78],label:'Ternate'},
+  'tianjin':{lonlat:[117.19,39.125],label:'Tianjin'},
+  'timika':{lonlat:[136.887,-4.528],label:'Timika'},
+  'tokyo':{lonlat:[139.692,35.689],label:'Tokyo'},
+  'tomohon':{lonlat:[124.833,1.33],label:'Tomohon'},
+  'toronto':{lonlat:[-79.383,43.653],label:'Toronto'},
+  'trenggalek':{lonlat:[111.708,-8.047],label:'Trenggalek'},
+  'tuban':{lonlat:[111.905,-6.9],label:'Tuban'},
+  'tulungagung':{lonlat:[111.903,-8.065],label:'Tulungagung'},
+  'ulaanbaatar':{lonlat:[106.921,47.887],label:'Ulaanbaatar'},
+  'vancouver':{lonlat:[-123.121,49.283],label:'Vancouver'},
+  'vienna':{lonlat:[16.373,48.209],label:'Vienna'},
+  'vientiane':{lonlat:[102.6,17.967],label:'Vientiane'},
+  'warsaw':{lonlat:[21.012,52.23],label:'Warsaw'},
+  'washington':{lonlat:[-77.037,38.907],label:'Washington'},
+  'wellington':{lonlat:[174.776,-41.286],label:'Wellington'},
+  'wonogiri':{lonlat:[110.923,-7.813],label:'Wonogiri'},
+  'wonosobo':{lonlat:[109.905,-7.361],label:'Wonosobo'},
+  'wuhan':{lonlat:[114.305,30.593],label:'Wuhan'},
+  'xian':{lonlat:[108.94,34.342],label:'Xian'},
+  'yangon':{lonlat:[96.157,16.805],label:'Yangon'},
+  'yogyakarta':{lonlat:[110.364,-7.803],label:'Yogyakarta'},
+  'yokohama':{lonlat:[139.638,35.444],label:'Yokohama'},
+  'zurich':{lonlat:[8.541,47.376],label:'Zurich'}
+};
+
+function getCityCoord(cityStr){
+  if(!cityStr) return null;
+  const lower=cityStr.toLowerCase();
+  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
+  for(const key of keys){
+    if(lower.includes(key)) return CITY_COORDS[key];
+  }
+  return null;
+}
+
+// DRAWER
+var _drawerData = {kota:{}, negara:{}};
+var _spkRows = [];
+
+function bukaDrawer(tipe){
+  var overlay = document.getElementById('drawer-overlay');
+  var drawer = document.getElementById('drawer');
+  var judul = document.getElementById('drawer-judul');
+  var list = document.getElementById('drawer-list');
+
+  var judulMap = {berjalan:'PERJALANAN', kota:'KOTA', negara:'NEGARA'};
+  judul.textContent = judulMap[tipe] || tipe.toUpperCase();
+  overlay.classList.add('aktif');
+  drawer.classList.add('aktif');
+  document.body.style.overflow = 'hidden';
+
+  // History API — push state supaya tombol back tutup drawer
+  window.history.pushState({drawer: true}, '');
+
+  var rows = _spkRows;
+
+  if(tipe === 'berjalan'){
+    if(!rows.length){list.innerHTML='<div class="drawer-kosong">Memuat...</div>';return;}
+    var map={};
+    rows.forEach(function(r){
+      var id=r.c[0]&&r.c[0].v, c=r.c[2]&&r.c[2].v;
+      if(!id) return;
+      if(!map[id]) map[id]={id,kota:[],count:0};
+      map[id].count++;
+      if(c) map[id].kota.push(c.split(',')[0].trim());
+    });
+    var arr=Object.values(map).sort(function(a,b){return b.count-a.count;}).slice(0,50);
+    if(!arr.length){list.innerHTML='<div class="drawer-kosong">Belum ada kaos yang berjalan</div>';return;}
+    list.innerHTML=arr.map(function(g){
+      var k=[...new Set(g.kota)].slice(0,3).join(' → ');
+      return '<a href="/id/'+encodeURIComponent(g.id)+'" class="drawer-item" style="text-decoration:none;color:inherit;">'+
+        '<div><div class="di-id">'+g.id+'</div><div class="di-info">'+g.count+' scan · '+(k||'—')+'</div></div>'+
+        '<div class="di-arrow">›</div></a>';
+    }).join('');
+  }
+
+  if(tipe === 'kota'){
+    var cnt={};
+    rows.forEach(function(r){var c=r.c[2]&&r.c[2].v;if(!c) return;var k=c.split(',')[0].trim();cnt[k]=(cnt[k]||0)+1;});
+    cnt['Klaten']=cnt['Klaten']||0;
+    var sorted=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];});
+    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data kota</div>';return;}
+    list.innerHTML=sorted.map(function(e){
+      return '<div class="drawer-item"><div><div class="di-id">'+e[0]+'</div><div class="di-info">'+(e[1]>0?e[1]+' scan':'Origin')+'</div></div></div>';
+    }).join('');
+  }
+
+  if(tipe === 'negara'){
+    var cnt={};
+    rows.forEach(function(r){var c=r.c[2]&&r.c[2].v;if(!c) return;var parts=c.split(',');var n=parts.length>1?parts[parts.length-1].trim():'Indonesia';cnt[n]=(cnt[n]||0)+1;});
+    var sorted=Object.entries(cnt).sort(function(a,b){return b[1]-a[1];});
+    if(!sorted.length){list.innerHTML='<div class="drawer-kosong">Belum ada data negara</div>';return;}
+    list.innerHTML=sorted.map(function(e){
+      return '<div class="drawer-item"><div><div class="di-id">'+e[0]+'</div><div class="di-info">'+e[1]+' scan</div></div></div>';
+    }).join('');
+  }
+}
+
+function tutupDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('aktif');
+  document.getElementById('drawer').classList.remove('aktif');
+  document.body.style.overflow = '';
+}
+
+// Intercept tombol back — tutup drawer, tidak keluar halaman
+window.addEventListener('popstate', function(e){
+  if(document.getElementById('drawer').classList.contains('aktif')){
+    tutupDrawer();
+  }
+});
+
+var _geoCache = null;
+function getGeoCache(){
+  if(_geoCache) return _geoCache;
+  try{ _geoCache = JSON.parse(sessionStorage.getItem('blumbang_geo')||'{}'); }
+  catch(e){ _geoCache = {}; }
+  return _geoCache;
+}
+function setGeoCache(key, val){
+  var cache = getGeoCache();
+  cache[key] = val;
+  try{ sessionStorage.setItem('blumbang_geo', JSON.stringify(cache)); }catch(e){}
+}
+
+async function geocodeCity(cityStr){
+  if(!cityStr) return null;
+  // Cek dictionary dulu
+  var fromDict = getCityCoord(cityStr);
+  if(fromDict) return fromDict;
+  // Strip "Kota " di awal dan cek lagi
+  var stripped = cityStr.replace(/^kota\s+/i, '').trim();
+  if(stripped !== cityStr){
+    var fromDictStripped = getCityCoord(stripped);
+    if(fromDictStripped) return fromDictStripped;
+  }
+  // Cek cache
+  var cache = getGeoCache();
+  var cacheKey = cityStr.toLowerCase().trim();
+  if(cache[cacheKey] !== undefined) return cache[cacheKey];
+  // Fetch Nominatim
+  try{
+    // Ambil bagian sebelum koma untuk query yang lebih bersih
+    var query = cityStr.split(',')[0].trim();
+    var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&accept-language=en';
+    var res = await fetch(url, {headers:{'User-Agent':'blumbang.id/1.0'}});
+    var data = await res.json();
+    if(data && data[0]){
+      var lon = parseFloat(data[0].lon);
+      var lat = parseFloat(data[0].lat);
+      var label = data[0].display_name.split(',')[0].trim();
+      var coord = {lonlat:[lon,lat], label:label};
+      setGeoCache(cacheKey, coord);
+      return coord;
+    }
+  }catch(e){}
+  setGeoCache(cacheKey, null);
+  return null;
+}
+
+async function buildMap(rows, preloadedWorld){
+  const citiesRow = document.getElementById('cities-row');
+  const tooltip = document.getElementById('map-tooltip');
+  const mapSection = document.getElementById('map-section');
+
+  // Kumpulkan kota unik dari Sheet — skip Klaten karena sudah jadi Origin
+  const uniqueCities = {};
+  rows.forEach(function(r){
+    const c = r.c[2] && r.c[2].v;
+    if(!c) return;
+    const lower = c.toLowerCase().trim();
+    if(lower === 'klaten' || lower === 'klaten, indonesia') return;
+    const key = lower;
+    if(!uniqueCities[key]) uniqueCities[key] = c;
+  });
+
+  // Geocode semua kota paralel (rate limit: max 1 req/detik untuk Nominatim)
+  const cityMap = {};
+  const cityKeys = Object.keys(uniqueCities);
+  for(var i=0; i<cityKeys.length; i++){
+    var cityStr = uniqueCities[cityKeys[i]];
+    var coord = await geocodeCity(cityStr);
+    if(!coord) continue;
+    var label = cityStr.split(',')[0].trim();
+    if(!cityMap[label]) cityMap[label] = {coord, count:0};
+    // Hitung total scan per kota
+    rows.forEach(function(r){
+      const c = r.c[2] && r.c[2].v;
+      if(c && c.toLowerCase().trim() === cityKeys[i]) cityMap[label].count++;
+    });
+    // Rate limit Nominatim — hanya delay jika ini hasil geocoding baru (bukan cache/dict)
+    if(!getCityCoord(cityStr) && !getGeoCache()[cityKeys[i]]){
+      await new Promise(function(res){setTimeout(res, 1100);});
+    }
+  }
+
+  // Dimensi peta: lebar penuh, tinggi 60vh
+  const w = window.innerWidth || document.documentElement.clientWidth;
+  const h = Math.round(w * 0.56); // rasio 16:9 landscape
+
+  const svg = d3.select('#d3-world-map')
+    .attr('width', w)
+    .attr('height', h)
+    .attr('viewBox', '0 0 ' + w + ' ' + h);
+
+  mapSection.style.height = h + 'px';
+
+  // Kumpulkan semua koordinat yang punya spark + Klaten
+  const KLATEN_COORD = [110.6, -7.7];
+  const allPoints = [KLATEN_COORD];
+  Object.values(cityMap).forEach(function(item){
+    allPoints.push(item.coord.lonlat);
+  });
+
+  // Buat GeoJSON dari titik-titik tersebut untuk fitExtent
+  const pointsGeo = {
+    type: 'FeatureCollection',
+    features: allPoints.map(function(pt){
+      return { type:'Feature', geometry:{ type:'Point', coordinates:pt }, properties:{} };
+    })
+  };
+
+  // Padding dinamis: makin sedikit titik makin besar padding
+  const pad = allPoints.length <= 2 ? 60 : allPoints.length <= 5 ? 40 : 20;
+
+  const projection = d3.geoNaturalEarth1()
+    .rotate([-118, 0, 0])
+    .fitExtent([[pad, pad], [w-pad, h-pad]], pointsGeo);
+
+  const pathGen = d3.geoPath().projection(projection);
+
+  function showTip(evt, text){
+    var cx, cy;
+    if(evt.touches && evt.touches[0]){ cx=evt.touches[0].clientX; cy=evt.touches[0].clientY; }
+    else { cx=evt.clientX; cy=evt.clientY; }
+    tooltip.textContent = text;
+    tooltip.style.left = cx + 'px';
+    tooltip.style.top = cy + 'px';
+    tooltip.classList.add('on');
+  }
+  function hideTip(){ tooltip.classList.remove('on'); }
+
+  Promise.resolve(preloadedWorld).then(function(world){
+    const countries = topojson.feature(world, world.objects.countries);
+
+    svg.append('path').datum(d3.geoGraticule()()).attr('d', pathGen)
+      .attr('fill','none').attr('stroke','rgba(255,255,255,0.06)').attr('stroke-width','0.5');
+
+    svg.selectAll('path.country').data(countries.features).enter().append('path')
+      .attr('class','country').attr('d', pathGen)
+      .attr('fill', function(d){ return d.id===360 ? 'rgba(201,168,76,0.5)' : 'rgba(40,80,140,0.35)'; })
+      .attr('stroke','rgba(255,255,255,0.18)').attr('stroke-width','0.3');
+
+    svg.append('path')
+      .datum(topojson.mesh(world, world.objects.countries, function(a,b){ return a!==b; }))
+      .attr('d', pathGen).attr('fill','none')
+      .attr('stroke','rgba(255,255,255,0.1)').attr('stroke-width','0.2');
+
+    const KLATEN = [110.6, -7.7];
+    const kPx = projection(KLATEN);
+    if(!kPx) return;
+
+    // Garis Klaten ke kota lain
+    Object.values(cityMap).forEach(function(item){
+      const px = projection(item.coord.lonlat);
+      if(!px) return;
+      svg.append('line')
+        .attr('x1',kPx[0]).attr('y1',kPx[1]).attr('x2',px[0]).attr('y2',px[1])
+        .attr('stroke','rgba(201,168,76,0.2)').attr('stroke-width','0.6').attr('stroke-dasharray','3,5');
+    });
+
+    // Titik kota - pulse, TANPA label
+    Object.values(cityMap).forEach(function(item){
+      const px = projection(item.coord.lonlat);
+      if(!px) return;
+      if(px[0] < -w || px[0] > w*2 || px[1] < -h || px[1] > h*2) return;
+      const cx = px[0], cy = px[1];
+
+      const ring = svg.append('circle')
+        .attr('cx',cx).attr('cy',cy).attr('r',2)
+        .attr('fill','none')
+        .attr('stroke','rgba(201,168,76,0.6)')
+        .attr('stroke-width','0.8');
+
+      function blink(){
+        ring.attr('r',2).attr('stroke-opacity',0.8)
+          .transition().duration(1600).ease(d3.easeLinear)
+          .attr('r',11).attr('stroke-opacity',0)
+          .on('end', blink);
+      }
+      blink();
+
+      svg.append('circle')
+        .attr('cx',cx).attr('cy',cy).attr('r',2.5)
+        .attr('fill','#C9A84C')
+        .attr('stroke','rgba(255,255,255,0.6)').attr('stroke-width','0.5')
+        .style('cursor','pointer')
+        .on('touchstart mouseover', function(evt){ evt.preventDefault(); showTip(evt, item.coord.label + ' · ' + item.count + ' scan'); })
+        .on('touchend mouseout', hideTip);
+    });
+
+    // Klaten origin
+    const kRing = svg.append('circle')
+      .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',3)
+      .attr('fill','none').attr('stroke','rgba(201,168,76,0.8)').attr('stroke-width','1');
+
+    function blinkKlaten(){
+      kRing.attr('r',3).attr('stroke-opacity',0.8)
+        .transition().duration(2200).ease(d3.easeLinear)
+        .attr('r',18).attr('stroke-opacity',0)
+        .on('end', blinkKlaten);
+    }
+    blinkKlaten();
+
+    svg.append('circle')
+      .attr('cx',kPx[0]).attr('cy',kPx[1]).attr('r',4)
+      .attr('fill','#C9A84C').attr('stroke','#fff').attr('stroke-width','1')
+      .style('cursor','pointer')
+      .on('touchstart mouseover', function(evt){ evt.preventDefault(); showTip(evt,'Klaten · Origin'); })
+      .on('touchend mouseout', hideTip);
+
+    // City tags - tambah kota yang punya spark
+    Object.keys(cityMap).forEach(function(label){
+      var kotaSlug = label.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-');
+      citiesRow.innerHTML += '<a href="/sparks/kota/'+kotaSlug+'" class="city-tag" style="text-decoration:none;"><span class="dot"></span>' + label + '</a>';
+    });
+
+    document.getElementById('map-loading').style.display = 'none';
+
+  }).catch(function(){
+    document.getElementById('map-loading').style.display = 'none';
+  });
+}
+
+// Load data
+requestAnimationFrame(function(){
+  Promise.all([
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
+    fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS').then(function(r){return r.text();}),
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
+  ]).then(function(results){
+    var txt = results[0];
+    var txtG = results[1];
+    var worldData = results[2];
+    var m = txt.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    if(!m){ document.getElementById('map-loading').style.display='none'; return; }
+    var rows = JSON.parse(m[1]).table.rows||[];
+    _spkRows = rows; // simpan untuk drawer
+
+    var mG = txtG.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
+    var rowsG = mG ? JSON.parse(mG[1]).table.rows||[] : [];
+    var totalGarments = rowsG.filter(function(r){return r.c[0]&&r.c[0].v;}).length;
+    animateNum('stat-garments', totalGarments);
+    animateNum('stat-perjalanan', rows.filter(function(r){return r.c[0]&&r.c[0].v;}).length);
+    const citySet = new Set(['klaten']);
+    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c)citySet.add(c.split(',')[0].trim().toLowerCase());});
+    animateNum('stat-kota', citySet.size);
+    const negSet = new Set(['Indonesia']);
+    rows.forEach(function(r){const c=r.c[2]&&r.c[2].v;if(c){const p=c.split(',');if(p.length>1)negSet.add(p[p.length-1].trim());}});
+    animateNum('stat-negara', negSet.size);
+
+    // Isi data drawer kota
+    var kotaCount = {'Klaten':0};
+    rows.forEach(function(r){
+      const c=r.c[2]&&r.c[2].v;
+      if(!c) return;
+      var kota = c.split(',')[0].trim();
+      kotaCount[kota] = (kotaCount[kota]||0) + 1;
+    });
+    _drawerData.kota = kotaCount;
+
+    // Isi data drawer negara
+    var negaraCount = {'Indonesia':0};
+    rows.forEach(function(r){
+      const c=r.c[2]&&r.c[2].v;
+      if(!c) return;
+      var parts = c.split(',');
+      var negara = parts.length > 1 ? parts[parts.length-1].trim() : 'Indonesia';
+      negaraCount[negara] = (negaraCount[negara]||0) + 1;
+    });
+
+    _drawerData.negara = negaraCount;
+
+    const scans = rows.filter(function(r){return r.c[2]&&r.c[2].v;});
+    if(scans.length){
+      const last = scans[scans.length-1];
+      const lastId = last.c[0] && last.c[0].v ? last.c[0].v.toString().trim() : "";
+      document.getElementById("ls-city").textContent = last.c[2].v.split(",")[0];
+      if(lastId){document.getElementById("ls-id").textContent = lastId;document.getElementById("latest-section").setAttribute("href","/id/"+encodeURIComponent(lastId));}
+      document.getElementById("latest-section").style.display = "flex";
+    }
+
+    buildMap(rows, worldData).catch(function(e){console.error('buildMap error:',e);});
+
+    // Fetch Hall of Fame
+    fetch('/sparks/hof').then(function(r){return r.text();}).then(function(html){
+      var m = html.match(/<script id="hof-data" type="application\/json">([\s\S]*?)<\/script>/);
+      if(!m) return;
+      var hof = JSON.parse(m[1]);
+      var hofSection = document.getElementById('hof-section');
+      var hofJauh = document.getElementById('hof-jauh');
+      var hofKota = document.getElementById('hof-kota');
+      if(!hofSection||!hofJauh||!hofKota) return;
+      hofJauh.innerHTML = hof.terjauh.map(function(g,i){
+        return '<a href="/id/'+encodeURIComponent(g.id)+'" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;"><div style="font-family:var(--font-logo);font-size:1rem;color:var(--gold);min-width:28px;">#'+(i+1)+'</div><div><div style="font-family:var(--font-ui);font-size:.75rem;color:var(--white);">'+g.nama+' · #'+g.nomor+'</div><div style="font-family:var(--font-ui);font-size:.65rem;color:var(--muted);">'+g.jarak+' km dari Blumbang ID</div></div></a>';
+      }).join('');
+      hofKota.innerHTML = hof.terbanyak.map(function(g,i){
+        return '<a href="/id/'+encodeURIComponent(g.id)+'" style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;"><div style="font-family:var(--font-logo);font-size:1rem;color:var(--gold);min-width:28px;">#'+(i+1)+'</div><div><div style="font-family:var(--font-ui);font-size:.75rem;color:var(--white);">'+g.nama+' · #'+g.nomor+'</div><div style="font-family:var(--font-ui);font-size:.65rem;color:var(--muted);">'+g.kotaUnik+' kota</div></div></a>';
+      }).join('');
+      hofSection.style.display = 'block';
+    }).catch(function(){});
+  }).catch(function(){
+    document.getElementById('map-loading').style.display = 'none';
+  });
+});
+</script>
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="tutupDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-judul" id="drawer-judul">KOTA</div>
+    <button class="drawer-tutup" onclick="tutupDrawer()">✕ Tutup</button>
+  </div>
+  <div class="drawer-list" id="drawer-list">
+    <div class="drawer-kosong">Memuat...</div>
+  </div>
+</div>
+
+</body>
+</html>

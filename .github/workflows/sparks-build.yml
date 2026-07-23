@@ -29,23 +29,20 @@ jobs:
       - name: Run build-sparks
         run: node build-sparks.js
 
+      - name: Generate sitemap dates
+        run: node build-sitemap-dates.js
+
       - name: Update sitemap
         run: node generate-posts.js
 
       - name: Refresh stats homepage
         run: node inject-stats.js
 
-      - name: Refresh sparks description
-        run: node inject-sparks-desc.js
-
-      - name: Refresh sparks description
-        run: node inject-sparks-desc.js
-
       - name: Commit dan push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sparks/ sparks.html index.html
+          git add sparks/ index.html sitemap-dates.json sitemap.xml
           git diff --staged --quiet && echo "Tidak ada perubahan" && exit 0
-          git commit -m "chore: rebuild sparks kota + refresh stats homepage"
+          git commit -m "chore: rebuild sparks kota + refresh stats homepage + sitemap dates"
           git push origin main

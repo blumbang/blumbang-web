@@ -250,42 +250,93 @@ async function fetchSeriSlugs() {
   try {
     const res = await fetch('https://catalog-builder.blmbng-id.workers.dev/seri/list');
     const data = await res.json();
-    if (data.ok && data.data) {
-      return data.data.filter(s => s.status === 'published').map(s => s.id);
+    if (data.ok && Array.isArray(data.data)) {
+      return data.data
+        .filter(s => s.status === 'published')
+        .map(s => ({ id: s.id, ts: s.updated_at || s.created_at || null }));
     }
+    console.log('⚠️  Respons /seri/list tidak sesuai bentuk yang diharapkan');
   } catch(e) {
-    console.log('⚠️  Gagal fetch seri dari Worker, pakai fallback');
+    console.log('⚠️  Gagal fetch seri dari Worker:', e.message);
   }
-  return [];
+  return null;   // null = GAGAL (beda dari [] yang berarti "memang nol seri")
 }
 
-function generateSitemap(posts, seriSlugs) {
+// Tanggal (YYYY-MM-DD) dari epoch milidetik. Balik ke fallback kalau tidak masuk akal.
+function tglDariEpoch(ms, fallback) {
+  if (!ms || typeof ms !== 'number' || ms <= 0) return fallback;
+  const d = new Date(ms);
+  if (isNaN(d.getTime())) return fallback;
+  return d.toISOString().split('T')[0];
+}
+
+// Manifest tanggal halaman statis. Dibuat build-sitemap-dates.js di GitHub Actions.
+// Kalau file belum ada / rusak → objek kosong, semua halaman statis pakai fallback.
+// TIDAK BOLEH melempar error: script ini juga jalan saat Cloudflare Pages build.
+function bacaManifestTanggal() {
+  try {
+    const p = path.join(__dirname, 'sitemap-dates.json');
+    if (!fs.existsSync(p)) {
+      console.log('⚠️  sitemap-dates.json belum ada — halaman statis pakai tanggal fallback');
+      return {};
+    }
+    const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+    return (m && typeof m === 'object') ? m : {};
+  } catch(e) {
+    console.log('⚠️  sitemap-dates.json tidak terbaca:', e.message);
+    return {};
+  }
+}
+
+function generateSitemap(posts, seriList) {
   const today = new Date().toISOString().split('T')[0];
+  const manifest = bacaManifestTanggal();
+  const FALLBACK = '2026-07-04';   // tanggal generate terverifikasi terakhir
+
+  // tgl(): tanggal halaman statis dari manifest, fallback kalau belum tercatat.
+  const tgl = (key) => manifest[key] || FALLBACK;
+
+  // Halaman yang MEMANG dibangun ulang tiap malam -> 'today' itu jujur:
+  //   /          -> inject-stats.js menulis ulang angka statistik
+  //   /sparks    -> build-sparks.js membangun ulang dari scan terbaru
+  //   /sparks/kota/*, /sparks/hof -> idem
+  // Sisanya TIDAK boleh pakai 'today'.
+
+  // Halaman turunan: tanggalnya ikut isi terbaru, otomatis tanpa manifest.
+  const tglKarya = seriList.length
+    ? seriList.map(s => tglDariEpoch(s.ts, FALLBACK)).sort().pop()
+    : FALLBACK;
+  const tglBlog = posts.length
+    ? posts.map(p => p.date || FALLBACK).sort().pop()
+    : FALLBACK;
+
   const staticPages = [
     { loc: `${BASE_URL}/`,                      lastmod: today, changefreq: 'weekly',  priority: '1.0' },
-    { loc: `${BASE_URL}/karya`,                 lastmod: today, changefreq: 'weekly',  priority: '0.9' },
+    { loc: `${BASE_URL}/karya`,                 lastmod: tglKarya, changefreq: 'weekly',  priority: '0.9' },
     { loc: `${BASE_URL}/sparks`,                lastmod: today, changefreq: 'daily',   priority: '0.9' },
-    { loc: `${BASE_URL}/about`,                 lastmod: today, changefreq: 'monthly', priority: '0.9' },
-    { loc: `${BASE_URL}/blog`,                  lastmod: today, changefreq: 'weekly',  priority: '0.8' },
-    { loc: `${BASE_URL}/ria`,                   lastmod: today, changefreq: 'monthly', priority: '0.5' },
-    { loc: `${BASE_URL}/sablon-klaten`,         lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-trucuk`,         lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-bayat`,          lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-pedan`,          lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-cawas`,          lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-solo`,           lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-jogja`,          lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-banjarbaru`,     lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-brand-klaten`,   lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/apa-itu-living-garment`, lastmod: today, changefreq: 'monthly', priority: '0.85' },
-    { loc: `${BASE_URL}/living-garment-indonesia`, lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/kemitraan`,             lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/konveksi-klaten`,       lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/kaos-sekolah-klaten`,   lastmod: today, changefreq: 'monthly', priority: '0.8' },
-    { loc: `${BASE_URL}/sablon-satuan-klaten`,  lastmod: today, changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/about`,                 lastmod: tgl('/about'), changefreq: 'monthly', priority: '0.9' },
+    { loc: `${BASE_URL}/blog`,                  lastmod: tglBlog, changefreq: 'weekly',  priority: '0.8' },
+    { loc: `${BASE_URL}/ria`,                   lastmod: tgl('/ria'), changefreq: 'monthly', priority: '0.5' },
+    { loc: `${BASE_URL}/sablon-klaten`,         lastmod: tgl('/sablon-klaten'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-trucuk`,         lastmod: tgl('/sablon-trucuk'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-bayat`,          lastmod: tgl('/sablon-bayat'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-pedan`,          lastmod: tgl('/sablon-pedan'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-cawas`,          lastmod: tgl('/sablon-cawas'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-solo`,           lastmod: tgl('/sablon-solo'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-jogja`,          lastmod: tgl('/sablon-jogja'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-banjarbaru`,     lastmod: tgl('/sablon-banjarbaru'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-brand-klaten`,   lastmod: tgl('/sablon-brand-klaten'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/apa-itu-living-garment`, lastmod: tgl('/apa-itu-living-garment'), changefreq: 'monthly', priority: '0.85' },
+    { loc: `${BASE_URL}/living-garment-indonesia`, lastmod: tgl('/living-garment-indonesia'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/kemitraan`,             lastmod: tgl('/kemitraan'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/konveksi-klaten`,       lastmod: tgl('/konveksi-klaten'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/kaos-sekolah-klaten`,   lastmod: tgl('/kaos-sekolah-klaten'), changefreq: 'monthly', priority: '0.8' },
+    { loc: `${BASE_URL}/sablon-satuan-klaten`,  lastmod: tgl('/sablon-satuan-klaten'), changefreq: 'monthly', priority: '0.8' },
   ];
-  const seriPages = seriSlugs.map(slug => ({
-    loc: `${BASE_URL}/karya/${slug}`, lastmod: today, changefreq: 'weekly', priority: '0.85'
+  const seriPages = seriList.map(s => ({
+    loc: `${BASE_URL}/karya/${s.id}`,
+    lastmod: tglDariEpoch(s.ts, FALLBACK),
+    changefreq: 'weekly', priority: '0.85'
   }));
   const blogPages = posts.map(p => ({
     loc: `${BASE_URL}/blog/${p.slug}`,
@@ -360,12 +411,20 @@ async function generate() {
   });
   console.log(`✅ ${posts.length} static HTML artikel di-generate`);
 
-  // 3. Fetch seri slugs dan generate sitemap
-  const seriSlugs = await fetchSeriSlugs();
-  console.log(`✅ ${seriSlugs.length} seri ditemukan untuk sitemap`);
-  const sitemap = generateSitemap(postsJson, seriSlugs);
+  // 3. Fetch seri dan generate sitemap
+  const seriList = await fetchSeriSlugs();
+
+  if (seriList === null) {
+    console.log('⛔ Fetch seri GAGAL — sitemap.xml TIDAK ditulis ulang.');
+    console.log('   File sitemap lama dipertahankan agar 46 halaman /karya tidak lenyap.');
+    return;
+  }
+
+  console.log(`✅ ${seriList.length} seri ditemukan untuk sitemap`);
+  const sitemap = generateSitemap(postsJson, seriList);
   fs.writeFileSync(OUTPUT_SITEMAP, sitemap);
-  console.log(`✅ sitemap.xml diupdate (6 statis + ${seriSlugs.length} seri + ${posts.length} blog = ${6 + seriSlugs.length + posts.length} URL)`);
+  const totalUrl = (sitemap.match(/<loc>/g) || []).length;
+  console.log(`✅ sitemap.xml diupdate — ${totalUrl} URL (${seriList.length} seri + ${posts.length} blog + statis & sparks)`);
 }
 
 generate();

@@ -576,12 +576,25 @@ async function main() {
   // Sort by scan count
   kotaList.sort((a, b) => b.scanCount - a.scanCount);
 
-  // Suntik snapshot statis ke sparks.html (untuk AI/crawler)
-  // Angka disamakan PERSIS dengan stat bar /sparks (yang diisi JS di browser):
-  // - totalKaosTerdaftar dari Sheet GARMENTS (bukan hitung unik dari scan)
-  // - totalKotaTermasukKlaten mengikuti logic citySet di sparks.html (klaten dihitung sebagai anggota)
-  const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
-  generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
+  // ─────────────────────────────────────────────────────────────
+  // DINONAKTIFKAN 23 Juli 2026 — sparks.html (file root) sudah tidak dipakai.
+  //
+  // Alasan: blumbang.id/sparks.html mengembalikan 308 permanent redirect
+  // ke /sparks, yang di-serve dari sparks/index.html (folder). Artinya
+  // sparks.html tidak pernah terbaca — bukan oleh pengunjung, bukan oleh
+  // Googlebot, bukan oleh crawler AI. Semua yang disuntik ke sana
+  // (narasi tersembunyi, schema ItemList, meta description) sia-sia.
+  //
+  // sparks/index.html sudah lengkap & mandiri: punya schema ItemList,
+  // narasi tersembunyi, dan meta description sendiri via generateIndexHTML().
+  // Tidak ada yang hilang dengan mematikan ini.
+  //
+  // Fungsi generateSparksSnapshot() sengaja TIDAK dihapus. Kalau suatu saat
+  // /sparks dikembalikan ke file root, cukup hapus komentar dua baris di bawah.
+  //
+  // const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
+  // generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
+  // ─────────────────────────────────────────────────────────────
 
   // Generate index — parameter sama persis dengan snapshot sparks.html, supaya kedua halaman konsisten
   const scanTerbaruUntukIndex = cariScanTerbaru(scanRows);

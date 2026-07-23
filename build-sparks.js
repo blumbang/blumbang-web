@@ -261,7 +261,7 @@ function generateIndexHTML(kotaList, totalKaosTerdaftar, totalScan, namaKotaTerb
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sablon Kaos & Peta Perjalanan Blumbang ID · Semua Kota</title>
 <meta name="description" content="${totalKotaTermasukKlaten} kota yang pernah dikunjungi kaos Blumbang ID Klaten. ${totalKaosTerdaftar} kaos terdaftar, ${totalScan} perjalanan.">
-<link rel="canonical" href="${BASE_URL}/sparks/kota">
+<link rel="canonical" href="${BASE_URL}/sparks">
 <script type="application/ld+json">
 ${JSON.stringify(itemListSchema, null, 2)}
 </script>

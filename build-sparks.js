@@ -1,9 +1,21 @@
 // build-sparks.js
 // Generate sparks/kota/[kota].html dan sparks/index.html
 // PENTING: Tidak menyentuh sparks.html sama sekali
+//
+// RUMUS: seluruh logika hitung & pengelompokan kota diambil dari
+// lib-stats.js — pemilik tunggal. Jangan menyalin ulang logikanya ke sini,
+// karena itu yang dulu membuat homepage dan /sparks berbeda angkanya.
 
 const fs = require('fs');
 const path = require('path');
+const {
+  getCellVal: getVal,
+  slugify,
+  filterScanRows,
+  filterGarmentRows,
+  groupKota,
+  hitungStatistik,
+} = require('./lib-stats.js');
 
 const SHEET_ID = '1J9SVJGQb7msPTEOpUgsJ2TWWvQ4TntIjrkHZ9nbKgbw';
 const BASE_URL = 'https://blumbang.id';
@@ -14,14 +26,6 @@ const SPARKS_DIR = path.join(__dirname, 'sparks');
 const KOTA_DIR = path.join(SPARKS_DIR, 'kota');
 if (!fs.existsSync(SPARKS_DIR)) fs.mkdirSync(SPARKS_DIR, { recursive: true });
 if (!fs.existsSync(KOTA_DIR)) fs.mkdirSync(KOTA_DIR, { recursive: true });
-
-function slugify(str) {
-  return str.toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-}
 
 function formatTanggal(str) {
   if (!str) return '';
@@ -47,9 +51,8 @@ async function fetchSheet(sheetName) {
   return data.table.rows || [];
 }
 
-function getVal(cell) {
-  return cell && cell.v ? cell.v.toString().trim() : '';
-}
+// getVal diimpor dari lib-stats.js sebagai getCellVal (lihat require di atas).
+// Perilakunya sengaja dipertahankan persis seperti versi lokal yang lama.
 
 function navHTML(activePage = '') {
   return `<nav>
@@ -663,8 +666,8 @@ async function main() {
     fetchSheet('GARMENTS')
   ]);
 
-  const scanRows = spkRows.filter(r => r.c && r.c[0] && getVal(r.c[0]) && getVal(r.c[0]) !== 'GARMENT_ID');
-  const garRows2 = garRows.filter(r => r.c && r.c[0] && getVal(r.c[0]));
+  const scanRows = filterScanRows(spkRows);
+  const garRows2 = filterGarmentRows(garRows);
 
   console.log(`Data: ${scanRows.length} scan, ${garRows2.length} garment`);
 
@@ -676,16 +679,9 @@ async function main() {
     if (id) garmentMap[id] = nama;
   });
 
-  // Group scan per kota
-  const kotaMap = {};
-  scanRows.forEach(r => {
-    const city = getVal(r.c[2]);
-    if (!city) return;
-    const kotaNama = city.split(',')[0].trim();
-    const kotaSlug = slugify(kotaNama);
-    if (!kotaMap[kotaSlug]) kotaMap[kotaSlug] = { nama: kotaNama, slug: kotaSlug, scans: [] };
-    kotaMap[kotaSlug].scans.push(r);
-  });
+  // Group scan per kota — memakai lib-stats.js supaya definisinya
+  // sama persis dengan yang dipakai untuk menghitung angka homepage.
+  const kotaMap = groupKota(scanRows);
 
   // Generate halaman per kota
   const kotaList = [];

@@ -703,23 +703,37 @@ async function main() {
   kotaList.sort((a, b) => b.scanCount - a.scanCount);
 
   // ─────────────────────────────────────────────────────────────
-  // DINONAKTIFKAN 23 Juli 2026 — sparks.html (file root) sudah tidak dipakai.
+  // DIAKTIFKAN KEMBALI 25 Juli 2026.
   //
-  // Alasan: blumbang.id/sparks.html mengembalikan 308 permanent redirect
-  // ke /sparks, yang di-serve dari sparks/index.html (folder). Artinya
-  // sparks.html tidak pernah terbaca — bukan oleh pengunjung, bukan oleh
-  // Googlebot, bukan oleh crawler AI. Semua yang disuntik ke sana
-  // (narasi tersembunyi, schema ItemList, meta description) sia-sia.
+  // Sempat dinonaktifkan 23 Juli 2026 dengan alasan "sparks.html sudah
+  // tidak dipakai karena /sparks di-serve dari sparks/index.html".
+  // ALASAN ITU KELIRU — sudah diverifikasi 25 Juli 2026:
+  //   - blumbang.id/sparks di-serve dari sparks.html (file root ini),
+  //     bukan dari folder. Dibuktikan lewat pencocokan teks: frasa
+  //     "Dari Klaten · Ke Dunia" dan "Kaos Terdaftar" hanya ada di
+  //     sparks.html, dan itulah yang tampil di browser.
+  //   - _redirects hanya mengatur /sparks/kota, tidak menyentuh /sparks.
+  //   - sparks/index.html justru yang tampil di URL /sparks/kota.
   //
-  // sparks/index.html sudah lengkap & mandiri: punya schema ItemList,
-  // narasi tersembunyi, dan meta description sendiri via generateIndexHTML().
-  // Tidak ada yang hilang dengan mematikan ini.
+  // Akibat penonaktifan itu, angka di /sparks membeku sejak 23 Juli
+  // (39 kota / 1244 kaos) sementara homepage menunjukkan angka terbaru —
+  // membuat AI membaca data yang saling bertentangan antar halaman.
   //
-  // Fungsi generateSparksSnapshot() sengaja TIDAK dihapus. Kalau suatu saat
-  // /sparks dikembalikan ke file root, cukup hapus komentar dua baris di bawah.
+  // KENAPA AMAN (diuji 25 Juli 2026 pada salinan sparks.html asli):
+  //   - Fungsi ini TIDAK menulis ulang seluruh file. Ia membaca file,
+  //     mengganti isi di antara penanda, lalu menulis kembali.
+  //   - Hanya 33% pertama file yang tersentuh. 48.638 byte terakhir —
+  //     tempat seluruh kode peta berada — terbukti identik byte-per-byte.
+  //   - Jumlah penanda tetap 1 setelah suntik, tidak menggandakan diri.
+  //   - Kalau salah satu penanda hilang, fungsi MEMBATALKAN DIRI dan
+  //     tidak menulis apa pun (lihat pengaman di dalam fungsinya).
   //
-  // const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
-  // generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
+  // CATATAN WORKFLOW: sparks.html harus ikut di baris `git add` pada
+  // .github/workflows/sparks-build.yml, kalau tidak perubahan ini tidak
+  // pernah ter-commit. `git add sparks/` TIDAK mencakup file root ini.
+  // ─────────────────────────────────────────────────────────────
+  const totalKotaTermasukKlaten = new Set(['klaten', ...Object.keys(kotaMap)]).size;
+  generateSparksSnapshot(kotaList, scanRows, scanRows.length, garRows2.length, totalKotaTermasukKlaten);
   // ─────────────────────────────────────────────────────────────
 
   // Generate index — parameter sama persis dengan snapshot sparks.html, supaya kedua halaman konsisten

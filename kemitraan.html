@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kemitraan · Sistem Identitas Digital untuk Kriya Klaten · Blumbang ID</title>
-<meta name="description" content="Blumbang ID membuka sistem Living Garment sebagai infrastruktur identitas digital terbuka untuk sentra kriya Klaten — sablon, konveksi, batik, dan lurik. Sudah menjangkau 40 kota, dari Trucuk sampai Tokyo.">
+<meta name="description" content="Blumbang ID membuka sistem Living Garment sebagai infrastruktur identitas digital terbuka untuk sentra kriya Klaten — sablon, konveksi, batik, dan lurik. Sudah membawa cerita kriya Klaten sampai Tokyo dan Seychelles.">
 <link rel="canonical" href="https://blumbang.id/kemitraan">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://blumbang.id/kemitraan">
 <meta property="og:title" content="Kemitraan · Sistem Identitas Digital untuk Kriya Klaten · Blumbang ID">
-<meta property="og:description" content="Sistem yang sudah membawa cerita kriya Klaten ke 40 kota dunia — terbuka untuk sentra dan UMKM lain.">
+<meta property="og:description" content="Sistem yang sudah membawa cerita kriya Klaten sampai Tokyo dan Seychelles — terbuka untuk sentra dan UMKM lain.">
 <meta property="og:image" content="https://blumbang.id/og-image.jpg">
 <meta property="og:site_name" content="Blumbang.id">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,7 +19,7 @@
 <meta property="og:image:alt" content="Blumbang ID — Kemitraan Sistem Identitas Digital Klaten">
 <meta property="og:image:type" content="image/jpeg">
 <meta name="twitter:title" content="Kemitraan · Sistem Identitas Digital untuk Kriya Klaten · Blumbang ID">
-<meta name="twitter:description" content="Sistem yang sudah membawa cerita kriya Klaten ke 40 kota dunia — terbuka untuk sentra dan UMKM lain.">
+<meta name="twitter:description" content="Sistem yang sudah membawa cerita kriya Klaten sampai Tokyo dan Seychelles — terbuka untuk sentra dan UMKM lain.">
 <meta name="twitter:image" content="https://blumbang.id/og-image.jpg">
 <link rel="alternate" hreflang="id" href="https://blumbang.id/kemitraan">
 <link rel="alternate" hreflang="x-default" href="https://blumbang.id/kemitraan">
@@ -80,12 +80,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;background:rgba(
 .hero-sub{font-family:var(--fb);font-size:clamp(.9rem,2.1vw,1.05rem);font-weight:400;line-height:1.8;color:var(--terang);max-width:640px;margin-top:22px;}
 
 /* ANGKA BUKTI */
-.bukti{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--border);}
-.bukti-item{padding:28px 16px;text-align:center;border-right:1px solid var(--border);}
-.bukti-item:last-child{border-right:none;}
-.bukti-num{font-family:var(--fd);font-size:clamp(2rem,5vw,3rem);color:var(--emas);line-height:1;}
-.bukti-lbl{font-family:var(--fu);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);margin-top:8px;}
-.bukti-cta{grid-column:1/-1;text-align:center;padding:16px;background:var(--charcoal);}
+.bukti{border-bottom:1px solid var(--border);padding:44px 24px 0;text-align:center;}
+.bukti-angka{display:flex;justify-content:center;gap:48px;flex-wrap:wrap;margin-bottom:24px;}
+.bukti-item{text-align:center;}
+.bukti-num{font-family:var(--fd);font-size:clamp(2.2rem,6vw,3.4rem);color:var(--emas);line-height:1;}
+.bukti-lbl{font-family:var(--fu);font-size:.6rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--redup);margin-top:6px;}
+.bukti-kalimat{font-family:var(--fb);font-weight:300;font-size:1rem;color:var(--dim);max-width:580px;margin:0 auto 26px;line-height:1.75;}
+.bukti-kalimat .emas{color:var(--emas);font-weight:500;}
+.bukti-cta{text-align:center;padding:16px;background:var(--charcoal);margin:0 -24px;}
 .bukti-cta a{font-family:var(--fu);font-size:.68rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--emas);border-bottom:1px solid var(--emas-dim);padding-bottom:3px;}
 
 /* SECTION UMUM */
@@ -131,8 +133,9 @@ footer{background:var(--charcoal);padding:40px 32px 24px;}
 .ft-copy{font-family:var(--fu);font-size:.6rem;color:var(--redup);margin-top:20px;letter-spacing:.03em;}
 
 @media(max-width:720px){
-  .bukti{grid-template-columns:1fr;}
-  .bukti-item{border-right:none;border-bottom:1px solid var(--border);}
+  .bukti{padding:32px 20px 0;}
+  .bukti-angka{gap:28px;}
+  .bukti-cta{margin:0 -20px;}
   .model-grid{grid-template-columns:1fr;}
   .sentra-row{flex-direction:column;gap:4px;align-items:flex-start;}
   .sentra-ket{text-align:left;}
@@ -171,19 +174,25 @@ footer{background:var(--charcoal);padding:40px 32px 24px;}
 </section>
 
 <!-- BUKTI ANGKA -->
+<!-- Angka di bawah diisi otomatis oleh inject-stats.js tiap malam.
+     Jangan ubah isi di antara penanda <!--LGS:...--> secara manual —
+     akan ditimpa build berikutnya. Rumusnya dari lib-stats.js. -->
 <section class="bukti">
-  <div class="bukti-item">
-    <div class="bukti-num">40</div>
-    <div class="bukti-lbl">Kota Sudah Terjangkau</div>
+  <div class="bukti-angka">
+    <div class="bukti-item">
+      <div class="bukti-num"><!--LGS:GARMENT-->1426<!--/LGS:GARMENT--></div>
+      <div class="bukti-lbl">Kaos</div>
+    </div>
+    <div class="bukti-item">
+      <div class="bukti-num"><!--LGS:KOTA-->41<!--/LGS:KOTA--></div>
+      <div class="bukti-lbl">Kota</div>
+    </div>
+    <div class="bukti-item">
+      <div class="bukti-num"><!--LGS:NEGARA-->3<!--/LGS:NEGARA--></div>
+      <div class="bukti-lbl">Negara</div>
+    </div>
   </div>
-  <div class="bukti-item">
-    <div class="bukti-num">3</div>
-    <div class="bukti-lbl">Negara — Termasuk Jepang &amp; Seychelles</div>
-  </div>
-  <div class="bukti-item">
-    <div class="bukti-num">2022</div>
-    <div class="bukti-lbl">Studio Berdiri — Tanpa Modal Besar</div>
-  </div>
+  <p class="bukti-kalimat">Termasuk <span class="emas">Tokyo</span> dan <span class="emas">Seychelles</span>. Blumbang ID sendiri berdiri sejak 2022 di Klaten — sistem Living Garment ini kami bangun tahun 2026, dan sekarang terbuka untuk sentra dan UMKM lain.</p>
   <div class="bukti-cta">
     <a href="/sparks">Lihat peta perjalanannya — live dan bisa diverifikasi →</a>
   </div>

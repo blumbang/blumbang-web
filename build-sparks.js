@@ -363,11 +363,141 @@ function generateHOF(scanRows, garmentMap) {
   const terjauh = semua.filter(g=>g.jarak>0).sort((a,b)=>b.jarak-a.jarak).slice(0,5);
   const terbanyak = semua.filter(g=>g.kotaUnik>0).sort((a,b)=>b.kotaUnik-a.kotaUnik).slice(0,5);
 
-  const hofData = JSON.stringify({ terjauh, terbanyak });
+  // JSON yang ditanam di dalam <script>: < > & di-escape jadi \u003c \u003e \u0026.
+  // Tetap JSON valid dan JSON.parse() menghasilkan nilai yang sama persis,
+  // tapi tidak mungkin lagi memutus tag <script> kalau ada nama seri aneh.
+  function jsonAman(obj, indent) {
+    return JSON.stringify(obj, null, indent)
+      .replace(/</g, '\\u003c')
+      .replace(/>/g, '\\u003e')
+      .replace(/&/g, '\\u0026');
+  }
+
+  const hofData = jsonAman({ terjauh, terbanyak });
+
+  // Escape untuk teks yang masuk ke HTML. Nama seri bisa mengandung & < > " '
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  const jarakTop = terjauh.length ? terjauh[0].jarak : 0;
+  const kotaTop = terbanyak.length ? terbanyak[0].kotaUnik : 0;
+  const namaTop = terjauh.length ? terjauh[0].nama : '';
+
+  const narasi = `Hall of Fame Blumbang ID menyimpan kaos-kaos dengan perjalanan paling luar biasa dari Klaten. `
+    + (jarakTop ? `Kaos terjauh sejauh ini adalah ${namaTop}, sejauh ${jarakTop} km dari workshop Blumbang ID di Jeto, Gaden, Trucuk, Klaten. ` : '')
+    + (kotaTop ? `Kaos dengan sebaran terluas sudah menyimpan jejak di ${kotaTop} kota berbeda. ` : '')
+    + `Peringkat disusun ulang setiap malam dari data pemindaian Living Garment. Setiap kaos Blumbang ID membawa QR unik di kerahnya yang menyimpan perjalanannya sendiri.`;
+
+  const schemaJauh = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kaos Blumbang ID dengan perjalanan terjauh dari Klaten",
+    "description": narasi,
+    "numberOfItems": terjauh.length,
+    "itemListElement": terjauh.map((g, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": `${g.nama} · #${g.nomor}`,
+      "description": `${g.jarak} km dari Blumbang ID Klaten`,
+      "url": `${BASE_URL}/id/${encodeURIComponent(g.id)}`
+    }))
+  };
+
+  const schemaKota = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Kaos Blumbang ID dengan sebaran kota terbanyak",
+    "description": "Kaos Blumbang ID yang jejaknya tersimpan di paling banyak kota berbeda.",
+    "numberOfItems": terbanyak.length,
+    "itemListElement": terbanyak.map((g, i) => ({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": `${g.nama} · #${g.nomor}`,
+      "description": `${g.kotaUnik} kota unik`,
+      "url": `${BASE_URL}/id/${encodeURIComponent(g.id)}`
+    }))
+  };
+
+  function barisHOF(arr, satuanFn) {
+    if (!arr.length) return `<div class="hof-empty">Belum ada data yang tersimpan.</div>`;
+    return arr.map((g, i) => `<a href="/id/${encodeURIComponent(g.id)}" class="hof-item">
+      <div class="hof-rank">#${i + 1}</div>
+      <div class="hof-body">
+        <div class="hof-nama">${esc(g.nama)} · #${esc(g.nomor)}</div>
+        <div class="hof-info">${satuanFn(g)}</div>
+      </div>
+    </a>`).join('');
+  }
+
   const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hall of Fame · Kaos Blumbang ID dengan Perjalanan Terjauh</title>
+<meta name="description" content="${esc(jarakTop ? `Kaos Blumbang ID terjauh sudah ${jarakTop} km dari Klaten. Peringkat kaos dengan perjalanan terpanjang dan sebaran kota terbanyak.` : 'Peringkat kaos Blumbang ID dengan perjalanan terpanjang dan sebaran kota terbanyak.')}">
+<link rel="canonical" href="${BASE_URL}/sparks/hof">
+<meta property="og:title" content="Hall of Fame · Kaos Blumbang ID">
+<meta property="og:description" content="${esc(jarakTop ? `Kaos Blumbang ID terjauh sudah ${jarakTop} km dari Klaten.` : 'Peringkat perjalanan kaos Blumbang ID.')}">
+<meta property="og:url" content="${BASE_URL}/sparks/hof">
+<meta property="og:type" content="website">
+<script type="application/ld+json">
+${jsonAman(schemaJauh, 2)}
+</script>
+<script type="application/ld+json">
+${jsonAman(schemaKota, 2)}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+${baseCSS()}
+<style>
+.hero{padding:100px 40px 48px;border-bottom:1px solid var(--border);}
+.hero-inner{max-width:1100px;margin:0 auto;}
+.hero-eyebrow{font-family:var(--font-ui);font-size:.6rem;font-weight:700;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.hero-title{font-family:var(--font-logo);font-size:clamp(2.5rem,7vw,5rem);letter-spacing:.06em;line-height:.95;color:var(--white);}
+.hero-sub{font-family:var(--font-ui);font-size:.72rem;letter-spacing:.06em;color:var(--dim);margin-top:14px;}
+.hof-wrap{max-width:1100px;margin:0 auto;padding:48px 40px 0;display:grid;grid-template-columns:1fr 1fr;gap:48px;}
+.hof-col-title{font-family:var(--font-ui);font-size:.62rem;font-weight:700;letter-spacing:.25em;color:var(--gold);text-transform:uppercase;margin-bottom:18px;}
+.hof-item{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);transition:background .2s;}
+.hof-item:hover .hof-nama{color:var(--gold);}
+.hof-rank{font-family:var(--font-logo);font-size:1.3rem;color:var(--gold);min-width:32px;}
+.hof-nama{font-family:var(--font-ui);font-size:.82rem;color:var(--white);transition:color .2s;}
+.hof-info{font-family:var(--font-ui);font-size:.68rem;color:var(--dim);margin-top:3px;}
+.hof-empty{font-family:var(--font-ui);font-size:.72rem;color:var(--muted);padding:14px 0;}
+.hof-note{max-width:1100px;margin:0 auto;padding:40px;font-family:var(--font-ui);font-size:.72rem;line-height:1.9;color:var(--dim);}
+@media(max-width:768px){.hero{padding:80px 20px 32px;}.hof-wrap{padding:32px 20px 0;grid-template-columns:1fr;gap:36px;}.hof-note{padding:28px 20px;}}
+</style>
+</head>
 <body>
+${navHTML('sparks')}
+<div class="hero">
+  <div class="hero-inner">
+    <a href="/sparks" style="font-family:var(--font-ui);font-size:.65rem;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);display:inline-block;margin-bottom:20px;">← Peta Perjalanan</a>
+    <div class="hero-eyebrow">✦ Hall of Fame · Blumbang ID</div>
+    <h1 class="hero-title">HALL OF FAME</h1>
+    <p class="hero-sub">Kaos Blumbang ID dengan perjalanan paling luar biasa</p>
+  </div>
+</div>
+<div class="hof-wrap">
+  <section>
+    <h2 class="hof-col-title">Paling Jauh dari Blumbang ID</h2>
+    ${barisHOF(terjauh, g => `${g.jarak} km dari Blumbang ID Klaten`)}
+  </section>
+  <section>
+    <h2 class="hof-col-title">Paling Banyak Kota</h2>
+    ${barisHOF(terbanyak, g => `${g.kotaUnik} kota unik`)}
+  </section>
+</div>
+<p class="hof-note">${esc(narasi)}</p>
+<footer>
+  <a href="/" class="footer-brand">BLUMB✦NG ID</a>
+  <a href="https://wa.me/6281234561146" class="footer-link">Order via WhatsApp →</a>
+</footer>
 <script id="hof-data" type="application/json">${hofData}</script>
 </body>
 </html>`;

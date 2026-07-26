@@ -439,10 +439,22 @@ function bacaGeoCache() {
 
 function getCityCoordServer(cityStr) {
   if (!cityStr) return null;
-  const lower = cityStr.toLowerCase();
-  const keys = Object.keys(CITY_COORDS).sort((a, b) => b.length - a.length);
-  for (const key of keys) {
-    if (lower.includes(key)) return CITY_COORDS[key];
+  const lower = cityStr.toLowerCase().trim();
+  // Pecah per koma, cocokkan PERSIS tiap bagian — bukan substring bebas.
+  //
+  // Dulu memakai lower.includes(key), yang membuat "Satui, Kalimantan
+  // Selatan" cocok dengan 'lima' (Peru) karena kata "ka-LIMA-ntan"
+  // mengandung "lima". Sengaja TANPA fallback substring apa pun: sempat
+  // dicoba fallback pencocokan awalan/akhiran kata, tapi itu membuat
+  // "Kalimantan Selatan" salah cocok ke 'selatan' → Tangerang Selatan,
+  // atau ke entri lain yang kebetulan mengandung potongan kata serupa.
+  // Kalau kota tidak ada persis di kamus, lebih baik null — biar
+  // geo-cache atau Nominatim yang menjawab — daripada menebak dan
+  // salah negara. Logika ini WAJIB identik dengan getCityCoord() di
+  // sparks.html.
+  const bagian = lower.split(',').map(x => x.trim()).filter(Boolean);
+  for (const p of bagian) {
+    if (CITY_COORDS[p]) return CITY_COORDS[p];
   }
   return null;
 }

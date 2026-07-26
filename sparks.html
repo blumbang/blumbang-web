@@ -1080,10 +1080,21 @@ const CITY_COORDS={
 
 function getCityCoord(cityStr){
   if(!cityStr) return null;
-  const lower=cityStr.toLowerCase();
-  const keys=Object.keys(CITY_COORDS).sort(function(a,b){return b.length-a.length;});
-  for(const key of keys){
-    if(lower.includes(key)) return CITY_COORDS[key];
+  const lower=cityStr.toLowerCase().trim();
+  // Pecah jadi bagian-bagian per koma, lalu cocokkan PERSIS.
+  //
+  // Dulu memakai lower.includes(key) — pencocokan substring bebas — yang
+  // membuat "Satui, Kalimantan Selatan" cocok dengan 'lima' (Peru), karena
+  // kata "ka-LIMA-ntan" mengandung "lima". Bug itu belum terpicu selama
+  // Sheet menulis nama kota tanpa provinsi, tapi akan langsung muncul
+  // begitu ada scan yang tercatat lengkap dengan nama provinsi.
+  //
+  // Sengaja TANPA pencocokan longgar apa pun: kalau nama kota tidak ada
+  // di kamus, lebih baik mengembalikan null dan membiarkan geo-cache
+  // atau Nominatim yang menjawab — daripada menebak dan salah negara.
+  const bagian = lower.split(',').map(function(x){return x.trim();}).filter(Boolean);
+  for(const p of bagian){
+    if(CITY_COORDS[p]) return CITY_COORDS[p];
   }
   return null;
 }
@@ -1213,8 +1224,18 @@ async function geocodeCity(cityStr){
     if(fromDictStripped) return fromDictStripped;
   }
   var cacheKey = cityStr.toLowerCase().trim();
-  // Cek geo-cache SERVER (hasil build semalam) — lapis kedua, tidak perlu fetch apa pun lagi
-  if(_serverGeoCache && _serverGeoCache[cacheKey] !== undefined) return _serverGeoCache[cacheKey];
+  // build-sparks.js menyimpan geo-cache dengan kunci nama kota SAJA
+  // (sudah dipotong di koma pertama, lihat groupKota di lib-stats.js),
+  // sementara cityStr di sini adalah string UTUH dari Sheet — misalnya
+  // "Berbak, Jambi, Indonesia". Tanpa penyesuaian ini kuncinya tidak
+  // pernah cocok, cache tidak pernah terpakai, dan setiap kota selalu
+  // jatuh ke Nominatim lengkap dengan jeda 1,1 detik.
+  var cacheKeyPendek = cityStr.split(',')[0].toLowerCase().trim();
+  // Cek geo-cache SERVER (hasil build semalam) — coba kedua bentuk kunci
+  if(_serverGeoCache){
+    if(_serverGeoCache[cacheKeyPendek] !== undefined) return _serverGeoCache[cacheKeyPendek];
+    if(_serverGeoCache[cacheKey] !== undefined) return _serverGeoCache[cacheKey];
+  }
   // Cek cache sesi browser (kalau sebelumnya pernah di-geocode manual di sesi ini)
   var cache = getGeoCache();
   if(cache[cacheKey] !== undefined) return cache[cacheKey];
@@ -1250,6 +1271,15 @@ async function buildMap(rows, preloadedWorld){
   // Kumpulkan kota unik dari Sheet — skip Klaten karena sudah jadi Origin
   const uniqueCities = {};
   rows.forEach(function(r){
+    // Buang baris header Sheet — kolom A berisi 'GARMENT_ID' dan kolom C
+    // berisi judul 'Kota'. Tanpa filter ini, 'Kota' dianggap nama kota
+    // sungguhan: ikut jadi chip di daftar, ikut dihitung sebagai kota,
+    // dan ikut di-geocode ke Nominatim. build-sparks.js sudah memfilter
+    // ini lewat filterScanRows() di lib-stats.js — sparks.html belum,
+    // itu sebabnya /sparks menampilkan jumlah kota lebih banyak 1
+    // dibanding halaman lain.
+    const idKolom = r.c[0] && r.c[0].v ? r.c[0].v.toString().trim() : '';
+    if(idKolom === 'GARMENT_ID') return;
     const c = r.c[2] && r.c[2].v;
     if(!c) return;
     const lower = c.toLowerCase().trim();
@@ -1268,8 +1298,13 @@ async function buildMap(rows, preloadedWorld){
     // geocodeCity() mengisi cache sesi di akhir pemanggilannya sendiri.
     // Kalau dicek SESUDAH, kota yang baru saja di-geocode akan salah
     // terbaca "sudah ada di cache" dan rate limit tidak pernah terpicu.
+    //
+    // Kunci geo-cache server memakai nama kota SAJA (dipotong di koma),
+    // sama seperti di geocodeCity() — kalau tidak disamakan, jeda 1,1
+    // detik tetap terpicu meski kotanya sebenarnya sudah ada di cache.
+    var kunciPendek = cityStr.split(',')[0].toLowerCase().trim();
     var sudahDikenal = !!getCityCoord(cityStr)
-      || !!(_serverGeoCache && _serverGeoCache[cityKeys[i]] !== undefined)
+      || !!(_serverGeoCache && (_serverGeoCache[kunciPendek] !== undefined || _serverGeoCache[cityKeys[i]] !== undefined))
       || !!(getGeoCache()[cityKeys[i]] !== undefined);
 
     var coord = await geocodeCity(cityStr);

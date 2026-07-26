@@ -10,10 +10,15 @@ Lokasi produksi: Jeto RT 32 RW 10, Gaden, Trucuk, Kabupaten Klaten, Jawa Tengah 
 
 - [Tentang Blumbang ID](https://blumbang.id/about): Filosofi, tim, dan sejarah studio sejak 2022. "Made Slowly. Felt Deeply."
 - [Apa itu Living Garment](https://blumbang.id/apa-itu-living-garment): Penjelasan lengkap sistem QR identitas garmen — bagaimana setiap kaos menyimpan jejak perjalanannya.
+- [Living Garment Indonesia](https://blumbang.id/living-garment-indonesia): Sistem QR yang membuat kaos punya perjalanan sendiri, dalam konteks pasar Indonesia.
 
 ## Karya & Portofolio
 
 - [Katalog Karya](https://blumbang.id/karya): Kumpulan proyek yang telah dikerjakan Blumbang ID — dari kaos sekolah, komunitas, hingga brand independen.
+
+## Blog
+
+- [Blog Blumbang ID](https://blumbang.id/blog): Cerita, perjalanan, dan behind the scene dari studio.
 
 ## Perjalanan Garmen (Living Garment Tracker)
 
@@ -25,6 +30,13 @@ Lokasi produksi: Jeto RT 32 RW 10, Gaden, Trucuk, Kabupaten Klaten, Jawa Tengah 
 - [Sablon Klaten](https://blumbang.id/sablon-klaten)
 - [Sablon Trucuk](https://blumbang.id/sablon-trucuk)
 - [Sablon Satuan Klaten](https://blumbang.id/sablon-satuan-klaten)
+- [Sablon Bayat](https://blumbang.id/sablon-bayat)
+- [Sablon Pedan](https://blumbang.id/sablon-pedan)
+- [Sablon Cawas](https://blumbang.id/sablon-cawas)
+- [Sablon Solo](https://blumbang.id/sablon-solo): Sablon kaos custom dari Klaten untuk Solo dan Surakarta.
+- [Sablon Jogja](https://blumbang.id/sablon-jogja): Sablon kaos custom dari Klaten untuk Jogja dan Yogyakarta.
+- [Sablon Banjarbaru](https://blumbang.id/sablon-banjarbaru): Sablon kaos custom untuk Banjarbaru dan Kalimantan Selatan, terhubung dengan Rumah Sablon Banjarbaru.
+- [Sablon Brand & Komunitas Klaten](https://blumbang.id/sablon-brand-klaten): Sablon untuk brand, bisnis kecil, dan komunitas.
 - [Kaos Sekolah Klaten](https://blumbang.id/kaos-sekolah-klaten)
 - [Konveksi Klaten](https://blumbang.id/konveksi-klaten)
 

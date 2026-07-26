@@ -255,7 +255,11 @@ function generateIndexHTML(kotaList, totalKaosTerdaftar, totalScan, namaKotaTerb
     <div class="kota-nama">${k.nama}</div>
     <div class="kota-info">${k.scanCount} scan · ${k.kaosUnik} kaos</div>
     <div class="kota-first">Pertama: ${k.pertamaTanggal}</div>
-  </a>`).join('');
+  </a>`).join('') + `<a href="/sparks/hof" class="kota-card kota-card-hof">
+    <div class="kota-nama">✦ Hall of Fame</div>
+    <div class="kota-info">Kaos paling jauh & paling banyak kota</div>
+    <div class="kota-first">Lihat peringkat →</div>
+  </a>`;
 
   return `<!DOCTYPE html>
 <html lang="id">
@@ -281,6 +285,9 @@ ${baseCSS()}
 .kota-nama{font-family:var(--font-logo);font-size:1.4rem;letter-spacing:.08em;color:var(--white);margin-bottom:8px;}
 .kota-info{font-family:var(--font-ui);font-size:.7rem;color:var(--gold);margin-bottom:4px;}
 .kota-first{font-family:var(--font-ui);font-size:.65rem;color:var(--muted);}
+.kota-card-hof{background:#140f02;border:1px solid var(--gold-dim);}
+.kota-card-hof .kota-nama{color:var(--gold);}
+.kota-card-hof:hover{background:var(--charcoal);}
 @media(max-width:768px){.hero{padding:80px 20px 32px;}.grid{padding:0;grid-template-columns:1fr 1fr;}}
 </style>
 </head>

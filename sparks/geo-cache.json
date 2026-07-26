@@ -1,0 +1,65 @@
+{
+  "victoria": {
+    "lonlat": [
+      144.6780052,
+      -36.5986096
+    ],
+    "label": "Victoria"
+  },
+  "berbak": {
+    "lonlat": [
+      104.1640587,
+      -1.2792223
+    ],
+    "label": "Berbak"
+  },
+  "muntilan": {
+    "lonlat": [
+      110.2585063,
+      -7.606161
+    ],
+    "label": "Muntilan"
+  },
+  "kutoarjo": {
+    "lonlat": [
+      109.9071767,
+      -7.7260691
+    ],
+    "label": "Kutoarjo"
+  },
+  "palangkaraya": {
+    "lonlat": [
+      113.9164372,
+      -2.2072919
+    ],
+    "label": "Palangka Raya"
+  },
+  "satui": {
+    "lonlat": [
+      115.4462873,
+      -3.7585957
+    ],
+    "label": "Satui Barat"
+  },
+  "kaliori": {
+    "lonlat": [
+      111.2466627,
+      -6.702239
+    ],
+    "label": "Kaliori"
+  },
+  "serpong": {
+    "lonlat": [
+      106.6655836,
+      -6.3201527
+    ],
+    "label": "Serpong"
+  },
+  "pugeran maguwoharjo": {
+    "lonlat": [
+      110.4181315,
+      -7.7654287
+    ],
+    "label": "Jalan Utama Pugeran"
+  }
+}

@@ -1164,6 +1164,30 @@ function setGeoCache(key, val){
   try{ sessionStorage.setItem('blumbang_geo', JSON.stringify(cache)); }catch(e){}
 }
 
+// ═══════════════════════════════════════════════════════════════
+// GEO-CACHE SERVER — ditambahkan 26 Juli 2026.
+//
+// sparks/geo-cache.json ditulis oleh build-sparks.js setiap malam,
+// berisi hasil geocoding Nominatim untuk kota yang belum ada di
+// CITY_COORDS. Ini lapis KEDUA (setelah CITY_COORDS, sebelum Nominatim
+// langsung) — sekali di-fetch di awal buildMap(), dipakai untuk semua
+// kota di kunjungan ini, TANPA perlu memanggil Nominatim satu-per-satu
+// dengan jeda 1,1 detik seperti sebelumnya.
+//
+// Kalau fetch gagal (file belum ada / offline), _serverGeoCache tetap
+// {} — geocodeCity() otomatis jatuh ke Nominatim langsung seperti biasa,
+// jadi peta tetap jalan, cuma lebih lambat untuk kota yang belum dikenal.
+var _serverGeoCache = null;
+async function muatServerGeoCache(){
+  try{
+    var res = await fetch('/sparks/geo-cache.json');
+    _serverGeoCache = await res.json();
+  }catch(e){
+    _serverGeoCache = {};
+  }
+}
+// ═══════════════════════════════════════════════════════════════
+
 async function geocodeCity(cityStr){
   if(!cityStr) return null;
   // Cek dictionary dulu
@@ -1175,11 +1199,13 @@ async function geocodeCity(cityStr){
     var fromDictStripped = getCityCoord(stripped);
     if(fromDictStripped) return fromDictStripped;
   }
-  // Cek cache
-  var cache = getGeoCache();
   var cacheKey = cityStr.toLowerCase().trim();
+  // Cek geo-cache SERVER (hasil build semalam) — lapis kedua, tidak perlu fetch apa pun lagi
+  if(_serverGeoCache && _serverGeoCache[cacheKey] !== undefined) return _serverGeoCache[cacheKey];
+  // Cek cache sesi browser (kalau sebelumnya pernah di-geocode manual di sesi ini)
+  var cache = getGeoCache();
   if(cache[cacheKey] !== undefined) return cache[cacheKey];
-  // Fetch Nominatim
+  // Jaring pengaman terakhir: kota benar-benar baru, belum sempat ter-build semalam
   try{
     // Ambil bagian sebelum koma untuk query yang lebih bersih
     var query = cityStr.split(',')[0].trim();
@@ -1204,6 +1230,11 @@ async function buildMap(rows, preloadedWorld){
   const tooltip = document.getElementById('map-tooltip');
   const mapSection = document.getElementById('map-section');
 
+  // Muat geo-cache dari server SEKALI di sini, sebelum loop geocoding kota.
+  // Ini yang membuat kota-kota yang sudah dikenal dari build semalam
+  // langsung tersedia tanpa perlu memanggil Nominatim satu-per-satu.
+  await muatServerGeoCache();
+
   // Kumpulkan kota unik dari Sheet — skip Klaten karena sudah jadi Origin
   const uniqueCities = {};
   rows.forEach(function(r){
@@ -1220,6 +1251,15 @@ async function buildMap(rows, preloadedWorld){
   const cityKeys = Object.keys(uniqueCities);
   for(var i=0; i<cityKeys.length; i++){
     var cityStr = uniqueCities[cityKeys[i]];
+
+    // Cek status SEBELUM memanggil geocodeCity() — penting, karena
+    // geocodeCity() mengisi cache sesi di akhir pemanggilannya sendiri.
+    // Kalau dicek SESUDAH, kota yang baru saja di-geocode akan salah
+    // terbaca "sudah ada di cache" dan rate limit tidak pernah terpicu.
+    var sudahDikenal = !!getCityCoord(cityStr)
+      || !!(_serverGeoCache && _serverGeoCache[cityKeys[i]] !== undefined)
+      || !!(getGeoCache()[cityKeys[i]] !== undefined);
+
     var coord = await geocodeCity(cityStr);
     if(!coord) continue;
     var label = cityStr.split(',')[0].trim();
@@ -1229,8 +1269,13 @@ async function buildMap(rows, preloadedWorld){
       const c = r.c[2] && r.c[2].v;
       if(c && c.toLowerCase().trim() === cityKeys[i]) cityMap[label].count++;
     });
-    // Rate limit Nominatim — hanya delay jika ini hasil geocoding baru (bukan cache/dict)
-    if(!getCityCoord(cityStr) && !getGeoCache()[cityKeys[i]]){
+    // Rate limit Nominatim — HANYA delay kalau kota ini benar-benar memicu
+    // panggilan Nominatim langsung barusan (tidak dikenal sama sekali
+    // sebelum baris ini). Kota yang sudah dikenal dari CITY_COORDS,
+    // geo-cache.json hasil build semalam, atau cache sesi browser TIDAK
+    // ikut kena jeda — ini yang membuat halaman jauh lebih cepat
+    // dibanding sebelum ada geo-cache.json.
+    if(!sudahDikenal){
       await new Promise(function(res){setTimeout(res, 1100);});
     }
   }

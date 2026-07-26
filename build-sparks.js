@@ -27,6 +27,475 @@ const KOTA_DIR = path.join(SPARKS_DIR, 'kota');
 if (!fs.existsSync(SPARKS_DIR)) fs.mkdirSync(SPARKS_DIR, { recursive: true });
 if (!fs.existsSync(KOTA_DIR)) fs.mkdirSync(KOTA_DIR, { recursive: true });
 
+// ═══════════════════════════════════════════════════════════════
+// GEOCODING SERVER-SIDE — ditambahkan 26 Juli 2026.
+//
+// TUJUAN: menghilangkan geocoding Nominatim dari browser pengunjung.
+// Sebelumnya sparks.html memanggil Nominatim satu-per-satu dengan jeda
+// 1,1 detik PER PENGUNJUNG untuk tiap kota yang belum dikenal — bisa
+// menambah beberapa detik loading, dan makin lambat kalau kota baru
+// terus bertambah (persis situasi yang diantisipasi saat volume order
+// naik menjelang Agustus 2026).
+//
+// SEKARANG: geocoding dilakukan SEKALI di sini, tiap build harian,
+// untuk kota yang belum dikenal. Hasilnya disimpan di
+// sparks/geo-cache.json. sparks.html cukup fetch file itu (statis,
+// cepat, dari Cloudflare Pages) alih-alih memanggil Nominatim sendiri.
+// Nominatim langsung dari browser tetap ada sebagai jaring pengaman
+// PALING TERAKHIR, untuk kota yang baru saja masuk dan belum sempat
+// ter-build semalam.
+//
+// CITY_COORDS di bawah ini adalah SALINAN PERSIS dari kamus yang sama
+// di sparks.html (364 kota, diekstrak otomatis dari file asli, bukan
+// diketik ulang). Ini lapis pertama — paling cepat, tidak perlu
+// panggilan apa pun. Kalau kamus di sparks.html diperbarui manual,
+// salinan ini perlu ikut diperbarui juga (lihat catatan di README kalau
+// ada, atau tanya ke sesi yang menambahkannya).
+const CITY_COORDS = {
+  'abu dhabi': { lonlat: [54.367, 24.453], label: 'Abu Dhabi' },
+  'accra': { lonlat: [-0.186, 5.556], label: 'Accra' },
+  'addis ababa': { lonlat: [38.747, 8.996], label: 'Addis Ababa' },
+  'adelaide': { lonlat: [138.6, -34.929], label: 'Adelaide' },
+  'ahmedabad': { lonlat: [72.587, 23.023], label: 'Ahmedabad' },
+  'ambon': { lonlat: [128.192, -3.695], label: 'Ambon' },
+  'amman': { lonlat: [35.945, 31.963], label: 'Amman' },
+  'amsterdam': { lonlat: [4.905, 52.37], label: 'Amsterdam' },
+  'ankara': { lonlat: [32.859, 39.92], label: 'Ankara' },
+  'athens': { lonlat: [23.728, 37.984], label: 'Athens' },
+  'atlanta':{lonlat:[-84.388,33.749],label:'Atlanta'},
+  'auckland':{lonlat:[174.763,-36.848],label:'Auckland'},
+  'baghdad':{lonlat:[44.361,33.341],label:'Baghdad'},
+  'balikpapan':{lonlat:[116.854,-1.268],label:'Balikpapan'},
+  'banda aceh':{lonlat:[95.323,5.548],label:'Banda Aceh'},
+  'bandar lampung':{lonlat:[105.261,-5.454],label:'Bandar Lampung'},
+  'bandar seri begawan':{lonlat:[114.941,4.89],label:'Bandar Seri Begawan'},
+  'bandung':{lonlat:[107.608,-6.917],label:'Bandung'},
+  'bangalore':{lonlat:[77.594,12.972],label:'Bangalore'},
+  'bangkalan':{lonlat:[112.73,-7.044],label:'Bangkalan'},
+  'bangkok':{lonlat:[100.501,13.756],label:'Bangkok'},
+  'banjar':{lonlat:[108.54,-7.368],label:'Banjar'},
+  'bali':{lonlat:[115.092,-8.34],label:'Bali'},
+  'bulakamba':{lonlat:[108.988,-6.867],label:'Bulakamba'},
+  'kijang':{lonlat:[104.633,0.917],label:'Kijang'},
+  'selogiri':{lonlat:[110.895,-7.783],label:'Selogiri'},
+  'trucuk':{lonlat:[110.617,-7.713],label:'Trucuk'},
+  'victoria, seychelles':{lonlat:[55.455,-4.62],label:'Victoria'},
+  'kota banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
+  'banjarbaru':{lonlat:[114.831,-3.442],label:'Banjarbaru'},
+  'banjarmasin':{lonlat:[114.592,-3.317],label:'Banjarmasin'},
+  'banjarnegara':{lonlat:[109.693,-7.388],label:'Banjarnegara'},
+  'bantul':{lonlat:[110.328,-7.888],label:'Bantul'},
+  'banyumas':{lonlat:[109.215,-7.513],label:'Banyumas'},
+  'banyuwangi':{lonlat:[114.37,-8.219],label:'Banyuwangi'},
+  'barcelona':{lonlat:[2.154,41.389],label:'Barcelona'},
+  'batam':{lonlat:[104.03,1.136],label:'Batam'},
+  'batang':{lonlat:[109.729,-6.915],label:'Batang'},
+  'batu':{lonlat:[122.516,-7.871],label:'Batu'},
+  'bau-bau':{lonlat:[122.626,-5.467],label:'Bau-bau'},
+  'beijing':{lonlat:[116.407,39.904],label:'Beijing'},
+  'beirut':{lonlat:[35.502,33.889],label:'Beirut'},
+  'bekasi':{lonlat:[107.017,-6.234],label:'Bekasi'},
+  'bengkulu':{lonlat:[102.261,-3.8],label:'Bengkulu'},
+  'berlin':{lonlat:[13.405,52.52],label:'Berlin'},
+  'bima':{lonlat:[118.689,-8.458],label:'Bima'},
+  'binjai':{lonlat:[98.485,3.6],label:'Binjai'},
+  'bitung':{lonlat:[125.192,1.44],label:'Bitung'},
+  'blitar':{lonlat:[112.168,-8.096],label:'Blitar'},
+  'blora':{lonlat:[111.407,-6.962],label:'Blora'},
+  'bogor':{lonlat:[106.8,-6.6],label:'Bogor'},
+  'bogota':{lonlat:[-74.085,4.711],label:'Bogota'},
+  'bojonegoro':{lonlat:[111.881,-7.151],label:'Bojonegoro'},
+  'bondowoso':{lonlat:[113.823,-7.912],label:'Bondowoso'},
+  'bontang':{lonlat:[117.5,0.132],label:'Bontang'},
+  'boston':{lonlat:[-71.058,42.36],label:'Boston'},
+  'boyolali':{lonlat:[110.593,-7.53],label:'Boyolali'},
+  'brebes':{lonlat:[108.754,-6.873],label:'Brebes'},
+  'brisbane':{lonlat:[153.028,-27.468],label:'Brisbane'},
+  'brunei':{lonlat:[114.941,4.89],label:'Brunei'},
+  'brussels':{lonlat:[4.352,50.85],label:'Brussels'},
+  'bucharest':{lonlat:[26.097,44.44],label:'Bucharest'},
+  'budapest':{lonlat:[19.04,47.498],label:'Budapest'},
+  'buenos aires':{lonlat:[-58.382,-34.614],label:'Buenos Aires'},
+  'bukit tinggi':{lonlat:[100.372,-0.308],label:'Bukit Tinggi'},
+  'busan':{lonlat:[129.075,35.18],label:'Busan'},
+  'cairo':{lonlat:[31.235,30.045],label:'Cairo'},
+  'calgary':{lonlat:[-114.066,51.045],label:'Calgary'},
+  'canberra':{lonlat:[149.128,-35.282],label:'Canberra'},
+  'cape town':{lonlat:[18.424,-33.925],label:'Cape Town'},
+  'caracas':{lonlat:[-66.914,10.48],label:'Caracas'},
+  'casablanca':{lonlat:[-7.59,33.573],label:'Casablanca'},
+  'cebu':{lonlat:[123.892,10.317],label:'Cebu'},
+  'chengdu':{lonlat:[104.066,30.572],label:'Chengdu'},
+  'chennai':{lonlat:[80.27,13.083],label:'Chennai'},
+  'chiang mai':{lonlat:[98.993,18.788],label:'Chiang Mai'},
+  'chiba':{lonlat:[140.116,35.605],label:'Chiba'},
+  'chicago':{lonlat:[-87.63,41.878],label:'Chicago'},
+  'chittagong':{lonlat:[91.832,22.335],label:'Chittagong'},
+  'chongqing':{lonlat:[106.553,29.563],label:'Chongqing'},
+  'christchurch':{lonlat:[172.637,-43.531],label:'Christchurch'},
+  'ciamis':{lonlat:[108.349,-7.332],label:'Ciamis'},
+  'cianjur':{lonlat:[107.139,-6.82],label:'Cianjur'},
+  'cilacap':{lonlat:[108.83,-7.719],label:'Cilacap'},
+  'cilegon':{lonlat:[106.052,-5.988],label:'Cilegon'},
+  'cirebon':{lonlat:[108.552,-6.732],label:'Cirebon'},
+  'colombo':{lonlat:[79.862,6.927],label:'Colombo'},
+  'copenhagen':{lonlat:[12.568,55.676],label:'Copenhagen'},
+  'da nang':{lonlat:[108.22,16.054],label:'Da Nang'},
+  'dallas':{lonlat:[-96.797,32.781],label:'Dallas'},
+  'dar es salaam':{lonlat:[39.289,-6.813],label:'Dar Es Salaam'},
+  'davao':{lonlat:[125.613,7.073],label:'Davao'},
+  'demak':{lonlat:[110.639,-6.894],label:'Demak'},
+  'denpasar':{lonlat:[115.217,-8.65],label:'Denpasar'},
+  'depok':{lonlat:[106.776,-6.385],label:'Depok'},
+  'dhaka':{lonlat:[90.407,23.724],label:'Dhaka'},
+  'dili':{lonlat:[125.575,-8.559],label:'Dili'},
+  'doha':{lonlat:[51.531,25.286],label:'Doha'},
+  'dubai':{lonlat:[55.296,25.276],label:'Dubai'},
+  'dumai':{lonlat:[101.454,1.672],label:'Dumai'},
+  'ende':{lonlat:[121.66,-8.843],label:'Ende'},
+  'frankfurt':{lonlat:[8.682,50.111],label:'Frankfurt'},
+  'fukuoka':{lonlat:[130.402,33.589],label:'Fukuoka'},
+  'garut':{lonlat:[107.905,-7.22],label:'Garut'},
+  'gianyar':{lonlat:[115.331,-8.538],label:'Gianyar'},
+  'gold coast':{lonlat:[153.431,-28.002],label:'Gold Coast'},
+  'gorontalo':{lonlat:[123.062,0.544],label:'Gorontalo'},
+  'gresik':{lonlat:[112.655,-7.157],label:'Gresik'},
+  'grobogan':{lonlat:[110.895,-7.042],label:'Grobogan'},
+  'guadalajara':{lonlat:[-103.344,20.659],label:'Guadalajara'},
+  'guangzhou':{lonlat:[113.264,23.129],label:'Guangzhou'},
+  'gunungkidul':{lonlat:[110.614,-7.97],label:'Gunungkidul'},
+  'gunungsitoli':{lonlat:[97.613,1.289],label:'Gunungsitoli'},
+  'hamamatsu':{lonlat:[137.727,34.711],label:'Hamamatsu'},
+  'hamburg':{lonlat:[9.993,53.551],label:'Hamburg'},
+  'hanoi':{lonlat:[105.804,21.028],label:'Hanoi'},
+  'helsinki':{lonlat:[24.941,60.17],label:'Helsinki'},
+  'hiroshima':{lonlat:[132.46,34.385],label:'Hiroshima'},
+  'ho chi minh':{lonlat:[106.66,10.823],label:'Ho Chi Minh'},
+  'hong kong':{lonlat:[114.109,22.397],label:'Hong Kong'},
+  'hongkong':{lonlat:[114.109,22.397],label:'Hongkong'},
+  'houston':{lonlat:[-95.37,29.76],label:'Houston'},
+  'hyderabad':{lonlat:[78.474,17.385],label:'Hyderabad'},
+  'ile au cerf':{lonlat:[55.508,-4.64],label:'Ile Au Cerf'},
+  'incheon':{lonlat:[126.705,37.456],label:'Incheon'},
+  'indramayu':{lonlat:[108.316,-6.325],label:'Indramayu'},
+  'ipoh':{lonlat:[101.083,4.597],label:'Ipoh'},
+  'islamabad':{lonlat:[73.048,33.725],label:'Islamabad'},
+  'istanbul':{lonlat:[28.979,41.015],label:'Istanbul'},
+  'jakarta':{lonlat:[106.845,-6.208],label:'Jakarta'},
+  'jakarta barat':{lonlat:[106.754,-6.168],label:'Jakarta Barat'},
+  'jakarta pusat':{lonlat:[106.83,-6.186],label:'Jakarta Pusat'},
+  'jakarta selatan':{lonlat:[106.814,-6.261],label:'Jakarta Selatan'},
+  'jakarta timur':{lonlat:[106.9,-6.225],label:'Jakarta Timur'},
+  'jakarta utara':{lonlat:[106.938,-6.121],label:'Jakarta Utara'},
+  'jambi':{lonlat:[103.612,-1.61],label:'Jambi'},
+  'jayapura':{lonlat:[140.717,-2.534],label:'Jayapura'},
+  'jeddah':{lonlat:[39.192,21.543],label:'Jeddah'},
+  'jember':{lonlat:[113.7,-8.172],label:'Jember'},
+  'jepara':{lonlat:[110.668,-6.587],label:'Jepara'},
+  'jogja':{lonlat:[110.364,-7.803],label:'Jogja'},
+  'johannesburg':{lonlat:[28.045,-26.202],label:'Johannesburg'},
+  'johor bahru':{lonlat:[103.758,1.492],label:'Johor Bahru'},
+  'jombang':{lonlat:[112.23,-7.547],label:'Jombang'},
+  'kagoshima':{lonlat:[130.558,31.56],label:'Kagoshima'},
+  'kanazawa':{lonlat:[136.626,36.561],label:'Kanazawa'},
+  'kandangan':{lonlat:[115.267,-2.78],label:'Kandangan'},
+  'kaohsiung':{lonlat:[120.312,22.621],label:'Kaohsiung'},
+  'karachi':{lonlat:[67.011,24.861],label:'Karachi'},
+  'karanganyar':{lonlat:[111.024,-7.601],label:'Karanganyar'},
+  'karawang':{lonlat:[107.302,-6.321],label:'Karawang'},
+  'kathmandu':{lonlat:[85.314,27.717],label:'Kathmandu'},
+  'kawasaki':{lonlat:[139.703,35.53],label:'Kawasaki'},
+  'kebumen':{lonlat:[109.652,-7.668],label:'Kebumen'},
+  'kediri':{lonlat:[112.008,-7.816],label:'Kediri'},
+  'kendal':{lonlat:[110.196,-6.921],label:'Kendal'},
+  'kendari':{lonlat:[122.515,-3.972],label:'Kendari'},
+  'kiev':{lonlat:[30.523,50.45],label:'Kiev'},
+  'kinshasa':{lonlat:[15.322,-4.324],label:'Kinshasa'},
+  'kitakyushu':{lonlat:[130.842,33.883],label:'Kitakyushu'},
+  'kl':{lonlat:[101.687,3.139],label:'Kl'},
+  'klaten':{lonlat:[110.61,-7.706],label:'Klaten'},
+  'kobe':{lonlat:[135.195,34.69],label:'Kobe'},
+  'kolkata':{lonlat:[88.363,22.573],label:'Kolkata'},
+  'kota kinabalu':{lonlat:[116.075,5.979],label:'Kota Kinabalu'},
+  'kotabaru':{lonlat:[116.182,-3.297],label:'Kotabaru'},
+  'kotamobagu':{lonlat:[124.317,0.728],label:'Kotamobagu'},
+  'kuala lumpur':{lonlat:[101.687,3.139],label:'Kuala Lumpur'},
+  'kuching':{lonlat:[110.33,1.55],label:'Kuching'},
+  'kudus':{lonlat:[110.836,-6.805],label:'Kudus'},
+  'kulonprogo':{lonlat:[110.155,-7.828],label:'Kulonprogo'},
+  'kumamoto':{lonlat:[130.742,32.79],label:'Kumamoto'},
+  'kuningan':{lonlat:[108.479,-6.976],label:'Kuningan'},
+  'kupang':{lonlat:[123.607,-10.169],label:'Kupang'},
+  'kuwait city':{lonlat:[47.978,29.375],label:'Kuwait City'},
+  'kyiv':{lonlat:[30.523,50.45],label:'Kyiv'},
+  'kyoto':{lonlat:[135.768,35.012],label:'Kyoto'},
+  'lagos':{lonlat:[3.379,6.455],label:'Lagos'},
+  'lahore':{lonlat:[74.344,31.549],label:'Lahore'},
+  'lamongan':{lonlat:[112.413,-7.117],label:'Lamongan'},
+  'langsa':{lonlat:[97.968,4.47],label:'Langsa'},
+  'lebak':{lonlat:[106.25,-6.56],label:'Lebak'},
+  'lhokseumawe':{lonlat:[97.14,5.181],label:'Lhokseumawe'},
+  'lima':{lonlat:[-77.028,-12.046],label:'Lima'},
+  'lisbon':{lonlat:[-9.139,38.722],label:'Lisbon'},
+  'london':{lonlat:[-0.128,51.507],label:'London'},
+  'los angeles':{lonlat:[-118.244,34.052],label:'Los Angeles'},
+  'lubuklinggau':{lonlat:[102.861,-3.3],label:'Lubuklinggau'},
+  'lumajang':{lonlat:[113.222,-8.131],label:'Lumajang'},
+  'macau':{lonlat:[113.549,22.199],label:'Macau'},
+  'madinah':{lonlat:[39.612,24.469],label:'Madinah'},
+  'madiun':{lonlat:[111.524,-7.63],label:'Madiun'},
+  'madrid':{lonlat:[-3.703,40.417],label:'Madrid'},
+  'magelang':{lonlat:[110.217,-7.47],label:'Magelang'},
+  'magetan':{lonlat:[111.343,-7.642],label:'Magetan'},
+  'majalengka':{lonlat:[108.227,-6.836],label:'Majalengka'},
+  'makassar':{lonlat:[119.419,-5.147],label:'Makassar'},
+  'malang':{lonlat:[112.616,-7.983],label:'Malang'},
+  'mamuju':{lonlat:[118.889,-2.681],label:'Mamuju'},
+  'manado':{lonlat:[124.842,1.48],label:'Manado'},
+  'manama':{lonlat:[50.586,26.215],label:'Manama'},
+  'manila':{lonlat:[120.984,14.599],label:'Manila'},
+  'manokwari':{lonlat:[134.062,-0.861],label:'Manokwari'},
+  'mataram':{lonlat:[116.117,-8.583],label:'Mataram'},
+  'matsuyama':{lonlat:[132.765,33.839],label:'Matsuyama'},
+  'maumere':{lonlat:[122.212,-8.623],label:'Maumere'},
+  'mecca':{lonlat:[39.826,21.423],label:'Mecca'},
+  'medan':{lonlat:[98.679,3.595],label:'Medan'},
+  'medina':{lonlat:[39.612,24.469],label:'Medina'},
+  'mekkah':{lonlat:[39.826,21.423],label:'Mekkah'},
+  'melbourne':{lonlat:[144.963,-37.814],label:'Melbourne'},
+  'merauke':{lonlat:[140.362,-8.494],label:'Merauke'},
+  'metro':{lonlat:[105.307,-5.113],label:'Metro'},
+  'mexico city':{lonlat:[-99.133,19.433],label:'Mexico City'},
+  'miami':{lonlat:[-80.192,25.775],label:'Miami'},
+  'milan':{lonlat:[9.19,45.465],label:'Milan'},
+  'mojokerto':{lonlat:[112.434,-7.471],label:'Mojokerto'},
+  'montreal':{lonlat:[-73.554,45.509],label:'Montreal'},
+  'moscow':{lonlat:[37.618,55.755],label:'Moscow'},
+  'mumbai':{lonlat:[72.878,19.076],label:'Mumbai'},
+  'munich':{lonlat:[11.582,48.135],label:'Munich'},
+  'muscat':{lonlat:[58.405,23.614],label:'Muscat'},
+  'nagasaki':{lonlat:[129.873,32.749],label:'Nagasaki'},
+  'nagoya':{lonlat:[136.907,35.181],label:'Nagoya'},
+  'naha':{lonlat:[127.681,26.212],label:'Naha'},
+  'nairobi':{lonlat:[36.817,-1.286],label:'Nairobi'},
+  'naypyidaw':{lonlat:[96.129,19.745],label:'Naypyidaw'},
+  'new delhi':{lonlat:[77.209,28.614],label:'New Delhi'},
+  'new york':{lonlat:[-74.006,40.713],label:'New York'},
+  'newcastle':{lonlat:[151.776,-32.927],label:'Newcastle'},
+  'nganjuk':{lonlat:[111.905,-7.605],label:'Nganjuk'},
+  'ngawi':{lonlat:[111.451,-7.408],label:'Ngawi'},
+  'niigata':{lonlat:[139.044,37.916],label:'Niigata'},
+  'nunukan':{lonlat:[117.666,4.136],label:'Nunukan'},
+  'okayama':{lonlat:[133.935,34.662],label:'Okayama'},
+  'osaka':{lonlat:[135.502,34.694],label:'Osaka'},
+  'oslo':{lonlat:[10.752,59.914],label:'Oslo'},
+  'pacitan':{lonlat:[111.099,-8.198],label:'Pacitan'},
+  'padang':{lonlat:[100.354,-0.947],label:'Padang'},
+  'padang panjang':{lonlat:[100.408,-0.455],label:'Padang Panjang'},
+  'padang sidempuan':{lonlat:[99.27,1.379],label:'Padang Sidempuan'},
+  'pagar alam':{lonlat:[103.264,-4.025],label:'Pagar Alam'},
+  'palangka raya':{lonlat:[113.921,-2.208],label:'Palangka Raya'},
+  'palembang':{lonlat:[104.745,-2.916],label:'Palembang'},
+  'palopo':{lonlat:[120.198,-3.004],label:'Palopo'},
+  'palu':{lonlat:[119.872,-0.9],label:'Palu'},
+  'pamekasan':{lonlat:[113.47,-7.157],label:'Pamekasan'},
+  'pandeglang':{lonlat:[106.108,-6.298],label:'Pandeglang'},
+  'pangandaran':{lonlat:[108.65,-7.69],label:'Pangandaran'},
+  'pangkalpinang':{lonlat:[106.118,-2.131],label:'Pangkalpinang'},
+  'parepare':{lonlat:[119.623,-4.014],label:'Parepare'},
+  'paris':{lonlat:[2.349,48.864],label:'Paris'},
+  'pasuruan':{lonlat:[112.907,-7.644],label:'Pasuruan'},
+  'pati':{lonlat:[111.035,-6.748],label:'Pati'},
+  'payakumbuh':{lonlat:[100.625,-0.22],label:'Payakumbuh'},
+  'pekalongan':{lonlat:[109.675,-6.889],label:'Pekalongan'},
+  'pekanbaru':{lonlat:[101.447,0.507],label:'Pekanbaru'},
+  'pemalang':{lonlat:[109.378,-6.889],label:'Pemalang'},
+  'pematang siantar':{lonlat:[99.069,2.958],label:'Pematang Siantar'},
+  'penang':{lonlat:[100.33,5.414],label:'Penang'},
+  'perth':{lonlat:[115.861,-31.953],label:'Perth'},
+  'philadelphia':{lonlat:[-75.165,39.952],label:'Philadelphia'},
+  'phnom penh':{lonlat:[104.916,11.562],label:'Phnom Penh'},
+  'phoenix':{lonlat:[-112.074,33.448],label:'Phoenix'},
+  'phuket':{lonlat:[98.392,7.879],label:'Phuket'},
+  'ponorogo':{lonlat:[111.463,-7.866],label:'Ponorogo'},
+  'pontianak':{lonlat:[109.332,-0.022],label:'Pontianak'},
+  'prabumulih':{lonlat:[104.236,-3.432],label:'Prabumulih'},
+  'prague':{lonlat:[14.421,50.088],label:'Prague'},
+  'probolinggo':{lonlat:[113.215,-7.755],label:'Probolinggo'},
+  'pune':{lonlat:[73.857,18.521],label:'Pune'},
+  'purbalingga':{lonlat:[109.362,-7.389],label:'Purbalingga'},
+  'purwakarta':{lonlat:[107.444,-6.552],label:'Purwakarta'},
+  'purworejo':{lonlat:[110.018,-7.714],label:'Purworejo'},
+  'rembang':{lonlat:[111.34,-6.708],label:'Rembang'},
+  'rio de janeiro':{lonlat:[-43.172,-22.909],label:'Rio De Janeiro'},
+  'riyadh':{lonlat:[46.675,24.687],label:'Riyadh'},
+  'rome':{lonlat:[12.496,41.903],label:'Rome'},
+  'sabang':{lonlat:[95.321,5.893],label:'Sabang'},
+  'sagamihara':{lonlat:[139.397,35.573],label:'Sagamihara'},
+  'saint petersburg':{lonlat:[30.316,59.939],label:'Saint Petersburg'},
+  'saitama':{lonlat:[139.649,35.861],label:'Saitama'},
+  'sakai':{lonlat:[135.553,34.573],label:'Sakai'},
+  'salatiga':{lonlat:[110.501,-7.331],label:'Salatiga'},
+  'samarinda':{lonlat:[117.136,-0.502],label:'Samarinda'},
+  'sampang':{lonlat:[113.249,-7.197],label:'Sampang'},
+  'sampit':{lonlat:[112.953,-2.535],label:'Sampit'},
+  'san antonio':{lonlat:[-98.494,29.424],label:'San Antonio'},
+  'san diego':{lonlat:[-117.157,32.716],label:'San Diego'},
+  'san francisco':{lonlat:[-122.419,37.775],label:'San Francisco'},
+  'san jose':{lonlat:[-121.886,37.339],label:'San Jose'},
+  'santiago':{lonlat:[-70.667,-33.457],label:'Santiago'},
+  'sao paulo':{lonlat:[-46.633,-23.55],label:'Sao Paulo'},
+  'sapporo':{lonlat:[141.354,43.061],label:'Sapporo'},
+  'sawahlunto':{lonlat:[100.776,-0.682],label:'Sawahlunto'},
+  'seattle':{lonlat:[-122.333,47.607],label:'Seattle'},
+  'semarang':{lonlat:[110.438,-6.967],label:'Semarang'},
+  'sendai':{lonlat:[140.882,38.268],label:'Sendai'},
+  'seoul':{lonlat:[126.978,37.566],label:'Seoul'},
+  'serang':{lonlat:[106.152,-6.11],label:'Serang'},
+  'shanghai':{lonlat:[121.474,31.23],label:'Shanghai'},
+  'sharjah':{lonlat:[55.382,25.357],label:'Sharjah'},
+  'shenzhen':{lonlat:[114.058,22.543],label:'Shenzhen'},
+  'shizuoka':{lonlat:[138.383,34.977],label:'Shizuoka'},
+  'sibolga':{lonlat:[98.779,1.742],label:'Sibolga'},
+  'sidoarjo':{lonlat:[112.718,-7.447],label:'Sidoarjo'},
+  'singapore':{lonlat:[103.82,1.352],label:'Singapore'},
+  'singapura':{lonlat:[103.82,1.352],label:'Singapura'},
+  'singaraja':{lonlat:[115.088,-8.112],label:'Singaraja'},
+  'singkawang':{lonlat:[108.995,0.908],label:'Singkawang'},
+  'situbondo':{lonlat:[114.003,-7.706],label:'Situbondo'},
+  'sleman':{lonlat:[110.354,-7.716],label:'Sleman'},
+  'solo':{lonlat:[110.831,-7.576],label:'Solo'},
+  'solok':{lonlat:[100.654,-0.789],label:'Solok'},
+  'sorong':{lonlat:[131.255,-0.876],label:'Sorong'},
+  'sragen':{lonlat:[111.027,-7.424],label:'Sragen'},
+  'stockholm':{lonlat:[18.068,59.33],label:'Stockholm'},
+  'subang':{lonlat:[107.758,-6.57],label:'Subang'},
+  'sukabumi':{lonlat:[106.93,-6.92],label:'Sukabumi'},
+  'sukoharjo':{lonlat:[110.838,-7.686],label:'Sukoharjo'},
+  'sumedang':{lonlat:[107.921,-6.854],label:'Sumedang'},
+  'sumenep':{lonlat:[113.862,-6.99],label:'Sumenep'},
+  'sungai penuh':{lonlat:[101.397,-2.06],label:'Sungai Penuh'},
+  'surabaya':{lonlat:[112.752,-7.257],label:'Surabaya'},
+  'surakarta':{lonlat:[110.831,-7.576],label:'Surakarta'},
+  'sydney':{lonlat:[151.209,-33.869],label:'Sydney'},
+  'tabanan':{lonlat:[115.124,-8.541],label:'Tabanan'},
+  'taipei':{lonlat:[121.565,25.033],label:'Taipei'},
+  'tangerang':{lonlat:[106.64,-6.178],label:'Tangerang'},
+  'tangerang selatan':{lonlat:[106.744,-6.289],label:'Tangerang Selatan'},
+  'tanjung balai':{lonlat:[99.801,2.966],label:'Tanjung Balai'},
+  'tanjung selor':{lonlat:[117.374,2.841],label:'Tanjung Selor'},
+  'tanjungpinang':{lonlat:[104.444,0.918],label:'Tanjungpinang'},
+  'tarakan':{lonlat:[117.637,3.3],label:'Tarakan'},
+  'tasikmalaya':{lonlat:[108.22,-7.327],label:'Tasikmalaya'},
+  'tebing tinggi':{lonlat:[99.162,3.328],label:'Tebing Tinggi'},
+  'tegal':{lonlat:[109.126,-6.869],label:'Tegal'},
+  'tehran':{lonlat:[51.388,35.69],label:'Tehran'},
+  'tel aviv':{lonlat:[34.781,32.085],label:'Tel Aviv'},
+  'temanggung':{lonlat:[110.18,-7.317],label:'Temanggung'},
+  'ternate':{lonlat:[127.38,0.78],label:'Ternate'},
+  'tianjin':{lonlat:[117.19,39.125],label:'Tianjin'},
+  'timika':{lonlat:[136.887,-4.528],label:'Timika'},
+  'tokyo':{lonlat:[139.692,35.689],label:'Tokyo'},
+  'tomohon':{lonlat:[124.833,1.33],label:'Tomohon'},
+  'toronto':{lonlat:[-79.383,43.653],label:'Toronto'},
+  'trenggalek':{lonlat:[111.708,-8.047],label:'Trenggalek'},
+  'tuban':{lonlat:[111.905,-6.9],label:'Tuban'},
+  'tulungagung':{lonlat:[111.903,-8.065],label:'Tulungagung'},
+  'ulaanbaatar':{lonlat:[106.921,47.887],label:'Ulaanbaatar'},
+  'vancouver':{lonlat:[-123.121,49.283],label:'Vancouver'},
+  'vienna':{lonlat:[16.373,48.209],label:'Vienna'},
+  'vientiane':{lonlat:[102.6,17.967],label:'Vientiane'},
+  'warsaw':{lonlat:[21.012,52.23],label:'Warsaw'},
+  'washington':{lonlat:[-77.037,38.907],label:'Washington'},
+  'wellington':{lonlat:[174.776,-41.286],label:'Wellington'},
+  'wonogiri':{lonlat:[110.923,-7.813],label:'Wonogiri'},
+  'wonosobo':{lonlat:[109.905,-7.361],label:'Wonosobo'},
+  'wuhan':{lonlat:[114.305,30.593],label:'Wuhan'},
+  'xian':{lonlat:[108.94,34.342],label:'Xian'},
+  'yangon':{lonlat:[96.157,16.805],label:'Yangon'},
+  'yogyakarta':{lonlat:[110.364,-7.803],label:'Yogyakarta'},
+  'yokohama':{lonlat:[139.638,35.444],label:'Yokohama'},
+  'zurich':{lonlat:[8.541,47.376],label:'Zurich'}
+};
+
+const GEO_CACHE_PATH = path.join(SPARKS_DIR, 'geo-cache.json');
+
+function bacaGeoCache() {
+  if (!fs.existsSync(GEO_CACHE_PATH)) return {};
+  try {
+    return JSON.parse(fs.readFileSync(GEO_CACHE_PATH, 'utf-8'));
+  } catch (e) {
+    console.log(`[geocode] geo-cache.json rusak (${e.message}) — mulai dari cache kosong.`);
+    return {};
+  }
+}
+
+function getCityCoordServer(cityStr) {
+  if (!cityStr) return null;
+  const lower = cityStr.toLowerCase();
+  const keys = Object.keys(CITY_COORDS).sort((a, b) => b.length - a.length);
+  for (const key of keys) {
+    if (lower.includes(key)) return CITY_COORDS[key];
+  }
+  return null;
+}
+
+// Geocode satu kota lewat Nominatim. Dipanggil HANYA untuk kota yang
+// tidak ada di CITY_COORDS maupun geo-cache.json.
+async function geocodeCityServer(cityStr) {
+  const query = cityStr.split(',')[0].trim();
+  const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&accept-language=en';
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': 'blumbang.id-build/1.0 (github actions, contact via blumbang.id)' } });
+    const data = await res.json();
+    if (data && data[0]) {
+      const lon = parseFloat(data[0].lon);
+      const lat = parseFloat(data[0].lat);
+      const label = data[0].display_name.split(',')[0].trim();
+      return { lonlat: [lon, lat], label };
+    }
+  } catch (e) {
+    console.log(`[geocode] gagal geocode "${cityStr}": ${e.message}`);
+  }
+  return null;
+}
+
+// Pastikan semua kota di kotaMap punya koordinat: cek CITY_COORDS dulu,
+// lalu geo-cache.json, baru panggil Nominatim untuk yang benar-benar baru.
+// Menulis ulang geo-cache.json HANYA kalau ada entri baru yang ditambahkan.
+async function pastikanGeoCache(kotaMap) {
+  const cache = bacaGeoCache();
+  let adaBaru = false;
+  let dipanggilNominatim = 0;
+
+  for (const data of Object.values(kotaMap)) {
+    if (data.slug === 'klaten') continue;
+    const nama = data.nama;
+    const cacheKey = nama.toLowerCase().trim();
+
+    if (getCityCoordServer(nama)) continue;         // lapis 1: sudah di kamus tetap
+    if (cache[cacheKey] !== undefined) continue;      // lapis 2: sudah di cache
+
+    // lapis 3: belum dikenal sama sekali — geocode sekarang
+    const coord = await geocodeCityServer(nama);
+    cache[cacheKey] = coord; // simpan meski null, supaya tidak dicoba ulang tiap malam
+    adaBaru = true;
+    dipanggilNominatim++;
+    console.log(`[geocode] "${nama}" -> ${coord ? coord.label + ' ' + JSON.stringify(coord.lonlat) : 'TIDAK DITEMUKAN'}`);
+
+    // Hormati rate limit Nominatim: 1 request/detik
+    await new Promise(r => setTimeout(r, 1100));
+  }
+
+  if (adaBaru) {
+    fs.writeFileSync(GEO_CACHE_PATH, JSON.stringify(cache, null, 2));
+    console.log(`[geocode] geo-cache.json diperbarui — ${dipanggilNominatim} kota baru di-geocode.`);
+  } else {
+    console.log('[geocode] Tidak ada kota baru — geo-cache.json tidak disentuh.');
+  }
+}
+// ═══════════════════════════════════════════════════════════════
+
 function formatTanggal(str) {
   if (!str) return '';
   try {
@@ -689,6 +1158,13 @@ async function main() {
   // Group scan per kota — memakai lib-stats.js supaya definisinya
   // sama persis dengan yang dipakai untuk menghitung angka homepage.
   const kotaMap = groupKota(scanRows);
+
+  // Pastikan semua kota sudah punya koordinat di geo-cache.json SEBELUM
+  // sparks.html dibaca pengunjung. Kota yang sudah ada di CITY_COORDS
+  // atau cache lama dilewati — hanya kota benar-benar baru yang
+  // memicu panggilan Nominatim (dengan jeda 1,1 detik per kota).
+  console.log('Memastikan geo-cache untuk semua kota...');
+  await pastikanGeoCache(kotaMap);
 
   // Generate halaman per kota
   const kotaList = [];

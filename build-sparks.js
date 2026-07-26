@@ -403,6 +403,13 @@ const CITY_COORDS = {
   'tulungagung':{lonlat:[111.903,-8.065],label:'Tulungagung'},
   'ulaanbaatar':{lonlat:[106.921,47.887],label:'Ulaanbaatar'},
   'vancouver':{lonlat:[-123.121,49.283],label:'Vancouver'},
+  // Ditambahkan 26 Juli 2026: 'victoria' tanpa konteks negara sempat
+  // ter-geocode ke Nominatim sebagai Victoria, Australia (144.7,-36.6)
+  // — bukan Victoria, Seychelles (kaos Blumbang yang dimaksud). Koordinat
+  // di bawah diambil dari kamus haversine di generateHOF() yang sudah
+  // benar sejak awal (baris 'victoria':[-4.62,55.455] format [lat,lng]),
+  // supaya kedua kamus di file ini akhirnya sepakat.
+  'victoria':{lonlat:[55.455,-4.62],label:'Victoria'},
   'vienna':{lonlat:[16.373,48.209],label:'Vienna'},
   'vientiane':{lonlat:[102.6,17.967],label:'Vientiane'},
   'warsaw':{lonlat:[21.012,52.23],label:'Warsaw'},

@@ -1243,10 +1243,9 @@ async function buildMap(rows, preloadedWorld){
   const tooltip = document.getElementById('map-tooltip');
   const mapSection = document.getElementById('map-section');
 
-  // Muat geo-cache dari server SEKALI di sini, sebelum loop geocoding kota.
-  // Ini yang membuat kota-kota yang sudah dikenal dari build semalam
-  // langsung tersedia tanpa perlu memanggil Nominatim satu-per-satu.
-  await muatServerGeoCache();
+  // geo-cache sudah dimuat lebih awal, paralel bersama Sheet & world-atlas
+  // di dalam Promise.all pemanggil (lihat _serverGeoCache di bawah).
+  // Tidak dipanggil ulang di sini supaya tidak menambah round-trip kedua.
 
   // Kumpulkan kota unik dari Sheet — skip Klaten karena sudah jadi Origin
   const uniqueCities = {};
@@ -1436,7 +1435,12 @@ requestAnimationFrame(function(){
   Promise.all([
     fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=SPARKS').then(function(r){return r.text();}),
     fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:json&sheet=GARMENTS').then(function(r){return r.text();}),
-    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();})
+    fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(function(r){return r.json();}),
+    // geo-cache.json digabung DI SINI, bukan menunggu setelah 3 fetch di atas
+    // selesai — supaya berjalan BERSAMAAN, bukan menambah round-trip baru
+    // yang berurutan. Kalau fetch ini gagal, muatServerGeoCache() sendiri
+    // sudah punya fallback ke {} jadi Promise.all tetap lanjut normal.
+    muatServerGeoCache()
   ]).then(function(results){
     var txt = results[0];
     var txtG = results[1];

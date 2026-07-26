@@ -61,5 +61,20 @@
       -7.7654287
     ],
     "label": "Jalan Utama Pugeran"
+  },
+  "blora regency": null,
+  "east jakarta": {
+    "lonlat": [
+      106.8822289,
+      -6.2628908
+    ],
+    "label": "East Jakarta"
+  },
+  "west jakarta": {
+    "lonlat": [
+      106.7438905,
+      -6.161569
+    ],
+    "label": "West Jakarta"
   }
 }

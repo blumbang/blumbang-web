@@ -13,14 +13,20 @@
 //
 // HASILNYA di-commit, lalu generate-posts.js tinggal membacanya.
 //
-// Halaman yang SENGAJA tidak ada di sini karena tanggalnya sudah jujur
+// Halaman yang SENGAJA tidak ada di PETA karena tanggalnya sudah jujur
 // dari sumber lain:
-//   /                    -> 'today' (inject-stats.js menulis ulang tiap malam)
-//   /sparks              -> 'today' (build-sparks.js membangun ulang tiap malam)
-//   /sparks/kota/*, /hof -> 'today' (idem)
+//   /       -> 'today' (inject-stats.js menulis ulang tiap malam, itu benar)
+//   /sparks -> 'today' (build-sparks.js membangun ulang SELURUH halaman tiap malam, itu benar)
 //   /karya               -> diturunkan dari updated_at seri terbaru
 //   /karya/*             -> updated_at masing-masing seri
 //   /blog, /blog/*       -> tanggal artikel itu sendiri
+//
+// KOREKSI 1 Agustus 2026: /sparks/kota/*, /sparks/hof DULU juga 'today',
+// disamakan dengan /sparks. Itu keliru: /sparks/kota/[X] cuma berubah kalau
+// KOTA X ITU SENDIRI dapat scan baru, tidak ikut berubah tiap malam seperti
+// /sparks. Sekarang dibaca dari riwayat git per file, sama seperti halaman
+// statis lain di bawah — file yang isinya tidak berubah = commit tidak
+// tercatat = lastmod lama, jujur.
 // ============================================================
 
 const fs = require('fs');
@@ -103,6 +109,40 @@ function build() {
       console.log(`   ⚠️  ${file} tidak punya riwayat commit — pakai fallback ${FALLBACK}`);
     }
   }
+
+  // Halaman kota — jumlahnya dinamis (folder di-scan, bukan daftar tetap).
+  const kotaDir = path.join(__dirname, 'sparks', 'kota');
+  let dariKota = 0;
+  if (fs.existsSync(kotaDir)) {
+    fs.readdirSync(kotaDir).filter(f => f.endsWith('.html')).forEach(f => {
+      const slug = f.replace('.html', '');
+      const relFile = path.join('sparks', 'kota', f);
+      const url = '/sparks/kota/' + slug;
+      const tgl = tanggalCommitTerakhir(relFile);
+      if (tgl) {
+        hasil[url] = tgl;
+        dariGit++;
+      } else {
+        hasil[url] = FALLBACK;
+        dariFallback++;
+      }
+      dariKota++;
+    });
+  } else {
+    console.log('   ⚠️  folder sparks/kota tidak ada — halaman kota dilewati');
+  }
+
+  // /sparks/hof — file tunggal, sama polanya dengan halaman statis lain.
+  const hofFile = path.join('sparks', 'hof.html');
+  if (fs.existsSync(path.join(__dirname, hofFile))) {
+    const tgl = tanggalCommitTerakhir(hofFile);
+    hasil['/sparks/hof'] = tgl || FALLBACK;
+    tgl ? dariGit++ : dariFallback++;
+  } else {
+    console.log('   ⚠️  sparks/hof.html tidak ada — /sparks/hof dilewati');
+  }
+
+  console.log(`   ℹ️  ${dariKota} halaman kota diproses dari sparks/kota/`);
 
   if (Object.keys(hasil).length === 0) {
     console.log('⛔ Tidak ada satu pun halaman terpetakan — file TIDAK ditulis.');

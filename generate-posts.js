@@ -343,17 +343,19 @@ function generateSitemap(posts, seriList) {
     lastmod: p.date || today, changefreq: 'monthly', priority: '0.7'
   }));
 
-  // Halaman sparks kota
+  // Halaman sparks kota — lastmod dari manifest (tanggal commit terakhir file
+  // itu SENDIRI berubah), bukan 'today'. Koreksi 1 Agustus 2026: lihat catatan
+  // di build-sitemap-dates.js untuk alasannya.
   const kotaDir = path.join(__dirname, 'sparks', 'kota');
   const kotaPages = [];
   if (fs.existsSync(kotaDir)) {
     fs.readdirSync(kotaDir).filter(f => f.endsWith('.html')).forEach(f => {
       const slug = f.replace('.html', '');
-      kotaPages.push({ loc: BASE_URL + '/sparks/kota/' + slug, lastmod: today, changefreq: 'daily', priority: '0.7' });
+      kotaPages.push({ loc: BASE_URL + '/sparks/kota/' + slug, lastmod: tgl('/sparks/kota/' + slug), changefreq: 'daily', priority: '0.7' });
     });
   }
   if (fs.existsSync(path.join(__dirname, 'sparks', 'hof.html'))) {
-    kotaPages.push({ loc: BASE_URL + '/sparks/hof', lastmod: today, changefreq: 'daily', priority: '0.7' });
+    kotaPages.push({ loc: BASE_URL + '/sparks/hof', lastmod: tgl('/sparks/hof'), changefreq: 'daily', priority: '0.7' });
   }
 
   const allPages = [...staticPages, ...seriPages, ...blogPages, ...kotaPages];

@@ -76,5 +76,26 @@
       -6.161569
     ],
     "label": "West Jakarta"
+  },
+  "mungkid": {
+    "lonlat": [
+      110.219888,
+      -7.5917812
+    ],
+    "label": "Mungkid"
+  },
+  "jatiroto": {
+    "lonlat": [
+      113.3638797,
+      -8.1223326
+    ],
+    "label": "Jatiroto"
+  },
+  "ketanggung": {
+    "lonlat": [
+      111.140494,
+      -7.47531
+    ],
+    "label": "Ketanggung"
   }
 }

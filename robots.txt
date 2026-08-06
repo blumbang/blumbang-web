@@ -1,8 +1,49 @@
 User-agent: *
+Content-Signal: search=yes,ai-train=yes,ai-input=yes
 Allow: /
-
-# Blok halaman admin
 Disallow: /admin
 Disallow: /admin.html
+
+# Folder dengan data yang berubah / bukan milik Blumbang — dikecualikan dari training AI
+# Search bot (Claude-SearchBot, Googlebot, Bingbot, dst) tetap boleh masuk ke folder ini.
+# Training bot (data dipakai melatih model, bukan dibaca real-time) dikecualikan.
+
+User-agent: ClaudeBot
+Disallow: /admin
+Disallow: /sparks
+Disallow: /sparks/
+Disallow: /blog/
+Disallow: /cerita/
+
+User-agent: GPTBot
+Disallow: /admin
+Disallow: /sparks
+Disallow: /sparks/
+Disallow: /blog/
+Disallow: /cerita/
+
+User-agent: Google-Extended
+Disallow: /admin
+Disallow: /sparks
+Disallow: /sparks/
+Disallow: /blog/
+Disallow: /cerita/
+
+User-agent: CCBot
+Disallow: /admin
+Disallow: /sparks
+Disallow: /sparks/
+Disallow: /blog/
+Disallow: /cerita/
+
+# Scraper murni, tidak ada jalur sitasi balik — diblokir total
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
 
 Sitemap: https://blumbang.id/sitemap.xml

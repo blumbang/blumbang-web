@@ -47,3 +47,6 @@ User-agent: meta-externalagent
 Disallow: /
 
 Sitemap: https://blumbang.id/sitemap.xml
+
+# llms.txt: panduan konteks untuk AI assistant/LLM
+https://blumbang.id/llms.txt

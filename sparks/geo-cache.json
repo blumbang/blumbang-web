@@ -97,5 +97,19 @@
       -7.47531
     ],
     "label": "Ketanggung"
+  },
+  "ceper": {
+    "lonlat": [
+      110.6748531,
+      -7.6689676
+    ],
+    "label": "Ceper"
+  },
+  "karanganom": {
+    "lonlat": [
+      110.624519,
+      -7.6463532
+    ],
+    "label": "Karanganom"
   }
 }

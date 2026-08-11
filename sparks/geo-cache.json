@@ -111,5 +111,19 @@
       -7.6463532
     ],
     "label": "Karanganom"
+  },
+  "tengah": {
+    "lonlat": [
+      103.7287456,
+      1.3638534
+    ],
+    "label": "Tengah"
+  },
+  "mertoyudan": {
+    "lonlat": [
+      110.2241571,
+      -7.5108329
+    ],
+    "label": "Mertoyudan"
   }
 }

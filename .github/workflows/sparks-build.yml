@@ -38,11 +38,14 @@ jobs:
       - name: Refresh stats homepage
         run: node inject-stats.js
 
+      - name: Refresh bukti kota
+        run: node inject-kota.js
+
       - name: Commit dan push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sparks/ sparks.html index.html kemitraan.html sitemap-dates.json sitemap.xml
+          git add sparks/ sparks.html index.html kemitraan.html sablon-jogja.html sitemap-dates.json sitemap.xml
           git diff --staged --quiet && echo "Tidak ada perubahan" && exit 0
           git commit -m "chore: rebuild sparks kota + refresh stats homepage + sitemap dates"
           git push origin main

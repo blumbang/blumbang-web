@@ -613,6 +613,7 @@ tr:hover td{background:rgba(255,255,255,0.02);}
       <div class="form-group"><label class="form-label">Bahan</label><input type="text" class="form-input" id="seri-bahan" placeholder="Cotton Combed 30s"></div>
     </div>
     <div class="form-group" style="margin-bottom:16px;"><label class="form-label">URL Mockup</label><input type="text" class="form-input" id="seri-mockup" placeholder="https://drive.google.com/file/d/..."></div>
+    <div class="form-group" style="margin-bottom:16px;"><label class="form-label">URL Hasil Sablon (opsional)</label><input type="text" class="form-input" id="seri-hasil" placeholder="https://media.blumbang.id/..."></div>
     <div class="form-group" style="margin-bottom:16px;"><label class="form-label">Deskripsi / Copywriting (untuk SEO)</label><textarea class="form-input" id="seri-deskripsi" rows="5" placeholder="Tulis cerita di balik seri ini..." style="resize:vertical;line-height:1.7;font-size:0.85rem;"></textarea></div>
     <div class="form-group" style="margin-bottom:16px;"><label class="form-label">Alt Text Gambar (untuk SEO gambar & aksesibilitas)</label><textarea class="form-input" id="seri-alt-text" rows="2" placeholder="Kaos warna toska motif graffiti bertuliskan ESFACA, sablon plastisol" style="resize:vertical;line-height:1.5;font-size:0.85rem;"></textarea><div style="font-size:0.7rem;color:var(--muted, #888);margin-top:4px;">Deskripsikan tampilan visual gambar (warna, motif, teknik). Kosongkan untuk pakai nama seri sebagai fallback.</div></div>
     <div class="form-row">
@@ -2777,13 +2778,14 @@ function resetSeriForm() {
   document.getElementById('seri-form-msg').textContent = '';
 }
 
-function editSeri(id, nama, pemesan, bahan, mockup, deskripsi, status, altText) {
+function editSeri(id, nama, pemesan, bahan, mockup, deskripsi, status, altText, hasil) {
   editingSeriId = id;
   document.getElementById('seri-form-title').textContent = 'Edit Seri: ' + nama;
   document.getElementById('seri-nama').value = nama;
   document.getElementById('seri-pemesan').value = pemesan || '';
   document.getElementById('seri-bahan').value = bahan || '';
   document.getElementById('seri-mockup').value = mockup || '';
+  document.getElementById('seri-hasil').value = hasil || '';
   document.getElementById('seri-deskripsi').value = deskripsi || '';
   document.getElementById('seri-alt-text').value = altText || '';
   document.getElementById('seri-status').value = status || 'draft';
@@ -2801,6 +2803,7 @@ async function simpanSeri() {
     pemesan: document.getElementById('seri-pemesan').value.trim(),
     bahan: document.getElementById('seri-bahan').value.trim(),
     mockup_url: document.getElementById('seri-mockup').value.trim(),
+    hasil_url: document.getElementById('seri-hasil').value.trim(),
     deskripsi: document.getElementById('seri-deskripsi').value.trim(),
     alt_text: document.getElementById('seri-alt-text').value.trim(),
     status: document.getElementById('seri-status').value,
@@ -2872,7 +2875,7 @@ async function loadSeriList() {
       btn.addEventListener('click', function() {
         const s = window._seriMap[this.getAttribute('data-edit-id')];
         if (!s) return;
-        editSeri(s.id, s.nama, s.pemesan||'', s.bahan||'', s.mockup_url||'', s.deskripsi||'', s.status||'draft', s.alt_text||'');
+        editSeri(s.id, s.nama, s.pemesan||'', s.bahan||'', s.mockup_url||'', s.deskripsi||'', s.status||'draft', s.alt_text||'', s.hasil_url||'');
       });
     });
 
